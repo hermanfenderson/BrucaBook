@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+//Contiene un sapido commento
 
 class App extends Component {
   render() {
