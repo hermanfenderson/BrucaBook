@@ -1,2 +1,9 @@
 Qui i moduli che aggiungo rispetto al caso base
+superagent
+react-modal
+react-redux
+redux-promise (che forse toglierò)
+react-bootstrap (ancora da mettere)
+react-router
+redux-form
 

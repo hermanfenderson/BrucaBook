@@ -1,13 +1,15 @@
 import React from 'react';
 
-class SearchBar extends React.Component {
-  render() {
+const SearchBar = (props) =>  {
+  const onInputChange = (term) => {
+    props.onTermChange(term);
+  }
+  
     return (
-      <div>
-        <h1>Search!</h1>
+      <div className="search">
+        <input placeholder="Enter text to search for gifs!" onChange={event => onInputChange(event.target.value)} />
       </div>
     );
-  }
-}
+ }
 
 export default SearchBar;
