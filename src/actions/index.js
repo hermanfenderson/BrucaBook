@@ -1,7 +1,9 @@
 import request from 'superagent';
 import { browserHistory } from 'react-router';
 import Firebase from 'firebase';
+import { reset as resetForm } from 'redux-form';
 
+export const FETCH_RIGHE_BOLLA = 'FETCH_RIGHE_BOLLA';
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const REQUEST_GIFS = 'REQUEST_GIFS';
@@ -22,6 +24,32 @@ const config = {
 };
 
 Firebase.initializeApp(config);
+
+//Azioni per la gestione delle righe
+export function aggiungiRigaBolla(bolla,valori) {
+//  const userUid = Firebase.auth().currentUser.uid;
+  var nuovaRigaOrdine = { "ean":valori.ean, "titolo":valori.titolo, "autore":valori.autore, "prezzo":valori.prezzo, "copie":valori.copie, "totale":valori.totale};
+  return function(dispatch) {
+    Firebase.database().ref('bolle/' + bolla).push().set(nuovaRigaOrdine).then(response => {
+      dispatch(resetForm('riga-bolla'));
+    });
+  }
+}
+
+export function fetchRigheBolla(bolla) {
+  return function(dispatch) {
+    const userUid = Firebase.auth().currentUser.uid;
+
+    Firebase.database().ref('bolle/' + bolla).on('child_added', snapshot => {
+      dispatch({
+        type: FETCH_RIGHE_BOLLA,
+        payload: snapshot
+      })
+    });
+  }
+}
+
+
 
 export function requestGifs(term = null) {
   return function(dispatch) {

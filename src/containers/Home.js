@@ -16,7 +16,7 @@ class Home extends React.Component {
                  onGifSelect={ selectedGif => this.props.actions.openModal({selectedGif}) }
                  onFavoriteSelect={ selectedGif => this.props.actions.favoriteGif({selectedGif}) }
                  onFavoriteDeselect={ selectedGif => this.props.actions.unfavoriteGif({selectedGif}) }
-                 isAuthenticated={ this.props.authenticated } />
+                 isAuthenticated={ this.props.authenticated } />      
          <GifModal modalIsOpen={ this.props.modalIsOpen }
                   selectedGif={ this.props.selectedGif }
                   onRequestClose={ () => this.props.actions.closeModal() } />
