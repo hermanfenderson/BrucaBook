@@ -6,4 +6,8 @@ redux-promise (che forse toglierò)
 react-bootstrap (ancora da mettere)
 react-router
 redux-form
+redux-thunk
+firebase
+
+Due CSS in CDN: bootstrap e FontAwesome
 

@@ -6,6 +6,7 @@ import Home from './containers/Home';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
 import Favorites from './containers/Favorites';
+import RequireAuth from './containers/RequireAuth';
 
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
@@ -21,7 +22,7 @@ ReactDOM.render(
         <IndexRoute component={Home} />
         <Route path="signup" component={Signup} />
         <Route path="login" component={Login} />
-        <Route path="favorites" component={Favorites} />
+        <Route path="favorites" component={RequireAuth(Favorites)} />
       </Route>
     </Router>
   </Provider>,
