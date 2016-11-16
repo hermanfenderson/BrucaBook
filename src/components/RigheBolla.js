@@ -7,13 +7,15 @@ const RigheBolla = (props) => {
     return <RigaBolla key={riga_key}
             id={riga_key}
             riga={props.righeBollaDB[riga_key]} 
+            editRow={props.editRow}
+            deleteRow={props.deleteRow}
             />
   });
   return (
   <div>
      <FormRigaBolla />
   <div className="table-responsive">
-  <table className="table table-condensed table-striped table-bordered table-hover no-margin">
+  <table className="table table-bolle table-condensed table-striped table-bordered table-hover no-margin">
     <thead>
       <tr>
         <th style={{width:"40%"}}>Titolo</th>

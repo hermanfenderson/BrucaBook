@@ -3,7 +3,8 @@ import { browserHistory } from 'react-router';
 import Firebase from 'firebase';
 import { reset as resetForm } from 'redux-form';
 
-export const FETCH_RIGHE_BOLLA = 'FETCH_RIGHE_BOLLA';
+export const ADDED_RIGA_BOLLA = 'ADDED_RIGA_BOLLA';
+export const DELETED_RIGA_BOLLA = 'DELETED_RIGA_BOLLA';
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const REQUEST_GIFS = 'REQUEST_GIFS';
@@ -24,6 +25,33 @@ const config = {
 };
 
 Firebase.initializeApp(config);
+//Prova amazon
+
+export function ricerca() {
+  var amazon = require('amazon-product-api');
+  var client = amazon.createClient({
+  awsId: "AKIAJ35CCXBI5PGJRGNQ",
+  awsSecret: "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",
+  awsTag: "brucabook"
+  });
+  return function(dispatch) {
+      client.itemSearch({
+            director: 'Quentin Tarantino',
+            actor: 'Samuel L. Jackson',
+            searchIndex: 'DVD',
+            audienceRating: 'R',
+            responseGroup: 'ItemAttributes,Offers,Images'
+            }).then(function(results){
+                    console.log(results);
+            }).catch(function(err){
+                      console.log(err);
+                    });
+     
+    };
+}
+
+  
+
 
 //Azioni per la gestione delle righe
 export function aggiungiRigaBolla(bolla,valori) {
@@ -36,19 +64,38 @@ export function aggiungiRigaBolla(bolla,valori) {
   }
 }
 
-export function fetchRigheBolla(bolla) {
+export function deleteRigaBolla(bolla,id) {
   return function(dispatch) {
-    const userUid = Firebase.auth().currentUser.uid;
+  Firebase.database().ref('bolle/' + bolla + '/' +id).remove();
+    };
+  }
+
+
+export function addedRigaBolla(bolla) {
+  return function(dispatch) {
+    
 
     Firebase.database().ref('bolle/' + bolla).on('child_added', snapshot => {
       dispatch({
-        type: FETCH_RIGHE_BOLLA,
+        type: ADDED_RIGA_BOLLA,
         payload: snapshot
       })
     });
   }
 }
 
+export function deletedRigaBolla(bolla) {
+  return function(dispatch) {
+    
+
+    Firebase.database().ref('bolle/' + bolla).on('child_removed', snapshot => {
+      dispatch({
+        type: DELETED_RIGA_BOLLA,
+        payload: snapshot
+      })
+    });
+  }
+}
 
 
 export function requestGifs(term = null) {
@@ -78,9 +125,9 @@ export function unfavoriteGif({selectedGif}) {
   return dispatch => Firebase.database().ref(userUid).child(gifId).remove();
 }
 
-export function fetchFavoritedGifs() {
+export function fetchFavoritedGifs(user) {
   return function(dispatch) {
-    const userUid = Firebase.auth().currentUser.uid;
+   const userUid = Firebase.auth().currentUser.uid;
 
     Firebase.database().ref(userUid).on('value', snapshot => {
       dispatch({
@@ -143,7 +190,7 @@ export function verifyAuth() {
   return function (dispatch) {
     Firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        dispatch(authUser());
+        dispatch(authUser(user));
       } else {
         dispatch(signOutUser());
       }
@@ -151,9 +198,10 @@ export function verifyAuth() {
   }
 }
 
-export function authUser() {
+export function authUser(user) {
   return {
-    type: AUTH_USER
+    type: AUTH_USER,
+    payload: user
   }
 }
 

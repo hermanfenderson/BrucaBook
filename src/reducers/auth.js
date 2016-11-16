@@ -2,7 +2,8 @@ import { AUTH_USER, SIGN_OUT_USER, AUTH_ERROR } from '../actions';
 
 const initialState =  {
   authenticated: false,
-  error: null
+  error: null,
+  user: null
 };
 
 export default function gifs(state = initialState, action) {
@@ -11,7 +12,8 @@ export default function gifs(state = initialState, action) {
       return {
         ...state,
         authenticated: true,
-        error: null
+        error: null,
+        user: action.payload
       };
     case SIGN_OUT_USER:
       return {

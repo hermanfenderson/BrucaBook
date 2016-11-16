@@ -5,19 +5,36 @@ import * as Actions from '../actions';
 import RigheBolla from '../components/RigheBolla';
 import '../styles/app.css';
 
+const bolla = 1; //Andrà passato come parametro appena possibile...
+
 class GestioneBolla extends React.Component {
-   componentWillMount() {
-    this.props.actions.fetchRigheBolla(1);
+
+  componentWillMount() {
+    this.props.actions.deletedRigaBolla(bolla);
+    this.props.actions.addedRigaBolla(bolla);
+   //this.props.actions.ricerca(); Per gioco...
   }
  
-  render() {
+  editRow(id)
+         {}
+
+ deleteRow = (id) => 
+         {
+           this.props.actions.deleteRigaBolla(bolla,id);
+         }
+  
+ render() {
     return (
       <div>
-      <RigheBolla righeBollaDB={this.props.righeBolla}/>        
+      <RigheBolla righeBollaDB={this.props.righeBolla}
+                  editRow={this.editRow}
+                  deleteRow={this.deleteRow} />        
       </div>
     );
   }
 }
+
+
 
 function mapStateToProps(state) {
   return {

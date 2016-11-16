@@ -1,7 +1,7 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 import rootReducer from '../reducers';
-import * as Actions from '../actions';
+
 
 export default function configureStore(initialState) {
   const store = createStore(
@@ -21,7 +21,7 @@ export default function configureStore(initialState) {
     });
   }
 
-  store.dispatch(Actions.verifyAuth());
+ // store.dispatch(Actions.verifyAuth()); Probabilmente qui non serve più
   
   return store;
 }

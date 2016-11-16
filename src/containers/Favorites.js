@@ -8,7 +8,7 @@ import '../styles/app.css';
 
 class Favorites extends React.Component {
   componentWillMount() {
-    this.props.actions.fetchFavoritedGifs();
+    this.props.actions.fetchFavoritedGifs(); //Modificato per gestire l'utente...
   }
 
   render() {
