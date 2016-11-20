@@ -9,7 +9,8 @@ const bolla = 1; //Andrà passato come parametro appena possibile...
 
 class GestioneBolla extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
+    console.log(this.props.user);
     this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
    //this.props.actions.ricerca(); Per gioco...
@@ -39,7 +40,8 @@ class GestioneBolla extends React.Component {
 function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
-    righeBolla: state.bolle.righeBolla
+    righeBolla: state.bolle.righeBolla,
+    user: state.auth.user
     };
 }
 

@@ -3,11 +3,14 @@ superagent
 react-modal
 react-redux
 redux-promise (che forse toglierò)
-react-bootstrap (ancora da mettere)
+react-bootstrap 
 react-router
 redux-form
 redux-thunk
 firebase
+react-intl ?
+react-intl-redux ?
+
 
 Due CSS in CDN: bootstrap e FontAwesome
 

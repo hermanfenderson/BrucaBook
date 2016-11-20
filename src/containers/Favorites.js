@@ -7,8 +7,8 @@ import GifModal from '../components/GifModal';
 import '../styles/app.css';
 
 class Favorites extends React.Component {
-  componentWillMount() {
-    this.props.actions.fetchFavoritedGifs(); //Modificato per gestire l'utente...
+  componentDidMount() {
+    this.props.actions.fetchFavoritedGifs(); 
   }
 
   render() {
@@ -31,6 +31,7 @@ class Favorites extends React.Component {
 function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
+    user: state.status.user,
     gifs: state.gifs.favorites,
     modalIsOpen: state.modal.modalIsOpen,
     selectedGif: state.modal.selectedGif

@@ -4,8 +4,18 @@
 }
 
 .table-bolle {
-    margin: 3em auto;
-    width: 80%;
+    margin: 1em auto;
+    width: 100%;
+}
+.form-group {
+  margin-left: 0px;
+  margin-right: 0px;
+ margin-bottom: 5px;
+}
+
+fieldset
+{
+ padding-right: 10px; 
 }
 
 .fa-heart {

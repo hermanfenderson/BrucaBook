@@ -1,5 +1,8 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
+import {persistStore, autoRehydrate} from 'redux-persist'
+
+
 import rootReducer from '../reducers';
 
 
@@ -9,7 +12,8 @@ export default function configureStore(initialState) {
     initialState,
     compose (
       applyMiddleware(reduxThunk),
-      window.devToolsExtension ? window.devToolsExtension() : f => f
+      autoRehydrate(),
+      window.devToolsExtension ? window.devToolsExtension() : f => f      
     )
   );
   
@@ -22,6 +26,6 @@ export default function configureStore(initialState) {
   }
 
  // store.dispatch(Actions.verifyAuth()); Probabilmente qui non serve più
-  
+  persistStore(store,{whitelist: ['status']}); //Stato dell'app per bootstrap in caso di refresh
   return store;
 }

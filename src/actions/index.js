@@ -1,7 +1,7 @@
 import request from 'superagent';
 import { browserHistory } from 'react-router';
 import Firebase from 'firebase';
-import { reset as resetForm } from 'redux-form';
+import { reset as resetForm, change as changeForm } from 'redux-form';
 
 export const ADDED_RIGA_BOLLA = 'ADDED_RIGA_BOLLA';
 export const DELETED_RIGA_BOLLA = 'DELETED_RIGA_BOLLA';
@@ -11,7 +11,11 @@ export const REQUEST_GIFS = 'REQUEST_GIFS';
 export const FETCH_FAVORITED_GIFS = 'FETCH_FAVORITED_GIFS';
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
+export const AUTH_INFO_RECEIVED = 'AUTH_INFO_RECEIVED';
 export const AUTH_USER = 'AUTH_USER';
+export const RESET_STATUS = 'RESET_STATUS'
+
+
 
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = '&api_key=dc6zaTOxFJmzC';
@@ -25,44 +29,34 @@ const config = {
 };
 
 Firebase.initializeApp(config);
-//Prova amazon
 
-export function ricerca() {
-  var amazon = require('amazon-product-api');
-  var client = amazon.createClient({
-  awsId: "AKIAJ35CCXBI5PGJRGNQ",
-  awsSecret: "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",
-  awsTag: "brucabook"
-  });
-  return function(dispatch) {
-      client.itemSearch({
-            director: 'Quentin Tarantino',
-            actor: 'Samuel L. Jackson',
-            searchIndex: 'DVD',
-            audienceRating: 'R',
-            responseGroup: 'ItemAttributes,Offers,Images'
-            }).then(function(results){
-                    console.log(results);
-            }).catch(function(err){
-                      console.log(err);
-                    });
-     
-    };
-}
 
-  
 
+//Aggiorno il prezzo scontato e il totale sulla base dei parametri della form bolle...
+ export function calculateDiscountPrice(allValues) {
+   return function(dispatch) {
+   {   var tmp = allValues.prezzzoUnitario;
+   if (!allValues.manSconto)
+        {
+        tmp = ((1 - allValues['sconto3']/100) *((1 - allValues['sconto2']/100) *((1 - allValues['sconto1']/100) * allValues['prezzoListino']))).toFixed(2);
+        changeForm('rigaBolla','prezzoUnitario',tmp);
+        }  
+        changeForm('rigaBolla','prezzoTotale',(allValues.pezzi * tmp).toFixed(2));      
+   } 
+  }  
+ }    
 
 //Azioni per la gestione delle righe
 export function aggiungiRigaBolla(bolla,valori) {
 //  const userUid = Firebase.auth().currentUser.uid;
-  var nuovaRigaOrdine = { "ean":valori.ean, "titolo":valori.titolo, "autore":valori.autore, "prezzo":valori.prezzo, "copie":valori.copie, "totale":valori.totale};
+  var nuovaRigaOrdine = { "ean":valori.ean, "titolo":valori.titolo, "autore":valori.autore, "prezzo":valori.prezzoUnitario, "copie":valori.pezzi, "totale":valori.prezzoTotale};
   return function(dispatch) {
     Firebase.database().ref('bolle/' + bolla).push().set(nuovaRigaOrdine).then(response => {
-      dispatch(resetForm('riga-bolla'));
+      dispatch(resetForm('rigaBolla'));
     });
   }
 }
+
 
 export function deleteRigaBolla(bolla,id) {
   return function(dispatch) {
@@ -125,11 +119,10 @@ export function unfavoriteGif({selectedGif}) {
   return dispatch => Firebase.database().ref(userUid).child(gifId).remove();
 }
 
-export function fetchFavoritedGifs(user) {
+export function fetchFavoritedGifs() {
   return function(dispatch) {
-   const userUid = Firebase.auth().currentUser.uid;
-
-    Firebase.database().ref(userUid).on('value', snapshot => {
+  const userUid = Firebase.auth().currentUser.uid;
+  Firebase.database().ref(userUid).on('value', snapshot => {
       dispatch({
         type: FETCH_FAVORITED_GIFS,
         payload: snapshot.val()
@@ -170,6 +163,7 @@ export function signInUser(credentials) {
   return function(dispatch) {
     Firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
       .then(response => {
+        console.log(response);
         dispatch(authUser());
         browserHistory.push('/favorites');
       })
@@ -180,30 +174,60 @@ export function signInUser(credentials) {
 }
 
 export function signOutUser() {
+  return function(dispatch) {
   browserHistory.push('/');
-  return {
-    type: SIGN_OUT_USER
-  }
+  dispatch(resetStatus());
+  dispatch(finalizeSignOut());
+ } 
 }
+
+export function finalizeSignOut()
+  {
+  return {
+  type: SIGN_OUT_USER
+  }  
+}
+
+
+export function resetStatus()
+  {
+  return {
+  type: RESET_STATUS
+  }  
+}
+  
 
 export function verifyAuth() {
   return function (dispatch) {
+    
+    
     Firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        dispatch(authUser(user));
+        dispatch(authUser()); 
+        dispatch(authInfoReceived());
       } else {
         dispatch(signOutUser());
+        dispatch(authInfoReceived());
       }
     });
   }
 }
 
-export function authUser(user) {
+
+export function authInfoReceived() 
+     {
+    return {
+      type: AUTH_INFO_RECEIVED
+    }
+}
+
+
+export function authUser() {
   return {
-    type: AUTH_USER,
-    payload: user
+    type: AUTH_USER
   }
 }
+
 
 export function authError(error) {
   return {

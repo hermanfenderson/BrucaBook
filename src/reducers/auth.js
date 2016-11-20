@@ -1,19 +1,18 @@
-import { AUTH_USER, SIGN_OUT_USER, AUTH_ERROR } from '../actions';
+import { AUTH_USER, SIGN_OUT_USER, AUTH_ERROR, AUTH_INFO_RECEIVED} from '../actions';
 
 const initialState =  {
   authenticated: false,
   error: null,
-  user: null
+  auth_info: false
 };
 
-export default function gifs(state = initialState, action) {
+export default function auth(state = initialState, action) {
   switch (action.type) {
     case AUTH_USER:
       return {
         ...state,
         authenticated: true,
         error: null,
-        user: action.payload
       };
     case SIGN_OUT_USER:
       return {
@@ -25,6 +24,11 @@ export default function gifs(state = initialState, action) {
       return {
         ...state,
         error: action.payload.message
+      };
+       case AUTH_INFO_RECEIVED:
+      return {
+        ...state,
+        auth_info: true
       };
     default:
       return state;
