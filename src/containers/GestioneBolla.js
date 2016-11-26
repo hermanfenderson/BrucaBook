@@ -10,18 +10,20 @@ const bolla = 1; //Andrà passato come parametro appena possibile...
 class GestioneBolla extends React.Component {
 
   componentDidMount() {
-    console.log(this.props.user);
-    this.props.actions.deletedRigaBolla(bolla);
+     this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
    //this.props.actions.ricerca(); Per gioco...
   }
  
   editRow(id)
-         {}
+         {
+           this.props.eanInputRef.focus(); 
+         }
 
  deleteRow = (id) => 
          {
            this.props.actions.deleteRigaBolla(bolla,id);
+           this.props.eanInputRef.focus(); //Metto il focus su EAN dopo la cancellazione
          }
   
  render() {
@@ -41,8 +43,8 @@ function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
     righeBolla: state.bolle.righeBolla,
-    user: state.auth.user
-    };
+    eanInputRef: state.bolle.eanInputRef
+     };
 }
 
 function mapDispatchToProps(dispatch) {

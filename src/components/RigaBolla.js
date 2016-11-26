@@ -8,7 +8,7 @@ const RigaBolla = (props) => {
         <td className="totale">{props.riga.totale}</td>
         <td className="azioni">
     
-          <div className="glyphicon glyphicon-trash" onClick={() => {props.deleteRow(props.id)}}></div>
+          <div className="glyphicon glyphicon-trash" onClick={() => { props.deleteRow(props.id)}}></div>
 				<div className="glyphicon glyphicon-edit" onClick={() => {props.editRow(props.row)}} ></div>
         
         </td>

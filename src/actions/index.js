@@ -1,10 +1,12 @@
 import request from 'superagent';
 import { browserHistory } from 'react-router';
 import Firebase from 'firebase';
-import { reset as resetForm, change as changeForm } from 'redux-form';
+import { reset as resetForm, change as changeForm} from 'redux-form';
 
 export const ADDED_RIGA_BOLLA = 'ADDED_RIGA_BOLLA';
 export const DELETED_RIGA_BOLLA = 'DELETED_RIGA_BOLLA';
+export const CALCOLA_SCONTO_MAN = 'CALCOLA_SCONTO_MAN';
+export const CALCOLA_SCONTO_AUT = 'CALCOLA_SCONTO_AUT';
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const REQUEST_GIFS = 'REQUEST_GIFS';
@@ -13,7 +15,8 @@ export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_INFO_RECEIVED = 'AUTH_INFO_RECEIVED';
 export const AUTH_USER = 'AUTH_USER';
-export const RESET_STATUS = 'RESET_STATUS'
+export const RESET_STATUS = 'RESET_STATUS';
+export const SET_EAN_INPUT_REF = 'SET_EAN_INPUT_REF';
 
 
 
@@ -31,20 +34,27 @@ const config = {
 Firebase.initializeApp(config);
 
 
+ 
+ 
+export function toggleScontoMan() {
+  return {
+    type: CALCOLA_SCONTO_MAN
+  }
+}
 
-//Aggiorno il prezzo scontato e il totale sulla base dei parametri della form bolle...
- export function calculateDiscountPrice(allValues) {
-   return function(dispatch) {
-   {   var tmp = allValues.prezzzoUnitario;
-   if (!allValues.manSconto)
-        {
-        tmp = ((1 - allValues['sconto3']/100) *((1 - allValues['sconto2']/100) *((1 - allValues['sconto1']/100) * allValues['prezzoListino']))).toFixed(2);
-        changeForm('rigaBolla','prezzoUnitario',tmp);
-        }  
-        changeForm('rigaBolla','prezzoTotale',(allValues.pezzi * tmp).toFixed(2));      
-   } 
-  }  
- }    
+export function toggleScontoAut() {
+  return {
+    type: CALCOLA_SCONTO_AUT
+  }
+}
+
+//Questa mi serve a rimettere focus su EAN da fuori
+export function setEANInputRef(input) {
+     return(
+       {type: SET_EAN_INPUT_REF,
+       input}
+       )
+}
 
 //Azioni per la gestione delle righe
 export function aggiungiRigaBolla(bolla,valori) {
