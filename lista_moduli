@@ -8,9 +8,10 @@ react-router
 redux-form
 redux-thunk
 firebase
+react-bootstrap-table
 react-intl ?
 react-intl-redux ?
+react-tostr (?)
 
-
-Due CSS in CDN: bootstrap e FontAwesome
+Tre CSS in CDN: bootstrap e FontAwesome e react-bootstrap-table
 

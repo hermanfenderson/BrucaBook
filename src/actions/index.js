@@ -1,7 +1,7 @@
 import request from 'superagent';
 import { browserHistory } from 'react-router';
 import Firebase from 'firebase';
-import { reset as resetForm, change as changeForm} from 'redux-form';
+import { reset as resetForm} from 'redux-form';
 
 export const ADDED_RIGA_BOLLA = 'ADDED_RIGA_BOLLA';
 export const DELETED_RIGA_BOLLA = 'DELETED_RIGA_BOLLA';
@@ -56,12 +56,26 @@ export function setEANInputRef(input) {
        )
 }
 
+
 //Azioni per la gestione delle righe
+
+//Helper per il prefisso alla base dati...
+function prefissoNegozio(getState) 
+    {
+      return(getState().status.catena + '/' + getState().status.libreria + '/'); 
+    }
+
+
 export function aggiungiRigaBolla(bolla,valori) {
 //  const userUid = Firebase.auth().currentUser.uid;
-  var nuovaRigaOrdine = { "ean":valori.ean, "titolo":valori.titolo, "autore":valori.autore, "prezzo":valori.prezzoUnitario, "copie":valori.pezzi, "totale":valori.prezzoTotale};
-  return function(dispatch) {
-    Firebase.database().ref('bolle/' + bolla).push().set(nuovaRigaOrdine).then(response => {
+  //var nuovaRigaOrdine = { "ean":valori.ean, "titolo":valori.titolo, "autore":valori.autore, "prezzo":valori.prezzoUnitario, "copie":valori.pezzi, "totale":valori.prezzoTotale};
+  var nuovaRigaOrdine = valori;
+  nuovaRigaOrdine['createdBy'] = Firebase.auth().currentUser.uid;
+  nuovaRigaOrdine['createdAt'] = Firebase.database.ServerValue.TIMESTAMP;
+  
+  return function(dispatch,getState) {
+    
+    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla).push().set(nuovaRigaOrdine).then(response => {
       dispatch(resetForm('rigaBolla'));
     });
   }
@@ -69,17 +83,16 @@ export function aggiungiRigaBolla(bolla,valori) {
 
 
 export function deleteRigaBolla(bolla,id) {
-  return function(dispatch) {
-  Firebase.database().ref('bolle/' + bolla + '/' +id).remove();
+  return function(dispatch, getState) {
+    
+  Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/' +id).remove();
     };
   }
 
 
 export function addedRigaBolla(bolla) {
-  return function(dispatch) {
-    
-
-    Firebase.database().ref('bolle/' + bolla).on('child_added', snapshot => {
+  return function(dispatch, getState) {
+     Firebase.database().ref(prefissoNegozio(getState) +'bolle/'  + bolla).on('child_added', snapshot => {
       dispatch({
         type: ADDED_RIGA_BOLLA,
         payload: snapshot
@@ -89,10 +102,9 @@ export function addedRigaBolla(bolla) {
 }
 
 export function deletedRigaBolla(bolla) {
-  return function(dispatch) {
-    
-
-    Firebase.database().ref('bolle/' + bolla).on('child_removed', snapshot => {
+  return function(dispatch, getState) {
+      
+    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla).on('child_removed', snapshot => {
       dispatch({
         type: DELETED_RIGA_BOLLA,
         payload: snapshot

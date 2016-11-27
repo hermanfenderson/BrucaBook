@@ -6,7 +6,8 @@ import {SET_EAN_INPUT_REF} from '../actions';
 
 
 const initialState =  {
-  righeBolla: {},
+  righeBollaArray: [],
+  righeBollaArrayIndex: {},
   selectedRigaBolla: null,
   eanInputRef: null,
   discountGroupDisabled: false //Questo serve a ingrigire i campi sconto...
@@ -15,23 +16,32 @@ const initialState =  {
 export default function bolle(state = initialState, action) {
   switch (action.type) {
     case ADDED_RIGA_BOLLA:
-      var righeBollaNew = {...(state.righeBolla)}; //Copia profonda di un oggetto...
-      righeBollaNew[action.payload.key] = action.payload.val();
-      console.log(action.payload);
-      console.log(righeBollaNew);
-      return {
-        ...state, righeBolla: righeBollaNew
+      var righeBollaArrayNew = state.righeBollaArray.slice();
+      var righeBollaArrayIndexNew = {...(state.righeBollaArrayIndex)};
+      var tmp = action.payload.val();
+      tmp['key'] = action.payload.key;
+       righeBollaArrayNew.push(tmp);
+      righeBollaArrayIndexNew[action.payload.key] = righeBollaArrayNew.length - 1;
+      
+       return {
+        ...state, righeBollaArray: righeBollaArrayNew, righeBollaArrayIndex: righeBollaArrayIndexNew
       };
       
    case DELETED_RIGA_BOLLA:
-      //console.log(action.payload.val());
-      //console.log(action.payload.key);
-      var righeBollaNew2 = {...(state.righeBolla)}; //Copia profonda di un oggetto...
-      delete righeBollaNew2[action.payload.key];
-      console.log(action.payload);
-      console.log(righeBollaNew2);
-       return {
-        ...state, righeBolla: righeBollaNew2
+       var righeBollaArrayNew2 = state.righeBollaArray.slice();
+      var righeBollaArrayIndexNew2 = {...(state.righeBollaArrayIndex)};
+      
+     
+      var index = righeBollaArrayIndexNew2[action.payload.key];
+       delete righeBollaArrayIndexNew2[action.payload.key]
+      righeBollaArrayNew2.splice(index,1);
+      for(var propt in righeBollaArrayIndexNew2){
+          if (righeBollaArrayIndexNew2[propt] > index) righeBollaArrayIndexNew2[propt]--;
+      }
+      
+      return {
+        ...state, righeBollaArray: righeBollaArrayNew2, righeBollaArrayIndex: righeBollaArrayIndexNew2
+     
       };
       
      case CALCOLA_SCONTO_MAN:
@@ -45,8 +55,7 @@ export default function bolle(state = initialState, action) {
       }; 
       
        case SET_EAN_INPUT_REF:
-        console.log(action.input);
-         return {
+          return {
         ...state, eanInputRef: action.input
       }; 
      

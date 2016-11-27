@@ -121,6 +121,8 @@ toggleSconto = (value) =>
   handleFormSubmit = (values) => {
    //Se arrivo qui ma non ho finito...
  //  this.props.eanInputRef.focus();
+    if (!values['manSconto']) values['manSconto'] = false;
+    console.log(values);
     if (values.pezzi > 0) {this.props.actions.aggiungiRigaBolla(1,values);}  //Controllo insufficiente
     else this.getBookByCode(values.ean,values.ean,values);
     this.props.eanInputRef.focus();

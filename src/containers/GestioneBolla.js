@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
-import RigheBolla from '../components/RigheBolla';
-import '../styles/app.css';
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
-const bolla = 1; //Andrà passato come parametro appena possibile...
+import FormRigaBolla from '../containers/FormRigaBolla';
+import '../styles/app.css';
+const bolla = 1; //Arriva come prop da sopra
 
 class GestioneBolla extends React.Component {
 
   componentDidMount() {
      this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
-   //this.props.actions.ricerca(); Per gioco...
   }
  
   editRow(id)
@@ -25,14 +25,27 @@ class GestioneBolla extends React.Component {
            this.props.actions.deleteRigaBolla(bolla,id);
            this.props.eanInputRef.focus(); //Metto il focus su EAN dopo la cancellazione
          }
-  
+  azioniFormatter = (cell, row) => {
+  return (
+        <div>
+        <div className="glyphicon glyphicon-trash" onClick={() => { this.deleteRow(row['key'])}}></div>
+				<div className="glyphicon glyphicon-edit" onClick={() => { this.editRow(this.props.righeBollaArray[row]['key'])}} ></div>  
+        </div>
+        );
+ }
+ 
  render() {
     return (
       <div>
-      <RigheBolla righeBollaDB={this.props.righeBolla}
-                  editRow={this.editRow}
-                  deleteRow={this.deleteRow} />        
-      </div>
+      <FormRigaBolla/>
+       <BootstrapTable data={this.props.righeBollaArray} striped hover>
+          <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
+          <TableHeaderColumn dataField='titolo' filter={ { type: 'TextFilter', delay: 100 } }>Titolo</TableHeaderColumn>
+          <TableHeaderColumn dataField='autore'>Autore</TableHeaderColumn>
+       <TableHeaderColumn width='50' dataFormat={ this.azioniFormatter }></TableHeaderColumn>
+      </BootstrapTable>
+     
+           </div>
     );
   }
 }
@@ -42,8 +55,9 @@ class GestioneBolla extends React.Component {
 function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
-    righeBolla: state.bolle.righeBolla,
+    righeBollaArray: state.bolle.righeBollaArray,
     eanInputRef: state.bolle.eanInputRef
+    
      };
 }
 
