@@ -1,4 +1,6 @@
 import React from 'react';
+import Measure from 'react-measure';
+
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import * as Actions from '../actions';
@@ -35,6 +37,11 @@ class Header extends React.Component {
 
   render() {
     return (
+       <Measure onMeasure={(dimensions) => {
+          this.props.storeMeasure('headerHeight',dimensions.height);
+          
+        }}
+      >
       <nav className="navbar navbar-default">
         <div className="container-fluid">
           <div className="navbar-header">
@@ -45,6 +52,7 @@ class Header extends React.Component {
            </ul>
         </div>
       </nav>
+      </Measure>
     );
   }
 }

@@ -1,10 +1,11 @@
 import React from 'react';
+import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
-import FormRigaBolla from '../containers/FormRigaBolla';
+import FormRigaBolla from './FormRigaBolla';
+import TableBolla from '../components/TableBolla';
 import '../styles/app.css';
 const bolla = 1; //Arriva come prop da sopra
 
@@ -13,10 +14,15 @@ class GestioneBolla extends React.Component {
   componentDidMount() {
      this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
+		this.props.actions.changedRigaBolla(bolla);	
   }
+	
+	
  
-  editRow(id)
-         {
+  editRow(row)
+         { 
+					 console.log(row);
+					 this.props.actions.setSelectedRigaBolla(row);
            this.props.eanInputRef.focus(); 
          }
 
@@ -25,38 +31,58 @@ class GestioneBolla extends React.Component {
            this.props.actions.deleteRigaBolla(bolla,id);
            this.props.eanInputRef.focus(); //Metto il focus su EAN dopo la cancellazione
          }
+ 
+  setTableRef = (tableRef) => {
+    this.tableRef = tableRef;
+  }
+	
   azioniFormatter = (cell, row) => {
   return (
         <div>
         <div className="glyphicon glyphicon-trash" onClick={() => { this.deleteRow(row['key'])}}></div>
-				<div className="glyphicon glyphicon-edit" onClick={() => { this.editRow(this.props.righeBollaArray[row]['key'])}} ></div>  
+				<div className="glyphicon glyphicon-edit" onClick={() => { this.editRow(row)}} ></div>  
         </div>
         );
  }
  
  render() {
+	 var shouldScroll = false;
+	 var tableHeight = '100%'
+	 if (this.props.measures['windowHeight']- 1.5 * this.props.measures['headerHeight']-this.props.measures['formBollaHeight'] > 0)
+		  {
+		  shouldScroll = true;		
+			tableHeight = this.props.measures['windowHeight']- 1.5 * this.props.measures['headerHeight']-this.props.measures['formBollaHeight'];
+			}
+		
+	 
     return (
       <div>
-      <FormRigaBolla/>
-       <BootstrapTable data={this.props.righeBollaArray} striped hover>
-          <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
-          <TableHeaderColumn dataField='titolo' filter={ { type: 'TextFilter', delay: 100 } }>Titolo</TableHeaderColumn>
-          <TableHeaderColumn dataField='autore'>Autore</TableHeaderColumn>
-       <TableHeaderColumn width='50' dataFormat={ this.azioniFormatter }></TableHeaderColumn>
-      </BootstrapTable>
+			<Measure onMeasure={(dimensions) => {
+          this.props.actions.storeMeasure('formBollaHeight',dimensions.height);
+          
+        }}
+      >
+      <FormRigaBolla />
+				</Measure>
+			<TableBolla shouldScroll={shouldScroll} data={this.props.righeBollaArray} height={tableHeight} dataFormat={ this.azioniFormatter } setTableRef={this.setTableRef} />
+			
+       
      
            </div>
     );
   }
 }
 
+//react-bs-container-body
 
 
 function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
     righeBollaArray: state.bolle.righeBollaArray,
-    eanInputRef: state.bolle.eanInputRef
+    eanInputRef: state.bolle.eanInputRef,
+		selectedRigaBolla: state.bolle.selectedRigaBolla,
+		measures: state.measures.measures
     
      };
 }

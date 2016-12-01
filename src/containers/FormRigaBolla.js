@@ -3,8 +3,10 @@ import { Field, reduxForm } from 'redux-form';
 import {Row, Col} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-
+import { isValidEAN, generateEAN, getBookByEAN13} from '../helpers/ean';
+ 
 import * as Actions from '../actions';
+const initialEmpty = {'sconto1': 0, 'sconto2': 0, 'sconto3': 0, 'gratis': 0};   
 
 const validate = values => {
   const errors = {};
@@ -21,35 +23,13 @@ const validate = values => {
  if (!(values.pezzi>0)) errors.pezzi = "Numero";
  if (!(values.gratis>=0)) errors.gratis = "Numero";
   
-
-  if (!values.email) {
-    errors.email = "Please enter an email.";
-  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-    errors.email = 'Invalid email address'
-  }
-
-  if (!values.password) {
-    errors.password = "Please enter a password.";
-  }
-  
-  
-
   return errors;
 };
 
-function getBookByEAN13(ean13)
-{
-  const books = {"1": {"titolo": "I promessi sposi", "autore": "Alessandro Manzoni", "prezzo": "9.90"},
-       "2": {"titolo": "Pinocchio", "autore": "Collodi", "prezzo": "5.00"},
-       "3": {"titolo": "La fuga del cavallo morto", "autore": "Mauro Minenna", "prezzo": "5.90"}};  
-  return books[ean13];
-}
 
-function calculateDiscountPrice(prezzoListino, sconto1, sconto2, sconto3)
-{
-  
-  return ((1 - sconto1/100) *((1 - sconto2 /100) *((1 - sconto1/100) * prezzoListino))).toFixed(2);
-       
+function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
+{  
+  return ((1 - sconto1/100) *((1 - sconto2 /100) *((1 - sconto1/100) * prezzoListino))).toFixed(2);      
 }
 
 
@@ -59,17 +39,26 @@ class FormRigaBolla extends React.Component {
    getBookByCode = () => {
        if (this.props.formState.values['ean']) 
           {
+          var book = {};
           var code = this.props.formState.values['ean'];
-   
-           if (code && (!(/[^0-9]+/i.test(code)))) {
-               var book = getBookByEAN13(code);
+          if ((code > 0) && (code.length < 12)) 
+              {
+              code = generateEAN(code); 
+              this.props.change('ean',code);
+              }
+          if ((code.length === 13) && (isValidEAN(code))) {
+              console.log("sono qui");
+        
+              book = getBookByEAN13(code);
+              if (book['titolo'])
+                {
                  this.props.change('titolo',book.titolo);
                 this.props.change('autore',book.autore);
                 this.props.change('prezzoListino',book.prezzo);
                 this.props.change('pezzi',1);
-                if (!this.props.formState.values['msnSconto']) 
+                if (!this.props.formState.values['manSconto']) 
                      {
-                      var tmp = calculateDiscountPrice(book.prezzo,this.props.formState.values['sconto1'],this.props.formState.values['sconto2'],this.props.formState.values['sconto3']);
+                      var tmp = discountPrice(book.prezzo,this.props.formState.values['sconto1'],this.props.formState.values['sconto2'],this.props.formState.values['sconto3']);
                       this.props.change(['prezzoUnitario'],tmp);
                       this.props.change(['prezzoTotale'],tmp); 
                      } 
@@ -79,10 +68,15 @@ class FormRigaBolla extends React.Component {
                      this.props.change('prezzoTotale',book.prezzo);
                      }  
                  this.pezziInput.focus();
-         
-               
-                }
+                 }
+               else 
+                  {
+                  this.props.change('ean',"");
+                  this.EANInput.focus();
+                  }
+            }
           }  
+     
   } 
    
   calculateDiscountPrice = (value, previousValue, allValues) => 
@@ -104,8 +98,8 @@ calculateTotal = (value, previousValue, allValues) =>
 
 toggleSconto = (value) =>
 {
-  if (value == true) this.props.actions.toggleScontoMan();
-  if (value == false) this.props.actions.toggleScontoAut();
+  if (value === true) this.props.actions.toggleScontoMan();
+  if (value === false) this.props.actions.toggleScontoAut();
   return value;
   
 }
@@ -118,12 +112,15 @@ toggleSconto = (value) =>
     }
 }
   
+ clearForm = () => {
+   //this.props.actions.clearForm(initialEmpty);
+ }
+  
   handleFormSubmit = (values) => {
    //Se arrivo qui ma non ho finito...
  //  this.props.eanInputRef.focus();
     if (!values['manSconto']) values['manSconto'] = false;
-    console.log(values);
-    if (values.pezzi > 0) {this.props.actions.aggiungiRigaBolla(1,values);}  //Controllo insufficiente
+    if (values.pezzi > 0) {this.props.actions.aggiornaRigaBolla(1,values);}  //Controllo insufficiente...rischio di fare un casino...
     else this.getBookByCode(values.ean,values.ean,values);
     this.props.eanInputRef.focus();
   };
@@ -233,9 +230,11 @@ renderFieldPezzi = ({input, label, type, disabled,  meta: { touched, error, acti
           </Col>  
           </div>
 
-            
             <button action="submit" className="btn btn-primary">Inserisci</button>
+            <button onClick={this.clearForm()} className="btn btn-primary">Annulla</button>
+        
           </form>
+           
 </Col>
 <Col sm={1}>
 <Row> Copie: 23 </Row>
@@ -265,5 +264,5 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps,  mapDispatchToProps)(reduxForm({
   form: 'rigaBolla', 
   validate,
-  initialValues: {'sconto1': 0, 'sconto2': 0, 'sconto3': 0, 'gratis': 0}
+  initialValues: initialEmpty
 })(FormRigaBolla));
