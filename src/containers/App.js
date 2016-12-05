@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
 import '../styles/app.css';
-import Measure from 'react-measure';
 
 class App extends React.Component {
   componentWillMount() {
@@ -33,16 +32,12 @@ handleResize = () => {
     if (this.props.auth_info)
         {  
         return (
-          <Measure onMeasure={(dimensions) => {
-          console.log({dimensions});
           
-        }}
-      >
            <div>
             <Header />
                 {React.cloneElement(this.props.children, { authenticated: this.props.authenticated, user: this.props.user })}
           </div>
-          </Measure>
+         
         );
         }
      else 

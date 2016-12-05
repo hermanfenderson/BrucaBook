@@ -6,6 +6,7 @@ redux-promise (che forse toglierò)
 react-bootstrap 
 react-router
 redux-form
+react-redux-form
 redux-thunk
 firebase
 react-bootstrap-table

@@ -2,6 +2,7 @@ import request from 'superagent';
 import { browserHistory } from 'react-router';
 import Firebase from 'firebase';
 import { reset as resetForm, initialize as initializeForm} from 'redux-form';
+
 import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 
 export const  STORE_MEASURE = 'STORE_MEASURE';
@@ -22,9 +23,6 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_INFO_RECEIVED = 'AUTH_INFO_RECEIVED';
 export const AUTH_USER = 'AUTH_USER';
 export const RESET_STATUS = 'RESET_STATUS';
-export const SET_EAN_INPUT_REF = 'SET_EAN_INPUT_REF';
-
-
 
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = '&api_key=dc6zaTOxFJmzC';
@@ -66,14 +64,6 @@ export function toggleScontoAut() {
   return {
     type: CALCOLA_SCONTO_AUT
   }
-}
-
-//Questa mi serve a rimettere focus su EAN da fuori
-export function setEANInputRef(input) {
-     return(
-       {type: SET_EAN_INPUT_REF,
-       input}
-       )
 }
 
 

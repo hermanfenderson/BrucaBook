@@ -5,15 +5,13 @@ import {SET_SELECTED_RIGA_BOLLA } from '../actions';
 
 import {CALCOLA_SCONTO_MAN} from '../actions';
 import {CALCOLA_SCONTO_AUT} from '../actions';
-import {SET_EAN_INPUT_REF} from '../actions';
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 
 const initialState =  {
   righeBollaArray: [],
   righeBollaArrayIndex: {},
   selectedRigaBolla: null,
-  eanInputRef: null,
-  discountGroupDisabled: false //Questo serve a ingrigire i campi sconto...
+   discountGroupDisabled: false //Questo serve a ingrigire i campi sconto...
 };
 
 export default function bolle(state = initialState, action) {
@@ -43,11 +41,7 @@ export default function bolle(state = initialState, action) {
         ...state, discountGroupDisabled: false
       }; 
       
-       case SET_EAN_INPUT_REF:
-          return {
-        ...state, eanInputRef: action.input
-      }; 
-     
+       
     
     default:
       return state;

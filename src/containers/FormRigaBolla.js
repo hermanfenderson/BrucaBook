@@ -47,8 +47,7 @@ class FormRigaBolla extends React.Component {
               this.props.change('ean',code);
               }
           if ((code.length === 13) && (isValidEAN(code))) {
-              console.log("sono qui");
-        
+              
               book = getBookByEAN13(code);
               if (book['titolo'])
                 {
@@ -112,17 +111,18 @@ toggleSconto = (value) =>
     }
 }
   
- clearForm = () => {
-   //this.props.actions.clearForm(initialEmpty);
+ clearForm = () =>
+ {
+   
  }
-  
+ 
   handleFormSubmit = (values) => {
    //Se arrivo qui ma non ho finito...
  //  this.props.eanInputRef.focus();
     if (!values['manSconto']) values['manSconto'] = false;
     if (values.pezzi > 0) {this.props.actions.aggiornaRigaBolla(1,values);}  //Controllo insufficiente...rischio di fare un casino...
     else this.getBookByCode(values.ean,values.ean,values);
-    this.props.eanInputRef.focus();
+    this.EANInput.focus();
   };
 
 renderEANField = ({input, onBlur, label, type, disabled, meta: { touched, error, active } }) => 
@@ -131,7 +131,7 @@ renderEANField = ({input, onBlur, label, type, disabled, meta: { touched, error,
     <fieldset className={`form-group ${touched && error ? 'has-error' : ''}`}>
       <label className="control-label">{label}</label>
       <div>
-        <input {...input}  ref={(input) => { this.props.actions.setEANInputRef(input); this.EANInput = input; }} onKeyPress={this.onKeyPress} onBlur={onBlur} disabled={disabled} className="form-control" type={type} />
+        <input {...input}  ref={(input) => { this.props.setEANInputRef(input); this.EANInput = input; }} onKeyPress={this.onKeyPress} onBlur={onBlur} disabled={disabled} className="form-control" type={type} />
         {touched && error && <div className="help-block">{error}</div>}
       </div>
     </fieldset>
@@ -179,13 +179,7 @@ renderFieldPezzi = ({input, label, type, disabled,  meta: { touched, error, acti
 
   render() {
      return(
-      <div className="container">
-           { this.renderAuthenticationError() }
- <Col sm={2}>
-<img src="https://img.ibs.it/images/9788807032073_0_0_180_0.jpg"/>
- </Col>
-<Col sm={9}>
-          <form className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleFormSubmit)}>
+           <form className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleFormSubmit)}>
          
           <div className="form-group">
            <Col sm={3}>
@@ -235,24 +229,16 @@ renderFieldPezzi = ({input, label, type, disabled,  meta: { touched, error, acti
         
           </form>
            
-</Col>
-<Col sm={1}>
-<Row> Copie: 23 </Row>
-<Row> Gratis: 12 </Row>
-<Row> Totale: 323,70 </Row>
- </Col>
-        </div>
+
     );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    authenticationError: state.auth.error,
     discountGroupDisabled: state.bolle.discountGroupDisabled,
     formState: state.form.rigaBolla,
-    eanInputRef: state.bolle.eanInputRef
-   }
+      }
 }
 
 function mapDispatchToProps(dispatch) {

@@ -3,38 +3,40 @@ import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
+import {Row, Col} from 'react-bootstrap';
 
-import FormRigaBolla from './FormRigaBolla';
+import FormRigaBolla from './FormRigaBolla2';
 import TableBolla from '../components/TableBolla';
 import '../styles/app.css';
 const bolla = 1; //Arriva come prop da sopra
 
 class GestioneBolla extends React.Component {
-
-  componentDidMount() {
+  
+	componentDidMount() {
      this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
 		this.props.actions.changedRigaBolla(bolla);	
   }
 	
 	
- 
+  setEANInputRef =  (input) => {
+	this.eanInputRef = input;	
+	}
+	
+	
   editRow(row)
          { 
 					 console.log(row);
 					 this.props.actions.setSelectedRigaBolla(row);
-           this.props.eanInputRef.focus(); 
+           this.eanInputRef.focus(); 
          }
 
  deleteRow = (id) => 
          {
            this.props.actions.deleteRigaBolla(bolla,id);
-           this.props.eanInputRef.focus(); //Metto il focus su EAN dopo la cancellazione
+           this.eanInputRef.focus(); //Metto il focus su EAN dopo la cancellazione
          }
  
-  setTableRef = (tableRef) => {
-    this.tableRef = tableRef;
-  }
 	
   azioniFormatter = (cell, row) => {
   return (
@@ -56,20 +58,30 @@ class GestioneBolla extends React.Component {
 		
 	 
     return (
-      <div>
-			<Measure onMeasure={(dimensions) => {
+			<div>
+     	<Measure onMeasure={(dimensions) => {
           this.props.actions.storeMeasure('formBollaHeight',dimensions.height);
           
         }}
       >
-      <FormRigaBolla />
+			<div className="container">
+       <Col sm={2}>
+				<img src="https://img.ibs.it/images/9788807032073_0_0_180_0.jpg"/>
+ 			</Col>
+		  <Col sm={9}>	
+      <FormRigaBolla setEANInputRef={this.setEANInputRef}/>
+			</Col>
+			<Col sm={1}>
+				<Row> Copie: 23 </Row>
+				<Row> Gratis: 12 </Row>
+				<Row> Totale: 323,70 </Row>
+		 </Col>
+     </div>
 				</Measure>
-			<TableBolla shouldScroll={shouldScroll} data={this.props.righeBollaArray} height={tableHeight} dataFormat={ this.azioniFormatter } setTableRef={this.setTableRef} />
-			
-       
-     
-           </div>
-    );
+			<TableBolla shouldScroll={shouldScroll} data={this.props.righeBollaArray} height={tableHeight} dataFormat={ this.azioniFormatter } />
+			</div>
+      
+     );
   }
 }
 
@@ -79,9 +91,8 @@ class GestioneBolla extends React.Component {
 function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
-    righeBollaArray: state.bolle.righeBollaArray,
-    eanInputRef: state.bolle.eanInputRef,
-		selectedRigaBolla: state.bolle.selectedRigaBolla,
+		 righeBollaArray: state.bolle.righeBollaArray,
+  	selectedRigaBolla: state.bolle.selectedRigaBolla,
 		measures: state.measures.measures
     
      };
