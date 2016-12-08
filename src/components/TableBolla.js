@@ -11,8 +11,12 @@ componentDidMount()
   }
   
   componentDidUpdate() {
-	if (this.props.shouldScroll) this.node.scrollTop = this.node.scrollHeight;
-	}
+ 	if (this.props.willScroll)
+		{
+		if (this.props.shouldScroll)  this.node.scrollTop = this.node.scrollHeight;
+		this.props.scrollAction(false); //Resetto lo scroll...
+		}
+ }
   
     render ()
      {

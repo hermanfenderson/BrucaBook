@@ -16,7 +16,7 @@ export function getBookByEAN13(ean13)
        "2000000000022": {"titolo": "Pinocchio", "autore": "Collodi", "prezzo": "5.00"},
        "2000000000039": {"titolo": "La fuga del cavallo morto", "autore": "Mauro Minenna", "prezzo": "5.90"}};  
   if (books[ean13]) return books[ean13];
-  return {};
+  return null;
 }
 
 export function isValidEAN(code)
@@ -24,9 +24,7 @@ export function isValidEAN(code)
   if (code.length !==13) return false;
   var number = code.slice(0,12);
   var check = code.slice(-1);
-  console.log(number);
-  console.log(check);
-  console.log(eanCheckDigit(number))
+ 
   if (eanCheckDigit(number) == check) return true;
   return false;
 }

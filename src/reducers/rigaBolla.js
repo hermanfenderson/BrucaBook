@@ -5,13 +5,13 @@ const initialState =  {
  titolo: '',
  autore: '',
  prezzoListino: '',
- sconto1: 0,
- sconto2: 0,
- sconto3: 0,
+ sconto1: '',
+ sconto2: '',
+ sconto3: '',
  manSconto: false,
  prezzoUnitario: '',
  pezzi: '',
- gratis: 0,
+ gratis: '',
  prezzoTotale: '' 
  };
 

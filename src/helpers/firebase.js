@@ -66,14 +66,14 @@ export function childChanged(payload, state, dataArrayName, dataIndexName)
 
 export function addCreatedStamp(record)
   {
-  record['createdBy'] = Firebase.auth().currentUser.uid;
-  record['createdAt'] = Firebase.database.ServerValue.TIMESTAMP;
+   record['createdBy'] = Firebase.auth().currentUser.uid;
+    record['createdAt'] = Firebase.database.ServerValue.TIMESTAMP;
   return record;
  }
 
 export function addChangedStamp(record)
   {
-  record['changedBy'] = Firebase.auth().currentUser.uid;
+   record['changedBy'] = Firebase.auth().currentUser.uid;
   record['changedAt'] = Firebase.database.ServerValue.TIMESTAMP;
   return record;
  }
