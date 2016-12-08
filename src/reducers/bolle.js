@@ -1,11 +1,9 @@
-import {ADDED_RIGA_BOLLA } from '../actions';
-import {DELETED_RIGA_BOLLA } from '../actions';
-import {CHANGED_RIGA_BOLLA } from '../actions';
-import {SET_SELECTED_RIGA_BOLLA } from '../actions';
-import {TABLE_BOLLA_WILL_SCROLL } from '../actions';
+import {ADDED_RIGA_BOLLA } from '../actions/bolle';
+import {DELETED_RIGA_BOLLA } from '../actions/bolle';
+import {CHANGED_RIGA_BOLLA } from '../actions/bolle';
+import {SET_SELECTED_RIGA_BOLLA } from '../actions/bolle';
+import {TABLE_BOLLA_WILL_SCROLL } from '../actions/bolle';
 
-import {CALCOLA_SCONTO_MAN} from '../actions';
-import {CALCOLA_SCONTO_AUT} from '../actions';
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 
 const initialState =  {

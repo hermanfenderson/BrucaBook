@@ -7,14 +7,7 @@ import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 
 export const  STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
-export const ADDED_RIGA_BOLLA = 'ADDED_RIGA_BOLLA';
-export const DELETED_RIGA_BOLLA = 'DELETED_RIGA_BOLLA';
-export const CHANGED_RIGA_BOLLA = 'CHANGED_RIGA_BOLLA';
-export const SET_SELECTED_RIGA_BOLLA = 'SET_SELECTED_RIGA_BOLLA';
-export const TABLE_BOLLA_WILL_SCROLL = 'TABLE_BOLLA_WILL_SCROLL';
 
-export const CALCOLA_SCONTO_MAN = 'CALCOLA_SCONTO_MAN';
-export const CALCOLA_SCONTO_AUT = 'CALCOLA_SCONTO_AUT';
 export const OPEN_MODAL = 'OPEN_MODAL';
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 export const REQUEST_GIFS = 'REQUEST_GIFS';
@@ -28,15 +21,8 @@ export const RESET_STATUS = 'RESET_STATUS';
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = '&api_key=dc6zaTOxFJmzC';
 
-const config = {
- apiKey: "AIzaSyAfrGzYIIRlmtN50IiChv8raxSKve-a0Sc",
-    authDomain: "brucabook.firebaseapp.com",
-    databaseURL: "https://brucabook.firebaseio.com",
-    storageBucket: "brucabook.appspot.com",
-    messagingSenderId: "684965752152"
-};
 
-Firebase.initializeApp(config);
+
 
 
 
@@ -56,12 +42,6 @@ export function removeMeasure(measureName) {
 }
  
  
-export function tableBollaWillScroll(scroll) {
-  return {
-    type: TABLE_BOLLA_WILL_SCROLL,
-    scroll
-  }
-}
 
 
 
@@ -69,85 +49,12 @@ export function tableBollaWillScroll(scroll) {
 //Azioni per la gestione delle righe
 
 //Helper per il prefisso alla base dati...
-function prefissoNegozio(getState) 
+export function prefissoNegozio(getState) 
     {
       return(getState().status.catena + '/' + getState().status.libreria + '/'); 
     }
 
 
-export function aggiungiRigaBolla(bolla,valori) {
-//  const userUid = Firebase.auth().currentUser.uid;
-  //var nuovaRigaOrdine = { "ean":valori.ean, "titolo":valori.titolo, "autore":valori.autore, "prezzo":valori.prezzoUnitario, "copie":valori.pezzi, "totale":valori.prezzoTotale};
-  var nuovaRigaBolla = {...valori};
-  //nuovaRigaBolla['createdBy'] = Firebase.auth().currentUser.uid;
-  //nuovaRigaBolla['createdAt'] = Firebase.database.ServerValue.TIMESTAMP;
-  addCreatedStamp(nuovaRigaBolla);
-  
-  return function(dispatch,getState) {
-    dispatch(tableBollaWillScroll(true));    
-   
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla).push().set(nuovaRigaBolla).then(response => {
-    });
-  }
-}
-
-export function setSelectedRigaBolla(row) {
-  return {
-    type: SET_SELECTED_RIGA_BOLLA,
-    row
-  }  
-}
-
-export function clearForm(initialEmpty) {
-  return function(dispatch) {
-    dispatch(initializeForm('rigaBolla',initialEmpty,true));
-    dispatch(setSelectedRigaBolla(null));
-  }
-}
-
-export function deleteRigaBolla(bolla,id) {
-  return function(dispatch, getState) {
-    
-  Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/' +id).remove();
-    };
-  }
-
-
-export function addedRigaBolla(bolla) {
-  return function(dispatch, getState) {
-    
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/'  + bolla).on('child_added', snapshot => {
-      dispatch({
-        type: ADDED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
-
-export function deletedRigaBolla(bolla) {
-  return function(dispatch, getState) {
-    
-    
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla).on('child_removed', snapshot => {
-      dispatch({
-        type: DELETED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
-
-export function changedRigaBolla(bolla) {
-  return function(dispatch, getState) {
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla).on('child_changed', snapshot => {
-      dispatch({
-        type: CHANGED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
 
 
 export function requestGifs(term = null) {

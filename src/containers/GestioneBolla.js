@@ -2,11 +2,12 @@ import React from 'react';
 import Measure from 'react-measure';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as Actions from '../actions';
+import {storeMeasure} from '../actions';
+import * as Actions from '../actions/bolle';
 import {eanFocus, fillWithRow} from '../actions/rigaBolla'
 import {Row, Col} from 'react-bootstrap';
 
-import FormRigaBolla from './FormRigaBolla2';
+import FormRigaBolla from './FormRigaBolla';
 import TableBolla from '../components/TableBolla';
 import '../styles/app.css';
 const bolla = 1; //Arriva come prop da sopra
@@ -25,7 +26,7 @@ class GestioneBolla extends React.Component {
 	
   editRow(row)
          { 
-					 this.props.actions.setSelectedRigaBolla(row);
+					 this.props.actions.setSelectedRigaBolla(row.key);
 					 this.props.fillWithRowAction(row);
            this.props.eanFocusAction(); 
          }
@@ -59,7 +60,7 @@ class GestioneBolla extends React.Component {
     return (
 			<div>
      	<Measure onMeasure={(dimensions) => {
-          this.props.actions.storeMeasure('formBollaHeight',dimensions.height);
+          this.props.storeMeasureAction('formBollaHeight',dimensions.height);
           
         }}
       >
@@ -68,7 +69,7 @@ class GestioneBolla extends React.Component {
 				<img src="https://img.ibs.it/images/9788807032073_0_0_180_0.jpg"/>
  			</Col>
 		  <Col sm={9}>	
-      <FormRigaBolla/>
+      <FormRigaBolla selectedRigaBolla = {this.props.selectedRigaBolla}/>
 			</Col>
 			<Col sm={1}>
 				<Row> Copie: 23 </Row>
@@ -77,7 +78,14 @@ class GestioneBolla extends React.Component {
 		 </Col>
      </div>
 				</Measure>
-			<TableBolla shouldScroll={shouldScroll} willScroll={this.props.willScroll} scrollAction={this.props.actions.tableBollaWillScroll} data={this.props.righeBollaArray} height={tableHeight} dataFormat={ this.azioniFormatter } />
+			<TableBolla 
+				shouldScroll={shouldScroll} 
+				willScroll={this.props.willScroll} 
+				scrollAction={this.props.actions.tableBollaWillScroll} 
+				data={this.props.righeBollaArray} 
+				selectedRigaBolla = {this.props.selectedRigaBolla}
+				height={tableHeight} 
+				dataFormat={ this.azioniFormatter } />
 			</div>
       
      );
@@ -101,6 +109,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(Actions, dispatch),
+		storeMeasureAction: bindActionCreators(storeMeasure, dispatch),
 		eanFocusAction: bindActionCreators(eanFocus,dispatch),
 		fillWithRowAction: bindActionCreators(fillWithRow,dispatch)
   };

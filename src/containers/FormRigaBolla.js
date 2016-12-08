@@ -1,254 +1,292 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import {Row, Col} from 'react-bootstrap';
+import {Col, FormGroup, ControlLabel, FormControl, Checkbox, HelpBlock, Button, ButtonToolbar} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Form, Control, Errors, actions as ActionsForm} from 'react-redux-form';
+
 import { isValidEAN, generateEAN, getBookByEAN13} from '../helpers/ean';
  
-import * as Actions from '../actions';
-const initialEmpty = {'sconto1': 0, 'sconto2': 0, 'sconto3': 0, 'gratis': 0};   
+import * as Actions from '../actions/bolle';
+import * as ActionsRigaBolla from '../actions/rigaBolla'
 
-const validate = values => {
-  const errors = {};
-  if (!values.ean) {
-    errors.ean = "Inserisci il codice prodotto";
-  } else if (/[^0-9]+/i.test(values.ean)) {
-    errors.ean = 'NON è un numero'
-  }
-  
-  if (!((values.sconto1 >= 0) && (values.sconto1 < 100))) errors.sconto1 = "tra 0 e 100";
-  if (!((values.sconto2 >= 0) && (values.sconto2 < 100))) errors.sconto2 = "tra 0 e 100";
-  if (!((values.sconto3 >= 0) && (values.sconto3 < 100))) errors.sconto3 = "tra 0 e 100";
-  
- if (!(values.pezzi>0)) errors.pezzi = "Numero";
- if (!(values.gratis>=0)) errors.gratis = "Numero";
-  
-  return errors;
-};
-
-
-function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
-{  
-  return ((1 - sconto1/100) *((1 - sconto2 /100) *((1 - sconto1/100) * prezzoListino))).toFixed(2);      
-}
 
 
 class FormRigaBolla extends React.Component {
+EANerrorShow = false;  
 
-
-   getBookByCode = () => {
-       if (this.props.formState.values['ean']) 
-          {
-          var book = {};
-          var code = this.props.formState.values['ean'];
-          if ((code > 0) && (code.length < 12)) 
-              {
-              code = generateEAN(code); 
-              this.props.change('ean',code);
-              }
-          if ((code.length === 13) && (isValidEAN(code))) {
-              
-              book = getBookByEAN13(code);
-              if (book['titolo'])
-                {
-                 this.props.change('titolo',book.titolo);
-                this.props.change('autore',book.autore);
-                this.props.change('prezzoListino',book.prezzo);
-                this.props.change('pezzi',1);
-                if (!this.props.formState.values['manSconto']) 
-                     {
-                      var tmp = discountPrice(book.prezzo,this.props.formState.values['sconto1'],this.props.formState.values['sconto2'],this.props.formState.values['sconto3']);
-                      this.props.change(['prezzoUnitario'],tmp);
-                      this.props.change(['prezzoTotale'],tmp); 
-                     } 
-               else 
-                     {
-                     this.props.change('prezzoUnitario',book.prezzo);
-                     this.props.change('prezzoTotale',book.prezzo);
-                     }  
-                 this.pezziInput.focus();
-                 }
-               else 
-                  {
-                  this.props.change('ean',"");
-                  this.EANInput.focus();
-                  }
-            }
-          }  
-     
-  } 
-   
-  calculateDiscountPrice = (value, previousValue, allValues) => 
-{   var tmp = allValues.prezzzoUnitario;
-   if (!allValues.manSconto)
-        {
-        tmp = ((1 - allValues['sconto3']/100) *((1 - allValues['sconto2']/100) *((1 - allValues['sconto1']/100) * allValues['prezzoListino']))).toFixed(2);
-        this.props.change('prezzoUnitario',tmp);
-        }  
-    this.props.change('prezzoTotale',(allValues.pezzi * tmp).toFixed(2));
-   return value;                   
-   };                      
-   
-calculateTotal = (value, previousValue, allValues) => 
-{ 
-    this.props.change('prezzoTotale',(allValues.pezzi * allValues.prezzoUnitario).toFixed(2));
-    return value;
-};
-
-toggleSconto = (value) =>
-{
-  if (value === true) this.props.actions.toggleScontoMan();
-  if (value === false) this.props.actions.toggleScontoAut();
-  return value;
-  
-}
-  
-  onKeyPress = (event) =>
-  {
-    if (event.which === 13 /* Enter */) {
-      event.preventDefault();
-      this.getBookByCode();
-    }
-}
-  
- clearForm = () =>
- {
-   
- }
- 
-  handleFormSubmit = (values) => {
-   //Se arrivo qui ma non ho finito...
- //  this.props.eanInputRef.focus();
-    if (!values['manSconto']) values['manSconto'] = false;
-    if (values.pezzi > 0) {this.props.actions.aggiornaRigaBolla(1,values);}  //Controllo insufficiente...rischio di fare un casino...
-    else this.getBookByCode(values.ean,values.ean,values);
-    this.EANInput.focus();
-  };
-
-renderEANField = ({input, onBlur, label, type, disabled, meta: { touched, error, active } }) => 
-  {
-  return (
-    <fieldset className={`form-group ${touched && error ? 'has-error' : ''}`}>
-      <label className="control-label">{label}</label>
-      <div>
-        <input {...input}  ref={(input) => { this.props.setEANInputRef(input); this.EANInput = input; }} onKeyPress={this.onKeyPress} onBlur={onBlur} disabled={disabled} className="form-control" type={type} />
-        {touched && error && <div className="help-block">{error}</div>}
-      </div>
-    </fieldset>
-  );
-}  
-
-renderField = ({input, label, type, disabled,  meta: { touched, error, active } }) => 
-  {
-  return (
-    <fieldset className={`form-group ${touched && error ? 'has-error' : ''}`}>
-      <label className="control-label">{label}</label>
-      <div>
-        <input {...input}   disabled={disabled} className="form-control" type={type} />
-        {touched && error && <div className="help-block">{error}</div>}
-      </div>
-    </fieldset>
-  );
+updatePrice = (model,value) => {
+   return(dispatch) => {this.props.actionsRigaBolla.updatePriceFromDiscount(model,value,this.props.formRigaBolla);}
 }
 
-renderFieldPezzi = ({input, label, type, disabled,  meta: { touched, error, active } }) => 
-  {
-  return (
-    <fieldset className={`form-group ${touched && error ? 'has-error' : ''}`}>
-      <label className="control-label">{label}</label>
-      <div>
-        <input {...input}  ref={(input) => { this.pezziInput = input; }} disabled={disabled} className="form-control" type={type} />
-        {touched && error && <div className="help-block">{error}</div>}
-      </div>
-    </fieldset>
-  );
+updateTotalPriceFromPezzi = (model,value) => {
+  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPezzi(value,this.props.formRigaBolla);}
 }
 
-  renderAuthenticationError() {
-    if (this.props.authenticationError) {
-      return <div className="alert alert-danger">{ this.props.authenticationError }</div>;
-    }
-    return <div></div>;
+updateTotalPriceFromPrice = (model,value) => {
+  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPrice(value,this.props.formRigaBolla);}
+}
+
+toggleManSconto = (model,value) => {
+  return(dispatch) => {this.props.actionsRigaBolla.toggleManSconto(value,this.props.formRigaBolla);}
+}
+
+EANChange = (model,value) => {
+  return(dispatch) => 
+  {
+  this.props.actionsForm.change(model,value);
+  if (value.length == 13) {
+    this.props.actionsRigaBolla.processEAN(value,this.props.formRigaBolla);
   }
+  }
+}
 
-  
-  componentDidMount()
-     {
-       this.EANInput.focus();
+
+//Campo EAN gestisco diversamente
+EANonKeyDown = (event) =>
+  {   
+  if (event.which === 13) {
+      if (!this.props.formRigaBolla.ean.valid) /* Enter */ {
+          this.EANerrorShow = true;
+          event.preventDefault();
+          this.props.actionsRigaBolla.changeCodeToEAN(this.props.formRigaBolla);
+          }
+ 
      }
+  else  if (event.which != 9) this.props.actionsRigaBolla.staleCode(this.props.formRigaBolla); //Utente ha scritto ma non ha ancora battuto invio gestisco nella change se è lungo 13
+}
+
+handleSubmit = (values) => {
+  if (this.props.selectedRigaBolla) this.props.actions.aggiornaRigaBolla(1,values,this.props.selectedRigaBolla);
+  if (!this.props.selectedRigaBolla) this.props.actions.aggiungiRigaBolla(1,values);
+  this.cancelForm();
+}
+
+cancelForm = () => {
+  this.props.actionsForm.reset("form2.rigaBolla");
+  this.EANerrorShow = false;
+  this.props.actionsRigaBolla.staleCode(this.props.formRigaBolla);
+  this.props.actions.setSelectedRigaBolla(null);
+   this.props.actionsRigaBolla.eanFocus();
+}
+
+componentDidMount = () => {
+  this.props.actionsRigaBolla.staleCode(this.props.formRigaBolla);
+  this.props.actionsRigaBolla.eanFocus();
+}
 
   render() {
+    const { formRigaBolla} = this.props;
+    const toggleMan = formRigaBolla.manSconto.value;
+    const enableSubmitButton = this.props.formRigaBolla.$form.valid;
      return(
-           <form className="form-horizontal" onSubmit={this.props.handleSubmit(this.handleFormSubmit)}>
+           <Form model="form2.rigaBolla" autoComplete="off" className="form-horizontal" onSubmit={v => this.handleSubmit(v)}>
          
           <div className="form-group">
            <Col sm={3}>
-            <Field name="ean" disabled={false} component={this.renderEANField} className="form-control" type="text" label="EAN" onBlur={this.getBookByCode}/>
-          </Col>  
+             <FormGroup controlId="ean"  onKeyDown={this.EANonKeyDown} validationState={((this.EANerrorShow) && (!formRigaBolla.ean.valid)) ? "error" : null}>
+                   <ControlLabel>EAN: </ControlLabel>
+                    <Control.text model=".ean" component={FormControl}  changeAction={this.EANChange} />
+                    <HelpBlock>
+                    <Errors
+                         model=".ean"
+                         messages={{
+                            isValidCode: 'EAN o codice + INVIO',
+                            isValidEAN: 'EAN non valido',
+                            EANFound: 'EAN non trovato'
+                        }}
+                        show={this.EANerrorShow}
+                    />
+                    </HelpBlock>
+             </FormGroup>
+           </Col>  
            <Col sm={4}>
-            <Field name="titolo"  disabled={true} component={this.renderField} className="form-control" type="text" label="Titolo"/>
+             <FormGroup controlId="titolo" validationState={formRigaBolla.titolo.valid ? null : "error"}>
+                   <ControlLabel>Titolo: </ControlLabel>
+                    <Control.text model=".titolo" disabled component={FormControl}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".titolo"
+                         messages={{
+                            isRequired: 'Please provide an email address.',
+                            isEmail: 'Please provide an email address.',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>  
           </Col>  
            <Col sm={3}>
-            <Field name="autore" disabled={true} component={this.renderField} className="form-control" type="text" label="Autore"/>
-           </Col>
+             <FormGroup controlId="autore" validationState={formRigaBolla.autore.valid ? null : "error"}>
+                   <ControlLabel>Autore: </ControlLabel>
+                    <Control.text model=".autore" disabled component={FormControl}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".autore"
+                         messages={{
+                            isRequired: 'Please provide an email address.',
+                            isEmail: 'Please provide an email address.',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>   
+          </Col>
            <Col sm={2} >
-            <Field name="prezzoListino" disabled={true} component={this.renderField} className="form-control" type="text" label="Listino" normalize={this.calculateDiscountPrice}/>
-          </Col>  
-    
+             <FormGroup controlId="prezzoListino" validationState={formRigaBolla.prezzoListino.valid ? null : "error"}>
+                   <ControlLabel>Listino: </ControlLabel>
+                    <Control.text model=".prezzoListino" disabled component={FormControl} changeAction={this.updatePrice}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".prezzoListino"
+                         messages={{
+                            isRequired: 'Please provide an email address.',
+                            isEmail: 'Please provide an email address.',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
+           </Col>  
           </div>
           <div className="form-group">
            <Col sm={1}>
-            <Field name="sconto1" disabled={this.props.discountGroupDisabled} component={this.renderField} className="form-control" type="text" label="Sc.1" normalize={this.calculateDiscountPrice}/>
+             <FormGroup controlId="sconto1"  validationState={formRigaBolla.sconto1.valid ? null : "error"}>
+                   <ControlLabel>Sc.1: </ControlLabel>
+                    <Control.text model=".sconto1" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
+                    
+                    <HelpBlock>
+                    <Errors
+                         model=".sconto1"
+                         messages={{
+                            isPercentage: '(0-99)',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
           </Col>
           <Col sm={1}>
-            <Field name="sconto2" disabled={this.props.discountGroupDisabled} component={this.renderField} className="form-control" type="text" label="Sc.2" normalize={this.calculateDiscountPrice}/>
-          </Col>
+            <FormGroup controlId="sconto2" validationState={formRigaBolla.sconto2.valid ? null : "error"}>
+                   <ControlLabel>Sc.2: </ControlLabel>
+                    <Control.text model=".sconto2" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".sconto2"
+                         messages={{
+                            isPercentage: '(0-99)',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
+           </Col>
           <Col sm={1}>
-            <Field name="sconto3" disabled={this.props.discountGroupDisabled} component={this.renderField} className="form-control" type="text" label="Sc.3" normalize={this.calculateDiscountPrice}/>
+             <FormGroup controlId="sconto3" validationState={formRigaBolla.sconto3.valid ? null : "error"}>
+                   <ControlLabel>Sc.3: </ControlLabel>
+                    <Control.text model=".sconto3" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".sconto3"
+                         messages={{
+                            isPercentage: '(0-99)',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
           </Col>
            <Col sm={1}>
-            <Field name="manSconto" disabled={false} component={this.renderField} className="form-control" type="checkbox" label="Man." normalize={this.toggleSconto}/>
-          </Col>
+             <FormGroup controlId="manSconto">
+                   <ControlLabel>Man. </ControlLabel>
+                    <Control.checkbox model=".manSconto" changeAction={this.toggleManSconto} component={Checkbox}/>
+             </FormGroup>
+           </Col>
          
           <Col sm={2}>
-            <Field name="prezzoUnitario" disabled={!this.props.discountGroupDisabled} component={this.renderField} className="form-control" type="text" label="Prezzo" normalize={this.calculateTotal}/>
+             <FormGroup controlId="prezzoUnitario" validationState={formRigaBolla.prezzoUnitario.valid ? null : "error"}>
+                   <ControlLabel>Prezzo: </ControlLabel>
+                    <Control.text model=".prezzoUnitario" disabled={!toggleMan} changeAction={this.updateTotalPriceFromPrice} component={FormControl} />
+                    <HelpBlock>
+                    <Errors
+                         model=".sconto3"
+                         messages={{
+                            isNaN: 'Inserire importo',
+    
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
           </Col>  
   <Col sm={2}>
-            <Field name="pezzi" disabled={false}  component={this.renderFieldPezzi} className="form-control" type="text" label="Quantità"  normalize={this.calculateTotal}/>
-          </Col>  
+          <FormGroup controlId="pezzi" validationState={formRigaBolla.pezzi.valid ? null : "error"}>
+                   <ControlLabel>Quantità: </ControlLabel>
+                    <Control.text model=".pezzi"  changeAction={this.updateTotalPriceFromPezzi} component={FormControl}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".pezzi"
+                         messages={{
+                            isPositive: 'numero',
+               
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
+  </Col>  
   <Col sm={2}>
-            <Field name="gratis" disabled={false} component={this.renderField} className="form-control" type="text" label="Gratis"/>
-          </Col>  
+          <FormGroup controlId="gratis" validationState={formRigaBolla.gratis.valid ? null : "error"}>
+                   <ControlLabel>Gratis: </ControlLabel>
+                    <Control.text model=".gratis" component={FormControl}
+                    validators={{
+                        isNumber: (val) => val >= 0,
+                        }}
+                    validateOn={["change", "blur"]}   
+                    />
+                    <HelpBlock>
+                    <Errors
+                         model=".gratis"
+                         messages={{
+                            isNumber: 'numero',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>      
+  </Col>  
   <Col sm={2}>
-            <Field name="prezzoTotale" disabled={true} component={this.renderField} className="form-control" type="text" label="Totale"/>
+            <FormGroup controlId="prezzoTotale" validationState={formRigaBolla.prezzoTotale.valid ? null : "error"}>
+                   <ControlLabel>Totale: </ControlLabel>
+                    <Control.text model=".prezzoTotale" component={FormControl}/>
+                    <HelpBlock>
+                    <Errors
+                         model=".prezzoTotale"
+                         messages={{
+                            isRequired: 'Please provide an email address.',
+                            isEmail: 'Please provide an email address.',
+                        }}
+                    />
+                    </HelpBlock>
+             </FormGroup>     
           </Col>  
           </div>
-
-            <button action="submit" className="btn btn-primary">Inserisci</button>
-            <button onClick={this.clearForm()} className="btn btn-primary">Annulla</button>
-        
-          </form>
+             <ButtonToolbar>
+              <Button type="submit" disabled={!enableSubmitButton} bsStyle="primary" bsSize="large" active={!enableSubmitButton}>{(this.props.selectedRigaBolla) ? 'Modifica' :' Inserisci'} </Button>
+              <Button type="button" onClick={this.cancelForm} bsSize="large" active>Annulla</Button>
+             </ButtonToolbar>
+          </Form>
            
 
     );
   }
 }
+//<button action="submit" className="btn btn-primary">Inserisci</button>
+//  <Button action="submit" active={enableSubmitButton} disabled={!enableSubmitButton} className="btn btn-primary">Inserisci</Button>
 
 function mapStateToProps(state) {
   return {
     discountGroupDisabled: state.bolle.discountGroupDisabled,
-    formState: state.form.rigaBolla,
-      }
+    formRigaBolla: state.form2.forms.rigaBolla ,
+        }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(Actions, dispatch)
+    actions: bindActionCreators(Actions, dispatch),
+    actionsRigaBolla: bindActionCreators(ActionsRigaBolla, dispatch),
+    actionsForm: bindActionCreators(ActionsForm, dispatch)
   };
 }
 
-export default connect(mapStateToProps,  mapDispatchToProps)(reduxForm({
-  form: 'rigaBolla', 
-  validate,
-  initialValues: initialEmpty
-})(FormRigaBolla));
+export default connect(mapStateToProps, mapDispatchToProps)(FormRigaBolla);

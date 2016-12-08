@@ -4,6 +4,16 @@ import {persistStore, autoRehydrate} from 'redux-persist'
 
 
 import rootReducer from '../reducers';
+import Firebase from 'firebase';
+const config = {
+ apiKey: "AIzaSyAfrGzYIIRlmtN50IiChv8raxSKve-a0Sc",
+    authDomain: "brucabook.firebaseapp.com",
+    databaseURL: "https://brucabook.firebaseio.com",
+    storageBucket: "brucabook.appspot.com",
+    messagingSenderId: "684965752152"
+};
+
+Firebase.initializeApp(config);
 
 
 export default function configureStore(initialState) {
