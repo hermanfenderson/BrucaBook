@@ -17,9 +17,6 @@ function preparaRiga(riga)
       riga['gratis'] = parseInt(riga['gratis']) || 0;
       riga['prezzoUnitario'] = parseFloat(riga['prezzoUnitario']).toFixed(2);
      riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
-     
-    
-     
    }
 
 export function tableBollaWillScroll(scroll) {

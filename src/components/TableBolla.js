@@ -27,8 +27,7 @@ componentDidMount()
 				selected: []
   			};
 			if (this.props.selectedRigaBolla) {selectRow['selected'] = [this.props.selectedRigaBolla]};
-      console.log(selectRow['selected']);
-     return (
+    return (
 			   <BootstrapTable height={(this.props.shouldScroll) ? this.props.height : '100%'} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
           <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
 					 <TableHeaderColumn dataField='ean' filter={ { type: 'TextFilter', delay: 100 } }>EAN</TableHeaderColumn>

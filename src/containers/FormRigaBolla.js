@@ -35,6 +35,7 @@ EANChange = (model,value) => {
   {
   this.props.actionsForm.change(model,value);
   if (value.length == 13) {
+     this.EANerrorShow = true;
     this.props.actionsRigaBolla.processEAN(value,this.props.formRigaBolla);
   }
   }
@@ -91,7 +92,7 @@ componentDidMount = () => {
                          model=".ean"
                          messages={{
                             isValidCode: 'EAN o codice + INVIO',
-                            isValidEAN: 'EAN non valido',
+                            isValidEan: 'EAN non valido',
                             EANFound: 'EAN non trovato'
                         }}
                         show={this.EANerrorShow}

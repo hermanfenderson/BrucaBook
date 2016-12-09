@@ -9,15 +9,6 @@ function eanCheckDigit(s){
     return (10 - (result % 10)) % 10;
 }
 
-//Per ora è uno stub
-export function getBookByEAN13(ean13)
-{ 
-  const books = {"2000000000015": {"titolo": "I promessi sposi", "autore": "Alessandro Manzoni", "prezzo": "9.90"},
-       "2000000000022": {"titolo": "Pinocchio", "autore": "Collodi", "prezzo": "5.00"},
-       "2000000000039": {"titolo": "La fuga del cavallo morto", "autore": "Mauro Minenna", "prezzo": "5.90"}};  
-  if (books[ean13]) return books[ean13];
-  return null;
-}
 
 export function isValidEAN(code)
 { 

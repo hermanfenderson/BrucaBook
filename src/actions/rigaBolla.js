@@ -1,7 +1,7 @@
 //Azioni per la gestione del form rigaBolla
 import { actions } from 'react-redux-form';
-import { isValidEAN, generateEAN, getBookByEAN13} from '../helpers/ean';
-
+import { isValidEAN, generateEAN} from '../helpers/ean';
+import {searchCatalogItem} from './catalog';
 function isPercentage(value)
 {
   if ((value >=0) && (value < 100)) return true;
@@ -58,7 +58,7 @@ if (isValidEAN(value))
 else
   {
   return (dispatch) => {
-    dispatch(actions.setValidity(form.ean.model, {isValidCode: true, isValidEan: false, EANFound: true}));
+     dispatch(actions.setValidity(form.ean.model, {isValidCode: true, isValidEan: false, EANFound: true}));
     }
   }
 }
@@ -67,29 +67,29 @@ else
 
 export function getBookByEAN(value,form)
 {return (dispatch) => {
-  var book = getBookByEAN13(value);
- dispatch(storeBookInfo(book,form)); 
+ searchCatalogItem(generateEAN(form.ean.value)).then(
+             (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),form));}
+             )   
   }
 }
 
 export function storeBookInfo(book, form)
-{
-   return (dispatch) => {
+{  return (dispatch) => {
      if (book)
        {  
        dispatch(actions.change(form.titolo.model, book.titolo));
        dispatch(actions.change(form.autore.model, book.autore));
-       dispatch(actions.change(form.prezzoListino.model, book.prezzo));
+       dispatch(actions.change(form.prezzoListino.model, book.prezzoListino));
        dispatch(actions.change(form.pezzi.model, "1"));
        if (!form.manSconto.value)
-         { const discount = discountPrice(book.prezzo, form.sconto1.value, form.sconto2.value, form.sconto3.value);
+         { const discount = discountPrice(book.prezzoListino, form.sconto1.value, form.sconto2.value, form.sconto3.value);
            dispatch(actions.change(form.prezzoUnitario.model, discount));
            dispatch(actions.change(form.prezzoTotale.model, discount));
          }
        else 
          {
-           dispatch(actions.change(form.prezzoUnitario.model, book.prezzo));
-           dispatch(actions.change(form.prezzoTotale.model, book.prezzo));
+           dispatch(actions.change(form.prezzoUnitario.model, book.prezzoListino));
+           dispatch(actions.change(form.prezzoTotale.model, book.prezzoListino));
          }
        dispatch(actions.setValidity(form.ean.model, {isValidCode: true, isValidEan: true, EANFound: true}));
        dispatch(actions.focus(form.pezzi.model));
@@ -109,9 +109,10 @@ export function changeCodeToEAN(form)
   return (dispatch) => {
     if (form.ean.value > 0 && form.ean.value.length < 12) {
     dispatch(actions.setValidity(form.ean.model, {isValidCode: true, isValidEan: false, EANFound: true}));
-    dispatch(actions.change(form.ean.model, generateEAN(form.ean.value)));
-    var book = getBookByEAN13(generateEAN(form.ean.value));
-    dispatch(storeBookInfo(book,form)); 
+    dispatch(actions.change(form.ean.model, generateEAN(form.ean.value)));  
+    searchCatalogItem(generateEAN(form.ean.value)).then(
+             (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),form));}
+             )  
     }  
     else 
     {
