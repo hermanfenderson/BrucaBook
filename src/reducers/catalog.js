@@ -1,5 +1,5 @@
-import {UPDATE_CATALOG_ITEM} from '../actions/catalogo';
-import {SEARCH_CATALOG_ITEM } from '../actions/catalogo';
+import {UPDATE_CATALOG_ITEM} from '../actions/catalog';
+import {SEARCH_CATALOG_ITEM } from '../actions/catalog';
 
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 

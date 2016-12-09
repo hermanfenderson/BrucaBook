@@ -49,7 +49,7 @@ export function staleCode(form)
 
 export function processEAN(value, form)
 {
-if (isValidEAN(value))
+  if (isValidEAN(value))
   {
     return (dispatch) => {
    dispatch(getBookByEAN(value, form));  
@@ -67,7 +67,7 @@ else
 
 export function getBookByEAN(value,form)
 {return (dispatch) => {
- searchCatalogItem(generateEAN(form.ean.value)).then(
+ searchCatalogItem(value).then(
              (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),form));}
              )   
   }
@@ -81,6 +81,8 @@ export function storeBookInfo(book, form)
        dispatch(actions.change(form.autore.model, book.autore));
        dispatch(actions.change(form.prezzoListino.model, book.prezzoListino));
        dispatch(actions.change(form.pezzi.model, "1"));
+           dispatch(actions.change(form.gratis.model, "0"));
+     
        if (!form.manSconto.value)
          { const discount = discountPrice(book.prezzoListino, form.sconto1.value, form.sconto2.value, form.sconto3.value);
            dispatch(actions.change(form.prezzoUnitario.model, discount));

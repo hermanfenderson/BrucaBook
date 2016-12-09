@@ -3,8 +3,8 @@ import AuthReducer from './auth';
 import GifsReducer from './gifs';
 import MeasuresReducer from './measures';
 import { combineForms } from 'react-redux-form';
-
-
+import CatalogReducer from './catalog';
+import ItemCatalogReducer from './itemCatalog';
 import ModalReducer from './modal';
 import BolleReducer from './bolle';
 import StatusReducer from './status';
@@ -15,13 +15,14 @@ import { reducer as FormReducer } from 'redux-form';
 const rootReducer = combineReducers({
   auth: AuthReducer,
   bolle: BolleReducer,
+  catalog: CatalogReducer,
   form: FormReducer,
   gifs: GifsReducer,
   measures: MeasuresReducer,
   modal: ModalReducer,
   status: StatusReducer,
   form2: combineForms({
-    rigaBolla: RigaBollaReducer
+    rigaBolla: RigaBollaReducer, itemCatalog: ItemCatalogReducer
   }, 'form2')
 });
 

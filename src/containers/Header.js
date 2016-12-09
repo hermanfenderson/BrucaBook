@@ -20,6 +20,9 @@ class Header extends React.Component {
           <Link className="nav-link" to="/bolla">Gestione bolle</Link>
         </li>,
         <li className="nav-item" key={3}>
+          <Link className="nav-link" to="/itemCatalogo">Catalogo</Link>
+        </li>,
+        <li className="nav-item" key={4}>
           <a className="nav-link" href="#" onClick={() => this.handleSignout()}>Sign Out</a>
         </li>
       ]

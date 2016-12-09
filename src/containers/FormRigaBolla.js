@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Form, Control, Errors, actions as ActionsForm} from 'react-redux-form';
 
-import { isValidEAN, generateEAN, getBookByEAN13} from '../helpers/ean';
+import { isValidEAN, generateEAN} from '../helpers/ean';
  
 import * as Actions from '../actions/bolle';
 import * as ActionsRigaBolla from '../actions/rigaBolla'
@@ -104,45 +104,20 @@ componentDidMount = () => {
              <FormGroup controlId="titolo" validationState={formRigaBolla.titolo.valid ? null : "error"}>
                    <ControlLabel>Titolo: </ControlLabel>
                     <Control.text model=".titolo" disabled component={FormControl}/>
-                    <HelpBlock>
-                    <Errors
-                         model=".titolo"
-                         messages={{
-                            isRequired: 'Please provide an email address.',
-                            isEmail: 'Please provide an email address.',
-                        }}
-                    />
-                    </HelpBlock>
+                    
              </FormGroup>  
           </Col>  
            <Col sm={3}>
              <FormGroup controlId="autore" validationState={formRigaBolla.autore.valid ? null : "error"}>
                    <ControlLabel>Autore: </ControlLabel>
                     <Control.text model=".autore" disabled component={FormControl}/>
-                    <HelpBlock>
-                    <Errors
-                         model=".autore"
-                         messages={{
-                            isRequired: 'Please provide an email address.',
-                            isEmail: 'Please provide an email address.',
-                        }}
-                    />
-                    </HelpBlock>
+        
              </FormGroup>   
           </Col>
            <Col sm={2} >
              <FormGroup controlId="prezzoListino" validationState={formRigaBolla.prezzoListino.valid ? null : "error"}>
                    <ControlLabel>Listino: </ControlLabel>
                     <Control.text model=".prezzoListino" disabled component={FormControl} changeAction={this.updatePrice}/>
-                    <HelpBlock>
-                    <Errors
-                         model=".prezzoListino"
-                         messages={{
-                            isRequired: 'Please provide an email address.',
-                            isEmail: 'Please provide an email address.',
-                        }}
-                    />
-                    </HelpBlock>
              </FormGroup>     
            </Col>  
           </div>
@@ -158,6 +133,7 @@ componentDidMount = () => {
                          messages={{
                             isPercentage: '(0-99)',
                         }}
+                      
                     />
                     </HelpBlock>
              </FormGroup>     
@@ -203,7 +179,7 @@ componentDidMount = () => {
                     <Control.text model=".prezzoUnitario" disabled={!toggleMan} changeAction={this.updateTotalPriceFromPrice} component={FormControl} />
                     <HelpBlock>
                     <Errors
-                         model=".sconto3"
+                         model=".prezzoUnitario"
                          messages={{
                             isNaN: 'Inserire importo',
     
@@ -228,11 +204,11 @@ componentDidMount = () => {
              </FormGroup>     
   </Col>  
   <Col sm={2}>
-          <FormGroup controlId="gratis" validationState={formRigaBolla.gratis.valid ? null : "error"}>
+          <FormGroup controlId="gratis" validationState={((formRigaBolla.gratis.value.length === 0) || (formRigaBolla.gratis.valid)) ? null : "error"}>
                    <ControlLabel>Gratis: </ControlLabel>
                     <Control.text model=".gratis" component={FormControl}
                     validators={{
-                        isNumber: (val) => val >= 0,
+                        isNumber: (val) => ((val >= 0) && (Number.isInteger(parseFloat(val)))),
                         }}
                     validateOn={["change", "blur"]}   
                     />
@@ -242,6 +218,7 @@ componentDidMount = () => {
                          messages={{
                             isNumber: 'numero',
                         }}
+                    show={(formRigaBolla.gratis.value.length>0)}      
                     />
                     </HelpBlock>
              </FormGroup>      
