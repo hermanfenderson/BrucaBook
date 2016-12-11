@@ -1,7 +1,7 @@
 //Azioni per la gestione del form rigaBolla
 import { actions } from 'react-redux-form';
 import { isValidEAN, generateEAN} from '../helpers/ean';
-import {searchCatalogItem} from './catalog';
+import {searchCatalogItem, searchIBSItem, updateCatalogItem} from './catalog';
 function isPercentage(value)
 {
   if ((value >=0) && (value < 100)) return true;
@@ -65,11 +65,30 @@ else
 
 
 
+
 export function getBookByEAN(value,form)
 {return (dispatch) => {
- searchCatalogItem(value).then(
-             (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),form));}
+ var promise = dispatch(searchCatalogItem(value));
+  console.log(promise);
+   promise.then(
+             (payload) => {
+                          var book = payload.val();
+                          if (!book) {
+                          //se non lo ho in memoria...lo cerco su IBS  
+                              dispatch(searchIBSItem(value, (response, ean) => {
+                                                            //Callback function... richiamata quando torna la ricerca...
+                                                            console.log("qui");
+                                                            console.log(JSON.parse(response.text));
+                                                            var book = JSON.parse(response.text); 
+                                                            book['ean']=value; 
+                                                            dispatch(storeBookInfo(book,form));  
+                                                            dispatch(updateCatalogItem(book));  
+                                                            }))  
+                                      } 
+                          else dispatch(storeBookInfo(book,form));
+                          }
              )   
+ 
   }
 }
 
@@ -112,8 +131,8 @@ export function changeCodeToEAN(form)
     if (form.ean.value > 0 && form.ean.value.length < 12) {
     dispatch(actions.setValidity(form.ean.model, {isValidCode: true, isValidEan: false, EANFound: true}));
     dispatch(actions.change(form.ean.model, generateEAN(form.ean.value)));  
-    searchCatalogItem(generateEAN(form.ean.value)).then(
-             (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),form));}
+    dispatch(searchCatalogItem(generateEAN(form.ean.value))).then(
+           (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),form));}
              )  
     }  
     else 
