@@ -15,19 +15,19 @@ class FormRigaBolla extends React.Component {
 EANerrorShow = false;  
 
 updatePrice = (model,value) => {
-   return(dispatch) => {this.props.actionsRigaBolla.updatePriceFromDiscount(model,value,this.props.formRigaBolla);}
+   return(dispatch) => {this.props.actionsRigaBolla.updatePriceFromDiscount(model,value,this.props.values);}
 }
 
 updateTotalPriceFromPezzi = (model,value) => {
-  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPezzi(value,this.props.formRigaBolla);}
+  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPezzi(value,this.props.values);}
 }
 
 updateTotalPriceFromPrice = (model,value) => {
-  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPrice(value,this.props.formRigaBolla);}
+  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPrice(value,this.props.values);}
 }
 
 toggleManSconto = (model,value) => {
-  return(dispatch) => {this.props.actionsRigaBolla.toggleManSconto(value,this.props.formRigaBolla);}
+  return(dispatch) => {this.props.actionsRigaBolla.toggleManSconto(value,this.props.values);}
 }
 
 EANChange = (model,value) => {
@@ -36,7 +36,7 @@ EANChange = (model,value) => {
   this.props.actionsForm.change(model,value);
   if (value.length == 13) {
      this.EANerrorShow = true;
-    this.props.actionsRigaBolla.processEAN(value,this.props.formRigaBolla);
+    this.props.actionsRigaBolla.processEAN(value,this.props.values);
   }
   }
 }
@@ -46,14 +46,14 @@ EANChange = (model,value) => {
 EANonKeyDown = (event) =>
   {   
   if (event.which === 13) {
-      if (!this.props.formRigaBolla.ean.valid) /* Enter */ {
+      if (!this.props.form.ean.valid) /* Enter */ {
           this.EANerrorShow = true;
           event.preventDefault();
-          this.props.actionsRigaBolla.changeCodeToEAN(this.props.formRigaBolla);
+          this.props.actionsRigaBolla.changeCodeToEAN(this.props.values);
           }
  
      }
-  else  if (event.which != 9) this.props.actionsRigaBolla.staleCode(this.props.formRigaBolla); //Utente ha scritto ma non ha ancora battuto invio gestisco nella change se è lungo 13
+  else  if (event.which != 9) this.props.actionsRigaBolla.staleCode(); //Utente ha scritto ma non ha ancora battuto invio gestisco nella change se è lungo 13
 }
 
 handleSubmit = (values) => {
@@ -65,26 +65,26 @@ handleSubmit = (values) => {
 cancelForm = () => {
   this.props.actionsForm.reset("form2.rigaBolla");
   this.EANerrorShow = false;
-  this.props.actionsRigaBolla.staleCode(this.props.formRigaBolla);
+  this.props.actionsRigaBolla.staleCode();
   this.props.actions.setSelectedRigaBolla(null);
    this.props.actionsRigaBolla.eanFocus();
 }
 
 componentDidMount = () => {
-  this.props.actionsRigaBolla.staleCode(this.props.formRigaBolla);
+  this.props.actionsRigaBolla.staleCode();
   this.props.actionsRigaBolla.eanFocus();
 }
 
   render() {
-    const { formRigaBolla} = this.props;
-    const toggleMan = formRigaBolla.manSconto.value;
-    const enableSubmitButton = this.props.formRigaBolla.$form.valid;
+    const { form,values} = this.props;
+    const toggleMan = values.manSconto;
+    const enableSubmitButton = form.$form.valid;
      return(
            <Form model="form2.rigaBolla" autoComplete="off" className="form-horizontal" onSubmit={v => this.handleSubmit(v)}>
          
           <div className="form-group">
            <Col sm={3}>
-             <FormGroup controlId="ean"  onKeyDown={this.EANonKeyDown} validationState={((this.EANerrorShow) && (!formRigaBolla.ean.valid)) ? "error" : null}>
+             <FormGroup controlId="ean"  onKeyDown={this.EANonKeyDown} validationState={((this.EANerrorShow) && (!form.ean.valid)) ? "error" : null}>
                    <ControlLabel>EAN: </ControlLabel>
                     <Control.text model=".ean" component={FormControl}  changeAction={this.EANChange} />
                     <HelpBlock>
@@ -101,21 +101,21 @@ componentDidMount = () => {
              </FormGroup>
            </Col>  
            <Col sm={4}>
-             <FormGroup controlId="titolo" validationState={formRigaBolla.titolo.valid ? null : "error"}>
+             <FormGroup controlId="titolo" validationState={form.titolo.valid ? null : "error"}>
                    <ControlLabel>Titolo: </ControlLabel>
                     <Control.text model=".titolo" disabled component={FormControl}/>
                     
              </FormGroup>  
           </Col>  
            <Col sm={3}>
-             <FormGroup controlId="autore" validationState={formRigaBolla.autore.valid ? null : "error"}>
+             <FormGroup controlId="autore" validationState={form.autore.valid ? null : "error"}>
                    <ControlLabel>Autore: </ControlLabel>
                     <Control.text model=".autore" disabled component={FormControl}/>
         
              </FormGroup>   
           </Col>
            <Col sm={2} >
-             <FormGroup controlId="prezzoListino" validationState={formRigaBolla.prezzoListino.valid ? null : "error"}>
+             <FormGroup controlId="prezzoListino" validationState={form.prezzoListino.valid ? null : "error"}>
                    <ControlLabel>Listino: </ControlLabel>
                     <Control.text model=".prezzoListino" disabled component={FormControl} changeAction={this.updatePrice}/>
              </FormGroup>     
@@ -123,7 +123,7 @@ componentDidMount = () => {
           </div>
           <div className="form-group">
            <Col sm={1}>
-             <FormGroup controlId="sconto1"  validationState={formRigaBolla.sconto1.valid ? null : "error"}>
+             <FormGroup controlId="sconto1"  validationState={form.sconto1.valid ? null : "error"}>
                    <ControlLabel>Sc.1: </ControlLabel>
                     <Control.text model=".sconto1" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
                     
@@ -139,7 +139,7 @@ componentDidMount = () => {
              </FormGroup>     
           </Col>
           <Col sm={1}>
-            <FormGroup controlId="sconto2" validationState={formRigaBolla.sconto2.valid ? null : "error"}>
+            <FormGroup controlId="sconto2" validationState={form.sconto2.valid ? null : "error"}>
                    <ControlLabel>Sc.2: </ControlLabel>
                     <Control.text model=".sconto2" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
                     <HelpBlock>
@@ -153,7 +153,7 @@ componentDidMount = () => {
              </FormGroup>     
            </Col>
           <Col sm={1}>
-             <FormGroup controlId="sconto3" validationState={formRigaBolla.sconto3.valid ? null : "error"}>
+             <FormGroup controlId="sconto3" validationState={form.sconto3.valid ? null : "error"}>
                    <ControlLabel>Sc.3: </ControlLabel>
                     <Control.text model=".sconto3" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
                     <HelpBlock>
@@ -174,7 +174,7 @@ componentDidMount = () => {
            </Col>
          
           <Col sm={2}>
-             <FormGroup controlId="prezzoUnitario" validationState={formRigaBolla.prezzoUnitario.valid ? null : "error"}>
+             <FormGroup controlId="prezzoUnitario" validationState={form.prezzoUnitario.valid ? null : "error"}>
                    <ControlLabel>Prezzo: </ControlLabel>
                     <Control.text model=".prezzoUnitario" disabled={!toggleMan} changeAction={this.updateTotalPriceFromPrice} component={FormControl} />
                     <HelpBlock>
@@ -189,7 +189,7 @@ componentDidMount = () => {
              </FormGroup>     
           </Col>  
   <Col sm={2}>
-          <FormGroup controlId="pezzi" validationState={formRigaBolla.pezzi.valid ? null : "error"}>
+          <FormGroup controlId="pezzi" validationState={form.pezzi.valid ? null : "error"}>
                    <ControlLabel>Quantità: </ControlLabel>
                     <Control.text model=".pezzi"  changeAction={this.updateTotalPriceFromPezzi} component={FormControl}/>
                     <HelpBlock>
@@ -204,7 +204,7 @@ componentDidMount = () => {
              </FormGroup>     
   </Col>  
   <Col sm={2}>
-          <FormGroup controlId="gratis" validationState={((formRigaBolla.gratis.value.length === 0) || (formRigaBolla.gratis.valid)) ? null : "error"}>
+          <FormGroup controlId="gratis" validationState={(form.gratis.valid) ? null : "error"}>
                    <ControlLabel>Gratis: </ControlLabel>
                     <Control.text model=".gratis" component={FormControl}
                     validators={{
@@ -218,13 +218,13 @@ componentDidMount = () => {
                          messages={{
                             isNumber: 'numero',
                         }}
-                    show={(formRigaBolla.gratis.value.length>0)}      
+                    show={(values.gratis.length>0)}      
                     />
                     </HelpBlock>
              </FormGroup>      
   </Col>  
   <Col sm={2}>
-            <FormGroup controlId="prezzoTotale" validationState={formRigaBolla.prezzoTotale.valid ? null : "error"}>
+            <FormGroup controlId="prezzoTotale" validationState={form.prezzoTotale.valid ? null : "error"}>
                    <ControlLabel>Totale: </ControlLabel>
                     <Control.text model=".prezzoTotale" component={FormControl}/>
                     <HelpBlock>
@@ -249,13 +249,12 @@ componentDidMount = () => {
     );
   }
 }
-//<button action="submit" className="btn btn-primary">Inserisci</button>
-//  <Button action="submit" active={enableSubmitButton} disabled={!enableSubmitButton} className="btn btn-primary">Inserisci</Button>
 
 function mapStateToProps(state) {
   return {
     discountGroupDisabled: state.bolle.discountGroupDisabled,
-    formRigaBolla: state.form2.forms.rigaBolla ,
+    form: state.form2.forms.rigaBolla ,
+    values: state.form2.rigaBolla
         }
 }
 
