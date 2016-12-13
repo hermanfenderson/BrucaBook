@@ -47,7 +47,7 @@ export function searchIBSItem(ean, callback)
           console.log(ean);
           dispatch(setStatus(SEARCH,"Ricerca in IBS"));
           dispatch(setCatalogEAN(ean));
-          request.get('http://www.minenna.it/test.php?ean='+ean).then(
+          request.get('http://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
                   (response, ean) => {
                                 console.log(response.text);
                                 dispatch(setStatus(OK,"Ricerca in IBS terminata"));
@@ -67,7 +67,7 @@ export function searchCatalogItem(ean)
       var promise = new Promise( function (resolve, reject) {
           Firebase.database().ref('catalogo/'+ean).once('value').then(
                  (payload) => {
-                       if (payload.val) dispatch(setStatus(OK,"Ricerca OK in catalogo"));
+                       if (payload.val()) dispatch(setStatus(OK,"Ricerca OK in catalogo"));
                        else dispatch(setStatus(FAIL,"Ricerca fallita in catalogo"));
                        resolve(payload);}                
                  )})        
