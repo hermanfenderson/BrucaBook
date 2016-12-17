@@ -21,6 +21,7 @@ class GestioneBolla extends React.Component {
   }
 	
 
+
  
 	
 	
@@ -66,7 +67,7 @@ class GestioneBolla extends React.Component {
       >
 			<div className="container">
        <Col sm={2}>
-				<img src="https://img.ibs.it/images/9788807032073_0_0_180_0.jpg"/>
+				<img src={this.props.activeImgUrl}/>
  			</Col>
 		  <Col sm={9}>	
       <FormRigaBolla selectedRigaBolla = {this.props.selectedRigaBolla}/>
@@ -101,7 +102,9 @@ function mapStateToProps(state) {
 		 righeBollaArray: state.bolle.righeBollaArray,
   	selectedRigaBolla: state.bolle.selectedRigaBolla,
 		measures: state.measures.measures,
-		willScroll: state.bolle.tableBollaWillScroll
+		willScroll: state.bolle.tableBollaWillScroll,
+		catalog: state.catalog, //Mi consente di vedere in che condizione è la ricerca...e saperne il risultato
+		activeImgUrl: state.form2.rigaBolla.imgUrl
     
      };
 }

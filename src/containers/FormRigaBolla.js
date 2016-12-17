@@ -67,6 +67,7 @@ cancelForm = () => {
   this.EANerrorShow = false;
   this.props.actionsRigaBolla.staleCode();
   this.props.actions.setSelectedRigaBolla(null);
+  this.props.actionsRigaBolla.setImgUrl('');
    this.props.actionsRigaBolla.eanFocus();
 }
 
@@ -204,7 +205,7 @@ componentDidMount = () => {
              </FormGroup>     
   </Col>  
   <Col sm={2}>
-          <FormGroup controlId="gratis" validationState={(form.gratis.valid) ? null : "error"}>
+          <FormGroup controlId="gratis" validationState={((values.gratis.length==0) || (form.gratis.valid)) ? null : "error"}>
                    <ControlLabel>Gratis: </ControlLabel>
                     <Control.text model=".gratis" component={FormControl}
                     validators={{
@@ -254,8 +255,8 @@ function mapStateToProps(state) {
   return {
     discountGroupDisabled: state.bolle.discountGroupDisabled,
     form: state.form2.forms.rigaBolla ,
-    values: state.form2.rigaBolla
-        }
+    values: state.form2.rigaBolla,
+         }
 }
 
 function mapDispatchToProps(dispatch) {

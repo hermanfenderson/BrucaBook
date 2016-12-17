@@ -1,4 +1,5 @@
-import { OPEN_MODAL, CLOSE_MODAL } from '../actions';
+import {SET_IMG_URL} from '../actions/rigaBolla'
+
 
 const initialState =  {
  ean: '',
@@ -12,11 +13,17 @@ const initialState =  {
  prezzoUnitario: '',
  pezzi: '',
  gratis: '',
- prezzoTotale: '' 
+ prezzoTotale: '',
+ imgUrl: ''
  };
 
 export default function rigaBolla(state = initialState, action) {
   switch(action.type) {
+  	case SET_IMG_URL:
+     	return {
+     		...state, imgUrl: action.imgUrl
+     	};
+     
     default:
       return state;
   }

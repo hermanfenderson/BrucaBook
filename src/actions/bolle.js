@@ -19,6 +19,8 @@ function preparaRiga(riga)
      riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
    }
 
+
+
 export function tableBollaWillScroll(scroll) {
   return {
     type: TABLE_BOLLA_WILL_SCROLL,

@@ -1,7 +1,11 @@
+export const SET_IMG_URL = 'SET_IMG_URL';
+
+
 //Azioni per la gestione del form rigaBolla
 import { actions } from 'react-redux-form';
 import { isValidEAN, generateEAN} from '../helpers/ean';
-import {searchCatalogItem, searchIBSItem, updateCatalogItem} from './catalog';
+import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus} from './catalog';
+
 function isPercentage(value)
 {
   if ((value >=0) && (value < 100)) return true;
@@ -12,6 +16,14 @@ function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
 {  
   return ((1 - sconto1/100) *((1 - sconto2 /100) *((1 - sconto3/100) * prezzoListino))).toFixed(2);    
 }  
+
+export function setImgUrl(imgUrl)
+{
+	return {
+		type: SET_IMG_URL,
+		imgUrl
+	}
+}
 
 export function eanFocus() {
   return function(dispatch) {
@@ -34,7 +46,7 @@ export function fillWithRow(row) {
     dispatch(actions.change('form2.rigaBolla.gratis', row.gratis));
     dispatch(actions.change('form2.rigaBolla.prezzoTotale', row.prezzoTotale));
     dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: true, EANFound: true}));
-  
+    dispatch(setImgUrl(row.imgUrl));
     
   }
 }
@@ -75,17 +87,19 @@ export function getBookByEAN(value,formValue)
                           var book = payload.val();
                           if (!book) {
                           //se non lo ho in memoria...lo cerco su IBS  
-                              dispatch(searchIBSItem(value, (response, ean) => {
-                                                            //Callback function... richiamata quando torna la ricerca...
-                                                            console.log("qui");
-                                                            console.log(JSON.parse(response.text));
-                                                            var book = JSON.parse(response.text); 
+                              dispatch(searchIBSItem(value)).then( (book, ean) => {
                                                             book['ean']=value; 
                                                             dispatch(storeBookInfo(book,formValue));  
                                                             dispatch(updateCatalogItem(book));  
-                                                            }))  
+                                                                 dispatch(setStatus("IDLE","")); //me ne fotto della const
+ 
+                                                            })  
                                       } 
-                          else dispatch(storeBookInfo(book,formValue));
+                          else 
+                              {
+                              	dispatch(storeBookInfo(book,formValue));
+                              	     dispatch(setStatus("IDLE","")); //me ne fotto della const
+                              }
                           }
              )   
  
@@ -97,6 +111,7 @@ export function storeBookInfo(book,formValue)
      if (book)
        {  
 console.log(formValue);
+       dispatch(setImgUrl(book.imgUrl));
        dispatch(actions.change('form2.rigaBolla.titolo', book.titolo));
        dispatch(actions.change('form2.rigaBolla.autore', book.autore));
        dispatch(actions.change('form2.rigaBolla.prezzoListino', book.prezzoListino));
@@ -124,6 +139,7 @@ console.log(formValue);
        dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: true, EANFound: false}));
        }
    }
+ 
 }
 
 export function changeCodeToEAN(formValues)

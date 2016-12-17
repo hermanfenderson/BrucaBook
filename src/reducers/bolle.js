@@ -3,14 +3,13 @@ import {DELETED_RIGA_BOLLA } from '../actions/bolle';
 import {CHANGED_RIGA_BOLLA } from '../actions/bolle';
 import {SET_SELECTED_RIGA_BOLLA } from '../actions/bolle';
 import {TABLE_BOLLA_WILL_SCROLL } from '../actions/bolle';
-
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 
 const initialState =  {
   righeBollaArray: [],
   righeBollaArrayIndex: {},
   selectedRigaBolla: null,
-  tableBollaWillScroll: false 
+   tableBollaWillScroll: false 
 };
 
 export default function bolle(state = initialState, action) {
@@ -34,7 +33,8 @@ export default function bolle(state = initialState, action) {
        return {
         ...state,tableBollaWillScroll: action.scroll
       }; 
-     
+      
+    
       
        
     

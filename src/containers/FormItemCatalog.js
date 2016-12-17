@@ -19,7 +19,7 @@ EANonKeyPress = (event) =>
  
   }
  
-
+ 
 render() {
   const { formItemCatalog} = this.props;
 	const enableSubmitButton = this.props.formItemCatalog.$form.valid;

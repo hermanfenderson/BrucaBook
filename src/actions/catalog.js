@@ -41,22 +41,23 @@ export function setCatalogEAN(ean)
   })
 }
 
-export function searchIBSItem(ean, callback)
+export function searchIBSItem(ean)
 {
   return function(dispatch) {
-          console.log(ean);
           dispatch(setStatus(SEARCH,"Ricerca in IBS"));
           dispatch(setCatalogEAN(ean));
-          request.get('http://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
+          var promise = new Promise( function (resolve, reject) {
+	  request.get('http://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
                   (response, ean) => {
-                                console.log(response.text);
+                                var book = JSON.parse(response.text);
                                 dispatch(setStatus(OK,"Ricerca in IBS terminata"));
-                                dispatch(setCatalogItem(JSON.parse(response.text)));
-                                callback(response, ean);
+                                dispatch(setCatalogItem(book));
+                                resolve(book, ean);
                              }
                   )
-          }
-  
+          })
+	  return promise;   
+ }
 }
 
 
