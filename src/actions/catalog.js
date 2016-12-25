@@ -47,7 +47,7 @@ export function searchIBSItem(ean)
           dispatch(setStatus(SEARCH,"Ricerca in IBS"));
           dispatch(setCatalogEAN(ean));
           var promise = new Promise( function (resolve, reject) {
-	  request.get('http://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
+	  request.get('https://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
                   (response, ean) => {
                                 var book = JSON.parse(response.text);
                                 dispatch(setStatus(OK,"Ricerca in IBS terminata"));

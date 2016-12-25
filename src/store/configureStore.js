@@ -5,6 +5,9 @@ import {persistStore, autoRehydrate} from 'redux-persist'
 
 import rootReducer from '../reducers';
 import Firebase from 'firebase';
+
+var persistor;
+
 const config = {
  apiKey: "AIzaSyAfrGzYIIRlmtN50IiChv8raxSKve-a0Sc",
     authDomain: "brucabook.firebaseapp.com",
@@ -15,8 +18,13 @@ const config = {
 
 Firebase.initializeApp(config);
 
+export function purgeLocalStorage()
+{
+	console.log("sono qui");
+	persistor.purge();
+}
 
-export default function configureStore(initialState) {
+export function configureStore(initialState) {
   const store = createStore(
     rootReducer,
     initialState,
@@ -36,6 +44,7 @@ export default function configureStore(initialState) {
   }
 
  // store.dispatch(Actions.verifyAuth()); Probabilmente qui non serve più
-  persistStore(store,{whitelist: ['status']}); //Stato dell'app per bootstrap in caso di refresh
+  persistor = persistStore(store,{whitelist: ['status']}); //Stato dell'app per bootstrap in caso di refresh
   return store;
 }
+

@@ -5,6 +5,7 @@ import { reset as resetForm, initialize as initializeForm} from 'redux-form';
 
 import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 
+import { purgeLocalStorage } from '../store/configureStore'; //Lo uso per fare reset dello stato persistito nel local store al logout
 export const  STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
 
@@ -16,7 +17,6 @@ export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_INFO_RECEIVED = 'AUTH_INFO_RECEIVED';
 export const AUTH_USER = 'AUTH_USER';
-export const RESET_STATUS = 'RESET_STATUS';
 
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = '&api_key=dc6zaTOxFJmzC';
@@ -140,8 +140,8 @@ export function signInUser(credentials) {
 
 export function signOutUser() {
   return function(dispatch) {
-  browserHistory.push('/');
-  dispatch(resetStatus());
+  //browserHistory.push('/');
+ purgeLocalStorage();
   dispatch(finalizeSignOut());
  } 
 }
@@ -154,13 +154,7 @@ export function finalizeSignOut()
 }
 
 
-export function resetStatus()
-  {
-  return {
-  type: RESET_STATUS
-  }  
-}
-  
+
 
 export function verifyAuth() {
   return function (dispatch) {

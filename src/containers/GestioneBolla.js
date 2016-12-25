@@ -10,16 +10,22 @@ import {Row, Col} from 'react-bootstrap';
 import FormRigaBolla from './FormRigaBolla';
 import TableBolla from '../components/TableBolla';
 import '../styles/app.css';
-const bolla = 1; //Arriva come prop da sopra
+var bolla = null //Viene passsato come parametro
 
 class GestioneBolla extends React.Component {
-  
 	componentDidMount() {
+    bolla = this.props.params.id; //Arriva come prop da sopra
+
      this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
+    this.props.actions.totaliChanged(bolla);
 		this.props.actions.changedRigaBolla(bolla);	
   }
 	
+	componentWillUnmount() {
+		this.props.actions.resetBolla();
+		
+	}
 
 
  
@@ -67,15 +73,15 @@ class GestioneBolla extends React.Component {
       >
 			<div className="container">
        <Col sm={2}>
-				<img src={this.props.activeImgUrl}/>
+				<img src={this.props.activeImgUrl} height="90%" width="90%"/>
  			</Col>
 		  <Col sm={9}>	
       <FormRigaBolla selectedRigaBolla = {this.props.selectedRigaBolla}/>
 			</Col>
 			<Col sm={1}>
-				<Row> Copie: 23 </Row>
-				<Row> Gratis: 12 </Row>
-				<Row> Totale: 323,70 </Row>
+				<Row> Copie: {this.props.totali.pezzi} </Row>
+				<Row> Gratis:  {this.props.totali.gratis} </Row>
+				<Row> Totale: {this.props.totali.prezzoTotale} </Row>
 		 </Col>
      </div>
 				</Measure>
@@ -101,6 +107,7 @@ function mapStateToProps(state) {
     authenticated: state.auth.authenticated,
 		 righeBollaArray: state.bolle.righeBollaArray,
   	selectedRigaBolla: state.bolle.selectedRigaBolla,
+	        totali: state.bolle.totali,
 		measures: state.measures.measures,
 		willScroll: state.bolle.tableBollaWillScroll,
 		catalog: state.catalog, //Mi consente di vedere in che condizione è la ricerca...e saperne il risultato

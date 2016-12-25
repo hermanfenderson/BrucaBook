@@ -14,7 +14,7 @@ import RequireAuth from './containers/RequireAuth';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
+import { configureStore } from './store/configureStore';
 
 const store = configureStore();
 
@@ -26,7 +26,7 @@ ReactDOM.render(
         <Route path="signup" component={Signup} />
         <Route path="login" component={Login} />
         <Route path="favorites" component={RequireAuth(Favorites)} />
-        <Route path="bolla" component={RequireAuth(GestioneBolla)} />
+        <Route path="bolla/:id" component={RequireAuth(GestioneBolla)} />
         <Route path="itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
       </Route>
     </Router>

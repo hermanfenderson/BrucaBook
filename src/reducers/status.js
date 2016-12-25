@@ -8,11 +8,6 @@ const initialState =  {
 
 export default function status(state = initialState, action) {
   switch (action.type) {
-    case RESET_STATUS:
-      return {
-        catena: null,
-        libreria: null
-      }
     default:
       return state;
   }

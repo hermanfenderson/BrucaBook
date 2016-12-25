@@ -17,7 +17,7 @@ class Header extends React.Component {
           <Link className="nav-link" to="/favorites">My Favorites</Link>
         </li>,
         <li className="nav-item" key={2}>
-          <Link className="nav-link" to="/bolla">Gestione bolle</Link>
+          <Link className="nav-link" to="/bolla/1">Gestione bolle</Link>
         </li>,
         <li className="nav-item" key={3}>
           <Link className="nav-link" to="/itemCatalogo">Catalogo</Link>

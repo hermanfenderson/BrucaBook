@@ -57,8 +57,12 @@ EANonKeyDown = (event) =>
 }
 
 handleSubmit = (values) => {
-  if (this.props.selectedRigaBolla) this.props.actions.aggiornaRigaBolla(1,values,this.props.selectedRigaBolla);
-  if (!this.props.selectedRigaBolla) this.props.actions.aggiungiRigaBolla(1,values);
+//Serve imgUrl perchè non è esplicitata nel form
+ var valuesImg = {...values};
+ valuesImg['imgUrl'] = '';
+ if (this.props.values.imgUrl) valuesImg['imgUrl'] = this.props.values.imgUrl;
+  if (this.props.selectedRigaBolla) this.props.actions.aggiornaRigaBolla(1,valuesImg,this.props.selectedRigaBolla);
+  if (!this.props.selectedRigaBolla) this.props.actions.aggiungiRigaBolla(1,valuesImg);
   this.cancelForm();
 }
 
@@ -88,6 +92,7 @@ componentDidMount = () => {
              <FormGroup controlId="ean"  onKeyDown={this.EANonKeyDown} validationState={((this.EANerrorShow) && (!form.ean.valid)) ? "error" : null}>
                    <ControlLabel>EAN: </ControlLabel>
                     <Control.text model=".ean" component={FormControl}  changeAction={this.EANChange} />
+                   
                     <HelpBlock>
                     <Errors
                          model=".ean"
