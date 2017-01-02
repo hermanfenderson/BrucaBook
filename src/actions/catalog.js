@@ -1,5 +1,7 @@
 import Firebase from 'firebase';
 import request from 'superagent';
+import { actions } from 'react-redux-form';
+
 
 export const UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM';
 export const SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM';
@@ -65,17 +67,30 @@ export function searchCatalogItem(ean)
   { 
   return function(dispatch) {
       dispatch(setStatus(SEARCH,"Ricerca in catalogo"));
+      dispatch(setCatalogEAN(ean));
       var promise = new Promise( function (resolve, reject) {
           Firebase.database().ref('catalogo/'+ean).once('value').then(
                  (payload) => {
-                       if (payload.val()) dispatch(setStatus(OK,"Ricerca OK in catalogo"));
+                       if (payload.val()) 
+                    		{dispatch(setStatus(OK,"Ricerca OK in catalogo"));
+                    		dispatch(setCatalogItem(payload.val()));
+                    		}
                        else dispatch(setStatus(FAIL,"Ricerca fallita in catalogo"));
                        resolve(payload);}                
                  )})        
           return promise;
   }       
 }
-                                
+
+export function fillFormWithItem(ean,row)
+{ return function(dispatch) {
+  dispatch(actions.change('form2.itemCatalog.ean', ean));
+  dispatch(actions.change('form2.itemCatalog.titolo', row.titolo));
+  dispatch(actions.change('form2.itemCatalog.autore', row.autore));
+    dispatch(actions.change('form2.itemCatalog.editore', row.editore));
+  dispatch(actions.change('form2.itemCatalog.prezzoListino', row.prezzoListino));
+ }
+}
                             
 //Item è un oggetto con una chiave ean dentro... la trasformo nella chiave del catalogo
 export function updateCatalogItem(item)

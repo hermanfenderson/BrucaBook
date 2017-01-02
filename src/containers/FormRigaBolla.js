@@ -61,8 +61,8 @@ handleSubmit = (values) => {
  var valuesImg = {...values};
  valuesImg['imgUrl'] = '';
  if (this.props.values.imgUrl) valuesImg['imgUrl'] = this.props.values.imgUrl;
-  if (this.props.selectedRigaBolla) this.props.actions.aggiornaRigaBolla(1,valuesImg,this.props.selectedRigaBolla);
-  if (!this.props.selectedRigaBolla) this.props.actions.aggiungiRigaBolla(1,valuesImg);
+  if (this.props.selectedRigaBollaValues) this.props.actions.aggiornaRigaBolla(this.props.bollaId,valuesImg,this.props.selectedRigaBollaValues);
+  if (!this.props.selectedRigaBollaValues) this.props.actions.aggiungiRigaBolla(this.props.bollaId,valuesImg);
   this.cancelForm();
 }
 
@@ -246,7 +246,7 @@ componentDidMount = () => {
           </Col>  
           </div>
              <ButtonToolbar>
-              <Button type="submit" disabled={!enableSubmitButton} bsStyle="primary" bsSize="large" active={!enableSubmitButton}>{(this.props.selectedRigaBolla) ? 'Modifica' :' Inserisci'} </Button>
+              <Button type="submit" disabled={!enableSubmitButton} bsStyle="primary" bsSize="large" active={!enableSubmitButton}>{(this.props.selectedRigaBollaValues) ? 'Modifica' :' Inserisci'} </Button>
               <Button type="button" onClick={this.cancelForm} bsSize="large" active>Annulla</Button>
              </ButtonToolbar>
           </Form>

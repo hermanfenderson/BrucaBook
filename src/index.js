@@ -5,7 +5,6 @@ import App from './containers/App';
 import Home from './containers/Home';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
-import Favorites from './containers/Favorites';
 import GestioneBolla from './containers/GestioneBolla';
 import GestioneItemCatalog from './containers/GestioneItemCatalog';
 
@@ -25,8 +24,7 @@ ReactDOM.render(
         <IndexRoute component={Home} />
         <Route path="signup" component={Signup} />
         <Route path="login" component={Login} />
-        <Route path="favorites" component={RequireAuth(Favorites)} />
-        <Route path="bolla/:id" component={RequireAuth(GestioneBolla)} />
+         <Route path="bolla/:id" component={RequireAuth(GestioneBolla)} />
         <Route path="itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
       </Route>
     </Router>

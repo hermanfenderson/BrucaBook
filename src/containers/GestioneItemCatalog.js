@@ -6,6 +6,7 @@ import * as Actions from '../actions/catalog';
 import {Col} from 'react-bootstrap';
 
 import FormItemCatalog from './FormItemCatalog';
+import * as ActionsCatalog from '../actions/catalog';
 
 class GestioneItemCatalog extends React.Component {
   
@@ -19,10 +20,10 @@ class GestioneItemCatalog extends React.Component {
     return (
 		 <div className="container">
        <Col sm={3}>
-				<img src="https://img.ibs.it/images/9788807032073_0_0_180_0.jpg"/>
+				<img src={this.props.imgUrl}/>
  			</Col>
 		  <Col sm={9}>	
-      <FormItemCatalog/>
+      <FormItemCatalog onSubmitAction={this.props.actionsCatalog.updateCatalogItem}/>
 			</Col>
 			
      </div>
@@ -35,13 +36,15 @@ class GestioneItemCatalog extends React.Component {
 
 function mapStateToProps(state) {
   return {
-       
+     
      };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(Actions, dispatch),
+     actionsCatalog:  bindActionCreators(ActionsCatalog, dispatch)
+	
 		  };
 }
 

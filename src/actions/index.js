@@ -18,6 +18,9 @@ export const AUTH_ERROR = 'AUTH_ERROR';
 export const AUTH_INFO_RECEIVED = 'AUTH_INFO_RECEIVED';
 export const AUTH_USER = 'AUTH_USER';
 
+export const SET_USER_STATUS = 'SET_USER_STATUS';
+export const RESET_USER_STATUS = 'RESET_USER_STATUS';
+
 const API_URL = 'http://api.giphy.com/v1/gifs/search?q=';
 const API_KEY = '&api_key=dc6zaTOxFJmzC';
 
@@ -53,8 +56,24 @@ export function prefissoNegozio(getState)
     {
       return(getState().status.catena + '/' + getState().status.libreria + '/'); 
     }
+    
+//Prende nel database la configurazione utente e la passa nello stato, Inzialmente catena e negozio
+export function setUserStatus() {
+     return function(dispatch) {
+  const userUid = Firebase.auth().currentUser.uid;
+  Firebase.database().ref('utenti/' + userUid).once('value', snapshot => {
+      dispatch({
+        type: SET_USER_STATUS,
+        payload: snapshot.val()
+      })
+    });
+  }
+}
 
-
+ export function resetUserStatus()
+  {
+  	return {type: RESET_USER_STATUS}
+  }
 
 
 export function requestGifs(term = null) {
@@ -115,7 +134,7 @@ export function signUpUser(credentials) {
     Firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
       .then(response => {
         dispatch(authUser());
-        browserHistory.push('/favorites');
+        browserHistory.push('/');
       })
       .catch(error => {
         console.log(error);
@@ -130,7 +149,7 @@ export function signInUser(credentials) {
       .then(response => {
         console.log(response);
         dispatch(authUser());
-        browserHistory.push('/favorites');
+        browserHistory.push('/');
       })
       .catch(error => {
         dispatch(authError(error));
@@ -140,7 +159,8 @@ export function signInUser(credentials) {
 
 export function signOutUser() {
   return function(dispatch) {
-  //browserHistory.push('/');
+  browserHistory.push('/');
+  dispatch(resetUserStatus());
  purgeLocalStorage();
   dispatch(finalizeSignOut());
  } 
@@ -164,6 +184,7 @@ export function verifyAuth() {
       if (user) {
         dispatch(authUser()); 
         dispatch(authInfoReceived());
+        dispatch(setUserStatus());
       } else {
         dispatch(signOutUser());
         dispatch(authInfoReceived());

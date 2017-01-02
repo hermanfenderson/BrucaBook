@@ -4,16 +4,24 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {storeMeasure} from '../actions';
 import * as Actions from '../actions/bolle';
-import {eanFocus, fillWithRow} from '../actions/rigaBolla'
+import {eanFocus, fillWithRow, updateCatalogAndFillForm} from '../actions/rigaBolla'
 import {Row, Col} from 'react-bootstrap';
 
 import FormRigaBolla from './FormRigaBolla';
 import TableBolla from '../components/TableBolla';
+import ModalGestioneItemCatalog from '../components/ModalGestioneItemCatalog';
+import ModalSearching from '../components/ModalSearching';
+
+
 import '../styles/app.css';
 var bolla = null //Viene passsato come parametro
-
 class GestioneBolla extends React.Component {
+   
+
+	
+
 	componentDidMount() {
+  
     bolla = this.props.params.id; //Arriva come prop da sopra
 
      this.props.actions.deletedRigaBolla(bolla);
@@ -38,9 +46,9 @@ class GestioneBolla extends React.Component {
            this.props.eanFocusAction(); 
          }
 
- deleteRow = (id) => 
+ deleteRow = (row) => 
          {
-           this.props.actions.deleteRigaBolla(bolla,id);
+           this.props.actions.deleteRigaBolla(bolla,row);
           this.props.eanFocusAction(); 
          }
  
@@ -48,7 +56,7 @@ class GestioneBolla extends React.Component {
   azioniFormatter = (cell, row) => {
   return (
         <div>
-        <div className="glyphicon glyphicon-trash" onClick={() => { this.deleteRow(row['key'])}}></div>
+        <div className="glyphicon glyphicon-trash" onClick={() => { this.deleteRow(row)}}></div>
 				<div className="glyphicon glyphicon-edit" onClick={() => { this.editRow(row)}} ></div>  
         </div>
         );
@@ -76,7 +84,7 @@ class GestioneBolla extends React.Component {
 				<img src={this.props.activeImgUrl} height="90%" width="90%"/>
  			</Col>
 		  <Col sm={9}>	
-      <FormRigaBolla selectedRigaBolla = {this.props.selectedRigaBolla}/>
+      <FormRigaBolla bollaId = {this.props.params.id} selectedRigaBollaValues = {this.props.righeBollaArray[this.props.righeBollaArrayIndex[this.props.selectedRigaBolla]]}/>
 			</Col>
 			<Col sm={1}>
 				<Row> Copie: {this.props.totali.pezzi} </Row>
@@ -93,7 +101,16 @@ class GestioneBolla extends React.Component {
 				selectedRigaBolla = {this.props.selectedRigaBolla}
 				height={tableHeight} 
 				dataFormat={ this.azioniFormatter } />
-			</div>
+		   <ModalGestioneItemCatalog 
+		    close={this.hideItemCatalogModal}
+		    onSubmitAction={this.props.updateCatalogAndFillFormAction}
+		    //Tutto da sistemare...
+		    showModal={((this.props.catalog.status === "FAIL") || (this.props.catalog.status === "INCOMPLETE") )}
+		   />
+		   <ModalSearching
+		    showModal={(this.props.catalog.status === "SEARCH")}
+		   />
+		  	</div>
       
      );
   }
@@ -106,6 +123,7 @@ function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
 		 righeBollaArray: state.bolle.righeBollaArray,
+		 righeBollaArrayIndex: state.bolle.righeBollaArrayIndex,
   	selectedRigaBolla: state.bolle.selectedRigaBolla,
 	        totali: state.bolle.totali,
 		measures: state.measures.measures,
@@ -121,7 +139,9 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(Actions, dispatch),
 		storeMeasureAction: bindActionCreators(storeMeasure, dispatch),
 		eanFocusAction: bindActionCreators(eanFocus,dispatch),
-		fillWithRowAction: bindActionCreators(fillWithRow,dispatch)
+		fillWithRowAction: bindActionCreators(fillWithRow,dispatch),
+		updateCatalogAndFillFormAction: bindActionCreators(updateCatalogAndFillForm,dispatch)
+	
   };
 }
 

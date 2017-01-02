@@ -28,9 +28,8 @@ export default function bolle(state = initialState, action) {
        return (childChanged(action.payload, state, "righeBollaArray", "righeBollaArrayIndex")); 
     
    case TOTALI_CHANGED:
-       return {
-           ...state, totali: action.payload
-       }
+       	   if (action.payload) return {...state, totali: action.payload};
+   
    case SET_SELECTED_RIGA_BOLLA:
        return {
         ...state, selectedRigaBolla: action.row

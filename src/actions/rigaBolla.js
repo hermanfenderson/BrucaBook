@@ -4,7 +4,7 @@ export const SET_IMG_URL = 'SET_IMG_URL';
 //Azioni per la gestione del form rigaBolla
 import { actions } from 'react-redux-form';
 import { isValidEAN, generateEAN} from '../helpers/ean';
-import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus} from './catalog';
+import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus, fillFormWithItem} from './catalog';
 
 function isPercentage(value)
 {
@@ -77,28 +77,57 @@ else
 
 
 
+function isComplete(book)
+{
+	var isComplete = true;
+	if (book.titolo.length === 0) isComplete = false;
+	if (book.autore.length === 0) isComplete = false;
+	if (book.editore.length === 0) isComplete = false;
+	if (!(book.prezzoListino > 0)) isComplete = false;
+	return(isComplete)
+}
+
+//Qui ci arrivo in caso di item incompleto... viene chiamato premendo submit sul form del catalogo dal modal...
+export function updateCatalogAndFillForm(book)
+{
+	return (dispatch, getState) => {
+		const formValue = getState().form2.forms.rigaBolla;
+  	 dispatch(setStatus("IDLE","")); 
+		dispatch(storeBookInfo(book,formValue));  
+        dispatch(updateCatalogItem(book));  
+	}
+}
 
 export function getBookByEAN(value,formValue)
 {return (dispatch) => {
  var promise = dispatch(searchCatalogItem(value));
-  console.log(promise);
    promise.then(
              (payload) => {
                           var book = payload.val();
                           if (!book) {
-                          //se non lo ho in memoria...lo cerco su IBS  
+                          //se non lo ho in catalogo...lo cerco su IBS  
                               dispatch(searchIBSItem(value)).then( (book, ean) => {
-                                                            book['ean']=value; 
-                                                            dispatch(storeBookInfo(book,formValue));  
-                                                            dispatch(updateCatalogItem(book));  
-                                                                 dispatch(setStatus("IDLE","")); //me ne fotto della const
- 
+                              	                            //Qui devo fare branch se non ho trovato il libro in IBS o se è incompleto...lo gestisco con la funzione definita qui sopra
+                              	                            if (isComplete(book))
+                              	                               {
+                                                            	book['ean']=value; 
+                                                            	dispatch(storeBookInfo(book,formValue));  
+                                                            	dispatch(updateCatalogItem(book));  
+                                                            	dispatch(setStatus("IDLE","")); //me ne fotto della const
+                                                            	}
+															else 
+																{   //Unizializzo la form del catalogo con quello che ho
+																    dispatch(setStatus("INCOMPLETE",""));
+																	dispatch(fillFormWithItem(value,book));
+																	console.log("mah!");
+																}
                                                             })  
                                       } 
                           else 
                               {
+                              //Se lo ho in catalogo...lo passo e basta...
                               	dispatch(storeBookInfo(book,formValue));
-                              	     dispatch(setStatus("IDLE","")); //me ne fotto della const
+                              	dispatch(setStatus("IDLE","")); //me ne fotto della const
                               }
                           }
              )   
@@ -149,11 +178,14 @@ export function changeCodeToEAN(formValues)
     dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: false, EANFound: true}));
     dispatch(actions.change('form2.rigaBolla.ean', generateEAN(formValues.ean)));  
     dispatch(searchCatalogItem(generateEAN(formValues.ean))).then(
-           (payload) => {console.log(payload.val()); dispatch(storeBookInfo(payload.val(),formValues));}
+           (payload) => {dispatch(storeBookInfo(payload.val(),formValues));
+           	             dispatch(setStatus("IDLE",""));
+                         }
              )  
     }  
     else 
     {
+    //Non ho l'oggetto a catalogo...si tratta di codici interni... se non ci sono non ha senso cercarli...
     dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: false, isValidEan: true, EANFound: true}));
     //dispatch(actions.change(form.ean.model, form.ean.value));
     }

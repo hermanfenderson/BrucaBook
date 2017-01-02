@@ -3,7 +3,8 @@ const initialState =  {
   titolo: '',
   autore: '',
   editore: '',
-  prezzoListino: ''
+  prezzoListino: '',
+  //imgUrl: '' da gestire in prospettiva...
 };
 
 export default function catalogItem(state = initialState, action) {

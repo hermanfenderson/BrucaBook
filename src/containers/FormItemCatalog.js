@@ -13,7 +13,7 @@ EANonKeyPress = (event) =>
   {   
   if (event.which === 13) {
           event.preventDefault();
-		      var ean = generateEAN(this.props.formItemCatalog.ean.value);
+		      var ean = generateEAN(this.props.formItemCatalogValori.ean);
 		      if (!isNaN(ean)) this.props.actionsForm.change(this.props.formItemCatalog.ean.model,ean);
           }
  
@@ -21,16 +21,16 @@ EANonKeyPress = (event) =>
  
  
 render() {
-  const { formItemCatalog} = this.props;
+  const { formItemCatalog, formItemCatalogValori} = this.props;
 	const enableSubmitButton = this.props.formItemCatalog.$form.valid;
    
    return (
-     <Form model="form2.itemCatalog" autoComplete="off" onSubmit={v => this.props.actionsCatalog.updateCatalogItem(v)}>
+     <Form model="form2.itemCatalog" autoComplete="off" onSubmit={v => this.props.onSubmitAction(v)}>
          
           <div className="form-group">
              <FormGroup controlId="ean" onKeyPress={this.EANonKeyPress} validationState={(!formItemCatalog.ean.valid) ? "error" : null}>
                    <ControlLabel>EAN: </ControlLabel>
-                    <Control.text model=".ean" component={FormControl} 
+                    <Control.text model=".ean" component={FormControl} disabled={this.props.disableEAN}
 										validators={{
 												isRequired: (val) => val.length > 0,
                         isValidCode: (val) => {
@@ -96,7 +96,7 @@ render() {
                          messages={{
                             isNumber: 'Prezzo',
                         }}
-										  show={(formItemCatalog.prezzoListino.value.length>0)} 		
+										  show={(formItemCatalogValori.prezzoListino.length>0)} 		
                     />
                     </HelpBlock>
              </FormGroup>   
@@ -113,7 +113,8 @@ render() {
 
 function mapStateToProps(state) {
   return {
-     formItemCatalog: state.form2.forms.itemCatalog 
+     formItemCatalog: state.form2.forms.itemCatalog,
+     formItemCatalogValori: state.form2.itemCatalog
         }
 }
 

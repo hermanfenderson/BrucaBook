@@ -7,7 +7,7 @@ const SearchBar = (props) =>  {
   
     return (
       <div className="search">
-        <input placeholder="Enter text to search for gifs!" onChange={event => onInputChange(event.target.value)} />
+        <input placeholder="Ricerca libri (non attivo)!" onChange={event => onInputChange(event.target.value)} />
       </div>
     );
  }

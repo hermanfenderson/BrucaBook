@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import AuthReducer from './auth';
-import GifsReducer from './gifs';
 import MeasuresReducer from './measures';
 import { combineForms } from 'react-redux-form';
 import CatalogReducer from './catalog';
@@ -17,7 +16,6 @@ const rootReducer = combineReducers({
   bolle: BolleReducer,
   catalog: CatalogReducer,
   form: FormReducer,
-  gifs: GifsReducer,
   measures: MeasuresReducer,
   modal: ModalReducer,
   status: StatusReducer,
