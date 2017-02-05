@@ -12,9 +12,9 @@ function isPercentage(value)
   return false;
 }
 
-function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
+function discountPrice(prezzoListino, sconto)
 {  
-  return ((1 - sconto1/100) *((1 - sconto2 /100) *((1 - sconto3/100) * prezzoListino))).toFixed(2);    
+  return ((1 - sconto/100) * prezzoListino).toFixed(2);    
 }  
 
 export function setImgUrl(imgUrl)
@@ -27,25 +27,22 @@ export function setImgUrl(imgUrl)
 
 export function eanFocus() {
   return function(dispatch) {
-    dispatch(actions.focus('form2.rigaBolla.ean'));
+    dispatch(actions.focus('form2.rigaScontrino.ean'));
    }
  }  
 
 export function fillWithRow(row) {
   return function(dispatch) {
-  dispatch(actions.change('form2.rigaBolla.ean', row.ean));
-  dispatch(actions.change('form2.rigaBolla.titolo', row.titolo));
-  dispatch(actions.change('form2.rigaBolla.autore', row.autore));
-  dispatch(actions.change('form2.rigaBolla.prezzoListino', row.prezzoListino));
-  dispatch(actions.change('form2.rigaBolla.sconto1', row.sconto1));
-     dispatch(actions.change('form2.rigaBolla.sconto2', row.sconto2));
-     dispatch(actions.change('form2.rigaBolla.sconto3', row.sconto3));
-    dispatch(actions.change('form2.rigaBolla.manSconto', row.manSconto));
-  dispatch(actions.change('form2.rigaBolla.prezzoUnitario', row.prezzoUnitario));
-    dispatch(actions.change('form2.rigaBolla.pezzi', row.pezzi));
-    dispatch(actions.change('form2.rigaBolla.gratis', row.gratis));
-    dispatch(actions.change('form2.rigaBolla.prezzoTotale', row.prezzoTotale));
-    dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: true, EANFound: true}));
+  dispatch(actions.change('form2.rigaScontrino.ean', row.ean));
+  dispatch(actions.change('form2.rigaScontrino.titolo', row.titolo));
+  dispatch(actions.change('form2.rigaScontrino.autore', row.autore));
+  dispatch(actions.change('form2.rigaScontrino.prezzoListino', row.prezzoListino));
+  dispatch(actions.change('form2.rigaScontrino.sconto', row.sconto));
+    dispatch(actions.change('form2.rigaScontrino.manSconto', row.manSconto));
+  dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', row.prezzoUnitario));
+    dispatch(actions.change('form2.rigaScontrino.pezzi', row.pezzi));
+    dispatch(actions.change('form2.rigaScontrino.prezzoTotale', row.prezzoTotale));
+    dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: true, isValidEan: true, EANFound: true}));
     dispatch(setImgUrl(row.imgUrl));
     
   }
@@ -55,13 +52,12 @@ export function staleCode()
 { 
   
   return (dispatch) => {
-    dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: false, isValidEan: true, EANFound: true}));
+    dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: false, isValidEan: true, EANFound: true}));
   }
 }
 
 export function processEAN(value,formValue)
 {
-	console.log("processEAN");
   if (isValidEAN(value))
   {
     return (dispatch) => {
@@ -71,7 +67,7 @@ export function processEAN(value,formValue)
 else
   {
   return (dispatch) => {
-     dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: false, EANFound: true}));
+     dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: true, isValidEan: false, EANFound: true}));
     }
   }
 }
@@ -92,7 +88,7 @@ function isComplete(book)
 export function updateCatalogAndFillForm(book)
 {
 	return (dispatch, getState) => {
-		const formValue = getState().form2.forms.rigaBolla;
+		const formValue = getState().form2.forms.rigaScontrino;
   	 dispatch(setStatus("IDLE","")); 
 		dispatch(storeBookInfo(book,formValue));  
         dispatch(updateCatalogItem(book));  
@@ -142,31 +138,30 @@ export function storeBookInfo(book,formValue)
        {  
 console.log(formValue);
        dispatch(setImgUrl(book.imgUrl));
-       dispatch(actions.change('form2.rigaBolla.titolo', book.titolo));
-       dispatch(actions.change('form2.rigaBolla.autore', book.autore));
-       dispatch(actions.change('form2.rigaBolla.prezzoListino', book.prezzoListino));
-       dispatch(actions.change('form2.rigaBolla.pezzi', "1"));
-           dispatch(actions.change('form2.rigaBolla.gratis', "0"));
-     
+       dispatch(actions.change('form2.rigaScontrino.titolo', book.titolo));
+       dispatch(actions.change('form2.rigaScontrino.autore', book.autore));
+       dispatch(actions.change('form2.rigaScontrino.prezzoListino', book.prezzoListino));
+       dispatch(actions.change('form2.rigaScontrino.pezzi', "1"));
+           
        if (!formValue.manSconto)
-         { const discount = discountPrice(book.prezzoListino, formValue.sconto1, formValue.sconto2, formValue.sconto3);
-           dispatch(actions.change('form2.rigaBolla.prezzoUnitario', discount));
-           dispatch(actions.change('form2.rigaBolla.prezzoTotale', discount));
+         { const discount = discountPrice(book.prezzoListino, formValue.sconto);
+           dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', discount));
+           dispatch(actions.change('form2.rigaScontrino.prezzoTotale', discount));
          }
        else 
          {
-           dispatch(actions.change('form2.rigaBolla.prezzoUnitario', book.prezzoListino));
-           dispatch(actions.change('form2.rigaBolla.prezzoTotale', book.prezzoListino));
+           dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', book.prezzoListino));
+           dispatch(actions.change('form2.rigaScontrino.prezzoTotale', book.prezzoListino));
          }
-       dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: true, EANFound: true}));
-       dispatch(actions.focus('form2.rigaBolla.pezzi'));
+       dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: true, isValidEan: true, EANFound: true}));
+       dispatch(actions.focus('form2.rigaScontrino.pezzi'));
        }
      else  
        { 
-       dispatch(actions.change('form2.rigaBolla.titolo',""));
-       dispatch(actions.change('form2.rigaBolla.autore',""));
-       dispatch(actions.change('form2.rigaBolla.prezzoListino', ""));
-       dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: true, EANFound: false}));
+       dispatch(actions.change('form2.rigaScontrino.titolo',""));
+       dispatch(actions.change('form2.rigaScontrino.autore',""));
+       dispatch(actions.change('form2.rigaScontrino.prezzoListino', ""));
+       dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: true, isValidEan: true, EANFound: false}));
        }
    }
  
@@ -176,8 +171,8 @@ export function changeCodeToEAN(formValues)
 {   //Candidato a diventare un EAN interno
   return (dispatch) => {
     if (formValues.ean > 0 && formValues.ean.length < 12) {
-    dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: true, isValidEan: false, EANFound: true}));
-    dispatch(actions.change('form2.rigaBolla.ean', generateEAN(formValues.ean)));  
+    dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: true, isValidEan: false, EANFound: true}));
+    dispatch(actions.change('form2.rigaScontrino.ean', generateEAN(formValues.ean)));  
     dispatch(searchCatalogItem(generateEAN(formValues.ean))).then(
            (payload) => {dispatch(storeBookInfo(payload.val(),formValues));
            	             dispatch(setStatus("IDLE",""));
@@ -187,7 +182,7 @@ export function changeCodeToEAN(formValues)
     else 
     {
     //Non ho l'oggetto a catalogo...si tratta di codici interni... se non ci sono non ha senso cercarli...
-    dispatch(actions.setValidity('form2.rigaBolla.ean', {isValidCode: false, isValidEan: true, EANFound: true}));
+    dispatch(actions.setValidity('form2.rigaScontrino.ean', {isValidCode: false, isValidEan: true, EANFound: true}));
     //dispatch(actions.change(form.ean.model, form.ean.value));
     }
   }  
@@ -197,17 +192,13 @@ export function updatePriceFromDiscount(model,value, formValues)
 { 
    if (isPercentage(value))
   {
-  var sconto1 = formValues.sconto1;
-  var sconto2 = formValues.sconto2;
-  var sconto3 = formValues.sconto3;
-  var prezzoListino = formValues.prezzoListino;
+  var sconto = formValues.sconto;
+   var prezzoListino = formValues.prezzoListino;
    //Qui devo gestirmi quale e' il campo in ingresso...
   var changedField = model.split('.')[2];
   switch (changedField)
       {
-      case 'sconto1' : sconto1 = value; break;
-      case 'sconto2' : sconto2 = value; break;
-      case 'sconto3' : sconto3 = value; break;
+      case 'sconto' : sconto = value; break;
       case 'prezzoListino' : prezzoListino = value; break;  
       }      
   
@@ -215,8 +206,8 @@ export function updatePriceFromDiscount(model,value, formValues)
     dispatch(actions.setValidity(model, {isPercentage: true}));
 
     dispatch(actions.change(model, value));
-    dispatch(actions.change('form2.rigaBolla.prezzoUnitario', discountPrice(prezzoListino, sconto1, sconto2, sconto3)));
-    dispatch(actions.change('form2.rigaBolla.prezzoTotale', (formValues.pezzi * discountPrice(prezzoListino, sconto1, sconto2, sconto3)).toFixed(2)));
+    dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', discountPrice(prezzoListino, sconto)));
+    dispatch(actions.change('form2.rigaScontrino.prezzoTotale', (formValues.pezzi * discountPrice(prezzoListino, sconto)).toFixed(2)));
     
     };
   }
@@ -231,13 +222,11 @@ export function updatePriceFromDiscount(model,value, formValues)
 
 export function updatePriceFromListino(value, formValues) 
 { 
-  var sconto1 = formValues.sconto1;
-  var sconto2 = formValues.sconto2;
-  var sconto3 = formValues.sconto3;
-  var prezzoListino = value;
+  var sconto = formValues.sconto;
+    var prezzoListino = value;
   
   return (dispatch) => {
-     dispatch(actions.change('form2.rigaBolla.prezzoUnitario', discountPrice(prezzoListino, sconto1, sconto2, sconto3)));
+     dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', discountPrice(prezzoListino, sconto)));
    
   };
 }
@@ -249,34 +238,34 @@ export function updateTotalPriceFromPrice(value, formValues)
  if (isNaN(value))  
     {
     return (dispatch) => {
-     dispatch(actions.setValidity('form2.rigaBolla.prezzoUnitario', {isNumber: false}));
+     dispatch(actions.setValidity('form2.rigaScontrino.prezzoUnitario', {isNumber: false}));
     }
     } 
   else 
     {
       return (dispatch) => {
-     dispatch(actions.setValidity('form2.rigaBolla.prezzoUnitario', {isNumber: true})); 
-     dispatch(actions.change('form2.rigaBolla.prezzoUnitario',value));
-     dispatch(actions.change('form2.rigaBolla.prezzoTotale', (value*formValues.pezzi).toFixed(2)));
+     dispatch(actions.setValidity('form2.rigaScontrino.prezzoUnitario', {isNumber: true})); 
+     dispatch(actions.change('form2.rigaScontrino.prezzoUnitario',value));
+     dispatch(actions.change('form2.rigaScontrino.prezzoTotale', (value*formValues.pezzi).toFixed(2)));
   }
  }     
 }  
 
 export function updateTotalPriceFromPezzi(value, formValues)
 {
- if (!((value>=0)&&(Number.isInteger(parseFloat(value)))))  
+ if (!Number.isInteger(parseFloat(value)))  
     {
     return (dispatch) => {
     //Devo cambiare leggermente qui per non aggiornare il prezzo di listino quando sarà chiamato da un libro vero
-    dispatch(actions.setValidity('form2.rigaBolla.pezzi', {isPositive: false}));
+    dispatch(actions.setValidity('form2.rigaScontrino.pezzi', {isNumber: false}));
     }
     } 
   else 
     {
       return (dispatch) => {
-      dispatch(actions.setValidity('form2.rigaBolla.pezzi', {isPositive: true}));
-     dispatch(actions.change('form2.rigaBolla.pezzi', value));
-     dispatch(actions.change('form2.rigaBolla.prezzoTotale', (value*formValues.prezzoUnitario).toFixed(2)));
+      dispatch(actions.setValidity('form2.rigaScontrino.pezzi', {isNumber: true}));
+     dispatch(actions.change('form2.rigaScontrino.pezzi', value));
+     dispatch(actions.change('form2.rigaScontrino.prezzoTotale', (value*formValues.prezzoUnitario).toFixed(2)));
   }
  }     
 }  
@@ -286,16 +275,14 @@ export function toggleManSconto(value, formValues)
   dispatch(actions.change('form2.rigaBolla.manSconto', value));
   if (value) 
     {
-       dispatch(actions.change('form2.rigaBolla.sconto1', ""));
-       dispatch(actions.change('form2.rigaBolla.sconto2', ""));
-       dispatch(actions.change('form2.rigaBolla.sconto3', ""));
-      dispatch(actions.change('form2.rigaBolla.prezzoUnitario', formValues.prezzoListino));
-      dispatch(actions.change('form2.rigaBolla.prezzoTotale', (formValues.prezzoListino * formValues.pezzi).toFixed(2)));
+       dispatch(actions.change('form2.rigaScontrino.sconto', ""));
+       dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', formValues.prezzoListino));
+      dispatch(actions.change('form2.rigaScontrino.prezzoTotale', (formValues.prezzoListino * formValues.pezzi).toFixed(2)));
     }
   else 
     {
-      dispatch(actions.change('form2.rigaBolla.prezzoUnitario', formValues.prezzoListino));
-      dispatch(actions.change('form2.rigaBolla.prezzoTotale', (formValues.prezzoListino * formValues.pezzi).toFixed(2)));
+      dispatch(actions.change('form2.rigaScontrino.prezzoUnitario', formValues.prezzoListino));
+      dispatch(actions.change('form2.rigaScontrino.prezzoTotale', (formValues.prezzoListino * formValues.pezzi).toFixed(2)));
     }
  }
 }

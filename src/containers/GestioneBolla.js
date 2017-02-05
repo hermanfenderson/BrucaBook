@@ -31,7 +31,7 @@ class GestioneBolla extends React.Component {
   }
 	
 	componentWillUnmount() {
-		this.props.actions.resetBolla();
+		this.props.actions.resetBolla(bolla);
 		
 	}
 
@@ -81,10 +81,10 @@ class GestioneBolla extends React.Component {
       >
 			<div className="container">
        <Col sm={2}>
-				<img src={this.props.activeImgUrl} height="90%" width="90%"/>
+				<img src={this.props.activeImgUrl} alt="book-img" height="90%" width="90%"/>
  			</Col>
 		  <Col sm={9}>	
-      <FormRigaBolla bollaId = {this.props.params.id} selectedRigaBollaValues = {this.props.righeBollaArray[this.props.righeBollaArrayIndex[this.props.selectedRigaBolla]]}/>
+      <FormRigaBolla bollaId={this.props.params.id} selectedRigaBollaValues={this.props.righeBollaArray[this.props.righeBollaArrayIndex[this.props.selectedRigaBolla]]}/>
 			</Col>
 			<Col sm={1}>
 				<Row> Copie: {this.props.totali.pezzi} </Row>
@@ -98,7 +98,7 @@ class GestioneBolla extends React.Component {
 				willScroll={this.props.willScroll} 
 				scrollAction={this.props.actions.tableBollaWillScroll} 
 				data={this.props.righeBollaArray} 
-				selectedRigaBolla = {this.props.selectedRigaBolla}
+				selectedRigaBolla={this.props.selectedRigaBolla}
 				height={tableHeight} 
 				dataFormat={ this.azioniFormatter } />
 		   <ModalGestioneItemCatalog 

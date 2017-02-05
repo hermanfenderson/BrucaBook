@@ -13,6 +13,9 @@ class Header extends React.Component {
   renderAuthLinks() {
     if (this.props.authenticated) {
       return [
+      	  <li className="nav-item" key={1}>
+          <Link className="nav-link" to="/cassa/20160105cassa1/1">Gestione vendite</Link>
+        </li>,
          <li className="nav-item" key={2}>
           <Link className="nav-link" to="/bolla/1">Gestione bolle</Link>
         </li>,

@@ -17,8 +17,8 @@ class Home extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    authenticated: state.auth.authenticated,
-    modalIsOpen: state.modal.modalIsOpen,
+    authenticated: state.auth.authenticated
+    
   };
 }
 

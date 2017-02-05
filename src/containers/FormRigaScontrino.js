@@ -1,33 +1,33 @@
 import React from 'react';
-import {Col, FormGroup, ControlLabel, FormControl, Checkbox, HelpBlock, Button, ButtonToolbar} from 'react-bootstrap';
+import {Row, Col, FormGroup, ControlLabel, FormControl, Checkbox, HelpBlock, Button, ButtonToolbar} from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Form, Control, Errors, actions as ActionsForm} from 'react-redux-form';
 
 import { isValidEAN, generateEAN} from '../helpers/ean';
  
-import * as Actions from '../actions/bolle';
-import * as ActionsRigaBolla from '../actions/rigaBolla'
+import * as Actions from '../actions/scontrini';
+import * as ActionsRigaScontrino from '../actions/rigaScontrino'
 
 
 
-class FormRigaBolla extends React.Component {
+class FormRigaScontrino extends React.Component {
 EANerrorShow = false;  
 
 updatePrice = (model,value) => {
-   return(dispatch) => {this.props.actionsRigaBolla.updatePriceFromDiscount(model,value,this.props.values);}
+   return(dispatch) => {this.props.actionsRigaScontrino.updatePriceFromDiscount(model,value,this.props.values);}
 }
 
 updateTotalPriceFromPezzi = (model,value) => {
-  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPezzi(value,this.props.values);}
+  return(dispatch) => {this.props.actionsRigaScontrino.updateTotalPriceFromPezzi(value,this.props.values);}
 }
 
 updateTotalPriceFromPrice = (model,value) => {
-  return(dispatch) => {this.props.actionsRigaBolla.updateTotalPriceFromPrice(value,this.props.values);}
+  return(dispatch) => {this.props.actionsRigaScontrino.updateTotalPriceFromPrice(value,this.props.values);}
 }
 
 toggleManSconto = (model,value) => {
-  return(dispatch) => {this.props.actionsRigaBolla.toggleManSconto(value,this.props.values);}
+  return(dispatch) => {this.props.actionsRigaScontrino.toggleManSconto(value,this.props.values);}
 }
 
 EANChange = (model,value) => {
@@ -36,7 +36,7 @@ EANChange = (model,value) => {
   this.props.actionsForm.change(model,value);
   if (value.length == 13) {
      this.EANerrorShow = true;
-    this.props.actionsRigaBolla.processEAN(value,this.props.values);
+    this.props.actionsRigaScontrino.processEAN(value,this.props.values);
   }
   }
 }
@@ -49,11 +49,11 @@ EANonKeyDown = (event) =>
       if (!this.props.form.ean.valid) /* Enter */ {
           this.EANerrorShow = true;
           event.preventDefault();
-          this.props.actionsRigaBolla.changeCodeToEAN(this.props.values);
+          this.props.actionsRigaScontrino.changeCodeToEAN(this.props.values);
           }
-     
+ 
      }
-  else  if (event.which != 9) this.props.actionsRigaBolla.staleCode(); //Utente ha scritto ma non ha ancora battuto invio gestisco nella change se è lungo 13
+  else  if (event.which != 9) this.props.actionsRigaScontrino.staleCode(); //Utente ha scritto ma non ha ancora battuto invio gestisco nella change se è lungo 13
 }
 
 handleSubmit = (values) => {
@@ -61,24 +61,23 @@ handleSubmit = (values) => {
  var valuesImg = {...values};
  valuesImg['imgUrl'] = '';
  if (this.props.values.imgUrl) valuesImg['imgUrl'] = this.props.values.imgUrl;
-  if (this.props.selectedRigaBollaValues) this.props.actions.aggiornaRigaBolla(this.props.bollaId,valuesImg,this.props.selectedRigaBollaValues);
-  if (!this.props.selectedRigaBollaValues) this.props.actions.aggiungiRigaBolla(this.props.bollaId,valuesImg);
+  if (this.props.selectedRigaScontrinoValues) this.props.actions.aggiornaRigaScontrino(this.props.cassaId, this.props.scontrinoId, valuesImg, this.props.selectedRigaScontrinoValues);
+  if (!this.props.selectedRigaScontrinoValues) this.props.actions.aggiungiRigaScontrino(this.props.cassaId, this.props.scontrinoId, valuesImg);
   this.cancelForm();
 }
 
 cancelForm = () => {
-   this.EANerrorShow = false;
-  this.props.actionsRigaBolla.staleCode();
-  this.props.actions.setSelectedRigaBolla(null);
-  this.props.actionsRigaBolla.setImgUrl('');
-   this.props.actionsRigaBolla.eanFocus();
-    this.props.actionsForm.reset("form2.rigaBolla");
-  
+  this.props.actionsForm.reset("form2.rigaScontrino");
+  this.EANerrorShow = false;
+  this.props.actionsRigaScontrino.staleCode();
+  this.props.actions.setSelectedRigaScontrino(null);
+  this.props.actionsRigaScontrino.setImgUrl('');
+   this.props.actionsRigaScontrino.eanFocus();
 }
 
 componentDidMount = () => {
-  this.props.actionsRigaBolla.staleCode();
-  this.props.actionsRigaBolla.eanFocus();
+  this.props.actionsRigaScontrino.staleCode();
+  this.props.actionsRigaScontrino.eanFocus();
 }
 
   render() {
@@ -86,10 +85,9 @@ componentDidMount = () => {
     const toggleMan = values.manSconto;
     const enableSubmitButton = form.$form.valid;
      return(
-           <Form model="form2.rigaBolla" autoComplete="off" className="form-horizontal" onSubmit={v => this.handleSubmit(v)}>
-         
-          <div className="form-group">
-           <Col sm={3}>
+           <Form model="form2.rigaScontrino" autoComplete="off"  onSubmit={v => this.handleSubmit(v)}>
+           <Row>
+           <Col sm={4}>
              <FormGroup controlId="ean"  onKeyDown={this.EANonKeyDown} validationState={((this.EANerrorShow) && (!form.ean.valid)) ? "error" : null}>
                    <ControlLabel>EAN: </ControlLabel>
                     <Control.text model=".ean" component={FormControl}  changeAction={this.EANChange} />
@@ -107,7 +105,7 @@ componentDidMount = () => {
                     </HelpBlock>
              </FormGroup>
            </Col>  
-           <Col sm={4}>
+           <Col sm={5}>
              <FormGroup controlId="titolo" validationState={form.titolo.valid ? null : "error"}>
                    <ControlLabel>Titolo: </ControlLabel>
                     <Control.text model=".titolo" disabled component={FormControl}/>
@@ -121,22 +119,22 @@ componentDidMount = () => {
         
              </FormGroup>   
           </Col>
+          </Row>
+          <Row>
            <Col sm={2} >
              <FormGroup controlId="prezzoListino" validationState={form.prezzoListino.valid ? null : "error"}>
                    <ControlLabel>Listino: </ControlLabel>
                     <Control.text model=".prezzoListino" disabled component={FormControl} changeAction={this.updatePrice}/>
              </FormGroup>     
            </Col>  
-          </div>
-          <div className="form-group">
-           <Col sm={1}>
-             <FormGroup controlId="sconto1"  validationState={form.sconto1.valid ? null : "error"}>
-                   <ControlLabel>Sc.1: </ControlLabel>
-                    <Control.text model=".sconto1" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
+           <Col sm={2}>
+             <FormGroup controlId="sconto"  validationState={form.sconto.valid ? null : "error"}>
+                   <ControlLabel>Sconto: </ControlLabel>
+                    <Control.text model=".sconto" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
                     
                     <HelpBlock>
                     <Errors
-                         model=".sconto1"
+                         model=".sconto"
                          messages={{
                             isPercentage: '(0-99)',
                         }}
@@ -145,35 +143,8 @@ componentDidMount = () => {
                     </HelpBlock>
              </FormGroup>     
           </Col>
-          <Col sm={1}>
-            <FormGroup controlId="sconto2" validationState={form.sconto2.valid ? null : "error"}>
-                   <ControlLabel>Sc.2: </ControlLabel>
-                    <Control.text model=".sconto2" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
-                    <HelpBlock>
-                    <Errors
-                         model=".sconto2"
-                         messages={{
-                            isPercentage: '(0-99)',
-                        }}
-                    />
-                    </HelpBlock>
-             </FormGroup>     
-           </Col>
-          <Col sm={1}>
-             <FormGroup controlId="sconto3" validationState={form.sconto3.valid ? null : "error"}>
-                   <ControlLabel>Sc.3: </ControlLabel>
-                    <Control.text model=".sconto3" disabled={toggleMan} component={FormControl} changeAction={this.updatePrice}/>
-                    <HelpBlock>
-                    <Errors
-                         model=".sconto3"
-                         messages={{
-                            isPercentage: '(0-99)',
-                        }}
-                    />
-                    </HelpBlock>
-             </FormGroup>     
-          </Col>
-           <Col sm={1}>
+         
+           <Col sm={2}>
              <FormGroup controlId="manSconto">
                    <ControlLabel>Man. </ControlLabel>
                     <Control.checkbox model=".manSconto" changeAction={this.toggleManSconto} component={Checkbox}/>
@@ -203,33 +174,14 @@ componentDidMount = () => {
                     <Errors
                          model=".pezzi"
                          messages={{
-                            isPositive: 'numero',
+                            isNumber: 'numero',
                
                         }}
                     />
                     </HelpBlock>
              </FormGroup>     
   </Col>  
-  <Col sm={2}>
-          <FormGroup controlId="gratis" validationState={((values.gratis.length==0) || (form.gratis.valid)) ? null : "error"}>
-                   <ControlLabel>Gratis: </ControlLabel>
-                    <Control.text model=".gratis" component={FormControl}
-                    validators={{
-                        isNumber: (val) => ((val >= 0) && (Number.isInteger(parseFloat(val)))),
-                        }}
-                    validateOn={["change", "blur"]}   
-                    />
-                    <HelpBlock>
-                    <Errors
-                         model=".gratis"
-                         messages={{
-                            isNumber: 'numero',
-                        }}
-                    show={(values.gratis.length>0)}      
-                    />
-                    </HelpBlock>
-             </FormGroup>      
-  </Col>  
+  
   <Col sm={2}>
             <FormGroup controlId="prezzoTotale" validationState={form.prezzoTotale.valid ? null : "error"}>
                    <ControlLabel>Totale: </ControlLabel>
@@ -244,9 +196,9 @@ componentDidMount = () => {
                     />
                     </HelpBlock>
              </FormGroup>     
-          </Col>  
-          </div>
-             <ButtonToolbar>
+          </Col> 
+          </Row>
+              <ButtonToolbar>
               <Button type="submit" disabled={!enableSubmitButton} bsStyle="primary" bsSize="large" active={!enableSubmitButton}>{(this.props.selectedRigaBollaValues) ? 'Modifica' :' Inserisci'} </Button>
               <Button type="button" onClick={this.cancelForm} bsSize="large" active>Annulla</Button>
              </ButtonToolbar>
@@ -259,18 +211,18 @@ componentDidMount = () => {
 
 function mapStateToProps(state) {
   return {
-    discountGroupDisabled: state.bolle.discountGroupDisabled,
-    form: state.form2.forms.rigaBolla ,
-    values: state.form2.rigaBolla,
+    discountGroupDisabled: state.scontrini.discountGroupDisabled,
+    form: state.form2.forms.rigaScontrino ,
+    values: state.form2.rigaScontrino,
          }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators(Actions, dispatch),
-    actionsRigaBolla: bindActionCreators(ActionsRigaBolla, dispatch),
+    actionsRigaScontrino: bindActionCreators(ActionsRigaScontrino, dispatch),
     actionsForm: bindActionCreators(ActionsForm, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FormRigaBolla);
+export default connect(mapStateToProps, mapDispatchToProps)(FormRigaScontrino);

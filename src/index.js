@@ -6,6 +6,7 @@ import Home from './containers/Home';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
 import GestioneBolla from './containers/GestioneBolla';
+import GestioneScontrino from './containers/GestioneScontrino';
 import GestioneItemCatalog from './containers/GestioneItemCatalog';
 
 import RequireAuth from './containers/RequireAuth';
@@ -24,6 +25,12 @@ ReactDOM.render(
         <IndexRoute component={Home} />
         <Route path="signup" component={Signup} />
         <Route path="login" component={Login} />
+         <Route path="cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
+{
+/*
+         <Route path="cassa/:idCassa" component={RequireAuth(GestioneCassa)} />
+*/
+}
          <Route path="bolla/:id" component={RequireAuth(GestioneBolla)} />
         <Route path="itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
       </Route>

@@ -76,58 +76,6 @@ export function setUserStatus() {
   }
 
 
-export function requestGifs(term = null) {
-  return function(dispatch) {
-    request.get(`${API_URL}${term.replace(/\s/g, '+')}${API_KEY}`).then(response => {
-      dispatch({
-        type: REQUEST_GIFS,
-        payload: response
-      });
-    });
-  }
-}
-
-export function favoriteGif({selectedGif}) {
-  const userUid = Firebase.auth().currentUser.uid;
-  const gifId = selectedGif.id;
-
-  return dispatch => Firebase.database().ref(userUid).update({
-    [gifId]: selectedGif
-  });
-}
-
-export function unfavoriteGif({selectedGif}) {
-  const userUid = Firebase.auth().currentUser.uid;
-  const gifId = selectedGif.id;
-
-  return dispatch => Firebase.database().ref(userUid).child(gifId).remove();
-}
-
-export function fetchFavoritedGifs() {
-  return function(dispatch) {
-  const userUid = Firebase.auth().currentUser.uid;
-  Firebase.database().ref(userUid).on('value', snapshot => {
-      dispatch({
-        type: FETCH_FAVORITED_GIFS,
-        payload: snapshot.val()
-      })
-    });
-  }
-}
-
-
-export function openModal(gif) {
-  return {
-    type: OPEN_MODAL,
-    gif
-  }
-}
-
-export function closeModal() {
-  return {
-    type: CLOSE_MODAL
-  }
-}
 
 export function signUpUser(credentials) {
   return function(dispatch) {
