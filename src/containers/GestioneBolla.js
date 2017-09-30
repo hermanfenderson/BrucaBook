@@ -26,7 +26,7 @@ class GestioneBolla extends React.Component {
 
      this.props.actions.deletedRigaBolla(bolla);
     this.props.actions.addedRigaBolla(bolla);
-    this.props.actions.totaliChanged(bolla);
+    this.props.actions.totaliChanged(bolla); 
 		this.props.actions.changedRigaBolla(bolla);	
   }
 	

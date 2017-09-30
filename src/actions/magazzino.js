@@ -24,14 +24,21 @@ var magEntryNew;
             //Raccolgo alcune info per capire in che situazione mi trovo...
             	
             var latestPos = magEntryNew['oggetti'][itemKey]['historyKeys'].length - 1;
+            var presentPos;
+            for (presentPos=0; presentPos <=latestPos; presentPos++ )
+            	{
+            	  if (magEntryNew['oggetti'][itemKey]['historyKeys'][presentPos] == statusKey)	break; //Prendo il valore della posizione presente...
+            	}
+            	
             var latestKey = magEntryNew['oggetti'][itemKey]['historyKeys'][latestPos];
             var isOrfano = false;
             var isMagazzino = false; 
             var isLatest = false;
             var segno = magEntryNew['oggetti'][itemKey]['history'][statusKey]['segno'];
             var stato = magEntryNew['oggetti'][itemKey]['history'][statusKey]['stato'];
+            var swappedObject = null; //mi serve a gestire uno swap di oggetti per evitare orfani
             var tobeDeleted = []; //Elenco di elementi dell'array historyKeys da cancellare...
-            var tobeChanged = []; //Elenco di oggetti... posizione in historyKeys e modifica da apportare allo stato... prima cambio e poi cancello...
+            var tobeChanged = []; //Elenco di oggetti... posizione in historyKeys (key) e nuovo stato (values)... prima cambio e poi cancello...
             var addMagazzino = null; //una riga da aggiungere a magazzino
             var removeMagazzino = null; //una riga da rimuovere da magazzino
             var addOrfano = null; //una riga da aggiungere a orfani
@@ -44,11 +51,12 @@ var magEntryNew;
              if (statusKey == latestKey) isLatest = true;
              if (magEntryNew['oggetti'][itemKey]['history'][statusKey]['orfano']) isOrfano = true;
              if (magEntryNew['oggetti'][itemKey]['history'][statusKey]['inMagazzino']) isMagazzino = true;
+             //TUTTA LA GESTIONE DEGLI ORDINI E' DA FARE...
              
              //Caso 1 Ingresso magazzino (segno +) in ultima posizione (non può essere orfano)
              if (isLatest && (segno == '+')) 
             	{
-            		tobeDeleted.push({'pos': latestPos, 'key': latestKey});
+            		tobeDeleted.push({'pos': latestPos, 'itemKey': itemKey, 'statusKey': latestKey});
             		//Il nuovo latest è quello che era in penultima posizione...se c'e' una penultima posizione...
             		if (latestPos > 0) 
             			newLatest = {...magEntryNew['oggetti'][itemKey]['history'][magEntryNew['oggetti'][itemKey]['historyKeys'][latestPos-1]]};
@@ -56,6 +64,62 @@ var magEntryNew;
             		removeMagazzino = itemKey; //Scompare dal magazzino
           
             	}
+            	
+            //Questo lascia un orfano! Se non trovo una soluzione migliore...
+            if (!isLatest && (segno == '+')) 
+            	{
+            	//Per certo non e' in magazzino... se ne ho un altro in magazzino avvio lo swap...
+            	//Ne ho almeno un altro in magazzino? Se no... ammazzo questo.
+            	if (magEntryNew['inMagazzino'])
+            		{
+            		//Faccio finta che sia quello la mia origine...
+            		magEntryNew['oggetti'][itemKey]['history'][statusKey] = {...magEntryNew['oggetti'][itemKey]['history'][magEntryNew['inMagazzino'][0]]};
+            			
+        			//Aggiorno lo stato ultimo....mettendoci solo le info che sono modificate... per differenza tolgo quelle che non devo cambiare...
+        			var changedInfo = {...magEntryNew['oggetti'][itemKey]['history'][statusKey]};
+        			delete changedInfo['data'];
+        			delete changedInfo['inMagazzino'];
+        			delete changedInfo['riferimento'];
+        			delete changedInfo['segno'];
+        			delete changedInfo['stato'];
+        			delete changedInfo['timestamp'];
+            		magEntryNew['oggetti'][itemKey]['history'][latestKey] = {...magEntryNew['oggetti'][itemKey]['history'][latestKey], changedInfo};
+            		removeMagazzino = magEntryNew['inMagazzino'][0];
+            		newLatest = {...magEntryNew['oggetti'][itemKey]['history'][latestKey]}; //Per fare anche aggiornare i totali...
+            		
+            	    //Adesso forzo la cancellazione dell'oggetto che ho sacrificato...
+            	    var localItemKey = magEntryNew['inMagazzino'][0];
+            	    //Lo stato che cancello e' sicuramente l'ultimo... l'oggetto e' a magazzino.
+            		 var localLatestPos = magEntryNew['oggetti'][localItemKey]['historyKeys'].length - 1;
+        			 var localLatestKey = magEntryNew['oggetti'][localItemKey]['historyKeys'][localLatestPos];
+                     //Preparo il puntatore alla nuova origine bolla
+            		 swappedObject = {'riferimento' : magEntryNew['oggetti'][itemKey]['history'][statusKey]['riferimentoIngresso'], 'oldObject': localItemKey, 'oldStatus': localLatestKey, 'newObject': itemKey, 'newStatus': statusKey}; //Questo lo devo gestire fuori routine
+            	
+            	    delete (magEntryNew['oggetti'][localItemKey]['history'][localLatestKey]); //Cancello gli stati che devo cancellare... 
+					magEntryNew['oggetti'][localItemKey]['historyKeys'].splice(localLatestPos,1); //Elimino dall'elenco
+					if (magEntryNew['oggetti'][localItemKey]['historyKeys'].length > 0)
+						{
+					    var newLatestPos = magEntryNew['oggetti'][localItemKey]['historyKeys'].length - 1;
+        				var newLatestKey = magEntryNew['oggetti'][localItemKey]['historyKeys'][newLatestPos];
+        				magEntryNew['oggetti'][localItemKey]['latest'] = {...magEntryNew['oggetti'][localItemKey]['history'][newLatestKey]};
+						}
+					else delete magEntryNew['oggetti'][localItemKey]; //Se la prima riga era l'entrata... cancello completamente l'oggetto...
+            	   
+            		}
+            	else
+            	//Devo generare un orfano....DA FARE!!!!!!!!!!
+            		{
+            		//CAMBIO LA RIGA CHE DEVE ESSERE CANCELLATA E LA RENDO ORFANA...	
+            		tobeChanged.push({'key': itemKey, 'values': {}});
+            		
+            		//AGGIORNO L'ULTIMO STATO (CHE A QUESTO PUNTO E' UN'USCITA PER FARE RIFERIMENTO A UN ORFANO)
+            		tobeChanged.push({'key': latestKey, 'values': {}});
+            		
+            		
+            		}
+          
+            	}
+            
             	
              if (isLatest && (segno == '-') && (isOrfano == false))
             	{
@@ -68,9 +132,9 @@ var magEntryNew;
             	
              if (isLatest && segno == '-' && (isOrfano == true))
             	{
-            		tobeDeleted.push({'pos': latestPos, 'key': latestKey});
+            		tobeDeleted.push({'pos': latestPos, 'itemKey': itemKey, 'statusKey': latestKey});
 			orfanoKey = magEntryNew['oggetti'][itemKey]['historyKeys'][latestPos-1];
-            		tobeDeleted.push({'pos': latestPos-1, 'key': orfanoKey});
+            		tobeDeleted.push({'pos': latestPos-1, 'itemKey': itemKey, 'statusKey': orfanoKey});
             		//Il nuovo latest è quello che era in terzultima posizione...
             		if (latestPos > 1) newLatest = {...magEntryNew['oggetti'][itemKey]['history'][magEntryNew['oggetti'][itemKey]['historyKeys'][latestPos-2]]};
             		else newLatest = null; //Cancello tutto l'oggetto!
@@ -121,12 +185,15 @@ var magEntryNew;
             		}
             
             //Modifico le righe che devono essere modificate...
-            //DA IMPLEMENTARE...  				
-            
+             for (var i = 0; i< tobeChanged.length; i++)
+    	    {
+    	    	magEntryNew['oggetti'][itemKey]['history'][tobeChanged[i]['key']] = {...tobeChanged[i]['values']}; //Cancello gli stati che devo cancellare... 
+		    }	
+		    
             //Cancello le righe che devono essere cancellate...
             for (var i = 0; i< tobeDeleted.length; i++)
     	    {
-    	    	delete (magEntryNew['oggetti'][itemKey]['history'][tobeDeleted[i]['kry']]); //Cancello gli stati che devo cancellare... 
+    	    	delete (magEntryNew['oggetti'][itemKey]['history'][tobeDeleted[i]['key']]); //Cancello gli stati che devo cancellare... 
 		magEntryNew['oggetti'][itemKey]['historyKeys'].splice(tobeDeleted[i]['pos'],1); //Elimino dall'elenco
     	    }				
             
@@ -149,11 +216,10 @@ var magEntryNew;
          }
             
              
-       else magEntryNew['anomalia'] =  true; //Forzo una modifica qualunque
+       else magEntryNew = {}; //Forzo una modifica qualunque
             
  
-    	   
-    	   return(magEntryNew);
+    	   return ({'magEntry': magEntryNew, 'swappedObject': swappedObject});
 }
 
 //Se il segno è +... cerco un orfano e lo copro
@@ -490,13 +556,12 @@ export function aggiungiRigheBollaMagazzino(bolla,valori, rigaBollaRef, update) 
 
 //Cancello tutti gli oggetti che corrispondono alla riga della bolla che sto cancellando
 //Va implementata pesantemente...METTERE A POSTO...
-
+/*
 export function eliminaRigheMagazzino(ean,oggettiDaCancellare, rigaDaCancellare, tipoDoc, refDoc) {
-  	console.log("uccidi!");
-			console.log(rigaDaCancellare);
-			
+  
   return function(dispatch,getState) {
      var magCodRef = Firebase.database().ref(prefissoNegozio(getState) +'magazzino/' + ean );
+     var originiDaModificare = [];
      magCodRef.transaction((magEntry) => 
     	{ 
     		if (magEntry)  
@@ -506,8 +571,10 @@ export function eliminaRigheMagazzino(ean,oggettiDaCancellare, rigaDaCancellare,
     		var magEntryNew = {...magEntry}
     		for  (var i=0; i < oggettiDaCancellare.length; i++)
     			{
-    		    magEntryNew = elimina(magEntryNew, oggettiDaCancellare[i]['oggettoKey'], oggettiDaCancellare[i]['statoKey']);
-      			}	
+    		    var result = elimina(magEntryNew, oggettiDaCancellare[i]['oggettoKey'], oggettiDaCancellare[i]['statoKey']);
+    		    magEntryNew = result['magEntry'];
+    		    if (result['swappedObject']) originiDaModificare.push(result['swappedObject']);
+       			}	
     		}	
     	   else var magEntryNew = {};
        	return (magEntryNew);	
@@ -531,7 +598,30 @@ export function eliminaRigheMagazzino(ean,oggettiDaCancellare, rigaDaCancellare,
 				
 			})	
 			}
+		//Da eseguire se ho origini da aggiornare	
+		if (completed && originiDaModificare.length > 0)
+			{
+			var oggetti = originiDaModificare.length
+			for (var i=0; i<oggetti; i++)
+				{
+				var ingressoRef = Firebase.database().ref(prefissoNegozio(getState) + originiDaModificare[i]['riferimentoIngresso'] + '/listaOggetti');
+				ingressoRef.once('value').then(function(snapshot) {
+							var listaOggetti = snapshot.val();
+							var item;
+							for (item in listaOggetti)
+								{
+								 if (listaOggetti[item]['oggettoKey'] == originiDaModificare[i]['oldObject']) break;	//Ho trovato l'item
+								}
+						//Per avere la build...
+						//	Firebase.database().ref(prefissoNegozio(getState) + originiDaModificare[i]['riferimentoIngresso'] + '/listaOggetti/' + item).set({'oggettoKey': originiDaModificare[i]['newObject'], 'statoKey': originiDaModificare[i]['newStatus']});	
+							}
+			}
     	}
     	)
   }
+      );
 } 
+
+}
+*/
+
