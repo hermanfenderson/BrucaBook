@@ -8,7 +8,6 @@ export const RESET_SCONTRINO = 'RESET_SCONTRINO';
 export const TOTALI_SCONTRINO_CHANGED = 'TOTALI_SCONTRINO_CHANGED';
 import Firebase from 'firebase';
 import {prefissoNegozio} from './index';
-import {aggiungiRigheScontrinoMagazzino, eliminaRigheMagazzino} from './magazzino';
 
 function preparaRiga(riga)
    {
@@ -33,7 +32,7 @@ export function totaliScontrinoChanged(cassaId, scontrinoId)
 }	
 }
 
-
+//Questo va "staccato"
 export function calcolaTotaliSafe(cassaId, scontrinoId) 
 
 {return function(dispatch,getState) {
@@ -72,53 +71,59 @@ export function tableScontrinoWillScroll(scroll) {
   }
 }
 
+
 export function resetScontrino(cassaId, scontrinoId) {
   return function(dispatch, getState) {
     
     
    Firebase.database().ref(prefissoNegozio(getState) +'vendite/'  + cassaId + '/' + scontrinoId + '/righe').off();
+   Firebase.database().ref(prefissoNegozio(getState) +'vendite/'  + cassaId + '/' + scontrinoId + '/totali').off();
+ 
    dispatch({type: RESET_SCONTRINO});
     
   }
 }
 
 
+  
+  
+//Ho già sganciato il calcolo dei totali...
 
 export function aggiungiRigaScontrino(cassaId, scontrinoId,valori) {
 
-var nuovaRigaScontrino = {...valori};
+  var nuovaRigaScontrino = {...valori};
    addCreatedStamp(nuovaRigaScontrino);
    preparaRiga(nuovaRigaScontrino);
 
-return function(dispatch,getState) {
+   return function(dispatch,getState) {
 	
 	dispatch(tableScontrinoWillScroll(true));    
-    dispatch(calcolaTotaliSafe(cassaId, scontrinoId));
-     var rigaRef =Firebase.database().ref(prefissoNegozio(getState) +'vendite/'  + cassaId + '/' + scontrinoId + '/righe').push();
-    var magazzinoList = dispatch(aggiungiRigheScontrinoMagazzino(cassaId, scontrinoId,valori,rigaRef)); //Calcolo prima...
-  //  var magazzinoList; Gestisco la commit della riga dentro la transazione...
-//    nuovaRigaScontrino['listaOggetti'] = magazzinoList;
-//    rigaRef.set(nuovaRigaScontrino).then(response => {
-//    		dispatch(calcolaTotaliSafe(cassaId, scontrinoId));
-//    			 });
-}
+    Firebase.database().ref(prefissoNegozio(getState) +'vendite/'  + cassaId + '/' + scontrinoId + '/righe').push().set(nuovaRigaScontrino);
+
+   }
 }
 
 
 
-
+//Idem...
+export function aggiornaRigaBolla(bolla,valori,selectedRigaBollaValues) {
+    var nuovaRigaBolla = {...valori};
+      addChangedStamp(nuovaRigaBolla);
+   preparaRiga(nuovaRigaBolla);
+     return function(dispatch,getState) {
+    
+    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe/' + selectedRigaBollaValues['key']).update(nuovaRigaBolla).then(response => {
+    });
+  }
+  
+}
 export function aggiornaRigaScontrino(cassaId, scontrinoId,valori,selectedRigaScontrinoValues) {
     var nuovaRigaScontrino = {...valori};
-    var selectedRigaScontrino = selectedRigaScontrinoValues['key'];
-     
    addChangedStamp(nuovaRigaScontrino);
    preparaRiga(nuovaRigaScontrino);
   return function(dispatch,getState) {
-     //Cancello le righe in magazzino della vecchia versione...
-    dispatch(eliminaRigheMagazzino(selectedRigaScontrinoValues['ean'], selectedRigaScontrinoValues['listaOggetti'], 'scontrino', {'cassa': cassaId, 'scontrino': scontrinoId}));
-    //e le aggiungo per la nuova
-    dispatch(aggiungiRigheScontrinoMagazzino(cassaId, scontrinoId, valori, selectedRigaScontrino, true));
- 
+  	 Firebase.database().ref(prefissoNegozio(getState) +'vendite/' + cassaId + '/' + scontrinoId + '/righe/' + selectedRigaScontrinoValues['key']).update(nuovaRigaScontrino).then(response => {
+    });
   }
 }
 
@@ -130,12 +135,15 @@ export function setSelectedRigaScontrino(row) {
   }  
 }
 
+
+
 //Aggiungo il riferimento alla riga per determinare le righe da cancellare...
 export function deleteRigaScontrino(cassaId, scontrinoId, row) {
   return function(dispatch, getState) {
   	 var id = row['key'];
      var rigaDaCancellare = prefissoNegozio(getState) +'vendite/'  + cassaId + '/' + scontrinoId + '/righe/' +id;
-  	dispatch(eliminaRigheMagazzino(row['ean'], row['listaOggetti'], rigaDaCancellare,'scontrino',{'cassa': cassaId, 'scontrino': scontrinoId}));
+     Firebase.database().ref(rigaDaCancellare).remove().then(response => {
+  })
     };
   }
 

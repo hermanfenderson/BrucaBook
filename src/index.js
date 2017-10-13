@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
+import 'semantic-ui-css/semantic.min.css';
 
 import App from './containers/App';
 import Home from './containers/Home';
 import Signup from './containers/Signup';
 import Login from './containers/Login';
-import GestioneBolla from './containers/GestioneBolla';
+import GestioneBollaOld from './containers/GestioneBollaOld';
+import GestioneBolla from './scenes/bolla';
+
 import GestioneScontrino from './containers/GestioneScontrino';
 import GestioneItemCatalog from './containers/GestioneItemCatalog';
 
@@ -34,6 +37,7 @@ ReactDOM.render(
 */
 }
          <Route path="bolla/:id" component={RequireAuth(GestioneBolla)} />
+         <Route path="bollaold/:id" component={RequireAuth(GestioneBollaOld)} />
         <Route path="itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
       </Route>
     </Router>

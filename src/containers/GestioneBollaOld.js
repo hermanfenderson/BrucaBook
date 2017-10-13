@@ -15,7 +15,7 @@ import ModalSearching from '../components/ModalSearching';
 
 import '../styles/app.css';
 var bolla = null //Viene passsato come parametro
-class GestioneBolla extends React.Component {
+class GestioneBollaOld extends React.Component {
    
 
 	
@@ -145,4 +145,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(GestioneBolla);
+export default connect(mapStateToProps, mapDispatchToProps)(GestioneBollaOld);

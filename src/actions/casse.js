@@ -1,3 +1,5 @@
+//DA RIPULIRE SIGNIFICATIVAMENTE
+
 import { browserHistory } from 'react-router';
 import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 export const NEW_SCONTRINO = 'NEW_SCONTRINO';
@@ -13,7 +15,6 @@ export const RESET_SCONTRINO = 'RESET_SCONTRINO';
 export const TOTALI_SCONTRINO_CHANGED = 'TOTALI_SCONTRINO_CHANGED';
 import Firebase from 'firebase';
 import {prefissoNegozio} from './index';
-import {aggiungiRigheScontrinoMagazzino, eliminaRigheMagazzino} from './magazzino';
 
 
 export function newScontrino(cassaId, oldScontrinoId = null)
@@ -111,7 +112,7 @@ export function resetScontrino(cassaId, scontrinoId) {
   }
 }
 
-
+/*
 
 export function aggiungiRigaScontrino(cassaId, scontrinoId,valori) {
 
@@ -153,6 +154,7 @@ export function aggiornaRigaScontrino(cassaId, scontrinoId,valori,selectedRigaSc
     });
   }
 }
+*/
 
 
 export function setSelectedRigaScontrino(row) {
@@ -162,6 +164,7 @@ export function setSelectedRigaScontrino(row) {
   }  
 }
 
+/*
 //Aggiungo il riferimento alla riga per determinare le righe da cancellare...
 export function deleteRigaScontrino(cassaId, scontrinoId, row) {
   return function(dispatch, getState) {
@@ -173,7 +176,8 @@ export function deleteRigaScontrino(cassaId, scontrinoId, row) {
     };
   }
 
-
+*(
+)
 export function addedRigaScontrino(cassaId, scontrinoId) {
   return function(dispatch, getState) {
       
@@ -186,6 +190,7 @@ export function addedRigaScontrino(cassaId, scontrinoId) {
   }
 }
 
+/*
 export function deletedRigaScontrino(cassaId, scontrinoId) {
   return function(dispatch, getState) {
     
@@ -198,6 +203,9 @@ export function deletedRigaScontrino(cassaId, scontrinoId) {
     });
   }
 }
+
+*/
+
 
 export function changedRigaScontrino(cassaId, scontrinoId) {
   return function(dispatch, getState) {

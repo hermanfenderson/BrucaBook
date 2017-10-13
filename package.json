@@ -15,6 +15,7 @@
     "amazon-product-api": "^0.4.2",
     "bootstrap": "^3.3.7",
     "firebase": "^3.6.0",
+    "firebase-admin": "^5.4.1",
     "firebase-functions": "^0.6.3",
     "react": "^15.4.1",
     "react-bootstrap": "^0.30.10",
@@ -30,6 +31,8 @@
     "redux-persist": "^4.0.0-alpha7",
     "redux-promise": "^0.5.3",
     "redux-thunk": "^2.1.0",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.74.2",
     "superagent": "^2.3.0"
   },
   "scripts": {

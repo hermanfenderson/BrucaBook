@@ -4,7 +4,7 @@ import MeasuresReducer from './measures';
 import { combineForms } from 'react-redux-form';
 import CatalogReducer from './catalog';
 import ItemCatalogReducer from './itemCatalog';
-import BolleReducer from './bolle';
+import BolleReducer, * as fromBolle from './bolle';
 import ScontriniReducer from './scontrini';
 import CasseReducer from './casse';
 import StatusReducer from './status';
@@ -27,3 +27,8 @@ const rootReducer = combineReducers({
 });
 
 export default rootReducer;
+
+
+export const getTotaliBolla = (state) => {return fromBolle.getTotaliBolla(state.bolle)};
+export const getRigheBolla = (state) => {return fromBolle.getRigheBolla(state.bolle)};
+export const getEditedRigaBolla = (state) => {return fromBolle.getEditedRigaBolla(state.bolle)};

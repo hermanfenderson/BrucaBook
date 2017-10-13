@@ -7,6 +7,26 @@
 //Inserimento di una riga (evento on child added)
 import Firebase from 'firebase';
 
+//Helper per il prefisso alla base dati...la ricolloco qui... in prospettiva...
+export function prefissoNegozio(getState) 
+    { 
+      return(getState().status.catena + '/' + getState().status.libreria + '/'); 
+    }
+    
+//Passo un getstate, dove voglio andare (stringa), params (oggetti)
+export function urlFactory(getState, destination, params)    
+{   let url = "";
+	switch(destination)
+		{
+			//Bolla: in input idBolla
+			case "totaliBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/totali'; break;
+			case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;	
+			default: return "";
+		}
+	return url;	
+	
+}
+
 export function childAdded(payload, state, dataArrayName, dataIndexName)
 {  //Creo un array e un indice per copia degli attuali
    var dataArrayNew = state[dataArrayName].slice();

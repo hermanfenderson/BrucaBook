@@ -57,6 +57,8 @@ export function prefissoNegozio(getState)
       return(getState().status.catena + '/' + getState().status.libreria + '/'); 
     }
     
+    
+    
 //Prende nel database la configurazione utente e la passa nello stato, Inzialmente catena e negozio
 export function setUserStatus() {
      return function(dispatch) {

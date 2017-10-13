@@ -29,7 +29,7 @@ handleResize = () => {
   this.props.actions.storeMeasure('windowHeight', window.innerHeight);
 }
   render() {
-    if (this.props.auth_info)
+    if (this.props.auth_info && this.props.catena)
         {  
         return (
           
@@ -53,7 +53,8 @@ function mapStateToProps(state) {
   return {
     authenticated: state.auth.authenticated,
     auth_info: state.auth.auth_info,
-    user: state.status.user
+    user: state.status.user,
+    catena: state.status.catena
   };
 }
 
