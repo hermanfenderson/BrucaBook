@@ -1,9 +1,13 @@
+/*
+
+*/
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 
  
-class WrappedBootstrapTable extends React.Component {
+class WrappedTable extends React.Component {
 render ()
      {
      const selectRow = {
@@ -79,7 +83,7 @@ componentDidMount()
  */
 } 
  
-export default WrappedBootstrapTable;
+export default WrappedTable;
  
 
 

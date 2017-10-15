@@ -21,7 +21,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { configureStore } from './store/configureStore';
 
-const store = configureStore();
+export const store = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import WrappedBootstrapTable from '../../../components/WrappedBootstrapTable'
+import WrappedTable from '../../../components/WrappedTable'
 
 
 //E' un dato.... che passo come costante...
@@ -12,7 +12,7 @@ const header = [{dataField: 'ean', label: 'EAN'},
 			   ];
 
 
-class TotaliBolla extends Component 
+class TableBolla extends Component 
     {
     componentDidMount() {
     	//Ascolto modifiche sulle righe della bolla
@@ -30,9 +30,9 @@ class TotaliBolla extends Component
     	render() { 
     	const props = this.props;	
     	  return(
-			<WrappedBootstrapTable {...props} header={header}/>
+			<WrappedTable {...props} header={header}/>
 			)}
     }		
 	
-export default TotaliBolla;
+export default TableBolla;
 

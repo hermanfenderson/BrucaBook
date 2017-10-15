@@ -76,18 +76,21 @@ export function offListenRigaBolla(bollaId)
 //Funzione chiamata quando cambia un campo del form...
 //Mando un oggetto nel formato... campo e valore
 export function changeEditedRigaBolla(name,value) {
-
-	return {
+   	return {
 		type: CHANGE_EDITED_RIGA_BOLLA,
     	name: name,
     	value: value
 		}
 }
 
-//Ho già tutto nello stato...
-export function submitEditedRigaBolla() {
-	return {
-		type: SUBMIT_EDITED_RIGA_BOLLA}
+//Azione richiamata sia perchè il campo EAN è stato attivato per "codice breve"
+//Sia perchè a campi validi... si può scrivere...
+
+export function submitEditedRigaBolla(isValid, bollaId, valori) {
+      return function(dispatch, getState) {
+		dispatch({type: SUBMIT_EDITED_RIGA_BOLLA});
+		if(isValid)	dispatch(aggiungiRigaBolla(bollaId,valori));
+      }
 }	
 
 //FUNZIONI DA VERIFICARE
@@ -121,7 +124,7 @@ export function tableBollaWillScroll(scroll) {
 
 
 //Disattivata la componente che opera sul magazzino...
-export function aggiungiRigaBolla(bolla,valori) {
+export function aggiungiRigaBolla(bollaId,valori) {
   var nuovaRigaBolla = {...valori};
    addCreatedStamp(nuovaRigaBolla);
    preparaRiga(nuovaRigaBolla);
@@ -129,7 +132,10 @@ export function aggiungiRigaBolla(bolla,valori) {
     dispatch(tableBollaWillScroll(true));    //Mi metto alla fine della tabella
     
     //Questa riga è stata modificata.. totali calcolati da una function...
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe').push().set(nuovaRigaBolla);
+    
+    //Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe').push().set(nuovaRigaBolla);
+    Firebase.database().ref(urlFactory(getState,"righeBolla", {bollaId: bollaId})).push().set(nuovaRigaBolla);
+  	
   }
 }
 

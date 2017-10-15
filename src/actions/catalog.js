@@ -82,6 +82,9 @@ export function searchCatalogItem(ean)
   }       
 }
 
+
+//Questa andrà tolta da qui...
+
 export function fillFormWithItem(ean,row)
 { return function(dispatch) {
   dispatch(actions.change('form2.itemCatalog.ean', ean));

@@ -1,59 +1,54 @@
 import React, {Component} from 'react'
-import {Form, Message , Label} from 'semantic-ui-react'
-
+import {Form} from 'semantic-ui-react'
+import WrappedForm from '../../../components/WrappedForm'
 
 class FormRigaBolla extends Component {
-onChange = (event,name, data=undefined) => {
-	    const target = event.target; 
-	    const value = data ? data.checked : target.value; 
-		this.props.changeEditedRigaBolla(name, value)};
+//E' la classe madre che disambigua i diversi campi... checkbox da input normali...
+onChange = (name, value) => {
+	   	this.props.changeEditedRigaBolla(name, value)};
 		
 onSubmit = () => {
-	this.props.submitEditedRigaBolla();
+	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.idBolla, this.props.editedRigaBolla.values); //Per sapere cosa fare... dopo
   }
+
+
 
   render() {
   	const formValues = this.props.editedRigaBolla.values;
+  	const errorMessages = this.props.editedRigaBolla.errorMessages;
   	const prezzoMan = formValues['manSconto'];
+  	const loading = this.props.editedRigaBolla.loading;
+
   	return (
-      <Form onSubmit={this.onSubmit}>
-        <Form.Group>
-         <Form.Field>
-         <Label> EAN </Label>
-          <input value={formValues.ean} placeholder='EAN' width={4} onChange={(e) => this.onChange(e,"ean")} />
-          <Label pointing>Please enter a value</Label>
-          </Form.Field>
-          <Form.Input label='Titolo' value={formValues.titolo} width={6} readOnly/>
-           <Form.Input label='Autore' value={formValues.autore}  width={4} readOnly/>
-             <Form.Input label='Listino' value={formValues.prezzoListino} width={2} readOnly/>
-        </Form.Group>
-        <Form.Group>
-          <Form.Input label='Sc.1' value={formValues.sconto1}  width={2} disabled={prezzoMan} onChange={(e) => this.onChange(e,"sconto1")} />
-		<Form.Input label='Sc.2' value={formValues.sconto2} width={2} disabled={prezzoMan} onChange={(e) => this.onChange(e,"sconto2")}/>
-    	<Form.Input label='Sc.3' value={formValues.sconto3} width={2} disabled={prezzoMan} onChange={(e) => this.onChange(e,"sconto3")}/>
-    
-          <Form.Input label='Prezzo' value={formValues.prezzoUnitario} readOnly={!prezzoMan} width={3} onChange={(e) => this.onChange(e,"prezzoUnitario")}/>
-           <Form.Input label='Quantità' value={formValues.pezzi} width={2} onChange={(e) => this.onChange(e,"pezzi")}/>
-             <Form.Input label='Gratis' value={formValues.gratis} width={2} onChange={(e) => this.onChange(e,"gratis")}/>
-             <Form.Input label='Totale' value={formValues.prezzoTotale} readOnly width={3}/>
-        </Form.Group>
-       
-        <Form.Checkbox label='Man.' checked={formValues.manSconto} onChange={(event,data) => this.onChange(event,"manSconto",data)}/>
+      <WrappedForm loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+         <WrappedForm.Group >
+        <WrappedForm.Input field='ean' label='EAN' width={4}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  width={6} readOnly/>
+        <WrappedForm.Input field='autore' label='Autore'  width={4} readOnly/>
+        <WrappedForm.Input field='prezzoListino' label='Listino'  width={2} readOnly/>
+     
+       </WrappedForm.Group>
         
-       
-       
-         <Message 
-    		 error
-    		 header='EAN non trovato'
-    		  content='Non ho trovato questo libro.'
-			 />
-		 <Message 
-    		 
-    		 header='Titolo inserito'
-    		  content='2 copie a magazzino'
+        <WrappedForm.Group >
+        <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} width={2}/>
+        <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} width={2}/>
+        <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} width={2}/>
+        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' width={3}/>
+        <WrappedForm.Input field='pezzi' label='Quantità' width={2}/>
+        <WrappedForm.Input field='gratis' label='Gratis' width={2}/>
+        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly width={3}/>
+    
+      </WrappedForm.Group>
+       <WrappedForm.Group >
+        <WrappedForm.Checkbox width={2} field='manSconto' label='Man.'/>
+        
+        <WrappedForm.Button width={4}>Submit</WrappedForm.Button>
+       	 <WrappedForm.GeneralError rows={1} width={10} error readOnly value='La paranza è una danza'
+       	 
 			 />	 
-        <Form.Button>Submit</Form.Button>
-      </Form>
+       
+        </WrappedForm.Group >
+       </WrappedForm>
     )
   }
 }

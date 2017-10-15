@@ -38,7 +38,7 @@ render()
         <Image src='/image.png' />
       </Grid.Column>
       <Grid.Column width={10}>
-    	 <FormRigaBolla/>
+    	 <FormRigaBolla idBolla={this.props.params.id}/>
       </Grid.Column>
       <Grid.Column width={3}>
     	 <TotaliBolla idBolla={this.props.params.id}/>
