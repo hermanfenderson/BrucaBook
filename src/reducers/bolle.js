@@ -11,12 +11,10 @@ import {SET_CATALOG_STATE, SET_CATALOG_ITEM } from '../actions/catalog';
 
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 import {isValidEAN, generateEAN} from '../helpers/ean';
-import {addError, isValidBookCode, isAmount, isNotNegativeInteger, isPercentage} from '../helpers/validators';
+import {isValidBookCode, isAmount, isNotNegativeInteger, isPercentage} from '../helpers/validators';
+import {errMgmt, editedItemInitialState} from '../helpers/form';
 
-
-
-const editedRigaBollaInitialState = () => {
-		const editedRigaBollaValuesInitialState = 
+const editedRigaBollaValuesInitialState = 
 	  {			ean: '',
 				titolo: '',
 				autore: '',
@@ -31,23 +29,13 @@ const editedRigaBollaInitialState = () => {
 				prezzoTotale: '',
 				imgUrl: ''	
 	};
+	
+const editedRigaBollaInitialState = () => {
+	return(editedItemInitialState(editedRigaBollaValuesInitialState, {'form':{'bookNotFound': 'EAN non presente in catalogo'}} ));
+}
 
- //La form viene gestita con uno stato di validità generale... isValid
- //errors è un oggetto con chiavi uguali ai campi e uno per il form in se..
- //ha codici di errore non parlanti...
- 
- //errorMessages è identico ad errors ma contiene SOLO gli errori da mostrare...
- //entrambe le strutture vengono calcolate ad ogni change...
- 
- 
-	return { values:{...editedRigaBollaValuesInitialState},
-			errors: {},
-			errorMessages: {},
-			isValid: false,
-			selectedRigaBolla: null,
-			loading: false
-			};
-}		
+
+
 
 const initialState = () => {
 
@@ -75,19 +63,21 @@ function pricesMgmt(changedEditedRigaBolla, name)
 	const sconto3 = changedEditedRigaBolla.values['sconto3'];
 	const pezzi = changedEditedRigaBolla.values['pezzi'];
 	const manSconto = changedEditedRigaBolla.values['manSconto'];
-	if (name !== 'prezzoUnitario')
+	if (name !== 'prezzoUnitario' && sconto1>=0 && sconto2>=0 && sconto3>=0)
 		{
 		if (manSconto) changedEditedRigaBolla.values['prezzoUnitario'] = prezzoListino;
 		else changedEditedRigaBolla.values['prezzoUnitario'] = discountPrice(prezzoListino, sconto1, sconto2, sconto3);
 		}
 	const prezzoUnitario = changedEditedRigaBolla.values['prezzoUnitario'];
-	changedEditedRigaBolla.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);	
+	if (prezzoUnitario >=0 && pezzi>=0) changedEditedRigaBolla.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);	
 }
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformEditedRigaBolla(changedEditedRigaBolla, name, value)
+function transformAndValidateEditedRigaBolla(changedEditedRigaBolla, name, value)
 {  	
 	changedEditedRigaBolla.values[name] = value;
+	
+	//Gestione cambiamenti
     switch (name) {
 		case 'sconto1':
 		case 'sconto2':
@@ -99,81 +89,59 @@ function transformEditedRigaBolla(changedEditedRigaBolla, name, value)
 		case 'pezzi':
 			const pezzi = changedEditedRigaBolla.values['pezzi'];
 			const prezzoUnitario = changedEditedRigaBolla.values['prezzoUnitario'];
-			changedEditedRigaBolla.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);
+			if (prezzoUnitario >=0 && pezzi>=0) changedEditedRigaBolla.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);
 	    break;
 		
 		default:
 		break;
 		
 	}
-	 
-	return changedEditedRigaBolla;
+	
+  //VALIDAZIONE Ricontrollo tutti i campi...a ogni change
+   var cerb = changedEditedRigaBolla;	
+  
+  //I messaggi vengono ricalcolati a ogni iterazione...
+    changedEditedRigaBolla.errorMessages = {};
+   
+   //Se tocco EAN il form è svalido sempre 
+   if (name === 'ean') errMgmt(cerb, 'form', 'bookNotFound', 'EAN non presente in catalogo', true, false); //Se tocco EAN il form è svalido sempre VA CAMBIATA!!!!
+   
+   //ean deve essere EAN valido MA mostro l'errore solo in fase di validazione...
+   errMgmt(cerb, 'ean','invalidEAN','EAN non valido',  ((value) => {return !isValidEAN(value)})(cerb.values.ean), false);
+  
+   var cond = (!isValidBookCode(cerb.values.ean) && (cerb.values.ean.length<=13));
+   errMgmt(cerb, 'ean','invalidBookCode','EAN è un numero',  cond);
+   
+   cond = (!isValidBookCode(changedEditedRigaBolla.values.ean) && (changedEditedRigaBolla.values.ean.length>13)); 
+   errMgmt(cerb, 'ean','tooLongBookCode','Codice troppo lungo',  cond);
+
+
+  
+		
+   errMgmt(cerb, 'sconto1','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cerb.values.sconto1));
+   errMgmt(cerb, 'sconto2','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cerb.values.sconto2));
+   errMgmt(cerb, 'sconto3','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cerb.values.sconto3));
+   	
+   
+   	errMgmt(cerb, 'prezzoUnitario','invalidAmount','Importo (19.99)',  
+   	    ((value) => {return !isAmount(value)})(cerb.values.prezzoUnitario), 
+   	    ((value) => {return (value.length>0 && !isAmount(value))})(cerb.values.prezzoUnitario));
+   	    
+    errMgmt(cerb, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cerb.values.pezzi));
+  	errMgmt(cerb, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cerb.values.gratis));
+  
+  
+
+
+    errMgmt(cerb, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cerb.values.pezzi));
+  	errMgmt(cerb, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cerb.values.gratis));
+  	
+    //Se ho anche solo un errore... sono svalido.
+    cerb.isValid = false;
+    if (Object.keys(cerb.errors).length === 0) cerb.isValid = true;
+    return changedEditedRigaBolla;
 }
 
-function validateFormEditedRigaBolla(changedEditedRigaBolla, name, value)
-{   //Ricontrollo tutti i campi...a ogni change
-   	
-    changedEditedRigaBolla.isValid = true; //Basta un errore e passo a false
-     changedEditedRigaBolla.errors = {};
-    changedEditedRigaBolla.errorMessages = {};
-   if (name === 'ean')  changedEditedRigaBolla.isValid = false; //Se tocco EAN il form è svalido sempre
-   //ean deve essere EAN valido MA mostro l'errore solo in fase di validazione...
-   if (!isValidEAN(changedEditedRigaBolla.values.ean)) 
-		{
-		addError(changedEditedRigaBolla.errors,'ean','invalidEAN');
-		 
-		 changedEditedRigaBolla.isValid = false;
-		} 
-		
-   if (!isValidBookCode(changedEditedRigaBolla.values.ean) && changedEditedRigaBolla.values.ean.length<=13) 
-		{addError(changedEditedRigaBolla.errors,'ean','invalidBookCode');
-		 changedEditedRigaBolla.errorMessages.ean = 'EAN è un numero';
-		 changedEditedRigaBolla.isValid = false;
-		}      
-   
-   if (!isValidBookCode(changedEditedRigaBolla.values.ean) && changedEditedRigaBolla.values.ean.length>13) 
-		{addError(changedEditedRigaBolla.errors,'ean','toolongBookCode');
-		 changedEditedRigaBolla.errorMessages.ean = 'Codice troppo lungo';
-		 changedEditedRigaBolla.isValid = false;
-		}      
-   				
-   if (!isPercentage(changedEditedRigaBolla.values.sconto1)) 
-		{addError(changedEditedRigaBolla.errors,'sconto1','invalidPercentage');
-		 changedEditedRigaBolla.errorMessages.sconto1='0-99';
-		 changedEditedRigaBolla.isValid = false;
-		}   
-   if (!isPercentage(changedEditedRigaBolla.values.sconto2)) 
-		{addError(changedEditedRigaBolla.errors,'sconto2','invalidPercentage');
-		 changedEditedRigaBolla.errorMessages.sconto2='0-99';
-		 changedEditedRigaBolla.isValid = false;
-		}     
-    if (!isPercentage(changedEditedRigaBolla.values.sconto3)) 
-		{addError(changedEditedRigaBolla.errors,'sconto3','invalidPercentage');
-		 changedEditedRigaBolla.errorMessages.sconto3='0-99';
-		 changedEditedRigaBolla.isValid = false;
-		} 
-	if (!isAmount(changedEditedRigaBolla.values.prezzoUnitario)) 
-		{addError(changedEditedRigaBolla.errors,'prezzoUnitario','invalidAmount');
-		 if (changedEditedRigaBolla.values.prezzoUnitario.length > 0) changedEditedRigaBolla.errorMessages.prezzoUnitario='Importo (19.99)';
-		 changedEditedRigaBolla.isValid = false;
-		}  	
-     if (!isNotNegativeInteger(changedEditedRigaBolla.values.pezzi)) 
-		{addError(changedEditedRigaBolla.errors,'pezzi','notPositive');
-		 changedEditedRigaBolla.errorMessages.pezzi='numero intero';
-		 changedEditedRigaBolla.isValid = false;
-		}  
-	  if (!isNotNegativeInteger(changedEditedRigaBolla.values.gratis)) 
-		{addError(changedEditedRigaBolla.errors,'gratis','notPositive');
-		 changedEditedRigaBolla.errorMessages.gratis='numero intero';
-		 changedEditedRigaBolla.isValid = false;
-		}  
-		 changedEditedRigaBolla.errorMessages.ean='';
-		 changedEditedRigaBolla.errorMessages.form='Correggi pirla!';
-		 
-		
-	return changedEditedRigaBolla;
-	
-}
 
 
 export default function bolle(state = initialState(), action) {
@@ -211,10 +179,10 @@ export default function bolle(state = initialState(), action) {
       
    case CHANGE_EDITED_RIGA_BOLLA:
    	    const values = {...state.editedRigaBolla.values};
-   	   const errors = {...state.editedRigaBolla.errors};
+   	    const errors = {...state.editedRigaBolla.errors};
 	    const errorMessages = {...state.editedRigaBolla.errorMessages};
-	   let tbc4EditedRigaBolla = {...state.editedRigaBolla, values: values, errors: errors, errorMessages: errorMessages};
-	    const changedEditedRigaBolla = validateFormEditedRigaBolla(transformEditedRigaBolla(tbc4EditedRigaBolla, action.name, action.value), action.name, action.value);
+	    let tbc4EditedRigaBolla = {...state.editedRigaBolla, values: values, errors: errors, errorMessages: errorMessages};
+	    const changedEditedRigaBolla = transformAndValidateEditedRigaBolla(tbc4EditedRigaBolla, action.name, action.value);
       	newState =  {...state, editedRigaBolla: changedEditedRigaBolla};
 		break;
 		
@@ -227,39 +195,62 @@ export default function bolle(state = initialState(), action) {
 	    	newState = {...state, editedRigaBolla: tbcEditedRigaBolla}; //Reset dello stato della riga bolla...
 	    	}
 	    else //Altrimenti
-	    	{   
-	    		//Se il form è invalid... e EAN non è valido... correggo EAN...DEVO MIGLIORARE 
-	    		if (isValidEAN(state.editedRigaBolla.values.ean)) newState = state;
+	    	{   let tbcEditedRigaBolla = {...state.editedRigaBolla};
+
+	    		//Se il form è invalid... e EAN non è valido... correggo EAN...
+	    		if (isValidEAN(state.editedRigaBolla.values.ean)) 
+	    		     {
+	    		     	//Mostro gli errori del form...
+	    		        errMgmt(tbcEditedRigaBolla, 'form', 'bookNotFound', 'EAN non presente in catalogo', true, true);
+	    		     }
+	    			
 	    		else {
-	    			let tbcEditedRigaBolla = {...state.editedRigaBolla};
-	    		    tbcEditedRigaBolla.values.ean = generateEAN(tbcEditedRigaBolla.values.ean);
-	    	    	newState = {...state, editedRigaBolla: tbcEditedRigaBolla};
+	    			 tbcEditedRigaBolla.values.ean = generateEAN(tbcEditedRigaBolla.values.ean);
+	    	    
 	    			}
+	    			newState = {...state, editedRigaBolla: tbcEditedRigaBolla};	
 	    	}
         break;
-        
-    case SET_CATALOG_ITEM:
-    	let tbcEditedRigaBollaValues = {...state.editedRigaBolla.values};
-    	//Il form e' valido... 
-    	let tbcEditedRigaBolla = {...state.editedRigaBolla, isValid : true};
-    	//Copio l'esito della ricerca...
-    	tbcEditedRigaBollaValues.titolo = action.item.titolo;
-    	tbcEditedRigaBollaValues.autore = action.item.autore;
-    	tbcEditedRigaBollaValues.prezzoListino = action.item.prezzoListino;
-    	tbcEditedRigaBolla.values = tbcEditedRigaBollaValues;
-    	//Aggiorno i prezi e i totali
-    	if (tbcEditedRigaBolla.values['prezzoListino'] > 0) pricesMgmt(tbcEditedRigaBolla,'prezzoListino');
-    	//Salvo il nuovo stato...
-        newState = {...state, editedRigaBolla: tbcEditedRigaBolla};
-        break;
-        
+    
     case SET_CATALOG_STATE:
     	let tbc2EditedRigaBolla = {...state.editedRigaBolla};
     	if (action.status === 'SEARCH') tbc2EditedRigaBolla.loading = true;
     	else tbc2EditedRigaBolla.loading = false;
-    	newState = {...state, editedRigaBolla: tbc2EditedRigaBolla}
+    	newState = {...state, editedRigaBolla: tbc2EditedRigaBolla};
     	break;
+    
+        
+    case SET_CATALOG_ITEM:
     	
+    	//DEVO DISTINGUERE IL CASO COMPLETO DA QUELLO INCOMPLETO!!!!!!!!! Agisco solo per il caso completo...
+    	let tbc3EditedRigaBolla = {...state.editedRigaBolla};
+        let tbc3EditedRigaBollaValues = tbc3EditedRigaBolla.values;
+    	//Copio l'esito della ricerca...
+    	tbc3EditedRigaBollaValues.titolo = action.item.titolo;
+    	tbc3EditedRigaBollaValues.autore = action.item.autore;
+    	tbc3EditedRigaBollaValues.prezzoListino = action.item.prezzoListino;
+    	
+    	//Aggiorno i prezi e i totali
+    	if (tbc3EditedRigaBollaValues['prezzoListino'] > 0) pricesMgmt(tbc3EditedRigaBolla,'prezzoListino');
+    	
+    	//Il form e' potenzialmente valido... sgancio gli errori...
+    	//Se sono qui... EAN è sicuramente valido...
+        
+    	errMgmt(tbc3EditedRigaBolla, 'ean', 'invalidEAN': 'EAN non valido', false, false);
+    	//Se sono qui... ho trovato il libro...
+    	errMgmt(tbc3EditedRigaBolla, 'form', 'bookNotFound': 'EAN non presente in catalogo', false, false);
+    	//E ho anche il prezzo
+    	errMgmt(tbc3EditedRigaBolla, 'prezzoUnitario','invalidAmount', 'Importo (19.99)',false, false);
+    	//Valuto se sono valido... 
+    	if (Object.keys(tbc3EditedRigaBolla.errors).length === 0) tbc3EditedRigaBolla.isValid = true;
+    
+    		//Salvo il nuovo stato...
+        newState = {...state, editedRigaBolla: tbc3EditedRigaBolla};
+        break;
+        
+        
+    
+    
     default:
         newState =  state;
     	break;

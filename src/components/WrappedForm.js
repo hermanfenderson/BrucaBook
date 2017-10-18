@@ -16,7 +16,7 @@ Passo a ogni singolo componente...
 */
 
 import React, {Component} from 'react'
-import {Form, Message , Label, Input} from 'semantic-ui-react'
+import {Form, Label, Input} from 'semantic-ui-react'
 //Gestoscp pmChange separatamente per consentire l'over-ride della funzione onChange...
 const renderChildren = (props, onChange) => {
 let children = React.Children.map(props.children, child => {

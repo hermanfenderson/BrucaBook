@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {Form} from 'semantic-ui-react'
 import WrappedForm from '../../../components/WrappedForm'
 
 class FormRigaBolla extends Component {

@@ -8,6 +8,7 @@ import {isValidEAN} from '../../..//helpers/ean';
 
 import {store} from '../../../index.js';
 
+//Memorizzo il penultimo ean...
 let ean = '';
 
 //Passa lo stato modificato come previsto ma intercetta un cambiamento di ean e scatena azioni...
