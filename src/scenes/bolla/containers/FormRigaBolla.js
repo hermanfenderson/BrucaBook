@@ -14,6 +14,7 @@ let ean = '';
 //Passa lo stato modificato come previsto ma intercetta un cambiamento di ean e scatena azioni...
 const getEditedRigaBollaSideEffects= (state) => {
 	const erb = getEditedRigaBolla(state);
+
 	//Il cambio di stato riguarda un EAN
 	if (erb.values.ean !== ean) {
 							ean = erb.values.ean;
@@ -22,6 +23,7 @@ const getEditedRigaBollaSideEffects= (state) => {
 							}
 	return(erb);
 }
+
 
 const mapStateToProps = (state) => { 
 	return ({editedRigaBolla: getEditedRigaBollaSideEffects(state)})

@@ -4,12 +4,15 @@ import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 export const ADDED_RIGA_BOLLA = 'ADDED_RIGA_BOLLA';
 export const DELETED_RIGA_BOLLA = 'DELETED_RIGA_BOLLA';
 export const CHANGED_RIGA_BOLLA = 'CHANGED_RIGA_BOLLA';
-export const CHANGE_EDITED_RIGA_BOLLA = 'CHANGE_EDITED_RIGA_BOLLA';
-export const SUBMIT_EDITED_RIGA_BOLLA = 'SUBMIT_EDITED_RIGA_BOLLA';
-export const SET_SELECTED_RIGA_BOLLA = 'SET_SELECTED_RIGA_BOLLA';
 export const TABLE_BOLLA_WILL_SCROLL = 'TABLE_BOLLA_WILL_SCROLL';
 export const RESET_BOLLA = 'RESET_BOLLA';
 export const TOTALI_CHANGED = 'TOTALI_CHANGED';
+
+//action per il form Rigabolla
+export const CHANGE_EDITED_RIGA_BOLLA = 'CHANGE_EDITED_RIGA_BOLLA';
+export const SUBMIT_EDITED_RIGA_BOLLA = 'SUBMIT_EDITED_RIGA_BOLLA';
+export const SET_SELECTED_RIGA_BOLLA = 'SET_SELECTED_RIGA_BOLLA';
+
 import Firebase from 'firebase';
 import {prefissoNegozio} from './index';
 

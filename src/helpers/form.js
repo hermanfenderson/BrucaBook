@@ -48,3 +48,7 @@ export function errMgmt(cerb, name,error,message, errorCondition, errorMessageCo
 		}
 	if (errorMessageCondition === true) cerb.errorMessages[name] = message;
 }
+
+export function isValidEditedItem(editedItem) {
+	return ((Object.keys(editedItem.errors).length === 0) && editedItem.loading === false)
+}

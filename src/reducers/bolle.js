@@ -6,13 +6,14 @@ import {CHANGED_RIGA_BOLLA, CHANGE_EDITED_RIGA_BOLLA, SUBMIT_EDITED_RIGA_BOLLA, 
 import {SET_SELECTED_RIGA_BOLLA } from '../actions/bolle';
 import {TABLE_BOLLA_WILL_SCROLL } from '../actions/bolle';
 import {RESET_BOLLA } from '../actions/bolle';
-import {SET_CATALOG_STATE, SET_CATALOG_ITEM } from '../actions/catalog';
+import {SEARCH_CATALOG_ITEM, SEARCH_CLOUD_ITEM, FOUND_CATALOG_ITEM, FOUND_CLOUD_ITEM, NOT_FOUND_CATALOG_ITEM, NOT_FOUND_CLOUD_ITEM, SUBMIT_EDITED_CATALOG_ITEM } from '../actions/catalog';
 
 
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode, isAmount, isNotNegativeInteger, isPercentage} from '../helpers/validators';
-import {errMgmt, editedItemInitialState} from '../helpers/form';
+import {isComplete} from '../helpers/catalog';
+import {errMgmt, editedItemInitialState, editedItemCopy, isValidEditedItem} from '../helpers/form';
 
 const editedRigaBollaValuesInitialState = 
 	  {			ean: '',
@@ -44,10 +45,13 @@ const initialState = () => {
 			righeBollaArrayIndex: {},
 		    selectedRigaBolla: null,
 			tableBollaWillScroll: false,
+			showCatalogModal: false,
 			totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
 			editedRigaBolla: {...editedRigaBollaInitialState()}
 	    	}
     }
+    
+    
 
 function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
 {  
@@ -104,7 +108,14 @@ function transformAndValidateEditedRigaBolla(changedEditedRigaBolla, name, value
     changedEditedRigaBolla.errorMessages = {};
    
    //Se tocco EAN il form è svalido sempre 
-   if (name === 'ean') errMgmt(cerb, 'form', 'bookNotFound', 'EAN non presente in catalogo', true, false); //Se tocco EAN il form è svalido sempre VA CAMBIATA!!!!
+   if (name === 'ean') 
+        {
+		errMgmt(cerb, 'form', 'bookNotFound', 'EAN non presente in catalogo', true, false); //Se tocco EAN il form è svalido sempre VA CAMBIATA!!!!
+		//E cancello i campi del libro...
+		cerb.values.titolo = '';
+		cerb.values.autore = '';
+		cerb.values.prezzoListino = '';
+		}
    
    //ean deve essere EAN valido MA mostro l'errore solo in fase di validazione...
    errMgmt(cerb, 'ean','invalidEAN','EAN non valido',  ((value) => {return !isValidEAN(value)})(cerb.values.ean), false);
@@ -137,11 +148,35 @@ function transformAndValidateEditedRigaBolla(changedEditedRigaBolla, name, value
   	errMgmt(cerb, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cerb.values.gratis));
   	
     //Se ho anche solo un errore... sono svalido.
-    cerb.isValid = false;
-    if (Object.keys(cerb.errors).length === 0) cerb.isValid = true;
+    changedEditedRigaBolla.isValid = isValidEditedItem(changedEditedRigaBolla);
     return changedEditedRigaBolla;
 }
 
+function foundCompleteItem(editedRigaBolla, action) 
+{
+		let tbc3EditedRigaBolla = editedItemCopy(editedRigaBolla);
+        let tbc3EditedRigaBollaValues = tbc3EditedRigaBolla.values;
+        tbc3EditedRigaBolla.loading = false;
+    	//Copio l'esito della ricerca...
+    	tbc3EditedRigaBollaValues.titolo = action.item.titolo;
+    	tbc3EditedRigaBollaValues.autore = action.item.autore;
+    	tbc3EditedRigaBollaValues.prezzoListino = action.item.prezzoListino;
+    	
+    	//Aggiorno i prezi e i totali
+    	if (tbc3EditedRigaBollaValues['prezzoListino'] > 0) pricesMgmt(tbc3EditedRigaBolla,'prezzoListino');
+    	
+    	//Il form e' potenzialmente valido... sgancio gli errori...
+    	//Se sono qui... EAN è sicuramente valido...
+        
+    	errMgmt(tbc3EditedRigaBolla, 'ean', 'invalidEAN': 'EAN non valido', false, false);
+    	//Se sono qui... ho trovato il libro...
+    	errMgmt(tbc3EditedRigaBolla, 'form', 'bookNotFound': 'EAN non presente in catalogo', false, false);
+    	//E ho anche il prezzo
+    	errMgmt(tbc3EditedRigaBolla, 'prezzoUnitario','invalidAmount', 'Importo (19.99)',false, false);
+    	//Valuto se sono valido... 
+    	 tbc3EditedRigaBolla.isValid = isValidEditedItem(tbc3EditedRigaBolla);
+    	 return(tbc3EditedRigaBolla);
+}
 
 
 export default function bolle(state = initialState(), action) {
@@ -178,12 +213,7 @@ export default function bolle(state = initialState(), action) {
 		break;
       
    case CHANGE_EDITED_RIGA_BOLLA:
-   	    const values = {...state.editedRigaBolla.values};
-   	    const errors = {...state.editedRigaBolla.errors};
-	    const errorMessages = {...state.editedRigaBolla.errorMessages};
-	    let tbc4EditedRigaBolla = {...state.editedRigaBolla, values: values, errors: errors, errorMessages: errorMessages};
-	    const changedEditedRigaBolla = transformAndValidateEditedRigaBolla(tbc4EditedRigaBolla, action.name, action.value);
-      	newState =  {...state, editedRigaBolla: changedEditedRigaBolla};
+      	newState =  {...state, editedRigaBolla: transformAndValidateEditedRigaBolla(editedItemCopy(state.editedRigaBolla), action.name, action.value)};
 		break;
 		
    case SUBMIT_EDITED_RIGA_BOLLA:
@@ -191,8 +221,7 @@ export default function bolle(state = initialState(), action) {
 			
 		if (state.editedRigaBolla.isValid)
 	    	{
-	    	let tbcEditedRigaBolla = {...editedRigaBollaInitialState()};	
-	    	newState = {...state, editedRigaBolla: tbcEditedRigaBolla}; //Reset dello stato della riga bolla...
+	    	newState = {...state, editedRigaBolla: {...editedRigaBollaInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
 	    	}
 	    else //Altrimenti
 	    	{   let tbcEditedRigaBolla = {...state.editedRigaBolla};
@@ -206,50 +235,47 @@ export default function bolle(state = initialState(), action) {
 	    			
 	    		else {
 	    			 tbcEditedRigaBolla.values.ean = generateEAN(tbcEditedRigaBolla.values.ean);
-	    	    
+	    	         tbcEditedRigaBolla.loading = true;
 	    			}
 	    			newState = {...state, editedRigaBolla: tbcEditedRigaBolla};	
 	    	}
         break;
     
-    case SET_CATALOG_STATE:
-    	let tbc2EditedRigaBolla = {...state.editedRigaBolla};
-    	if (action.status === 'SEARCH') tbc2EditedRigaBolla.loading = true;
-    	else tbc2EditedRigaBolla.loading = false;
+    case SEARCH_CATALOG_ITEM:
+    case SEARCH_CLOUD_ITEM:	
+    	let tbc2EditedRigaBolla = editedItemCopy(state.editedRigaBolla);
+    	tbc2EditedRigaBolla.loading = true;
     	newState = {...state, editedRigaBolla: tbc2EditedRigaBolla};
     	break;
     
-        
-    case SET_CATALOG_ITEM:
-    	
-    	//DEVO DISTINGUERE IL CASO COMPLETO DA QUELLO INCOMPLETO!!!!!!!!! Agisco solo per il caso completo...
-    	let tbc3EditedRigaBolla = {...state.editedRigaBolla};
-        let tbc3EditedRigaBollaValues = tbc3EditedRigaBolla.values;
-    	//Copio l'esito della ricerca...
-    	tbc3EditedRigaBollaValues.titolo = action.item.titolo;
-    	tbc3EditedRigaBollaValues.autore = action.item.autore;
-    	tbc3EditedRigaBollaValues.prezzoListino = action.item.prezzoListino;
-    	
-    	//Aggiorno i prezi e i totali
-    	if (tbc3EditedRigaBollaValues['prezzoListino'] > 0) pricesMgmt(tbc3EditedRigaBolla,'prezzoListino');
-    	
-    	//Il form e' potenzialmente valido... sgancio gli errori...
-    	//Se sono qui... EAN è sicuramente valido...
-        
-    	errMgmt(tbc3EditedRigaBolla, 'ean', 'invalidEAN': 'EAN non valido', false, false);
-    	//Se sono qui... ho trovato il libro...
-    	errMgmt(tbc3EditedRigaBolla, 'form', 'bookNotFound': 'EAN non presente in catalogo', false, false);
-    	//E ho anche il prezzo
-    	errMgmt(tbc3EditedRigaBolla, 'prezzoUnitario','invalidAmount', 'Importo (19.99)',false, false);
-    	//Valuto se sono valido... 
-    	if (Object.keys(tbc3EditedRigaBolla.errors).length === 0) tbc3EditedRigaBolla.isValid = true;
     
-    		//Salvo il nuovo stato...
-        newState = {...state, editedRigaBolla: tbc3EditedRigaBolla};
+    case NOT_FOUND_CATALOG_ITEM:
+    	let tbc4EditedRigaBolla = editedItemCopy(state.editedRigaBolla);
+        tbc4EditedRigaBolla.loading = false;
+    	newState = {...state, editedRigaBolla: tbc4EditedRigaBolla};
+    	break;
+    	
+         
+     case FOUND_CATALOG_ITEM:
+     case FOUND_CLOUD_ITEM:
+          newState = {...state, editedRigaBolla: foundCompleteItem(state.editedRigaBolla, action)};
+          break;
+          
+        
+        
+     case NOT_FOUND_CLOUD_ITEM:
+     	//COMPRENDE ANCHE I CODICI INTERNI NON VALORIZZATI....
+     	  let tbc5EditedRigaBolla = editedItemCopy(state.editedRigaBolla);
+          tbc5EditedRigaBolla.loading = false;
+    	  newState = {...state, editedRigaBolla: tbc5EditedRigaBolla, showCatalogModal : true};
         break;
         
-        
-    
+     case SUBMIT_EDITED_CATALOG_ITEM:
+     	  //Se torno dal form sono sicuro che è completo...
+      	   newState = {...state, editedRigaBolla: foundCompleteItem(state.editedRigaBolla, action), showCatalogModal : false};
+          break;
+     	  
+
     
     default:
         newState =  state;
@@ -263,6 +289,7 @@ export default function bolle(state = initialState(), action) {
  export const getTotaliBolla = (state) => {return state.totali};  
  export const getRigheBolla = (state) => {return state.righeBollaArray};  
  export const getEditedRigaBolla = (state) => {return state.editedRigaBolla};  
+ export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  
  
       

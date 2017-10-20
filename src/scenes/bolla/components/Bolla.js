@@ -1,9 +1,9 @@
 import TableBolla from '../containers/TableBolla';
 import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../containers/TotaliBolla';
-
+import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import React, {Component} from 'react'
-import { Grid, Image, Container} from 'semantic-ui-react'
+import { Grid, Image, Container, Modal} from 'semantic-ui-react'
 
 
 
@@ -32,7 +32,11 @@ class Bolla extends Component {
 render()
 {
   return (
+     
   <Grid columns={3}>
+  <Modal open={this.props.showCatalogModal}>
+	<FormCatalogo/>
+  </Modal>
     <Grid.Row>
       <Grid.Column width={3}>
         <Image src='/image.png' />
@@ -49,7 +53,10 @@ render()
          <TableBolla idBolla={this.props.params.id}/>
       </Container>
     </Grid.Row>
+   
   </Grid>
+ 
+ 
 )
 }
 

@@ -1,81 +1,95 @@
 import Firebase from 'firebase';
 import request from 'superagent';
-import { actions } from 'react-redux-form';
+import {isComplete} from '../helpers/catalog'
+import {isInternalEAN} from '../helpers/ean'
 
-
+//Azioni legate ad azioni di ricerca
 export const UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM';
 export const SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM';
-export const SET_CATALOG_STATE = 'SET_CATALOG_STATE';
-export const SET_CATALOG_ITEM = 'SET_CATALOG_ITEM';
-export const SET_CATALOG_EAN = 'SET_CATALOG_EAN';
+export const SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM';
+export const FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM';
+export const FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM';
+export const NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM';
+export const NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM';
+
+//Azioni legate al form
+export const CHANGE_EDITED_CATALOG_ITEM = 'CHANGE_EDITED_CATALOG_ITEM';
+export const SUBMIT_EDITED_CATALOG_ITEM = 'SUBMIT_EDITED_CATALOG_ITEM';
 
 
-export const IDLE = 'IDLE';
-export const SEARCH = 'SEARCH';
-export const FAIL = 'FAIL';
-export const ABORT = 'ABORT';
-export const INCOMPLETE = 'INCOMPLETE';
-export const OK = 'OK';
 
-//Gestione degli stati...
-export function setStatus(status, statusText = "")
-{
-  return(
-    {type: SET_CATALOG_STATE,
-     status: status,
-     statusText: statusText
-    }
-  )
-}
-
-export function setCatalogItem(item)
+export function foundCatalogItem(item)
 {return({
-  type: SET_CATALOG_ITEM,
+  type: FOUND_CATALOG_ITEM,
   item: item
    }
   )
 }
 
-export function setCatalogEAN(ean)
-{return({
-  type: SET_CATALOG_EAN,
-  ean: ean
-  })
+export function foundCloudItem(ean,item)
+{
+	return function(dispatch) {
+  	     item['ean'] = ean; //La ricerca non lo contiene...
+	   dispatch({type: FOUND_CLOUD_ITEM,item});	
+	   dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...
+		
+	}
 }
 
-export function searchIBSItem(ean)
+//Copro anche il caso dei ritorni parziali...
+export function notFoundCloudItem(ean,item)
 {
+	return function(dispatch) {
+  	     item['ean'] = ean; //La ricerca non lo contiene...
+	   dispatch({type: NOT_FOUND_CLOUD_ITEM,item});	
+	}
+}
+
+export function notFoundCatalogItem()
+{return({
+  type: NOT_FOUND_CATALOG_ITEM,
+   }
+  )
+}
+
+
+export function searchCloudItem(ean)
+{ 
   return function(dispatch) {
-          dispatch(setStatus(SEARCH,"Ricerca in IBS"));
-          dispatch(setCatalogEAN(ean));
-          var promise = new Promise( function (resolve, reject) {
-	  request.get('https://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
-                  (response, ean) => {
-                                var book = JSON.parse(response.text);
-                                dispatch(setStatus(OK,"Ricerca in IBS terminata"));
-                                dispatch(setCatalogItem(book));
-                                resolve(book, ean);
-                             }
-                  )
-          })
+  	   dispatch({type: SEARCH_CLOUD_ITEM});
+  	  //Non cerco nel cloud per codici interni
+  	  if (!isInternalEAN) 
+  	  {
+	      var promise = new Promise( function (resolve, reject) {
+		  request.get('https://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
+	                  (response) => {
+	                                var book = JSON.parse(response.text);
+	                                if (isComplete(book)) dispatch(foundCloudItem(ean,book));
+	                                else dispatch(notFoundCloudItem(ean,book));
+	                                resolve(book, ean);
+	                             }
+	                  )
+	          })
 	  return promise;   
- }
+	  }
+	 //Codice interno vergine... 
+	 else dispatch(notFoundCloudItem(ean,{}))
+  }
 }
 
 
 export function searchCatalogItem(ean)
   { 
-  return function(dispatch) {
-      dispatch(setStatus(SEARCH,"Ricerca in catalogo"));
-      dispatch(setCatalogEAN(ean));
+   return function(dispatch) {
+   dispatch({type: SEARCH_CATALOG_ITEM});
       var promise = new Promise( function (resolve, reject) {
           Firebase.database().ref('catalogo/'+ean).once('value').then(
                  (payload) => {
-                       if (payload.val()) 
-                    		{dispatch(setStatus(OK,"Ricerca OK in catalogo"));
-                    		dispatch(setCatalogItem(payload.val()));
+                       if (payload.val()) dispatch(foundCatalogItem(payload.val()));
+                       else {
+                       		dispatch(notFoundCatalogItem());
+                       		dispatch(searchCloudItem(ean));
                     		}
-                       else dispatch(setStatus(FAIL,"Ricerca fallita in catalogo"));
                        resolve(payload);}                
                  )})        
           return promise;
@@ -83,18 +97,6 @@ export function searchCatalogItem(ean)
 }
 
 
-//Questa andrà tolta da qui...
-
-export function fillFormWithItem(ean,row)
-{ return function(dispatch) {
-  dispatch(actions.change('form2.itemCatalog.ean', ean));
-  dispatch(actions.change('form2.itemCatalog.titolo', row.titolo));
-  dispatch(actions.change('form2.itemCatalog.autore', row.autore));
-    dispatch(actions.change('form2.itemCatalog.editore', row.editore));
-  dispatch(actions.change('form2.itemCatalog.prezzoListino', row.prezzoListino));
- }
-}
-                            
 //Item è un oggetto con una chiave ean dentro... la trasformo nella chiave del catalogo
 export function updateCatalogItem(item)
 {
@@ -103,10 +105,38 @@ export function updateCatalogItem(item)
   delete slicedItem.ean;
   return function(dispatch) {
     Firebase.database().ref('catalogo/'+ean).update(slicedItem).then(response => {
-      console.log(response); 
       dispatch({
-        type: UPDATE_CATALOG_ITEM
+        type: UPDATE_CATALOG_ITEM,
+        item: item
       });
     });
   }
 }
+
+
+//Funzione chiamata quando cambia un campo del form...
+//Mando un oggetto nel formato... campo e valore
+export function changeEditedCatalogItem(name,value) {
+   	return {
+		type: CHANGE_EDITED_CATALOG_ITEM,
+    	name: name,
+    	value: value
+		}
+}
+
+//Azione richiamata sia perchè il campo EAN è stato attivato per "codice breve"
+//Sia perchè a campi validi... si può scrivere...
+
+export function submitEditedCatalogItem(isValid, item) {
+      return function(dispatch, getState) {
+		if(isValid)	
+		    {   item['prezzoListino'] = parseFloat(item['prezzoListino']).toFixed(2); //Formato corretto...
+		    	dispatch(updateCatalogItem(item))
+		    };
+
+      dispatch({type: SUBMIT_EDITED_CATALOG_ITEM, item:item});
+      }
+}	
+
+
+

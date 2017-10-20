@@ -2,7 +2,9 @@ import { combineReducers } from 'redux';
 import AuthReducer from './auth';
 import MeasuresReducer from './measures';
 import { combineForms } from 'react-redux-form';
-import CatalogReducer from './catalog';
+import CatalogReducer, * as fromCatalog from './catalog';
+import OldCatalogReducer from './oldCatalog';
+
 import ItemCatalogReducer from './itemCatalog';
 import BolleReducer, * as fromBolle from './bolle';
 import ScontriniReducer from './scontrini';
@@ -18,6 +20,7 @@ const rootReducer = combineReducers({
   scontrini: ScontriniReducer,
   casse: CasseReducer,
   catalog: CatalogReducer,
+  oldCatalog: OldCatalogReducer,
   form: FormReducer,
   measures: MeasuresReducer,
   status: StatusReducer,
@@ -32,3 +35,5 @@ export default rootReducer;
 export const getTotaliBolla = (state) => {return fromBolle.getTotaliBolla(state.bolle)};
 export const getRigheBolla = (state) => {return fromBolle.getRigheBolla(state.bolle)};
 export const getEditedRigaBolla = (state) => {return fromBolle.getEditedRigaBolla(state.bolle)};
+export const getShowCatalogModal = (state) => {return fromBolle.getShowCatalogModal(state.bolle)};
+export const getEditedCatalogItem = (state) => {return fromCatalog.getEditedCatalogItem(state.catalog)};

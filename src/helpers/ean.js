@@ -20,6 +20,17 @@ export function isValidEAN(code)
   return false;
 }
 
+export function isInternalEAN(code)
+{ 
+  if (code.length !==13) return false;
+  var number = code.slice(0,12);
+  var check = code.slice(-1);
+ 
+  if ((eanCheckDigit(number) == check) && (code[0] === '2')) return true;
+  return false;
+}
+
+
 export function generateEAN(number)
 { 
   //Genero il numero che mi serve a partire dal codice interno... 

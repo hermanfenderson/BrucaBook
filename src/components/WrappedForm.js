@@ -58,6 +58,7 @@ const FormGroup = (props) => {
 
 
 class WrappedForm extends Component {
+	
     static Group = FormGroup;
     static ErrorLabel = ErrorLabel;
     static Checkbox = Checkbox;
@@ -65,13 +66,19 @@ class WrappedForm extends Component {
     static Button = FormButton;
     static GeneralError = GeneralError;
     //Per distinguere la chekbox...
+    
+    
+    //Caricamento di eventuali valori iniziali
+    //Passo una prop di dati e una action 
+    
+    
     onChange = (event,name, data=undefined) => {
 	    const target = event.target; 
 	    const value = data ? data.checked : target.value; 
 	    this.props.onChange(name,value);
     	}
     render()
-    	{return  <Form onSubmit={this.props.onSubmit}> {renderChildren(this.props, this.onChange)}</Form>}
+    	{return  <Form loading={this.props.loading} onSubmit={this.props.onSubmit}> {renderChildren(this.props, this.onChange)}</Form>}
 }
 
 

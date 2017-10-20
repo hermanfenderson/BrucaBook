@@ -12,7 +12,7 @@ import GestioneBollaOld from './containers/GestioneBollaOld';
 import GestioneBolla from './scenes/bolla';
 
 import GestioneScontrino from './containers/GestioneScontrino';
-import GestioneItemCatalog from './containers/GestioneItemCatalog';
+import GestioneItemCatalog from './scenes/catalogo';
 
 import RequireAuth from './containers/RequireAuth';
 

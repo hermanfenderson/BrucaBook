@@ -4,7 +4,7 @@ export const SET_IMG_URL = 'SET_IMG_URL';
 //Azioni per la gestione del form rigaBolla
 import { actions } from 'react-redux-form';
 import { isValidEAN, generateEAN} from '../helpers/ean';
-import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus, fillFormWithItem} from './catalog';
+import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus, fillFormWithItem} from './oldCatalog';
 
 function isPercentage(value)
 {

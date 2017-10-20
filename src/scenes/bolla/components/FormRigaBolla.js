@@ -15,11 +15,12 @@ onSubmit = () => {
   render() {
   	const formValues = this.props.editedRigaBolla.values;
   	const errorMessages = this.props.editedRigaBolla.errorMessages;
+  	const formInitialValues = this.props.formInitialValues;
   	const prezzoMan = formValues['manSconto'];
   	const loading = this.props.editedRigaBolla.loading;
-
+  	
   	return (
-      <WrappedForm loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+      <WrappedForm loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} formInitialValues={formInitialValues}>
          <WrappedForm.Group >
         <WrappedForm.Input field='ean' label='EAN' width={4}/>
         <WrappedForm.Input field='titolo' label='Titolo'  width={6} readOnly/>
@@ -42,7 +43,7 @@ onSubmit = () => {
         <WrappedForm.Checkbox width={2} field='manSconto' label='Man.'/>
         
         <WrappedForm.Button width={4}>Submit</WrappedForm.Button>
-       	 <WrappedForm.GeneralError rows={1} width={10} error readOnly value='La paranza è una danza'
+       	 <WrappedForm.GeneralError rows={1} width={10} error readOnly
        	 
 			 />	 
        
