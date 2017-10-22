@@ -15,7 +15,7 @@ export const NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM';
 //Azioni legate al form
 export const CHANGE_EDITED_CATALOG_ITEM = 'CHANGE_EDITED_CATALOG_ITEM';
 export const SUBMIT_EDITED_CATALOG_ITEM = 'SUBMIT_EDITED_CATALOG_ITEM';
-
+export const RESET_EDITED_CATALOG_ITEM = 'RESET_EDITED_CATALOG_ITEM';
 
 
 export function foundCatalogItem(item)
@@ -40,8 +40,8 @@ export function foundCloudItem(ean,item)
 export function notFoundCloudItem(ean,item)
 {
 	return function(dispatch) {
-  	     item['ean'] = ean; //La ricerca non lo contiene...
-	   dispatch({type: NOT_FOUND_CLOUD_ITEM,item});	
+       item['ean'] = ean;
+  	   dispatch({type: NOT_FOUND_CLOUD_ITEM, item:item});	
 	}
 }
 
@@ -58,14 +58,14 @@ export function searchCloudItem(ean)
   return function(dispatch) {
   	   dispatch({type: SEARCH_CLOUD_ITEM});
   	  //Non cerco nel cloud per codici interni
-  	  if (!isInternalEAN) 
+  	  if (!isInternalEAN(ean)) 
   	  {
-	      var promise = new Promise( function (resolve, reject) {
+  	      var promise = new Promise( function (resolve, reject) {
 		  request.get('https://linode.hermanfenderson.com/ibs.php?ean='+ean).then(
 	                  (response) => {
 	                                var book = JSON.parse(response.text);
 	                                if (isComplete(book)) dispatch(foundCloudItem(ean,book));
-	                                else dispatch(notFoundCloudItem(ean,book));
+	                                else dispatch(notFoundCloudItem(ean,{}));
 	                                resolve(book, ean);
 	                             }
 	                  )
@@ -134,9 +134,17 @@ export function submitEditedCatalogItem(isValid, item) {
 		    	dispatch(updateCatalogItem(item))
 		    };
 
-      dispatch({type: SUBMIT_EDITED_CATALOG_ITEM, item:item});
+      dispatch({type: SUBMIT_EDITED_CATALOG_ITEM, isValid:isValid, item:item});
       }
 }	
+
+export function resetEditedCatalogItem()
+	{
+	return {
+		type: RESET_EDITED_CATALOG_ITEM,
+		}	
+		
+	}
 
 
 

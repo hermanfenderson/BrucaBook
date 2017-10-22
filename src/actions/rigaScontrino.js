@@ -4,7 +4,7 @@ export const SET_IMG_URL = 'SET_IMG_URL';
 //Azioni per la gestione del form rigaBolla
 import { actions } from 'react-redux-form';
 import { isValidEAN, generateEAN} from '../helpers/ean';
-import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus, fillFormWithItem} from './catalog';
+import {searchCatalogItem, searchIBSItem, updateCatalogItem, setStatus, fillFormWithItem} from './catalogo';
 
 function isPercentage(value)
 {
@@ -136,7 +136,6 @@ export function storeBookInfo(book,formValue)
 {  return (dispatch) => {
      if (book)
        {  
-console.log(formValue);
        dispatch(setImgUrl(book.imgUrl));
        dispatch(actions.change('form2.rigaScontrino.titolo', book.titolo));
        dispatch(actions.change('form2.rigaScontrino.autore', book.autore));

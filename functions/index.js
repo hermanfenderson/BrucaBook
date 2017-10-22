@@ -66,7 +66,8 @@ exports.aggiornaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
             	  return event.data.ref.parent.parent.parent.parent.child('registro/'+ean+'/'+key).set(newVal);
             	  }
                
-            //Caso riga inserita o modificata... la sostituisco integralmente. 
+            //Caso riga inserita o modificata... la sostituisco integralmente. A condizione che non mi cambi EAN.... 
+            //Questa è una regola generale...
             
             }
            ); 

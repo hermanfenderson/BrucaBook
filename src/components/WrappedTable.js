@@ -5,9 +5,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {Icon} from 'semantic-ui-react';
+ 
 
  
 class WrappedTable extends React.Component {
+
+
+rowActions = (cell, row) => {
+  return (
+        <div>
+        {(this.props.deleteRow) && <Icon name="trash outline" onClick={() => { this.props.deleteRow(row)}}/>} 
+		{(this.props.editRow) && <Icon name="edit" onClick={() => { this.props.editRow(row)}}/>}  
+        </div>
+        );
+ }
+ 
 render ()
      {
      const selectRow = {
@@ -23,9 +36,10 @@ render ()
   				 <TableHeaderColumn key={index} dataField={header.dataField} width={header.width}>{header.label}</TableHeaderColumn> 	
   				);		
         return(
-       		 <BootstrapTable height={'100%'} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
+       		 <BootstrapTable height={'300px'} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
         		 <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
-        		 {tableHeaderColumns}	
+        		 {tableHeaderColumns}
+        		 <TableHeaderColumn width='50' dataFormat={this.rowActions}></TableHeaderColumn>
     		</BootstrapTable>
        	
        		);	

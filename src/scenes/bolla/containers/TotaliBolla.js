@@ -1,5 +1,5 @@
 import TotaliBollaComponent from '../components/TotaliBolla'
-import {listenTotaliChanged, offListenTotaliChanged} from '../../../actions/bolle'
+import {listenTotaliChanged, offListenTotaliChanged} from '../../../actions/bolla'
 import {getTotaliBolla} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'

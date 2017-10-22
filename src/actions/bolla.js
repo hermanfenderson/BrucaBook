@@ -12,6 +12,8 @@ export const TOTALI_CHANGED = 'TOTALI_CHANGED';
 export const CHANGE_EDITED_RIGA_BOLLA = 'CHANGE_EDITED_RIGA_BOLLA';
 export const SUBMIT_EDITED_RIGA_BOLLA = 'SUBMIT_EDITED_RIGA_BOLLA';
 export const SET_SELECTED_RIGA_BOLLA = 'SET_SELECTED_RIGA_BOLLA';
+export const RESET_EDITED_RIGA_BOLLA = 'RESET_EDITED_RIGA_BOLLA';
+
 
 import Firebase from 'firebase';
 import {prefissoNegozio} from './index';
@@ -89,22 +91,24 @@ export function changeEditedRigaBolla(name,value) {
 //Azione richiamata sia perchè il campo EAN è stato attivato per "codice breve"
 //Sia perchè a campi validi... si può scrivere...
 
-export function submitEditedRigaBolla(isValid, bollaId, valori) {
+export function submitEditedRigaBolla(isValid, bollaId, valori, selectedItem) {
       return function(dispatch, getState) {
 		dispatch({type: SUBMIT_EDITED_RIGA_BOLLA});
-		if(isValid)	dispatch(aggiungiRigaBolla(bollaId,valori));
+		if (selectedItem && isValid) dispatch(aggiornaRigaBolla(bollaId,valori, selectedItem));
+		else if(isValid) dispatch(aggiungiRigaBolla(bollaId,valori));
       }
 }	
+
 
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
 function preparaRiga(riga)
    {
-     riga['sconto1'] = parseInt(riga['sconto1']) || 0;
-     riga['sconto2'] = parseInt(riga['sconto2']) || 0;
-     riga['sconto3'] = parseInt(riga['sconto3']) || 0;
-      riga['pezzi'] = parseInt(riga['pezzi']) || 0;
-      riga['gratis'] = parseInt(riga['gratis']) || 0;
+     riga['sconto1'] = parseInt(riga['sconto1'],10) || 0;
+     riga['sconto2'] = parseInt(riga['sconto2'],10) || 0;
+     riga['sconto3'] = parseInt(riga['sconto3'],10) || 0;
+      riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
+      riga['gratis'] = parseInt(riga['gratis'],10) || 0;
       riga['prezzoUnitario'] = parseFloat(riga['prezzoUnitario']).toFixed(2);
      riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
    }
@@ -143,33 +147,42 @@ export function aggiungiRigaBolla(bollaId,valori) {
 }
 
 //Idem...
-export function aggiornaRigaBolla(bolla,valori,selectedRigaBollaValues) {
+export function aggiornaRigaBolla(bollaId,valori,row) {
     var nuovaRigaBolla = {...valori};
       addChangedStamp(nuovaRigaBolla);
    preparaRiga(nuovaRigaBolla);
      return function(dispatch,getState) {
+     var id = row['key'];
+   	
     
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe/' + selectedRigaBollaValues['key']).update(nuovaRigaBolla).then(response => {
+    Firebase.database().ref(urlFactory(getState,"rigaBolla", {bollaId: bollaId, rigaId: id})).update(nuovaRigaBolla).then(response => {
     });
   }
   
 }
 
 //Ripristinata a prima del magazzino...
-export function deleteRigaBolla(bolla,row) {
+export function deleteRigaBolla(bollaId,row) {
   return function(dispatch, getState) {
   var id = row['key'];
    
-  Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe/' +id).remove().then(response => {
+  Firebase.database().ref(urlFactory(getState,"rigaBolla", {bollaId: bollaId, rigaId: id})).remove().then(response => {
   })
     };
   }
 
+//METODI DEL FORM
 //Selezionata una riga nella tabella
 export function setSelectedRigaBolla(row) {
   return {
     type: SET_SELECTED_RIGA_BOLLA,
     row
+  }  
+}
+
+export function resetEditedRigaBolla() {
+  return {
+    type: RESET_EDITED_RIGA_BOLLA,
   }  
 }
 
@@ -200,82 +213,4 @@ export function totaliChanged(bollaId)
 }	
 }
 
-//Questa è ragionevolmente OK
-export function addedRigaBolla(bolla) {
-  return function(dispatch, getState) {
-    
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/'  + bolla + '/righe').on('child_added', snapshot => {
-      dispatch({
-        type: ADDED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
 
-//Idem
-export function deletedRigaBolla(bolla) {
-  return function(dispatch, getState) {
-    
-    
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe').on('child_removed', snapshot => {
-      dispatch({
-        type: DELETED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
-
-//Idem
-export function changedRigaBolla(bolla) {
-  return function(dispatch, getState) {
-    Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe').on('child_changed', snapshot => {
-      dispatch({
-        type: CHANGED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
-
-
-
-//Questa è ragionevolmente OK
-export function listenAddedRigaBolla(bollaId) {
-  return function(dispatch, getState) {
-    
-    Firebase.database().ref(urlFactory(getState,"righeBolla", {bollaId: bollaId})).on('child_added', snapshot => {
-      dispatch({
-        type: ADDED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
-
-//Idem
-export function listenDeletedRigaBolla(bollaId) {
-  return function(dispatch, getState) {
-    
-    
-    Firebase.database().ref(urlFactory(getState,"righeBolla", {bollaId: bollaId})).on('child_removed', snapshot => {
-      dispatch({
-        type: DELETED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}
-
-//Idem
-export function listenChangedRigaBolla(bollaId) {
-  return function(dispatch, getState) {
-    Firebase.database().ref(urlFactory(getState,"righeBolla", {bollaId: bollaId})).on('child_changed', snapshot => {
-      dispatch({
-        type: CHANGED_RIGA_BOLLA,
-        payload: snapshot
-      })
-    });
-  }
-}

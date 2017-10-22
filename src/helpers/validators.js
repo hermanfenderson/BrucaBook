@@ -7,7 +7,7 @@ function isInteger(x) {
 export function isValidBookCode(code)
 {   
 	
-	return(isInteger(code) && code >=0 & code.length <= 13);
+	return(isInteger(code) && code >0 & code.length <= 8);
 }
 
 export function isPercentage(code)

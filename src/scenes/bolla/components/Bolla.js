@@ -4,6 +4,7 @@ import TotaliBolla from '../containers/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import React, {Component} from 'react'
 import { Grid, Image, Container, Modal} from 'semantic-ui-react'
+import Measure from 'react-measure';
 
 
 
@@ -35,8 +36,13 @@ render()
      
   <Grid columns={3}>
   <Modal open={this.props.showCatalogModal}>
-	<FormCatalogo/>
+	<FormCatalogo readOnlyEAN={true}/>
   </Modal>
+  	<Measure onMeasure={(dimensions) => {
+          this.props.storeMeasure('fixedSceneHeight',dimensions.height);
+        }}
+      >
+      
     <Grid.Row>
       <Grid.Column width={3}>
         <Image src='/image.png' />
@@ -48,6 +54,7 @@ render()
     	 <TotaliBolla idBolla={this.props.params.id}/>
       </Grid.Column>
     </Grid.Row>
+    </Measure>
     <Grid.Row>
       <Container>
          <TableBolla idBolla={this.props.params.id}/>

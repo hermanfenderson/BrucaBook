@@ -1,9 +1,10 @@
 
 //In prima istanza deve "solo" gestire un form libero
-import {CHANGE_EDITED_CATALOG_ITEM, SUBMIT_EDITED_CATALOG_ITEM, SEARCH_CATALOG_ITEM, FOUND_CATALOG_ITEM, NOT_FOUND_CATALOG_ITEM, NOT_FOUND_CLOUD_ITEM } from '../actions/catalog';
+import {CHANGE_EDITED_CATALOG_ITEM, SUBMIT_EDITED_CATALOG_ITEM, SEARCH_CATALOG_ITEM, RESET_EDITED_CATALOG_ITEM,
+FOUND_CATALOG_ITEM, NOT_FOUND_CATALOG_ITEM, NOT_FOUND_CLOUD_ITEM } from '../actions/catalogo';
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode, isAmount, isNotNegativeInteger, isPercentage} from '../helpers/validators';
-import {errMgmt, editedItemInitialState, editedItemCopy, isValidEditedItem} from '../helpers/form';
+import {errMgmt, editedItemInitialState, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors} from '../helpers/form';
 
 const editedCatalogItemValuesInitialState = 
 	  {			ean: '',
@@ -14,10 +15,9 @@ const editedCatalogItemValuesInitialState =
 				imgUrl: ''	
 	};
 
-//INSERISCO UN KLUDGE PER DISABILITARE LA RICERCA INFINITA DELL'EAN nel side effect quando chiamato in un modal...
 
 const editedCatalogItemInitialState = () => {
-	return({...editedItemInitialState(editedCatalogItemValuesInitialState),ignoreEAN:false}); 
+	return({...editedItemInitialState(editedCatalogItemValuesInitialState)}); 
 }
 
 
@@ -40,16 +40,25 @@ function transformAndValidateEditedCatalogItem(changedEditedCatalogItem, name, v
   
   //I messaggi vengono ricalcolati a ogni iterazione...
     changedEditedCatalogItem.errorMessages = {};
+    
+     //Se tocco EAN il form è svalido sempre 
+   if (name === 'ean') 
+        {
+        //Aggiorno lo stato di EAN
+        eanState(ceci);
+        //cancello provvisoriamente tutti gli error
+        noErrors(ceci, 'ean');
+		//E cancello i campi del libro...
+		ceci.values.titolo = '';
+		ceci.values.autore = '';
+		ceci.values.editore = '';
+		
+		ceci.values.prezzoListino = '';
+		//Rivaluto gli errori e cosa mostrare
+	    updateEANErrors(ceci);
+		}
    
-   //ean deve essere EAN valido MA mostro l'errore solo in fase di validazione...
-   errMgmt(ceci, 'ean','invalidEAN','EAN non valido',  ((value) => {return !isValidEAN(value)})(ceci.values.ean), false);
-  
-   var cond = (!isValidBookCode(ceci.values.ean) && (ceci.values.ean.length<=13));
-   errMgmt(ceci, 'ean','invalidBookCode','EAN è un numero',  cond);
-   
-   cond = (!isValidBookCode(ceci.values.ean) && (ceci.values.ean.length>13)); 
-   errMgmt(ceci, 'ean','tooLongBookCode','Codice troppo lungo',  cond);
-   
+    
    errMgmt(ceci, 'titolo','emptyField','Campo obbligatorio', ceci.values.titolo.length===0, false);
    errMgmt(ceci, 'autore','emptyField','Campo obbligatorio', ceci.values.autore.length===0, false);
   errMgmt(ceci, 'editore','emptyField','Campo obbligatorio', ceci.values.editore.length===0, false);
@@ -94,13 +103,30 @@ export default function catalog(state = initialState(), action) {
 	    		     	 errMgmt(ceci, 'titolo','emptyField','Campo obbligatorio', ceci.values.titolo.length===0);
 						errMgmt(ceci, 'autore','emptyField','Campo obbligatorio', ceci.values.autore.length===0);
 							errMgmt(ceci, 'editore','emptyField','Campo obbligatorio', ceci.values.editore.length===0);
-
+                        errMgmt(ceci, 'prezzoListino','invalidAmount', 'Importo (19.99)',((value) => {return !isAmount(value)})(ceci.values.prezzoListino));
+    	
 	    		        //errMgmt(tbcEditedCatalogItem, 'form', 'bookNotFound', 'EAN non presente in catalogo', true, true);
 	    		     }
 	    			
-	    		else {
-	    			 tbcEditedCatalogItem.values.ean = generateEAN(tbcEditedCatalogItem.values.ean);
-	    	         }
+	    	     
+	    	    else {
+	    			if (isValidBookCode(state.editedCatalogItem.values.ean)) //Altrimenti parto alla ricerca di un codice breve
+	    				{
+	    				ceci.values.ean = generateEAN(ceci.values.ean);
+	    				ceci.eanState = 'VALID'; //Valido per definizione...appena generato
+	    	        	ceci.loading = true;
+	    				}
+	    			else
+	    				{
+	    				//Se arrivo qui è un codice troppo lungo per codice e troppo corto per EAN
+	    				if (ceci.eanState === 'FILL') 
+	    					errMgmt(ceci, 'ean','invalidEAN','codice (max. 8) o EAN (13) ',true);
+  
+	    				// updateEANErrors(cerb); //Serve???
+	    				}
+	    			}
+	    	         
+	    	         //
 	    			newState = {...state, editedCatalogItem: tbcEditedCatalogItem};	
 	    	}
         break;
@@ -126,14 +152,19 @@ export default function catalog(state = initialState(), action) {
     	newState = {...state, editedCatalogItem: tbc3EditedCatalogItem};
     	
     	//Copio l'esito della ricerca...
-    	if (action.item.ean) {tbc3EditedCatalogItem.values.ean = action.item.ean; tbc3EditedCatalogItem.ignoreEAN = true;}
-    	if (action.item.titolo) tbc3EditedCatalogItem.values.titolo = action.item.titolo;
+    	tbc3EditedCatalogItem.values.ean = action.item.ean;
+    	if (action.item.titolo) tbc3EditedCatalogItem.values.titolo = action.item.titolo; 
+    	else  tbc3EditedCatalogItem.values.titolo = '';
     	if (action.item.autore) tbc3EditedCatalogItem.values.autore = action.item.autore;
+    	else  tbc3EditedCatalogItem.values.autore = '';
     	if (action.item.editore) tbc3EditedCatalogItem.values.editore = action.item.editore;
+    	else  tbc3EditedCatalogItem.values.editore = '';
     	if (action.item.prezzoListino) tbc3EditedCatalogItem.values.prezzoListino = action.item.prezzoListino;
+    	else  tbc3EditedCatalogItem.values.prezzoListino = '';
+    	
     	
      	
-    	//Il form e' potenzialmente valido... sgancio gli errori...
+    	//Il form e' potenzialmente valido... valuto gli errori...
     	errMgmt(tbc3EditedCatalogItem, 'titolo','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.titolo.length===0,false);
 		errMgmt(tbc3EditedCatalogItem, 'autore','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.autore.length===0,false);
 		errMgmt(tbc3EditedCatalogItem, 'editore','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.editore.length===0,false);
@@ -152,7 +183,10 @@ export default function catalog(state = initialState(), action) {
         newState = {...state, editedCatalogItem: tbc3EditedCatalogItem};
         break;
     
-    
+    case RESET_EDITED_CATALOG_ITEM:
+   	    newState = {...state, editedCatalogItem: {...editedCatalogItemInitialState()}}; 
+   	    break;
+   	    
     default:
         newState =  state;
     	break;

@@ -20,7 +20,8 @@ export function urlFactory(getState, destination, params)
 		{
 			//Bolla: in input idBolla
 			case "totaliBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/totali'; break;
-			case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;	
+			case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;
+			case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.rigaId; break;
 			default: return "";
 		}
 	return url;	

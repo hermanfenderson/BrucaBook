@@ -14,16 +14,18 @@ onSubmit = () => {
   	const formValues = this.props.editedCatalogItem.values;
   	const errorMessages = this.props.editedCatalogItem.errorMessages;
   	const loading = this.props.editedCatalogItem.loading;
-  	const formInitialValues = this.props.formInitialValues;
+  	const resetForm = this.props.resetEditedCatalogItem;
   	return (
       <WrappedForm loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-          <WrappedForm.Input field='ean' label='EAN'/>
+          <WrappedForm.Input field='ean' label='EAN' readOnly={this.props.readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'/>
         <WrappedForm.Input field='autore' label='Autore' />
         <WrappedForm.Input field='editore' label='Editore'  />
         <WrappedForm.Input field='prezzoListino' label='Listino' />
      
-        <WrappedForm.Button>Submit</WrappedForm.Button>
+        <WrappedForm.Button>OK</WrappedForm.Button>
+        <WrappedForm.Button type={'button'} width={2} onClick={resetForm}>Annulla</WrappedForm.Button>
+     
        	 <WrappedForm.GeneralError rows={1} error readOnly/>	 
        </WrappedForm>
     )

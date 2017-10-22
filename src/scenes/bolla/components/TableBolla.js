@@ -25,12 +25,22 @@ class TableBolla extends Component
 		
 		
 	}
+	
+	deleteRow = (row) => {
+		this.props.deleteRigaBolla(this.props.idBolla,row);
+	}
+	
+	editRow = (row) => {
+		this.props.setSelectedRigaBolla(row);
+	}
 
     
     	render() { 
-    	const props = this.props;	
+    	let props = {...this.props};
+    	delete props['deleteRigaBolla']; //Non la passo liscia...
+    	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props} header={header}/>
+			<WrappedTable {...props} editRow={this.editRow} deleteRow={this.deleteRow} header={header}/>
 			)}
     }		
 	

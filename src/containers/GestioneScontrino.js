@@ -8,9 +8,7 @@ import {eanFocus, fillWithRow, updateCatalogAndFillForm} from '../actions/rigaSc
 import {Grid, Row, Col, Button} from 'react-bootstrap';
 
 import FormRigaScontrino from './FormRigaScontrino';
-import TableBolla from '../components/TableBolla';
-import ModalGestioneItemCatalog from '../components/ModalGestioneItemCatalog';
-import ModalSearching from '../components/ModalSearching';
+import TableScontrino from '../components/TableScontrino';
 import {newScontrino} from '../actions/casse';
 
 
@@ -125,15 +123,7 @@ class GestioneScontrino extends React.Component {
 				height={tableHeight} 
 				dataFormat={ this.azioniFormatter } />
 
-		   <ModalGestioneItemCatalog 
-		    close={this.hideItemCatalogModal}
-		    onSubmitAction={this.props.updateCatalogAndFillFormAction}
-		    //Tutto da sistemare...
-		    showModal={((this.props.catalog.status === "FAIL") || (this.props.catalog.status === "INCOMPLETE") )}
-		   />
-		   <ModalSearching
-		    showModal={(this.props.catalog.status === "SEARCH")}
-		   />
+		   
 	</div>
       
      );
