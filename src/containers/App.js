@@ -4,16 +4,26 @@
 //Gestisco anche la presenza di un utente autenticato...(anche se nel rendering sotto mi devo fidare del mio stato)
 
 import React from 'react';
-import Header from './Header';
+import { withRouter } from 'react-router-dom'
+
+import Header from '../components/Header';
+import Main from '../components/Main';
 import { connect } from 'react-redux';
+import Measure from 'react-measure';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
 import '../styles/app.css';
 
 class App extends React.Component {
+
+
   componentWillMount() {
-  this.props.actions.verifyAuth(); //Questo metodo è maledettamente asincrono... lo ho sincronizzato... 
+  this.props.actions.listenAuthStateChanged();
   }
+
+handleResize = () => {
+  this.props.actions.storeMeasure('viewPortHeight', window.innerHeight);
+}
 
  componentDidMount() {
     this.handleResize(); //La prima volta...
@@ -22,39 +32,33 @@ class App extends React.Component {
 
 componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
-  this.props.actions.removeMeasure('windowHeight');
-  }
-
-handleResize = () => {
-  this.props.actions.storeMeasure('windowHeight', window.innerHeight);
+  this.props.actions.removeMeasure('viewPortHeight');
+  //QUI MANCA LA CHIUSURA DEL LISTENER DELL'AUTENTICAZIONE
+	
 }
+
+
+
+
   render() {
-    if (this.props.auth_info && this.props.catena)
-        {  
-        return (
-          
+      return (
+         <Measure onMeasure={(dimensions) => {
+          this.props.actions.storeMeasure('windowHeight',dimensions.height);
+          }}
+    	 > 
            <div>
-            <Header />
-                {React.cloneElement(this.props.children, { authenticated: this.props.authenticated, user: this.props.user })}
-          </div>
-         
+            <Header authenticated={this.props.authenticated} signOutUser={this.props.actions.signOutUser} />
+            <Main />
+           </div>
+        </Measure>  
         );
         }
-     else 
-        {
-         return (
-            <div>loading...</div>
-         )
-        }
-  }
 }
 
 function mapStateToProps(state) {
   return {
-    authenticated: state.auth.authenticated,
-    auth_info: state.auth.auth_info,
+    authenticated: state.status.authenticated,
     user: state.status.user,
-    catena: state.status.catena
   };
 }
 
@@ -65,4 +69,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

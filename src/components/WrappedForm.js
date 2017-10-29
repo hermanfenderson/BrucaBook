@@ -17,10 +17,16 @@ Passo a ogni singolo componente...
 
 import React, {Component} from 'react'
 import {Form, Label, Input} from 'semantic-ui-react'
-//Gestoscp pmChange separatamente per consentire l'over-ride della funzione onChange...
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+
+import 'react-datepicker/dist/react-datepicker.css';
+moment.locale("it");
+
+//Gestisco pmChange separatamente per consentire l'over-ride della funzione onChange...
 const renderChildren = (props, onChange) => {
 let children = React.Children.map(props.children, child => {
-	    return React.cloneElement(child, {errorMessages: props.errorMessages, formValues: props.formValues, onChange: onChange})
+	    return React.cloneElement(child, {errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, onChange: onChange})
 				}); 
    return(children);
 }
@@ -29,26 +35,37 @@ const GeneralError = (props) => {const { errorMessages, width } = props;
     if (errorMessages['form']) return <Form.TextArea rows={1} width={width} error readOnly value={errorMessages['form']}/>
     else return null }
     
-const FormButton =  (props) => { var newProps = {...props}; delete newProps['formValues']; delete newProps['errorMessages']; return <Form.Button {...newProps} /> }
+const FormButton =  (props) => { var newProps = {...props}; delete newProps['readOnlyForm']; delete newProps['formValues']; delete newProps['errorMessages']; return <Form.Button {...newProps} /> }
        	
 const ErrorLabel = (props) => {const {text} = props;
 	if (text) {return (<Label basic color='red' pointing>{props.text}</Label>)}
 	else {return(<div></div>)}
 }
 
+const InformedDatePickerInput = (props) => {
+	     const onChange=(e) => {props.onChange(e,props.field)};        
+         return(
+         <Form.Field width={props.width} error={!(typeof props.errorMessages[props.field] === 'undefined')}>
+        	<label> {props.label} </label>
+        	<DatePicker disabled={true} selected={props.formValues[props.field]} type={props.type} placeholder={props.label} onChange={onChange} disabled={props.disabled} readOnly={props.readOnlyForm || props.readOnly} />
+        	<ErrorLabel  text={props.errorMessages[props.field]}/>
+         </Form.Field>)
+         } 
+         
+         
 const InformedInput = (props) => {
 	     const onChange=(e) => {props.onChange(e,props.field)};        
          return(
          <Form.Field width={props.width} error={!(typeof props.errorMessages[props.field] === 'undefined')}>
         	<label> {props.label} </label>
-        	<Input value={props.formValues[props.field]} placeholder={props.label} onChange={onChange} disabled={props.disabled} readOnly={props.readOnly} />
+        	<Input value={props.formValues[props.field]} type={props.type} placeholder={props.label} onChange={onChange} disabled={props.disabled} readOnly={props.readOnlyForm || props.readOnly} />
         	<ErrorLabel  text={props.errorMessages[props.field]}/>
          </Form.Field>)
          } 
          
 const Checkbox = (props) => {
 	     const onChange=(e,data) => props.onChange(e,props.field,data);        
-         return(<Form.Checkbox width={props.width} label={props.label} checked={props.formValues[props.field]} onChange={onChange}/>)
+         return(<Form.Checkbox width={props.width} label={props.label} checked={props.formValues[props.field]} onChange={onChange} readOnly={props.readOnlyForm || props.readOnly}/>)
          }           
           
 const FormGroup = (props) => {
@@ -65,6 +82,7 @@ class WrappedForm extends Component {
     static Input = InformedInput;
     static Button = FormButton;
     static GeneralError = GeneralError;
+    static DatePickerInput = InformedDatePickerInput;
     //Per distinguere la chekbox...
     
     
@@ -73,8 +91,7 @@ class WrappedForm extends Component {
     
     
     onChange = (event,name, data=undefined) => {
-	    const target = event.target; 
-	    const value = data ? data.checked : target.value; 
+        const value = data ? data.checked : (event.target ? event.target.value : event); 
 	    this.props.onChange(name,value);
     	}
     render()

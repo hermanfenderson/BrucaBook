@@ -1,22 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { browserHistory } from 'react-router';
-
+import {Redirect} from 'react-router';
 export default function(WrappedComponent) {
   class Auth extends React.Component {
-    componentWillMount() {
-      if (!this.props.authenticated) {
-          browserHistory.push('/login');
-        }
-    }    
+       
     render() {
-      return <WrappedComponent {...this.props} />
+      return this.props.authenticated ? <WrappedComponent {...this.props} /> : <Redirect to='/login' />
     }
   }
 
   function mapStateToProps(state) {
-    return { authenticated: state.auth.authenticated, 
-             user: state.auth.user
+    return { authenticated: state.status.authenticated, 
+             user: state.status.user
            };
   }
 

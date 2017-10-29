@@ -10,16 +10,38 @@ import {Icon} from 'semantic-ui-react';
 
  
 class WrappedTable extends React.Component {
+componentDidMount()
+  {
+  	  this.node = ReactDOM.findDOMNode(this.refs.bsTable).childNodes[0].childNodes[1];
+  }
+  
+ 
+  componentDidUpdate() {
+        if (this.props.tableScroll)
+			{
+			this.node.scrollTop = this.node.scrollHeight;
+			this.props.toggleTableScroll(false); //Resetto lo scroll...
+			}
+ }
+	
 
-
+ 
 rowActions = (cell, row) => {
-  return (
+   return (
         <div>
         {(this.props.deleteRow) && <Icon name="trash outline" onClick={() => { this.props.deleteRow(row)}}/>} 
 		{(this.props.editRow) && <Icon name="edit" onClick={() => { this.props.editRow(row)}}/>}  
         </div>
         );
  }
+ 
+ selectRow = (row) => {
+ 	if(this.props.selectRow) this.props.selectRow(row);
+ }
+ 
+ordinaryRowFormat = (cell,row) => {
+	return(<div onClick={() => { this.selectRow(row)}}>{cell}</div>);
+} 
  
 render ()
      {
@@ -29,14 +51,13 @@ render ()
 				bgColor: '#286090',	
 				selected: []
   			};
-  			
-  			
-  	
+  	if (this.props.selectedItem) {selectRow['selected'] = [this.props.selectedItem.key]};		
+  	//Aggiungo gestione della selectRow... 
   	const tableHeaderColumns = this.props.header.map((header, index) => 
-  				 <TableHeaderColumn key={index} dataField={header.dataField} width={header.width}>{header.label}</TableHeaderColumn> 	
-  				);		
-        return(
-       		 <BootstrapTable height={'300px'} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
+  				 <TableHeaderColumn dataFormat={this.ordinaryRowFormat} key={index} dataField={header.dataField} width={header.width}>{header.label}</TableHeaderColumn> 	
+  				);	
+  	    return(
+        	 <BootstrapTable  height={this.props.height} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
         		 <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
         		 {tableHeaderColumns}
         		 <TableHeaderColumn width='50' dataFormat={this.rowActions}></TableHeaderColumn>

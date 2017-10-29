@@ -8,7 +8,7 @@ export default function measures(state = initialState, action) {
   switch (action.type) {
     case STORE_MEASURE:
        var newMeasures = {...state['measures']};
-       newMeasures[action.newMeasure.name] = action.newMeasure.number;
+       if (action.newMeasure) newMeasures[action.newMeasure.name] = action.newMeasure.number;
          return {
         ...state, measures: newMeasures
       };

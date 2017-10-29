@@ -1,29 +1,27 @@
+//Componente puro per gestire la parte alta della app...
 import React from 'react';
-import Measure from 'react-measure';
-
-import { connect } from 'react-redux';
-import { Link } from 'react-router';
-import * as Actions from '../actions';
-
-class Header extends React.Component {
-  handleSignout() {
-    this.props.signOutUser();
-  }
-
-  renderAuthLinks() {
-    if (this.props.authenticated) {
-      return [
-      	  <li className="nav-item" key={1}>
+import { Link } from 'react-router-dom';
+/*
+<li className="nav-item" key={1}>
           <Link className="nav-link" to="/cassa/20160105cassa1/1">Gestione vendite</Link>
         </li>,
          <li className="nav-item" key={2}>
           <Link className="nav-link" to="/bolla/1">Gestione bolle</Link>
         </li>,
+*/
+
+const  renderAuthLinks = (authenticated, signOutUser) => {
+    if (authenticated) {
+      return [
+      	  
+        <li className="nav-item" key={3}>
+          <Link to="/acquisti">Acquisti</Link>
+        </li>,
         <li className="nav-item" key={4}>
-          <Link className="nav-link" to="/itemCatalogo">Catalogo</Link>
+          <Link to="/itemCatalogo">Catalogo</Link>
         </li>,
         <li className="nav-item" key={5}>
-          <a className="nav-link" href="#" onClick={() => this.handleSignout()}>Sign Out</a>
+          <a className="nav-link" href="#" onClick={() => signOutUser()}>Sign Out</a>
         </li>
       ]
     } else {
@@ -37,33 +35,22 @@ class Header extends React.Component {
       ]
     }
   }
-
-  render() {
+  
+  
+const Header = (props) => {
     return (
-       <Measure onMeasure={(dimensions) => {
-          this.props.storeMeasure('headerHeight',dimensions.height);
-          
-        }}
-      >
       <nav className="navbar navbar-default">
         <div className="container-fluid">
           <div className="navbar-header">
             <Link to="/" className="navbar-brand">BrucaBook</Link>
           </div>
            <ul className="nav navbar-nav navbar-right">
-             { this.renderAuthLinks() }
+             { renderAuthLinks(props.authenticated, props.signOutUser) }
            </ul>
         </div>
       </nav>
-      </Measure>
     );
-  }
 }
 
-function mapStateToProps(state) {
-  return {
-    authenticated: state.auth.authenticated
-  }
-}
 
-export default connect(mapStateToProps, Actions)(Header);
+export default Header;

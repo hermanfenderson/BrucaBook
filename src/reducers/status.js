@@ -1,18 +1,28 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
-import {SET_USER_STATUS, RESET_USER_STATUS } from '../actions';
+import {USER_INFO_CHANGED } from '../actions';
 
 const initialState =  {
-  catena: null,
-  libreria: null
+  info: null,
+  user: null,
+  authenticated: true //Questo evita rimbalzi in caso di refresh
 };
 
 export default function status(state = initialState, action) {
   switch (action.type) {
-  	case SET_USER_STATUS:
-  	    return {...state, catena: action.payload.catena, libreria: action.payload.libreria};	
-  	case RESET_USER_STATUS:
-  		return {...state, catena: null, libreria: null};
+  	 case USER_INFO_CHANGED:
+      	return {
+      	 ...state,
+      	 authenticated: action.authenticated,
+        user: action.user,
+        catena: action.catena,
+        libreria: action.libreria,
+        info: action.info
+      	}	
     default:
       return state;
   }
 }
+
+export const getCatena = (state) => {if (state.info) return state.info.catena; else return null;}; //In futuro questo lo cambierà... il resto no!
+export const getLibreria = (state) => {if (state.info) return state.info.libreria; else return null;};
+export const isAuthenticated = (state) => {return state.authenticated};

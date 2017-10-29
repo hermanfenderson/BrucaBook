@@ -6,6 +6,7 @@ import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode, isAmount, isNotNegativeInteger, isPercentage} from '../helpers/validators';
 import {errMgmt, editedItemInitialState, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors} from '../helpers/form';
 
+const NOT_FOUND_CLOUD_ITEM_BOLLA = 'NOT_FOUND_CLOUD_ITEM_BOLLA';
 const editedCatalogItemValuesInitialState = 
 	  {			ean: '',
 				titolo: '',

@@ -114,7 +114,7 @@ class GestioneScontrino extends React.Component {
 		 </Grid>
    				</Measure>
   				
-			<TableBolla 
+			<TableScontrino 
 				shouldScroll={shouldScroll} 
 				willScroll={this.props.willScroll} 
 				scrollAction={this.props.actions.tableScontrinoWillScroll} 

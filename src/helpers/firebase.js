@@ -6,35 +6,45 @@
 //Vengo chiamato dal reducer... per tre tipologie di modifiche...
 //Inserimento di una riga (evento on child added)
 import Firebase from 'firebase';
+import {getLibreria, getCatena} from '../reducers';
 
 //Helper per il prefisso alla base dati...la ricolloco qui... in prospettiva...
 export function prefissoNegozio(getState) 
     { 
-      return(getState().status.catena + '/' + getState().status.libreria + '/'); 
+      return(getCatena(getState()) + '/' + getLibreria(getState()) + '/'); 
     }
     
 //Passo un getstate, dove voglio andare (stringa), params (oggetti)
 export function urlFactory(getState, destination, params)    
 {   let url = "";
-	switch(destination)
+  	switch(destination)
 		{
 			//Bolla: in input idBolla
 			case "totaliBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/totali'; break;
 			case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;
-			case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.rigaId; break;
+			case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.itemId; break;
+			case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle'; break;
+			case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.itemId; break;
+			
 			default: return "";
 		}
 	return url;	
 	
 }
 
-export function childAdded(payload, state, dataArrayName, dataIndexName)
+ 
+
+export function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
 {  //Creo un array e un indice per copia degli attuali
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndexNew = {...(state[dataIndexName])};
   //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
    var tmp = payload.val();
    tmp['key'] = payload.key;
+    //Se è definita una funzione di trasformazione la applico
+   if (transformItem) transformItem(tmp);
+
+
    dataArrayNew.push(tmp);
   //Creo un indice per recuperare in seguito la posizione nell'array per la chiave
    dataIndexNew[payload.key] = dataArrayNew.length - 1;
@@ -68,7 +78,7 @@ export function childDeleted(payload, state, dataArrayName, dataIndexName)
    return newState;
 }
 
-export function childChanged(payload, state, dataArrayName, dataIndexName)
+export function childChanged(payload, state, dataArrayName, dataIndexName, transformItem)
 {  //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndex = state[dataIndexName];
@@ -77,6 +87,9 @@ export function childChanged(payload, state, dataArrayName, dataIndexName)
   //Prendo la riga da modificare e aggiungo una proprietà con la chiave
    var tmp = payload.val();
    tmp['key'] = payload.key;
+ //Se è definita una funzione di trasformazione la applico
+   if (transformItem) transformItem(tmp);
+  
    dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
   
   //Aggiorno lo stato passando nuovo array e nuovo indice

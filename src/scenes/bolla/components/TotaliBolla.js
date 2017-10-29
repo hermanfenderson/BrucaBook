@@ -5,12 +5,12 @@ class TotaliBolla extends Component
     {
     componentDidMount() {
     	//Ascolto modifiche sui totali della bolla
-    	this.props.listenTotaliChanged(this.props.idBolla); 
+    	this.props.listenTotaliChanged({'bollaId':this.props.idBolla}); 
 	}
 	
 	componentWillUnmount() {
 		//Smetto di ascoltare...
-		this.props.offListenTotaliChanged(this.props.idBolla); 
+		this.props.offListenTotaliChanged({'bollaId':this.props.idBolla}); 
 		
 	}
 

@@ -1,17 +1,16 @@
 import BollaComponent from '../components/Bolla'
 import {resetBolla} from '../../../actions/bolla'
-import {storeMeasure} from '../../../actions'
 import {getShowCatalogModal} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
 
-const mapStateToProps = (state) => { 
+const mapStateToProps = (state) => {
 	return ({showCatalogModal: getShowCatalogModal(state)})
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ resetBolla, storeMeasure}, dispatch);
+  return bindActionCreators({ resetBolla}, dispatch);
 }
 
 const Bolla = connect(mapStateToProps, mapDispatchToProps)(BollaComponent)

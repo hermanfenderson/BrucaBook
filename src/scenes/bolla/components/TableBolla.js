@@ -16,18 +16,18 @@ class TableBolla extends Component
     {
     componentDidMount() {
     	//Ascolto modifiche sulle righe della bolla
-    	this.props.listenRigaBolla(this.props.idBolla); 
+    	this.props.listenRigaBolla({'bollaId':this.props.idBolla}); 
 	}
 	
 	componentWillUnmount() {
 		//Smetto di ascoltare...
-		this.props.offListenRigaBolla(this.props.idBolla); 
+		this.props.offListenRigaBolla({'bollaId':this.props.idBolla}); 
 		
 		
 	}
 	
 	deleteRow = (row) => {
-		this.props.deleteRigaBolla(this.props.idBolla,row);
+		this.props.deleteRigaBolla({'bollaId':this.props.idBolla,'itemId':row.key});
 	}
 	
 	editRow = (row) => {
@@ -40,7 +40,7 @@ class TableBolla extends Component
     	delete props['deleteRigaBolla']; //Non la passo liscia...
     	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props} editRow={this.editRow} deleteRow={this.deleteRow} header={header}/>
+			<WrappedTable {...props} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	

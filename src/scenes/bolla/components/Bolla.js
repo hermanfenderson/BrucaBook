@@ -4,16 +4,8 @@ import TotaliBolla from '../containers/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import React, {Component} from 'react'
 import { Grid, Image, Container, Modal} from 'semantic-ui-react'
-import Measure from 'react-measure';
 
 
-
-
-//Da sistemare
-const onChange = (e) => {console.log(e.target.name);}
-
-
-	
 
 
 class Bolla extends Component {
@@ -27,37 +19,33 @@ class Bolla extends Component {
  }	
  
  componentWillUnmount() {
- 	this.props.resetBolla(this.props.params.id);
+ 	this.props.resetBolla(this.props.match.params.id);
  }
  
 render()
 {
   return (
-     
-  <Grid columns={3}>
-  <Modal open={this.props.showCatalogModal}>
-	<FormCatalogo readOnlyEAN={true}/>
-  </Modal>
-  	<Measure onMeasure={(dimensions) => {
-          this.props.storeMeasure('fixedSceneHeight',dimensions.height);
-        }}
-      >
-      
+ 	
+  <Grid>
+  
+  
+    <Modal open={this.props.showCatalogModal}>
+		<FormCatalogo readOnlyEAN={true} scene='BOLLA'/>
+    </Modal>  
     <Grid.Row>
       <Grid.Column width={3}>
         <Image src='/image.png' />
       </Grid.Column>
       <Grid.Column width={10}>
-    	 <FormRigaBolla idBolla={this.props.params.id}/>
+    	 <FormRigaBolla idBolla={this.props.match.params.id}/>
       </Grid.Column>
       <Grid.Column width={3}>
-    	 <TotaliBolla idBolla={this.props.params.id}/>
+    	 <TotaliBolla idBolla={this.props.match.params.id}/>
       </Grid.Column>
     </Grid.Row>
-    </Measure>
-    <Grid.Row>
+     <Grid.Row>
       <Container>
-         <TableBolla idBolla={this.props.params.id}/>
+         <TableBolla idBolla={this.props.match.params.id}/>
       </Container>
     </Grid.Row>
    

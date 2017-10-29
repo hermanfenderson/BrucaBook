@@ -127,7 +127,7 @@ export function changeEditedCatalogItem(name,value) {
 //Azione richiamata sia perchè il campo EAN è stato attivato per "codice breve"
 //Sia perchè a campi validi... si può scrivere...
 
-export function submitEditedCatalogItem(isValid, item) {
+export function submitEditedCatalogItem(isValid, item, scene) {
       return function(dispatch, getState) {
 		if(isValid)	
 		    {   item['prezzoListino'] = parseFloat(item['prezzoListino']).toFixed(2); //Formato corretto...
@@ -135,14 +135,22 @@ export function submitEditedCatalogItem(isValid, item) {
 		    };
 
       dispatch({type: SUBMIT_EDITED_CATALOG_ITEM, isValid:isValid, item:item});
+      if (scene) dispatch({type: 'SUBMIT_EDITED_CATALOG_ITEM_'+scene, isValid:isValid, item:item});
+      
       }
 }	
 
-export function resetEditedCatalogItem()
+export function resetEditedCatalogItem(scene)
 	{
-	return {
-		type: RESET_EDITED_CATALOG_ITEM,
-		}	
+		return function(dispatch) {
+		dispatch ({
+			type: RESET_EDITED_CATALOG_ITEM,
+			})
+		if (scene) 	
+			dispatch ({
+			type: 'RESET_EDITED_CATALOG_ITEM_'+scene,
+			})
+		}
 		
 	}
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import * as Actions from '../actions';
+import {Redirect} from 'react-router';
 
 const validate = values => {
   const errors = {};
@@ -43,6 +44,7 @@ class Login extends React.Component {
 
   render() {
     return(
+    this.props.authenticated ? <Redirect to='/' /> :	
       <div className="container">
         <div className="col-md-6 col-md-offset-3">
           <h2 className="text-center">Log In</h2>
@@ -63,7 +65,8 @@ class Login extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    authenticationError: state.auth.error
+    authenticationError: state.auth.error,
+    authenticated: state.status.authenticated
   }
 }
 
