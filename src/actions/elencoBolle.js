@@ -1,18 +1,8 @@
-//Ci metto anche i metodi rigaBolla...
+import {FormActions} from '../helpers/formActions';
 
-import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 export const SCENE = 'ELENCOBOLLE';
 export const RESET_ELENCOBOLLE = 'RESET_ELENCOBOLLE';
 export const GOTO_BOLLA = 'GOTO_BOLLA';
-
-import {FormActions} from '../helpers/formActions';
-import {STORE_MEASURE} from './index';
-
-
-import Firebase from 'firebase';
-
-//Questa genera i path... e mi dorvrebbe aggiungere flessibilità...
-import {urlFactory} from '../helpers/firebase';
 
 export const SET_READ_ONLY_BOLLA_FORM = 'SET_READ_ONLY_BOLLA_FORM';
 

@@ -21,7 +21,7 @@ const  renderAuthLinks = (authenticated, signOutUser) => {
           <Link to="/itemCatalogo">Catalogo</Link>
         </li>,
         <li className="nav-item" key={5}>
-          <a className="nav-link" href="#" onClick={() => signOutUser()}>Sign Out</a>
+          <a className="nav-link" href="#signout" onClick={() => signOutUser()}>Sign Out</a>
         </li>
       ]
     } else {

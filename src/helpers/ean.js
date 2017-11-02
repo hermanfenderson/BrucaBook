@@ -4,7 +4,7 @@
 function eanCheckDigit(s){
     var result = 0;
     for (var counter = s.length-1; counter >=0; counter--){
-        result = result + parseInt(s.charAt(counter)) * (1+(2*(counter % 2)));
+        result = result + parseInt(s.charAt(counter),10) * (1+(2*(counter % 2)));
     }
     return (10 - (result % 10)) % 10;
 }
@@ -16,7 +16,7 @@ export function isValidEAN(code)
   var number = code.slice(0,12);
   var check = code.slice(-1);
  
-  if (eanCheckDigit(number) == check) return true;
+  if (eanCheckDigit(number) === parseInt(check,10)) return true;
   return false;
 }
 
@@ -26,7 +26,7 @@ export function isInternalEAN(code)
   var number = code.slice(0,12);
   var check = code.slice(-1);
  
-  if ((eanCheckDigit(number) == check) && (code[0] === '2')) return true;
+  if ((eanCheckDigit(number) === parseInt(check,10)) && (code[0] === '2')) return true;
   return false;
 }
 

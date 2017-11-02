@@ -26,3 +26,5 @@ export default function status(state = initialState, action) {
 export const getCatena = (state) => {if (state.info) return state.info.catena; else return null;}; //In futuro questo lo cambierà... il resto no!
 export const getLibreria = (state) => {if (state.info) return state.info.libreria; else return null;};
 export const isAuthenticated = (state) => {return state.authenticated};
+export const getUser = (state) => {return state.user};
+

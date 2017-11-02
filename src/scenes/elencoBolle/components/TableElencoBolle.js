@@ -3,10 +3,10 @@ import WrappedTable from '../../../components/WrappedTable'
 
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'riferimento', label: 'Riferimento', width: '60'},
-			    {dataField: 'fornitore', label: 'Fornitore', width: '60'},
-			    {dataField: 'dataDocumento', label: 'Data Doc', width: '60'},
-			    {dataField: 'dataCarico', label: 'Data Carico', width: '60'}
+const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
+			    {dataField: 'fornitore', label: 'Fornitore', width: '300px'},
+			    {dataField: 'dataDocumento', label: 'Data Doc', width: '200px'},
+			    {dataField: 'dataCarico', label: 'Data Carico', width: '200px'}
 			   ];
 
 
@@ -40,10 +40,12 @@ class TableBolla extends Component
     
     	render() { 
     	let props = {...this.props};
+    	let selectedItemKey = null;
+    	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	delete props['deleteBolla']; //Non la passo liscia...
     	delete props['setSelectedBolla']; //Idem
     	  return(
-			<WrappedTable {...props} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	

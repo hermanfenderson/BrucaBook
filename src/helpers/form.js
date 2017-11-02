@@ -12,7 +12,8 @@ export const editedItemInitialState = (editedItemValuesInitialState,
 									   isValid=false, 
 									   selectedItem=null, 
 									   loading=false, 
-									   eanState='BLANK'
+									   readOnlyForm: false,
+									   eanState='BLANK',
 									   ) => {
 	
  //La form viene gestita con uno stato di validità generale... isValid
@@ -28,7 +29,7 @@ export const editedItemInitialState = (editedItemValuesInitialState,
 			isValid: isValid,
 			selectedItem: selectedItem,
 			loading: loading,
-			eanState: eanState
+			eanState: eanState,
 			};
 }	
 
@@ -64,6 +65,11 @@ export function showError(cei,name)
 {
 		if (name in cei.errors) cei.errorMessages[name] = cei.errors[name][Object.keys(cei.errors[name])[0]]; 
 	
+}
+
+export function showAllErrors(cei)
+{
+	for (var key in cei.errors) showError(cei,key);
 }
 
 export function noErrors(cei, name)

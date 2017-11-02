@@ -4,15 +4,20 @@
 //Gestisco anche la presenza di un utente autenticato...(anche se nel rendering sotto mi devo fidare del mio stato)
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom'
+import { LocaleProvider } from 'antd';
+import itIT from 'antd/lib/locale-provider/it_IT';
 
-import Header from '../components/Header';
+
+//import Header from '../components/Header';
 import Main from '../components/Main';
 import { connect } from 'react-redux';
-import Measure from 'react-measure';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
+import {isAuthenticated, getUser} from '../reducers';
 import '../styles/app.css';
+
 
 class App extends React.Component {
 
@@ -23,6 +28,8 @@ class App extends React.Component {
 
 handleResize = () => {
   this.props.actions.storeMeasure('viewPortHeight', window.innerHeight);
+  	this.props.actions.storeMeasure('windowHeight', ReactDOM.findDOMNode(this.refs.border).clientHeight);
+
 }
 
  componentDidMount() {
@@ -38,27 +45,26 @@ componentWillUnmount() {
 }
 
 
-
-
+//   <Header authenticated={this.props.authenticated} signOutUser={this.props.actions.signOutUser} />
+         
   render() {
+  
       return (
-         <Measure onMeasure={(dimensions) => {
-          this.props.actions.storeMeasure('windowHeight',dimensions.height);
-          }}
-    	 > 
-           <div>
-            <Header authenticated={this.props.authenticated} signOutUser={this.props.actions.signOutUser} />
+        
+           <LocaleProvider locale={itIT}>
+           <div ref='border'>
             <Main />
-           </div>
-        </Measure>  
+           </div> 
+            </LocaleProvider>
+       
         );
         }
 }
 
 function mapStateToProps(state) {
   return {
-    authenticated: state.status.authenticated,
-    user: state.status.user,
+    authenticated: isAuthenticated(state),
+    user: getUser(state)
   };
 }
 

@@ -169,7 +169,9 @@ export default function bolla(state = initialState(), action) {
   switch (action.type) {
     
    case RESET_BOLLA:
-      	newState =  {...initialState()};
+   	    //Trucchismo.... salvo l'altezza della tabella
+   	    const tableHeight = state.tableHeight;
+      	newState =  {...initialState(), tableHeight: tableHeight};
 		break;
 
       
@@ -190,6 +192,7 @@ export default function bolla(state = initialState(), action) {
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
+ export const getMeasures = (state) => {return state.measures};
  
  
       

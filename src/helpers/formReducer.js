@@ -1,7 +1,7 @@
 //Helper per generare automagicamente un pezzo del reducer nel caso debba gestire una specifica scene...
 //E' polimorfico!  Se non esiste un campo EAN... si comporta senza doppi salti ecc ecc...
 
-import {errMgmt, editedItemCopy, showError} from '../helpers/form';
+import {errMgmt, editedItemCopy, showError, showAllErrors} from '../helpers/form';
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode} from '../helpers/validators';
 import {STORE_MEASURE} from '../actions';
@@ -28,6 +28,7 @@ this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
 this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
+this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 
 if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
 if (transformItem) this.transformItem = transformItem;
@@ -136,8 +137,8 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	            //Se il form è invalid... e EAN è valido... Mostro gli altri errori (non posso farti salvare...)
 		    	if (isValidEAN(state.editedItem.values.ean)) 
 		    		     {
-		    		     	//Mostro gli errori del form...
-		    		     	showError(cei,'form'); 
+		    		     	//Mostro TUTTI gli errori del form...
+		    		     	showAllErrors(cei); 
 		    		     }
 		    	else 
 		    			{
@@ -178,21 +179,30 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   	    if (action.payload) newState =  {...state, totali: action.payload};
 	       	else newState = state;
 			break;
-	   
+			
+	   case this.SET_TABLE_WINDOW_HEIGHT:
+	   	    const newMeasures = {...state.measures, 'tableWindowHeight': action.tableWindowHeight}
+	   	    newState = {...state, measures: newMeasures};
+	   	    break;
+	   	    
         case STORE_MEASURE:
 	  	   	//Sulla base del valore attuale della altezza della tabella, della finestra e del viewport stabilisco la nuova altezza della tabella...
 	  	   	const measures = {...action.allMeasures}
 	  	   	measures[action.newMeasure['name']] = action.newMeasure['number']; //Riprendo ultima misura
+	  	    
 	  	    if ((measures.windowHeight>0) && (measures.viewPortHeight>0))  {
 	  	   		let tH = state.tableHeight;
+	  	   		if (!tH) tH = 0;
 	  	   		let wH = measures.windowHeight;
 	  	   		let vH = measures.viewPortHeight;
 	  	   		if (vH > wH) tH = tH + vH - wH;
 	  	   		if (vH < wH) tH = tH - (wH - vH);
 	  	   		if (tH<0) tH=0; 
-	  	   		newState = {...state, tableHeight: tH};
-	  	   	}
+	  	   	
+	  	   		newState = {...state, measures: measures, tableHeight: tH};
+			}
 	  	   	else newState = state;
+	  	   
 	  	   break;
 
 	    	default:

@@ -1,7 +1,7 @@
 import TableElencoBolle from '../containers/TableElencoBolle';
 import FormBolla from '../containers/FormBolla';
 import React, {Component} from 'react'
-import { Grid, Container} from 'semantic-ui-react'
+import { Row} from 'antd'
 
 
 
@@ -15,22 +15,15 @@ class ElencoBolle extends Component {
 render()
 {
   return (
- 	
-  <Grid>
-  
-  
-  <Grid.Row>
-  <Container>
-    	 <FormBolla/>
-  </Container>  	 
-    </Grid.Row>
-     <Grid.Row>
-      <Container>
+ <div>	
+  <Row>
+   	 <FormBolla/>
+    </Row>
+     <Row>
          <TableElencoBolle/>
-      </Container>
-    </Grid.Row>
+      </Row>
    
-  </Grid>
+  </div>
  
  
 )

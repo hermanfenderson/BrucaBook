@@ -1,12 +1,13 @@
 //QUESTA VA SISTEMATA
 import FormReducer from '../helpers/formReducer'
 import moment from 'moment';
-moment.locale("it");
+import 'moment/locale/it';
 
-import {errMgmt, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
+import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem} from '../helpers/form';
 
 import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE, GOTO_BOLLA} from '../actions/elencoBolle';
 
+moment.locale("it");
 
 //Metodi reducer per le Form
 
@@ -40,7 +41,6 @@ const initialState = () => {
 			itemsArray: [],
 			itemsArrayIndex: {},
 		    tableScroll: false,
-			readOnlyForm: false,
 			willGotoBolla: false,
 			tableHeight:200,
 			editedItem: {...editedItemInitialState()}
@@ -74,7 +74,9 @@ export default function elencoBolle(state = initialState(), action) {
   var newState;
   switch (action.type) {
     case SET_READ_ONLY_BOLLA_FORM:
-     newState = {...state, readOnlyForm: true }	
+     let cei = editedItemCopy(state.editedItem);
+     cei.readOnlyForm=true;
+     newState = {...state, editedItem: cei };	
      break;
      
     case GOTO_BOLLA:
@@ -82,9 +84,9 @@ export default function elencoBolle(state = initialState(), action) {
      break;	
      
     case RESET_ELENCOBOLLE:
-      newState = initialState();
-      break;
-    	
+    const tableHeight = state.tableHeight;
+      	newState =  {...initialState(), tableHeight: tableHeight};
+      	break;
     default:
         newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedBolla);
         //newState =  state;
@@ -100,7 +102,7 @@ export default function elencoBolle(state = initialState(), action) {
  export const getEditedItem = (state) => {return state.editedItem};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
- export const getReadOnlyForm = (state) => {return state.readOnlyForm};
+ export const getReadOnlyForm = (state) => {return state.editedItem.readOnlyForm};
  export const getGotoBolla = (state) => {return state.willGotoBolla};
  
  

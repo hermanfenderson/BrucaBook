@@ -1,6 +1,6 @@
 import FormLoginComponent from '../components/FormLogin'
 import {loginFA} from '../../../actions/login'
-import {getEditedItemLogin} from '../../../reducers'
+import {getEditedItemLogin, isAuthenticated} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -10,7 +10,7 @@ const resetEditedLogin = loginFA.resetEditedItem;
 
 
 const mapStateToProps = (state) => { 
-	return ({editedItem: getEditedItemLogin(state), authenticated: state.status.authenticated})
+	return ({editedItem: getEditedItemLogin(state), authenticated: isAuthenticated(state)})
 }
  
 

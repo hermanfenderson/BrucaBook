@@ -4,11 +4,15 @@ import React from 'react';
 
 import { Switch, Route} from 'react-router-dom'
 import Home from '../containers/Home';
-import Signup from '../containers/Signup';
+import Signup from '../scenes/signup';
 import Login from '../scenes/login';
 import ElencoBolle from '../scenes/elencoBolle';
 import GestioneBolla from '../scenes/bolla';
-import GestioneScontrino from '../containers/GestioneScontrino';
+//import GestioneScontrino from '../containers/GestioneScontrino';
+//        		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
+//      		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
+ 
+
 import GestioneItemCatalog from '../scenes/catalogo';
 import RequireAuth from '../containers/RequireAuth';
 
@@ -21,8 +25,7 @@ const Main= (props) =>
     			<Route exact path='/acquisti' component={RequireAuth(ElencoBolle)}/>
 		        <Route path="/signup" component={Signup} />
         		<Route path="/login" component={Login} />
-        		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
-        		<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
+         		<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
     		 </Switch>
 		)
 }

@@ -1,16 +1,13 @@
-//Ci metto anche i metodi rigaBolla...
-
-import {addCreatedStamp,addChangedStamp} from '../helpers/firebase';
-export const RESET_BOLLA = 'RESET_BOLLA';
-export const SCENE = 'BOLLA';
 import {FormActions} from '../helpers/formActions';
-import {STORE_MEASURE} from './index';
-
+import {storeMeasure} from './index';
 
 import Firebase from 'firebase';
 
 //Questa genera i path... e mi dorvrebbe aggiungere flessibilità...
 import {urlFactory} from '../helpers/firebase';
+
+export const RESET_BOLLA = 'RESET_BOLLA';
+export const SCENE = 'BOLLA';
 
 
 
@@ -36,6 +33,7 @@ export function resetBolla(bolla) {
     Firebase.database().ref(urlFactory(getState,"totaliBolla", {'bollaId': bolla})).off();
    //DEVO DECIDERE COSA FARE QUI...
     dispatch({type: RESET_BOLLA});
+    dispatch(storeMeasure());
    
   }
 }

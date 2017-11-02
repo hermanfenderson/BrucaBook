@@ -3,20 +3,13 @@ import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../containers/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import React, {Component} from 'react'
-import { Grid, Image, Container, Modal} from 'semantic-ui-react'
+import { Row, Col,  Modal} from 'antd'
 
 
 
 
 class Bolla extends Component {
-  componentDidMount()
-  {
-  	
-  }
-  
-  componentDidUpdate() {
- 	
- }	
+
  
  componentWillUnmount() {
  	this.props.resetBolla(this.props.match.params.id);
@@ -26,30 +19,29 @@ render()
 {
   return (
  	
-  <Grid>
+  <div>
   
   
-    <Modal open={this.props.showCatalogModal}>
+    <Modal visible={this.props.showCatalogModal}>
 		<FormCatalogo readOnlyEAN={true} scene='BOLLA'/>
     </Modal>  
-    <Grid.Row>
-      <Grid.Column width={3}>
-        <Image src='/image.png' />
-      </Grid.Column>
-      <Grid.Column width={10}>
+    <Row>
+      <Col span={4}>
+      </Col>
+      <Col span={16}>
     	 <FormRigaBolla idBolla={this.props.match.params.id}/>
-      </Grid.Column>
-      <Grid.Column width={3}>
+      </Col>
+      <Col span={4}>
     	 <TotaliBolla idBolla={this.props.match.params.id}/>
-      </Grid.Column>
-    </Grid.Row>
-     <Grid.Row>
-      <Container>
+      </Col>
+    </Row>
+     <Row>
+      
          <TableBolla idBolla={this.props.match.params.id}/>
-      </Container>
-    </Grid.Row>
+      
+    </Row>
    
-  </Grid>
+  </div>
  
  
 )

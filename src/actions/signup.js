@@ -5,10 +5,10 @@ import {FormActions} from '../helpers/formActions';
 import Firebase from 'firebase';
 
 //Questa genera i path... e mi dorvrebbe aggiungere flessibilità...
-export const SCENE = 'LOGIN';
-export const SUBMIT_EDITED_ITEM_LOGIN = 'SUBMIT_EDITED_ITEM_LOGIN' //Override
-export const AUTH_ERROR_LOGIN = 'AUTH_ERROR_LOGIN'
-export const DISMISS_AUTH_ERROR_LOGIN = 'DISMISS_AUTH_ERROR_LOGIN'
+export const SCENE = 'SIGNUP';
+export const SUBMIT_EDITED_ITEM_SIGNUP = 'SUBMIT_EDITED_ITEM_SIGNUP' //Override
+export const AUTH_ERROR_SIGNUP = 'AUTH_ERROR_LOGIN'
+export const DISMISS_AUTH_ERROR_SIGNUP = 'DISMISS_AUTH_ERROR_SIGNUP'
 //METODI DEL FORM
 var loginFAtmp = new FormActions(SCENE);
 
@@ -16,13 +16,13 @@ var loginFAtmp = new FormActions(SCENE);
 //Eccone uno...faccio il login
 loginFAtmp.submitEditedItem = (isValid,credentials) => {
 if (isValid) return function(dispatch) {
-			dispatch({type: SUBMIT_EDITED_ITEM_LOGIN});
-			Firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
+			dispatch({type: SUBMIT_EDITED_ITEM_SIGNUP});
+			Firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
     		 .then(response => {
-    		    dispatch({type: DISMISS_AUTH_ERROR_LOGIN});
+    		    dispatch({type: DISMISS_AUTH_ERROR_SIGNUP});
 			   })
 		     .catch(error => {
-		     dispatch({type: AUTH_ERROR_LOGIN, error: error});
+		     dispatch({type: AUTH_ERROR_SIGNUP, error: error});
 	      });
 		}
 }

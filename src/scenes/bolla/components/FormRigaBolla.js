@@ -6,7 +6,9 @@ class FormRigaBolla extends Component {
 onChange = (name, value) => {
 	   	this.props.changeEditedRigaBolla(name, value)};
 		
-onSubmit = () => {
+onSubmit = (e) => {
+	e.preventDefault();
+
 	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, {'bollaId':this.props.idBolla}, this.props.editedRigaBolla.values); //Per sapere cosa fare... dopo
   }
  
@@ -26,34 +28,33 @@ resetForm = () => {
   	return (
       <WrappedForm loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group >
-        <WrappedForm.Input field='ean' label='EAN' width={4} readOnly={readOnlyEAN}/>
-        <WrappedForm.Input field='titolo' label='Titolo'  width={6} readOnly/>
-        <WrappedForm.Input field='autore' label='Autore'  width={4} readOnly/>
-        <WrappedForm.Input field='prezzoListino' label='Listino'  width={2} readOnly/>
+        <WrappedForm.Input field='ean' required={true} label='EAN' width={6} formItemLayout={{wrapperCol: { span: 22 }}} readOnly={readOnlyEAN}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  width={8} formItemLayout={{wrapperCol: { span: 22 }}} readOnly/>
+        <WrappedForm.Input field='autore' label='Autore'  width={6} formItemLayout={{wrapperCol: { span: 22 }}} readOnly/>
+        <WrappedForm.Input field='prezzoListino' label='Listino'  width={4} formItemLayout={{wrapperCol: { span: 22 }}} readOnly/>
      
        </WrappedForm.Group>
         
         <WrappedForm.Group >
-        <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} width={2}/>
-        <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} width={2}/>
-        <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} width={2}/>
-        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' width={3}/>
-        <WrappedForm.Input field='pezzi' label='Quantità' width={2}/>
-        <WrappedForm.Input field='gratis' label='Gratis' width={2}/>
-        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly width={3}/>
+        <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} width={2} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} width={2} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} width={2} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Checkbox width={2} field='manSconto' label='Man.'/>
+        
+        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' width={4} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Input field='pezzi' label='Quantità' width={3} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Input field='gratis' label='Gratis' width={3} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly width={6} formItemLayout={{wrapperCol: { span: 22 }}}/>
     
       </WrappedForm.Group>
        <WrappedForm.Group >
-        <WrappedForm.Checkbox width={2} field='manSconto' label='Man.'/>
-        
-        <WrappedForm.Button className={'hidden'}>Submit</WrappedForm.Button>
-        
-        <WrappedForm.Button primary disabled={!this.props.editedRigaBolla.isValid} width={4}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+         <WrappedForm.GeneralError  width={16}/>
+       
         <WrappedForm.Button type={'button'} width={4} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-       	 <WrappedForm.GeneralError rows={1} width={6} error readOnly
-       	 
-			 />	 
+        <WrappedForm.Button  type="primary" htmlType="submit" width={4}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        
+        
        
         </WrappedForm.Group >
        </WrappedForm>

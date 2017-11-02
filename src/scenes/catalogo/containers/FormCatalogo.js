@@ -3,7 +3,6 @@ import {changeEditedCatalogItem, submitEditedCatalogItem, searchCatalogItem, res
 import {getEditedCatalogItem} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
-import {isValidEAN} from '../../..//helpers/ean';
 
 import {store} from '../../../index.js';
 

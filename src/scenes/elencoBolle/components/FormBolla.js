@@ -7,7 +7,8 @@ class FormBolla extends Component {
 onChange = (name, value) => {
 	   	this.props.changeEditedBolla(name, value)};
 		
-onSubmit = () => {
+onSubmit = (e) => {
+	e.preventDefault();
 	//Qui devo fare reload della pagina verso la riga bolla...
 	if (this.props.readOnlyForm) {
 		
@@ -33,22 +34,21 @@ resetForm = () => {
     return (
     
      this.props.willGotoBolla ? <Redirect to={destination} /> : 	 
-     <WrappedForm  readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
+     <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
          <WrappedForm.Group >
-        <WrappedForm.Input field='riferimento' label='Riferimento'  width={4} />
-        <WrappedForm.Input field='fornitore' label='Fornitore'  width={4} />
-        <WrappedForm.DatePickerInput field='dataDocumento' label='Data Documento'  width={4} />
-        <WrappedForm.DatePickerInput field='dataCarico' label='Data Carico'  width={4} />
+        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} width={8} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} width={8} formItemLayout={{wrapperCol: { span: 22 }}}/>
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento'  format = 'DD/MM/YYYY' width={4} />
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  format = 'DD/MM/YYYY' width={4} />
        </WrappedForm.Group>
         
      
        <WrappedForm.Group >
-        
-        <WrappedForm.Button primary disabled={!this.props.editedBolla.isValid} width={4}>{submitLabel}</WrappedForm.Button>
-        <WrappedForm.Button type={'button'} width={4} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.Button buttonItemLayout={{wrapperCol: { span: 4, offset: 20 }}} htmlType="button"  width={21} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-       	 <WrappedForm.GeneralError rows={1} width={8} error readOnly
-			 />	 
+        <WrappedForm.Button type="primary" width={3} htmlType="submit" >{submitLabel}</WrappedForm.Button>
+        
+       	 <WrappedForm.GeneralError rows={1} width={8} error readOnly/>	 
         </WrappedForm.Group >
        </WrappedForm>
     )

@@ -4,118 +4,74 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import {Icon} from 'semantic-ui-react';
- 
+import { Icon, Table } from 'antd';
 
- 
+
 class WrappedTable extends React.Component {
 componentDidMount()
-  {
-  	  this.node = ReactDOM.findDOMNode(this.refs.bsTable).childNodes[0].childNodes[1];
+  {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
   }
   
- 
+  
+
   componentDidUpdate() {
-        if (this.props.tableScroll)
+	   if (this.props.tableScroll)
 			{
-			this.node.scrollTop = this.node.scrollHeight;
+	        this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
  }
 	
-
+selectRow = (row) => {
+ 	if(this.props.selectRow) this.props.selectRow(row);
+ }
  
-rowActions = (cell, row) => {
+ 
+actionRowRender = (cell, row) => {
    return (
         <div>
-        {(this.props.deleteRow) && <Icon name="trash outline" onClick={() => { this.props.deleteRow(row)}}/>} 
-		{(this.props.editRow) && <Icon name="edit" onClick={() => { this.props.editRow(row)}}/>}  
+        {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(row)}}/>} 
+		{(this.props.editRow) && <Icon type="edit" onClick={() => { this.props.editRow(row)}}/>}  
         </div>
         );
  }
  
- selectRow = (row) => {
- 	if(this.props.selectRow) this.props.selectRow(row);
- }
  
-ordinaryRowFormat = (cell,row) => {
-	return(<div onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ 
+ordinaryRowRender = (cell,row) => {
+ if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
+ else  return(<div onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
+ 
 } 
- 
+
+
 render ()
      {
-     const selectRow = {
-    		mode: 'radio',  // single select
-				hideSelectColumn: true,
-				bgColor: '#286090',	
-				selected: []
-  			};
-  	if (this.props.selectedItem) {selectRow['selected'] = [this.props.selectedItem.key]};		
-  	//Aggiungo gestione della selectRow... 
-  	const tableHeaderColumns = this.props.header.map((header, index) => 
-  				 <TableHeaderColumn dataFormat={this.ordinaryRowFormat} key={index} dataField={header.dataField} width={header.width}>{header.label}</TableHeaderColumn> 	
-  				);	
+    let columns = this.props.header.map((header) => 
+  	            	{
+  	            		return({
+  	             	'title':  header.label,
+  	             	'dataIndex': header.dataField,
+  	             	 'width': header.width,
+  	             	'render': (text, record) => {return this.ordinaryRowRender(text,record)}
+  	            		})
+  	            	}
+  				);
+  		columns.push(
+  					{
+  					'render': (text, record) => {return this.actionRowRender(text,record)},
+  					'width': '60px',
+  					'title': 'Sel.'
+  	            	}
+  	            	
+  				)	
   	    return(
-        	 <BootstrapTable  height={this.props.height} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
-        		 <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
-        		 {tableHeaderColumns}
-        		 <TableHeaderColumn width='50' dataFormat={this.rowActions}></TableHeaderColumn>
-    		</BootstrapTable>
+        	 <Table ref='antTable' scroll={{ y: this.props.height }} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        	
        		);	
      }	
 
-/*ROTTAMAZIONE SOFTWARE!!!
-	const tableHeaderColumns = this.props.header.map((header) => 
-  				{
-  				 <TableHeaderColumn dataField={header.dataField}>{header.label}</TableHeaderColumn> 	
-  				}
-  				);
-  				
-  			{tableHeaderColumns}	
-  				
-class WrappedBootstrapTable extends React.Component {
-componentDidMount()
-  {
-  	  this.node = ReactDOM.findDOMNode(this.refs.bsTable).childNodes[0].childNodes[1];
-  }
-  
-  componentDidUpdate() {
- 	if (this.props.willScroll)
-		{
-		if (this.props.shouldScroll)  this.node.scrollTop = this.node.scrollHeight;
-		this.props.scrollAction(false); //Resetto lo scroll...
-		}
- }
-  
-    render ()
-     {
-			const selectRow = {
-    		mode: 'radio',  // single select
-				hideSelectColumn: true,
-				bgColor: '#286090',	
-				selected: []
-  			};
-			if (this.props.selectedRigaBolla) {selectRow['selected'] = [this.props.selectedRigaBolla]};
-    return (
-			   <BootstrapTable height={(this.props.shouldScroll) ? this.props.height : '100%'} ref='bsTable'  data={this.props.data} striped hover condensed selectRow={ selectRow } >
-          <TableHeaderColumn isKey dataField='key' hidden>Key</TableHeaderColumn>
-					 <TableHeaderColumn dataField='ean' filter={ { type: 'TextFilter', delay: 100 } }>EAN</TableHeaderColumn>
 
-          <TableHeaderColumn dataField='titolo' filter={ { type: 'TextFilter', delay: 100 } }>Titolo</TableHeaderColumn>
-          <TableHeaderColumn width='60' dataField='prezzoUnitario'>Prezzo</TableHeaderColumn>
-					<TableHeaderColumn width='60' dataField='pezzi'>Quantità</TableHeaderColumn>
-					<TableHeaderColumn width='60' dataField='gratis'>Gratis</TableHeaderColumn>
-					<TableHeaderColumn width='70' dataField='prezzoTotale'>Totale</TableHeaderColumn>
-					
-					
-       <TableHeaderColumn width='50' dataFormat={ this.props.dataFormat }></TableHeaderColumn>
-      </BootstrapTable>
-       );
-   }
- }
- */
 } 
  
 export default WrappedTable;

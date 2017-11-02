@@ -27,12 +27,26 @@ this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
 this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
+this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
+
+
 this.itemUrl = itemUrl;
 this.itemsUrl = itemsUrl;
 this.totaliUrl = totaliUrl;
 this.preparaItem = preparaItem;
 
-//Funzioni da MIGRARE
+
+this.setTableWindowHeight = (tableWindowHeight) =>
+{return({
+  type: this.SET_TABLE_WINDOW_HEIGHT,
+  tableWindowHeight: tableWindowHeight
+   }
+  );
+};	
+
+
+//Funzioni da MIGRARE... che vuol dire?
+
 this.foundCatalogItem = (item) =>
 {return({
   type: this.FOUND_CATALOG_ITEM,

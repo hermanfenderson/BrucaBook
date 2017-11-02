@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Grid } from 'semantic-ui-react'
+import {Row} from 'antd'
 
 class TotaliBolla extends Component 
     {
@@ -19,9 +19,9 @@ class TotaliBolla extends Component
     	const props = this.props;	
     	  return(
 			<div>
-			<Grid.Row> Copie: {props.totali.pezzi} </Grid.Row>
-			<Grid.Row> Gratis:  {props.totali.gratis} </Grid.Row>
-			<Grid.Row> Totale: {props.totali.prezzoTotale} </Grid.Row>
+			<Row> Copie: {props.totali.pezzi} </Row>
+			<Row> Gratis:  {props.totali.gratis} </Row>
+			<Row> Totale: {props.totali.prezzoTotale} </Row>
 			</div>
 			)}
     }		

@@ -4,18 +4,19 @@ import FormReducer from '../helpers/formReducer';
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  showError, noErrors} from '../helpers/form';
 import {isValidEmail} from '../helpers/validators';
 //Override
-import {SUBMIT_EDITED_ITEM_LOGIN} from '../actions/login';
-import {AUTH_ERROR_LOGIN, DISMISS_AUTH_ERROR_LOGIN} from '../actions/login';
+import {SUBMIT_EDITED_ITEM_SIGNUP} from '../actions/signup';
+import {AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP} from '../actions/signup';
 
 //Metodi reducer per le Form
-const itemR = new FormReducer('LOGIN'); 
+const itemR = new FormReducer('SIGNUP'); 
 
-const editedLoginValuesInitialState = 
+const editedSignupValuesInitialState = 
 	  {			email: '',
-				password: ''
+				password: '',
+				confirmPassword: ''
 	};
 const editedItemInitialState = () => {
-	return(editedItemInitialStateHelper(editedLoginValuesInitialState, {} ));
+	return(editedItemInitialStateHelper(editedSignupValuesInitialState, {} ));
 }
 
 
@@ -33,7 +34,7 @@ const initialState = () => {
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformAndValidateEditedItem(cei, name, value)
+function transformAndValidateEditedSignup(cei, name, value)
 {  	
 	cei.values[name] = value;
 
@@ -44,7 +45,7 @@ function transformAndValidateEditedItem(cei, name, value)
 //Mostro l'errore solo in fase di validazione	
    errMgmt(cei, 'email','invalidEmail','email non valida', !isValidEmail(cei.values.email), (!isValidEmail(cei.values.email) && cei.values.email.length >0));
    errMgmt(cei, 'password','blankPassword','password obbligatoria', (cei.values.password.length === 0), false);
-   
+   errMgmt(cei, 'confirmPassword','notIdentic','le password non coincidono', (!(cei.values.password === cei.values.confirmPassword)), (cei.values.confirmPassword.length > 0) && (!(cei.values.password === cei.values.confirmPassword)));
   	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
@@ -54,11 +55,11 @@ function transformAndValidateEditedItem(cei, name, value)
 
 
 
-export default function login(state = initialState(), action) {
+export default function signup(state = initialState(), action) {
   var newState;
   switch (action.type) {
    //Over-ride del caso di submit... non devo cancellare il form
-   case SUBMIT_EDITED_ITEM_LOGIN:
+   case SUBMIT_EDITED_ITEM_SIGNUP:
 		    //Posso sottomettere il form se lo stato della riga è valido
 			if (!state.editedItem.isValid)
 		        {
@@ -69,7 +70,7 @@ export default function login(state = initialState(), action) {
 		        }
 		    else newState = state;    
 	   break;
-	case AUTH_ERROR_LOGIN:
+	case AUTH_ERROR_SIGNUP:
 		  {
 		  	let cei = editedItemCopy(state.editedItem);
 		    		     errMgmt(cei,'form','loginError',action.error.message,true,true);
@@ -77,7 +78,7 @@ export default function login(state = initialState(), action) {
 		        
 		  }
         break;		  
-    case DISMISS_AUTH_ERROR_LOGIN:
+    case DISMISS_AUTH_ERROR_SIGNUP:
 		  {
 		  	let cei = editedItemCopy(state.editedItem);
 		    		  noErrors(cei, 'form'); //ELIMINO GLI ERRORI DAL FORM...
@@ -86,7 +87,7 @@ export default function login(state = initialState(), action) {
 		  }
         break;		      
     default:
-        newState = itemR.updateState(state,action,editedItemInitialState, transformAndValidateEditedItem);
+        newState = itemR.updateState(state,action,editedItemInitialState, transformAndValidateEditedSignup);
     	break;
    
   }

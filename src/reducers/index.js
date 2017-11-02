@@ -1,31 +1,20 @@
 import { combineReducers } from 'redux';
-import AuthReducer from './auth';
 import MeasuresReducer from './measures';
-import { combineForms } from 'react-redux-form';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import LoginReducer, * as fromLogin from './login';
-import ScontriniReducer from './scontrini';
-import CasseReducer from './casse';
+import SignupReducer, * as fromSignup from './signup';
 import StatusReducer, * as fromStatus from './status';
-import RigaScontrinoReducer from './rigaScontrino';
-import { reducer as FormReducer } from 'redux-form';
 
 const rootReducer = combineReducers({
-  auth: AuthReducer,
   bolla: BollaReducer,
   elencoBolle: ElencoBolleReducer,
   login: LoginReducer,
-  scontrini: ScontriniReducer,
-  casse: CasseReducer,
+  signup: SignupReducer,
   catalogo: CatalogoReducer,
-  form: FormReducer,
   measures: MeasuresReducer,
-  status: StatusReducer,
-  form2: combineForms({
-    rigaScontrino: RigaScontrinoReducer
-  }, 'form2')
+  status: StatusReducer
 });
 
 export default rootReducer;
@@ -37,6 +26,7 @@ export const getEditedRigaBolla = (state) => {return fromBolla.getEditedItem(sta
 export const getShowCatalogModal = (state) => {return fromBolla.getShowCatalogModal(state.bolla)};
 export const getTableHeight = (state) => {return fromBolla.getTableHeight(state.bolla)};
 export const getTableScroll = (state)  => {return fromBolla.getTableScroll(state.bolla)};
+export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)};
 
 
 //Scene ElencoBolle
@@ -54,11 +44,16 @@ export const getEditedCatalogItem = (state) => {return fromCatalog.getEditedCata
 //Scene Login
 export const getEditedItemLogin = (state) => {return fromLogin.getEditedItem(state.login)};
 
+//Scene Signup
+export const getEditedItemSignup = (state) => {return fromSignup.getEditedItem(state.signup)};
+
 
 //Dallo stato
 export const getLibreria = (state) => {return fromStatus.getLibreria(state.status)};
 export const getCatena = (state) => {return fromStatus.getCatena(state.status)};
 export const isAuthenticated = (state) => {return fromStatus.isAuthenticated(state.status)};
+export const getUser = (state) => {return fromStatus.getUser(state.status)};
+
 
 
  

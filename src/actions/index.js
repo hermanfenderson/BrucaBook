@@ -75,35 +75,6 @@ export function removeMeasure(measureName) {
 
 
 
-
-//Azioni per la gestione delle righe
-
- 
-
-export function signUpUser(credentials) {
-  return function(dispatch) {
-    Firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
-      .then(response => {
-        dispatch(authUser());
-      })
-      .catch(error => {
-        dispatch(authError(error));
-      });
-  }
-}
-
-export function signInUser(credentials) {
-  return function(dispatch) {
-    Firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
-      .then(response => {
-        dispatch(authUser());
-      })
-      .catch(error => {
-        dispatch(authError(error));
-      });
-  }
-}
-
 export function signOutUser() {
   return function(dispatch) {
   	Firebase.auth().signOut().then(function() {
@@ -115,7 +86,8 @@ export function signOutUser() {
 		info: null,
   });  
 }).catch(function(error) {
-  // An error happened.
+  // An error happened. DA IMPLEMENTARE!!!
+  
 });
  } 
 }
@@ -124,16 +96,3 @@ export function signOutUser() {
 
 
 
-export function authUser() {
-  return {
-    type: AUTH_USER
-  }
-}
-
-
-export function authError(error) {
-  return {
-    type: AUTH_ERROR,
-    payload: error
-  }
-}

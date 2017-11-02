@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as Actions from '../actions';
 import SearchBar from '../components/SearchBar';
+import {isAuthenticated} from '../reducers';
+
 import '../styles/app.css';
 
 class Home extends React.Component {
@@ -17,7 +19,7 @@ class Home extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    authenticated: state.auth.authenticated
+    authenticated: isAuthenticated(state)
     
   };
 }

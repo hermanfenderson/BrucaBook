@@ -3,10 +3,9 @@
 import {CHANGE_EDITED_CATALOG_ITEM, SUBMIT_EDITED_CATALOG_ITEM, SEARCH_CATALOG_ITEM, RESET_EDITED_CATALOG_ITEM,
 FOUND_CATALOG_ITEM, NOT_FOUND_CATALOG_ITEM, NOT_FOUND_CLOUD_ITEM } from '../actions/catalogo';
 import {isValidEAN, generateEAN} from '../helpers/ean';
-import {isValidBookCode, isAmount, isNotNegativeInteger, isPercentage} from '../helpers/validators';
+import {isValidBookCode, isAmount} from '../helpers/validators';
 import {errMgmt, editedItemInitialState, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors} from '../helpers/form';
 
-const NOT_FOUND_CLOUD_ITEM_BOLLA = 'NOT_FOUND_CLOUD_ITEM_BOLLA';
 const editedCatalogItemValuesInitialState = 
 	  {			ean: '',
 				titolo: '',
