@@ -11,24 +11,32 @@ import {getLibreria, getCatena} from '../reducers';
 //Helper per il prefisso alla base dati...la ricolloco qui... in prospettiva...
 export function prefissoNegozio(getState) 
     { 
-      return(getCatena(getState()) + '/' + getLibreria(getState()) + '/'); 
+      const catena = getCatena(getState());
+      const libreria = getLibreria(getState());
+      if (catena && libreria) return(getCatena(getState()) + '/' + getLibreria(getState()) + '/'); 
+      else return null;
     }
     
 //Passo un getstate, dove voglio andare (stringa), params (oggetti)
 export function urlFactory(getState, destination, params)    
 {   let url = "";
-  	switch(destination)
-		{
-			//Bolla: in input idBolla
-			case "totaliBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/totali'; break;
-			case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;
-			case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.itemId; break;
-			case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle'; break;
-			case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.itemId; break;
-			
-			default: return "";
-		}
-	return url;	
+    let prefisso = prefissoNegozio(getState);
+    if (prefisso)
+    {
+	  	switch(destination)
+			{
+				//Bolla: in input idBolla
+				case "totaliBolla": url = prefissoNegozio(getState)+'elencoBolle/'  + params.bollaId + '/totali'; break;
+				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;
+				case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.itemId; break;
+				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle'; break;
+				case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.itemId; break;
+				
+				default: return null;
+			}
+		return url;
+    }
+    else return null;
 	
 }
 

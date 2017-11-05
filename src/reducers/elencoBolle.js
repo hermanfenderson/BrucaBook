@@ -5,7 +5,7 @@ import 'moment/locale/it';
 
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem} from '../helpers/form';
 
-import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE, GOTO_BOLLA} from '../actions/elencoBolle';
+import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE} from '../actions/elencoBolle';
 
 moment.locale("it");
 
@@ -41,8 +41,7 @@ const initialState = () => {
 			itemsArray: [],
 			itemsArrayIndex: {},
 		    tableScroll: false,
-			willGotoBolla: false,
-			tableHeight:200,
+			tableHeight:0,
 			editedItem: {...editedItemInitialState()}
 	    	}
     }
@@ -79,9 +78,6 @@ export default function elencoBolle(state = initialState(), action) {
      newState = {...state, editedItem: cei };	
      break;
      
-    case GOTO_BOLLA:
-      newState = {...state, willGotoBolla: true }	
-     break;	
      
     case RESET_ELENCOBOLLE:
     const tableHeight = state.tableHeight;
@@ -103,7 +99,6 @@ export default function elencoBolle(state = initialState(), action) {
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getReadOnlyForm = (state) => {return state.editedItem.readOnlyForm};
- export const getGotoBolla = (state) => {return state.willGotoBolla};
  
  
       

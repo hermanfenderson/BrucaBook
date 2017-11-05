@@ -37,7 +37,7 @@ const initialState = () => {
 			itemsArrayIndex: {},
 		    tableScroll: false,
 			showCatalogModal: false,
-			tableHeight:200,
+			tableHeight:0,
 			totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
 			editedItem: {...editedItemInitialState()}
 	    	}

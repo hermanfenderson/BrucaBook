@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Redirect} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 import WrappedForm from '../../../components/WrappedForm'
 
 class FormBolla extends Component {
@@ -11,8 +11,7 @@ onSubmit = (e) => {
 	e.preventDefault();
 	//Qui devo fare reload della pagina verso la riga bolla...
 	if (this.props.readOnlyForm) {
-		
-		this.props.gotoBolla();
+		this.props.history.push('/bolla/' + this.props.editedBolla.selectedItem.key);
 	}
 	//Elemento radice: il parametro del punto di destinazione è oggetto vuoto...
 	else this.props.submitEditedBolla(this.props.editedBolla.isValid, this.props.editedBolla.selectedItem, {}, this.props.editedBolla.values); //Per sapere cosa fare... dopo
@@ -22,7 +21,10 @@ resetForm = () => {
 	this.props.resetEditedBolla();
 }
 
-
+componentWillMount = () => 
+{
+	this.resetForm();
+}
 
   render() {
   	const formValues = this.props.editedBolla.values;
@@ -30,28 +32,26 @@ resetForm = () => {
   	const readOnlyForm = this.props.readOnlyForm; //Vado in read only form... perchè sono pronto per aggiungere libri...
   	const selectedItem = this.props.editedBolla.selectedItem;
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
-  	const destination = selectedItem ? '/bolla/' + selectedItem.key : '';
     return (
-    
-     this.props.willGotoBolla ? <Redirect to={destination} /> : 	 
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group >
-        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} width={8} formItemLayout={{wrapperCol: { span: 22 }}}/>
-        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} width={8} formItemLayout={{wrapperCol: { span: 22 }}}/>
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento'  format = 'DD/MM/YYYY' width={4} />
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  format = 'DD/MM/YYYY' width={4} />
+         <WrappedForm.Group formGroupLayout={{gutter:16}}>
+        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 8}} />
+        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 8}} />
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
        </WrappedForm.Group>
         
      
-       <WrappedForm.Group >
-        <WrappedForm.Button buttonItemLayout={{wrapperCol: { span: 4, offset: 20 }}} htmlType="button"  width={21} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Group formGroupLayout={{gutter:16}}>
+        <WrappedForm.GeneralError  formColumnLayout={{span:18}}/>
+       
+        <WrappedForm.Button type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button type="primary" width={3} htmlType="submit" >{submitLabel}</WrappedForm.Button>
-        
-       	 <WrappedForm.GeneralError rows={1} width={8} error readOnly/>	 
+        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
+       
         </WrappedForm.Group >
        </WrappedForm>
     )
   }
 }
-export default FormBolla;
+export default withRouter(FormBolla);

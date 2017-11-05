@@ -1,6 +1,6 @@
 import FormBollaComponent from '../components/FormBolla'
-import {bollaFA, gotoBolla} from '../../../actions/elencoBolle'
-import {getEditedBolla, getReadOnlyFormBolla, getGotoBolla} from '../../../reducers'
+import {bollaFA} from '../../../actions/elencoBolle'
+import {getEditedBolla, getReadOnlyFormBolla} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -11,12 +11,12 @@ const resetEditedBolla = bollaFA.resetEditedItem;
 
 
 const mapStateToProps = (state) => { 
-	return ({editedBolla: getEditedBolla(state), readOnlyForm: getReadOnlyFormBolla(state), willGotoBolla: getGotoBolla(state)})
+	return ({editedBolla: getEditedBolla(state), readOnlyForm: getReadOnlyFormBolla(state)})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeEditedBolla, submitEditedBolla, resetEditedBolla, gotoBolla }, dispatch);
+  return bindActionCreators({ changeEditedBolla, submitEditedBolla, resetEditedBolla }, dispatch);
 }
 
 

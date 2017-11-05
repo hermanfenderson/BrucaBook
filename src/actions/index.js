@@ -12,14 +12,8 @@ Se user è null chiamo anche in questo caso userInfoChanged con type USER_INFO_C
 import Firebase from 'firebase';
 
 
-export const STORE_MEASURE = 'STORE_MEASURE';
-export const REMOVE_MEASURE = 'REMOVE_MEASURE';
-
-export const SIGN_OUT_USER = 'SIGN_OUT_USER';
-export const AUTH_ERROR = 'AUTH_ERROR';
-export const AUTH_USER = 'AUTH_USER';
 export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
-
+export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
 
 
 
@@ -53,25 +47,7 @@ export function listenAuthStateChanged() {
   }
 }
 
-export function storeMeasure(newMeasureName, newMeasureNumber) {
-  var newMeasure = {name: newMeasureName, number: newMeasureNumber};
-  return function(dispatch, getState) {
-  dispatch({
-  type: STORE_MEASURE,
-  newMeasure: newMeasure,
-  allMeasures: getState().measures.measures
-  });
-};
-}
 
-export function removeMeasure(measureName) {
-  return {
-  type: STORE_MEASURE,
-  measureName
-  }
-}
- 
- 
 
 
 
@@ -92,6 +68,13 @@ export function signOutUser() {
  } 
 }
 
+export function toggleCollapsed() {
+	return(
+		{
+			type: TOGGLE_COLLAPSED
+		}
+		)
+}
 
 
 

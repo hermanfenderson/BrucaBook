@@ -4,75 +4,111 @@
 //Gestisco anche la presenza di un utente autenticato...(anche se nel rendering sotto mi devo fidare del mio stato)
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom'
-import { LocaleProvider } from 'antd';
+import { LocaleProvider, Layout, Icon, Affix, Row } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
 
 
 //import Header from '../components/Header';
 import Main from '../components/Main';
+import SiderComponent from '../components/Sider';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as Actions from '../actions';
-import {isAuthenticated, getUser} from '../reducers';
+import { bindActionCreators} from 'redux'
+
+import {signOutUser, listenAuthStateChanged, toggleCollapsed} from '../actions';
+import {isAuthenticated, getUser, getCollapsed} from '../reducers';
+
+//Foglio di stile...
 import '../styles/app.css';
+
+const { Header, Sider, Content } = Layout;
 
 
 class App extends React.Component {
 
-
   componentWillMount() {
-  this.props.actions.listenAuthStateChanged();
+  this.props.listenAuthStateChanged();
   }
+  
+  
 
 handleResize = () => {
-  this.props.actions.storeMeasure('viewPortHeight', window.innerHeight);
-  	this.props.actions.storeMeasure('windowHeight', ReactDOM.findDOMNode(this.refs.border).clientHeight);
-
-}
+ }
 
  componentDidMount() {
-    this.handleResize(); //La prima volta...
-    window.addEventListener('resize', this.handleResize);
-  }
+    }
 
 componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  this.props.actions.removeMeasure('viewPortHeight');
+ 
   //QUI MANCA LA CHIUSURA DEL LISTENER DELL'AUTENTICAZIONE
 	
 }
 
+  toggle = () => {
+    this.props.toggleCollapsed();
+  }
 
-//   <Header authenticated={this.props.authenticated} signOutUser={this.props.actions.signOutUser} />
-         
+           
+           
+ 
   render() {
-  
-      return (
-        
-           <LocaleProvider locale={itIT}>
-           <div ref='border'>
-            <Main />
-           </div> 
-            </LocaleProvider>
+    return (
+     <LocaleProvider locale={itIT}>	
+      <Layout>
+      
+        <Sider style={{height: '100vh'}}
+          trigger={null}
+          collapsible
+          collapsed={this.props.collapsed}
+        >
+        <Affix>
+     
+          <div className="logo"/>
+          <SiderComponent authenticated={this.props.authenticated}/>
+          </Affix>
+     
+      </Sider>
        
-        );
-        }
+       
+          <Layout >
+        
+          <Header style={{   background: '#fff', padding: 0, width: '100%' }}>
+           <Affix>
+           <Row  style={{backgroundColor: 'white'}}>
+            <Icon
+              className="trigger"
+              type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+              onClick={this.toggle}
+            />
+            </Row>
+            </Affix>
+          </Header>
+       
+          <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: '100vh-48' }}>
+          <Main />
+          </Content>
+        </Layout>
+      </Layout>
+      </LocaleProvider> 
+    );
+  }
 }
 
+
+        
 function mapStateToProps(state) {
   return {
     authenticated: isAuthenticated(state),
-    user: getUser(state)
+    user: getUser(state),
+    collapsed: getCollapsed(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(Actions, dispatch)
-  };
+  return bindActionCreators({signOutUser, listenAuthStateChanged, toggleCollapsed }, dispatch);
 }
+
+
 
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

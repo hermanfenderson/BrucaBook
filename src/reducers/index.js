@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import MeasuresReducer from './measures';
+import AppReducer, * as fromApp from './app';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
@@ -8,16 +8,18 @@ import SignupReducer, * as fromSignup from './signup';
 import StatusReducer, * as fromStatus from './status';
 
 const rootReducer = combineReducers({
+  app: AppReducer,
   bolla: BollaReducer,
   elencoBolle: ElencoBolleReducer,
   login: LoginReducer,
   signup: SignupReducer,
   catalogo: CatalogoReducer,
-  measures: MeasuresReducer,
   status: StatusReducer
 });
 
 export default rootReducer;
+//Dalla App
+export const getCollapsed = (state) => {return fromApp.getCollapsed(state.app)};
 
 //Scene Bolla
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
@@ -35,7 +37,6 @@ export const getEditedBolla = (state) => {return fromElencoBolle.getEditedItem(s
 export const getTableElencoBolleHeight = (state) => {return fromElencoBolle.getTableHeight(state.elencoBolle)};
 export const getTableElencoBolleScroll = (state)  => {return fromElencoBolle.getTableScroll(state.elencoBolle)};
 export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
-export const getGotoBolla = (state) => {return fromElencoBolle.getGotoBolla(state.elencoBolle)};
 
 
 //Scene Catalogo

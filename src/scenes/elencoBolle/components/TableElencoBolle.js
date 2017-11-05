@@ -6,22 +6,21 @@ import WrappedTable from '../../../components/WrappedTable'
 const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
 			    {dataField: 'fornitore', label: 'Fornitore', width: '300px'},
 			    {dataField: 'dataDocumento', label: 'Data Doc', width: '200px'},
-			    {dataField: 'dataCarico', label: 'Data Carico', width: '200px'}
+			    {dataField: 'dataCarico', label: 'Data Carico', width: '200px'},
+			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '200px'},
+			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '200px'},
+			    {dataField: 'totali.gratis', label: 'Gratis', width: '200px'},
 			   ];
 
+var listening = false;
 
 class TableBolla extends Component 
     {
     componentDidMount() {
-    	//Ascolto modifiche sulle bolle... non passo parametri...sono nella radice
-    	this.props.listenBolla(); 
-	}
-	
-	componentWillUnmount() {
-		//Smetto di ascoltare...
-		this.props.offListenBolla(); 
-		
-		
+    	let result = null;
+    	//Ascolto modifiche sulle bolle... non passo parametri...sono nella radice. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
+    	if (!listening) result = this.props.listenBolla();
+    	if (result === '') listening = true;
 	}
 	
 	deleteRow = (row) => {

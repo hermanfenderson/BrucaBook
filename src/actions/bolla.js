@@ -1,5 +1,4 @@
 import {FormActions} from '../helpers/formActions';
-import {storeMeasure} from './index';
 
 import Firebase from 'firebase';
 
@@ -33,8 +32,7 @@ export function resetBolla(bolla) {
     Firebase.database().ref(urlFactory(getState,"totaliBolla", {'bollaId': bolla})).off();
    //DEVO DECIDERE COSA FARE QUI...
     dispatch({type: RESET_BOLLA});
-    dispatch(storeMeasure());
-   
+    
   }
 }
 

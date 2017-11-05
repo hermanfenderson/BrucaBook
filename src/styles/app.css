@@ -1,3 +1,31 @@
+
+
+.ant-layout-footer {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+ .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+.trigger:hover {
+  color: #108ee9;
+}
+
+ .logo {
+  content: 'BrucaBook';
+  height: 32px;
+  background: #333;
+  background-image:url('/brucabook.png');
+  background-repeat:no-repeat;
+  
+  border-radius: 6px;
+  margin: 16px;
+}
 /*
 .app {
     margin: 3em auto;

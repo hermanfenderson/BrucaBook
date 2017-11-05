@@ -1,18 +1,24 @@
 import React, {Component} from 'react'
 import {Row} from 'antd'
 
+var currentListenedIdBolla = null;
+
 class TotaliBolla extends Component 
     {
     componentDidMount() {
     	//Ascolto modifiche sui totali della bolla
-    	this.props.listenTotaliChanged({'bollaId':this.props.idBolla}); 
+    	
+    	if (currentListenedIdBolla !== this.props.idBolla)
+    	   {
+    	   	if (currentListenedIdBolla) 
+    	   		{this.props.offListenTotaliChanged({'bollaId':this.props.idBolla}); 
+    	   		}
+    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
+    	   	let objectUrl = this.props.listenTotaliChanged({'bollaId':this.props.idBolla}); 
+    	   	if (objectUrl) currentListenedIdBolla = objectUrl['bollaId']; 
+    	   	}
 	}
 	
-	componentWillUnmount() {
-		//Smetto di ascoltare...
-		this.props.offListenTotaliChanged({'bollaId':this.props.idBolla}); 
-		
-	}
 
     
     	render() { 

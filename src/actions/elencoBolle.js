@@ -2,8 +2,6 @@ import {FormActions} from '../helpers/formActions';
 
 export const SCENE = 'ELENCOBOLLE';
 export const RESET_ELENCOBOLLE = 'RESET_ELENCOBOLLE';
-export const GOTO_BOLLA = 'GOTO_BOLLA';
-
 export const SET_READ_ONLY_BOLLA_FORM = 'SET_READ_ONLY_BOLLA_FORM';
 
 
@@ -13,6 +11,9 @@ function preparaItem(riga)
    {
    	riga['dataDocumento'] = riga['dataDocumento'].valueOf();
    	riga['dataCarico'] = riga['dataCarico'].valueOf();
+   	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
+   	if ('totali' in riga) {delete riga.totali}
+   	
     
      }
 
@@ -22,10 +23,6 @@ export const setReadOnlyBollaForm = () =>
 	return ({'type': SET_READ_ONLY_BOLLA_FORM});
 }
 
-export const gotoBolla = () =>
-{
-	return ({'type': GOTO_BOLLA});
-}
 
 export function resetElencoBolle() {
 return{type: RESET_ELENCOBOLLE};

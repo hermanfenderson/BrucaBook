@@ -1,12 +1,14 @@
 //Helper per generare automagicamente un pezzo del reducer nel caso debba gestire una specifica scene...
 //E' polimorfico!  Se non esiste un campo EAN... si comporta senza doppi salti ecc ecc...
-
 import {errMgmt, editedItemCopy, showError, showAllErrors} from '../helpers/form';
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode} from '../helpers/validators';
-import {STORE_MEASURE} from '../actions';
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 
+
+//la funzione transforItem se c'e' è responsabile di trasformare il risultato di firebase in uno compatibile con la tabella che voglio
+//mostrare.
+//la funzione transformSelectedItem prende invece dalla riga in tabella e la porta verso il form...
 
 function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem) {
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
@@ -185,25 +187,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   	    newState = {...state, measures: newMeasures};
 	   	    break;
 	   	    
-        case STORE_MEASURE:
-	  	   	//Sulla base del valore attuale della altezza della tabella, della finestra e del viewport stabilisco la nuova altezza della tabella...
-	  	   	const measures = {...action.allMeasures}
-	  	   	measures[action.newMeasure['name']] = action.newMeasure['number']; //Riprendo ultima misura
-	  	    
-	  	    if ((measures.windowHeight>0) && (measures.viewPortHeight>0))  {
-	  	   		let tH = state.tableHeight;
-	  	   		if (!tH) tH = 0;
-	  	   		let wH = measures.windowHeight;
-	  	   		let vH = measures.viewPortHeight;
-	  	   		if (vH > wH) tH = tH + vH - wH;
-	  	   		if (vH < wH) tH = tH - (wH - vH);
-	  	   		if (tH<0) tH=0; 
-	  	   	
-	  	   		newState = {...state, measures: measures, tableHeight: tH};
-			}
-	  	   	else newState = state;
-	  	   
-	  	   break;
+       
 
 	    	default:
         		newState =  state;

@@ -8,10 +8,11 @@ import { Row} from 'antd'
 
 class ElencoBolle extends Component {
   	
- componentWillUnmount() {
- 	this.props.resetElencoBolle();
- }
- 
+//Rimosso il reset da qui... non mi serve mai resettare visto che non ho casi ambigui...devo solo resettare la riga selezionata
+ componentWillMount() {
+  this.props.setSelectedBolla(null);
+}
+
 render()
 {
   return (

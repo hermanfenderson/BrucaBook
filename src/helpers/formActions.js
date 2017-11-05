@@ -173,12 +173,18 @@ this.listenTotaliChanged = (urlObject) =>
     const type = this.TOTALI_CHANGED;
     const totaliUrl = this.totaliUrl;
 	 return function(dispatch, getState) {
-    	Firebase.database().ref(urlFactory(getState,totaliUrl, urlObject)).on('value', snapshot => {
-    		dispatch({
-    		 type: type,
-        	 payload: snapshot.val()
-    		})
-    	});
+    	 const url = urlFactory(getState,totaliUrl, urlObject);
+    	 if (url)
+    	{
+	    	Firebase.database().ref(url).on('value', snapshot => {
+	    		dispatch({
+	    		 type: type,
+	        	 payload: snapshot.val()
+	    		})
+	    	});
+	    	return (url);
+    	}
+    	else return null;
 	}
 }	
 
@@ -203,25 +209,30 @@ this.listenItem = (urlObject) => {
    const itemsUrl = this.itemsUrl;	
   return function(dispatch, getState) {
   	const url = urlFactory(getState,itemsUrl, urlObject);
-  
-    Firebase.database().ref(url).on('child_added', snapshot => {
-      dispatch({
-        type: type1,
-        payload: snapshot
-      })
-    });
-   Firebase.database().ref(url).on('child_changed', snapshot => {
-      dispatch({
-        type: type2,
-        payload: snapshot
-      })  
-   });
-   Firebase.database().ref(url).on('child_removed', snapshot => {
-      dispatch({
-        type: type3,
-        payload: snapshot
-      })  
-   });
+    if (url)
+    {
+	    Firebase.database().ref(url).on('child_added', snapshot => {
+	      dispatch({
+	        type: type1,
+	        payload: snapshot
+	      })
+	    });
+	   Firebase.database().ref(url).on('child_changed', snapshot => {
+	      dispatch({
+	        type: type2,
+	        payload: snapshot
+	      })  
+	   });
+	   Firebase.database().ref(url).on('child_removed', snapshot => {
+	      dispatch({
+	        type: type3,
+	        payload: snapshot
+	      })  
+	   });
+	if (urlObject) return(urlObject);
+	else return('');
+    }   
+	else return null;   
   }
 }
 
@@ -229,6 +240,8 @@ this.listenItem = (urlObject) => {
 //Non ritorna nessuna azione e non crea nessuna actionCreator
 this.offListenItem = (urlObject) =>
 {   const itemsUrl = this.itemsUrl;
+    console.log("Non ascolto");
+    console.log(urlObject);
 	return function(dispatch, getState) {
 	Firebase.database().ref(urlFactory(getState,itemsUrl, urlObject)).off();
     }

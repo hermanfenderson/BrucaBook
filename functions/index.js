@@ -10,6 +10,8 @@ admin.initializeApp(functions.config().firebase);
 exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe')
     .onWrite(event => 
             {
+            const key = event.params.idBolla;	
+           	
             const righe = event.data.val();
         	var totalePezzi = 0.0;
 			var totaleGratis = 0.0;
@@ -22,11 +24,32 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{i
 				}
 			const totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis, 'prezzoTotale' : totaleImporto.toFixed(2)}; 
 			console.info("Aggiornati totali");
-			return event.data.ref.parent.child('totali').set(totali);	
-			
-    		}
-           ); 
+			const ref = event.data.ref.parent.parent.parent.child('elencoBolle').child(key);
+			if (totalePezzi + totaleGratis > 0) ref.child('totali').set(totali); //Per non perdere tempo...
+			//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
+			else 
+				{
+					ref.once("value")
+						.then(function(snapshot) {
+		    				var notEmpty = snapshot.hasChildren(); 
+		    				if (notEmpty) ref.child('totali').set(totali);
+							 });
+		    		}
+                }	
+           );
            
+//Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...
+
+exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{idBolla}')
+    .onDelete(event => 
+            {
+            const key = event.params.idBolla;	
+			console.info("Cancello bolla "+key);
+			return event.data.ref.parent.parent.child('bolle').child(key).remove();
+    		}
+           );
+           
+//Da coompletare...           
 exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/vendite/{idCassa}/{idScontrino}/righe')
     .onWrite(event => 
             {

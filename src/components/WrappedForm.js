@@ -13,13 +13,21 @@ Passo alla form nel suo complesso:
 
 Propago formValues,errorMessages al formGroup. 
 
-Passo a ogni singolo componente...
+Formattazione
+WrappedForm mappa uno a uno le caratteristiche di Form di antd.
+Se uso un elemento WrappedForm.Group viene inseria una row (con eventuale gutter...) e tante col per quante servono...
+
+La formattazione dell'elemento è a carico del chiamante. Utilizzando tre insiemi di oggetti
+formColumnLayout nel caso di definzione di formGroup consente di formattare la colonna che contiene l'elemento.
+formItemLayout per definire il layout del singolo item (che a seconda se verticale o orizzontale è fatto di una o due colonne)
+buttonItemLayout idem per il bottone
 */
 
 import React, {Component} from 'react'
 import {Form, Alert, Button, Input, Checkbox, DatePicker, Row,Col, Spin} from 'antd';
 import moment from 'moment';
 import 'moment/locale/it';
+
 
 
 moment.locale("it");
@@ -33,7 +41,7 @@ const FormItem = Form.Item; //Per semplicità
 const renderChildren = (props, hasColumns) => {
 let children = React.Children.map(props.children, child => {
 	    if (hasColumns)
-	         return <Col span={child.props.width} >
+	         return <Col {...child.props.formColumnLayout} >
 	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues})}
 			        </Col>
 	    else return React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues})
@@ -50,19 +58,17 @@ const GeneralError = (props) => {
 
 const FormButton =  (props) => 
 				{ 
-				   const {formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout,...otherProps} = props;
+				   const {formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout,...otherProps} = props;
                    return <FormItem {...buttonItemLayout}> <Button  {...otherProps} /> </FormItem>
 				}
              	
   const InputDecorator = (InputComponent) => {return (props) => {
-  	     const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, ...otherProps} = props;
+  	     const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, ...otherProps} = props;
 	    const onChangeInput=(input) => {
 	    	const value = input.target ? input.target.value : input;
 	    	onChange(field,value)
-	    	
 	    };
-	     
-	     return(
+	      return(
          <FormItem {...formItemLayout}
               	width={props.width} 
         		required={props.required}
@@ -78,10 +84,11 @@ const FormButton =  (props) =>
          }
   }
 
-
+//formGroupLayout ha le props di row
 const FormGroup = (props) => {
   const hasColumns = true;
-    return  <Row>{renderChildren(props, hasColumns)}</Row>
+    const {formGroupLayout, ...otherProps} = props
+    return  <Row {...formGroupLayout}>{renderChildren(otherProps, hasColumns)}</Row>
 }
 
 

@@ -10,21 +10,26 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
 			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
+//Per gestire in modo smmooth il ricaricamento!
 
-
+var currentListenedIdBolla = null;
 class TableBolla extends Component 
     {
     componentDidMount() {
-    	//Ascolto modifiche sulle righe della bolla
-    	this.props.listenRigaBolla({'bollaId':this.props.idBolla}); 
+    	   
+    		//Ascolto modifiche sulle righe della bolla
+    	if (currentListenedIdBolla !== this.props.idBolla)
+    	   {
+    	   	if (currentListenedIdBolla) 
+    	   		{this.props.offListenRigaBolla({'bollaId':currentListenedIdBolla}); 
+    	   		}
+    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
+    	   	let objectUrl = this.props.listenRigaBolla({'bollaId':this.props.idBolla}); 
+    	   	if (objectUrl) currentListenedIdBolla = objectUrl['bollaId']; 
+    	   	}
 	}
 	
-	componentWillUnmount() {
-		//Smetto di ascoltare...
-		this.props.offListenRigaBolla({'bollaId':this.props.idBolla}); 
-		
-		
-	}
+	
 	
 	deleteRow = (row) => {
 		this.props.deleteRigaBolla({'bollaId':this.props.idBolla,'itemId':row.key});
