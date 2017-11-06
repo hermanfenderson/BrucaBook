@@ -14,7 +14,7 @@ const Header = (props) => {
 		{
 			case '1': link='/acquisti'; break;
 			case '2': link='/itemCatalogo'; break;
-			case '3': link='#signout'; break;
+			case '3': link='#signout'; props.signOutUser();break;
 			case '4': link='/login'; break;
 			case '5': link='/signup'; break;
 			default: break;

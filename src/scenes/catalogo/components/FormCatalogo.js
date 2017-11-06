@@ -28,10 +28,10 @@ resetForm = () => {
         <WrappedForm.Input field='editore' label='Editore'/>
         <WrappedForm.Input field='prezzoListino' label='Listino'/>
         {this.props.isModal ? <WrappedForm.Group></WrappedForm.Group> :
-        <WrappedForm.Group>
-         <WrappedForm.GeneralError  formColumnLayout={{span:16}}/>
-         <WrappedForm.Button type={'button'} formColumnLayout={{span:4}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
-       	 <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:4}}>OK</WrappedForm.Button>
+        <WrappedForm.Group formGroupLayout={{gutter:32}}>
+         <WrappedForm.GeneralError  formColumnLayout={{span:14}}/>
+         <WrappedForm.Button type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       	 <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:5}}>OK</WrappedForm.Button>
         </WrappedForm.Group>
         }
        

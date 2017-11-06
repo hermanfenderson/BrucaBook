@@ -6,5 +6,5 @@
 //La seconda è come "modal" con EAN bloccato e consentendo solo di integrare dati mancanti...passandoli al chiamante generico (bolla o altro)
 
 //Al solito questa è solo per omogeneità:
-import FormCatalogo from './containers/FormCatalogo';
-export default FormCatalogo;
+import Catalogo from './components/Catalogo';
+export default Catalogo;

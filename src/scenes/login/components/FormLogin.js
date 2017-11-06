@@ -1,13 +1,16 @@
 import React, {Component} from 'react'
+import {Redirect, Link} from 'react-router-dom';
+
 import WrappedForm from '../../../components/WrappedForm'
-import {Redirect} from 'react-router';
+import {Icon} from 'antd';
 
 class FormLogin extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
 onChange = (name, value) => {
 	   	this.props.changeEditedLogin(name, value)};
 		
-onSubmit = () => {
+onSubmit = (e) => {
+	e.preventDefault();
 	this.props.submitEditedLogin(this.props.editedItem.isValid, this.props.editedItem.values); //Per sapere cosa fare... dopo
   }
  
@@ -22,15 +25,26 @@ resetForm = () => {
   	const errorMessages = this.props.editedItem.errorMessages;
   	
   	return (
-  	this.props.authenticated ? <Redirect to='/' /> :	
-     <WrappedForm onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-           <WrappedForm.Input field='email' label='Email'/>
-        <WrappedForm.Input field='password' label='Password' type='password'/>
-           <WrappedForm.GeneralError error readOnly/>	 
-        <WrappedForm.Button primary disabled={!this.props.editedItem.isValid} width={4}>{'Login'}</WrappedForm.Button>
-      
+  			this.props.authenticated ? <Redirect to='/' /> :
+    <WrappedForm formClass="login-form" layout='horizontal' readOnlyForm={false} loading={false} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
+     
+           <WrappedForm.Input required={true} prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" field='email' />
+        <WrappedForm.Input required={true} prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" field='password' />
+           <WrappedForm.GeneralError />	 
+           <WrappedForm.Group>
+           <WrappedForm.Checkbox formColumnLayout={{span:12}} field='remember'>Ricordami</WrappedForm.Checkbox>
+           <WrappedForm.WrapGeneric><div><a className="login-form-forgot" href="">Password dimenticata?</a></div></WrappedForm.WrapGeneric>
+           </WrappedForm.Group>
+           
+        <WrappedForm.Button type="primary" htmlType="submit" className="login-form-button"> Login</WrappedForm.Button>
+       <WrappedForm.WrapGeneric><div>Oppure <Link to="/signup">registrati ora</Link></div></WrappedForm.WrapGeneric>
        </WrappedForm>
     )
   }
 }
+
+
+
+
 export default FormLogin;
+

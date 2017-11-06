@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { withRouter } from 'react-router-dom'
-import { LocaleProvider, Layout, Icon, Affix, Row } from 'antd';
+import { LocaleProvider, Layout, Icon, Affix, Row, Col } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
 
 
@@ -54,7 +54,8 @@ componentWillUnmount() {
   render() {
     return (
      <LocaleProvider locale={itIT}>	
-      <Layout>
+      {this.props.authenticated ? 
+      (<Layout>
       
         <Sider style={{height: '100vh'}}
           trigger={null}
@@ -64,7 +65,7 @@ componentWillUnmount() {
         <Affix>
      
           <div className="logo"/>
-          <SiderComponent authenticated={this.props.authenticated}/>
+          <SiderComponent signOutUser={this.props.signOutUser} authenticated={this.props.authenticated}/>
           </Affix>
      
       </Sider>
@@ -85,10 +86,23 @@ componentWillUnmount() {
           </Header>
        
           <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: '100vh-48' }}>
-          <Main />
+          <Main authenticated={true}/>
           </Content>
         </Layout>
-      </Layout>
+      </Layout>) 
+      :
+      (<div>
+         
+         <Row style={{height:'100vh'}} type="flex" justify="center" align="middle">
+        		<Col span={9} />
+        		<Col span={6}><Main authenticated={false}/></Col>
+        		<Col span={9} />
+         </Row>
+        
+         
+      </div>
+      )
+      }
       </LocaleProvider> 
     );
   }

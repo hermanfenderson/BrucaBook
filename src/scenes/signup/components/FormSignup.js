@@ -7,13 +7,12 @@ class FormSignup extends Component {
 onChange = (name, value) => {
 	   	this.props.changeEditedSignup(name, value)};
 		
-onSubmit = () => {
+onSubmit = (e) => {
+	e.preventDefault();
 	this.props.submitEditedSignup(this.props.editedItem.isValid, this.props.editedItem.values); //Per sapere cosa fare... dopo
   }
  
-resetForm = () => {
-	this.props.resetEditedSignup();
-}
+
 
 
 
@@ -23,13 +22,17 @@ resetForm = () => {
   	
   	return (
   	this.props.authenticated ? <Redirect to='/' /> :	
-  	  <WrappedForm onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-           <WrappedForm.Input field='email' label='Email'/>
-        <WrappedForm.Input field='password' label='Password' type='password'/>
-         <WrappedForm.Input field='confirmPassword' label='Ripeti password' type='password'/>
-        <WrappedForm.GeneralError error readOnly/>
-        <WrappedForm.Button primary disabled={!this.props.editedItem.isValid} width={4}>{'Crea utente'}</WrappedForm.Button>
-    	 
+       
+        <WrappedForm formClass="signup-form" layout='horizontal' readOnlyForm={false} loading={false} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
+     
+           <WrappedForm.Input required={true} label='Email' field='email' />
+        <WrappedForm.Input required={true}  label='Password' type="password" field='password' />
+         <WrappedForm.Input  required={true} field='confirmPassword' label='Ripeti password' type='password'/>
+        
+           <WrappedForm.GeneralError />	 
+           
+        <WrappedForm.Button type="primary" htmlType="submit" className="signup-form-button"> Registrati</WrappedForm.Button>
+       <WrappedForm.WrapGeneric><div>Hai già un account? <a href="">esegui il login</a></div></WrappedForm.WrapGeneric>
        </WrappedForm>
     )
   }

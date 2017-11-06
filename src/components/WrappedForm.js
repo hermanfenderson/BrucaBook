@@ -61,6 +61,13 @@ const FormButton =  (props) =>
 				   const {formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout,...otherProps} = props;
                    return <FormItem {...buttonItemLayout}> <Button  {...otherProps} /> </FormItem>
 				}
+				
+const WrapGeneric = (props) =>
+				{ 
+					const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, ...otherProps} = props;
+					return(React.cloneElement(props.children, {...otherProps}));
+				}
+					
              	
   const InputDecorator = (InputComponent) => {return (props) => {
   	     const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, ...otherProps} = props;
@@ -102,13 +109,14 @@ class WrappedForm extends Component {
     static DatePicker = InputDecorator(DatePicker);
     static Button = FormButton;
     static GeneralError = GeneralError;
+    static WrapGeneric = WrapGeneric;
     
  
   
 	render ()
 	{   
 	return <Spin spinning={this.props.loading}>
-    		<Form 
+    		<Form className={this.props.formClass}
     			layout={this.props.layout}  
     			hideRequiredMark={this.props.hideRequiredMark}
     			onSubmit={this.props.onSubmit}>
