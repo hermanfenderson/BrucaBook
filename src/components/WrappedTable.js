@@ -66,7 +66,7 @@ render ()
   	            	
   				)	
   	    return(
-        	 <Table ref='antTable' style={{minHeight: this.props.height}} scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+        	 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        		);	
      }	
 } 

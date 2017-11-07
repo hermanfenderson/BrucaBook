@@ -1,17 +1,21 @@
 import { combineReducers } from 'redux';
 import AppReducer, * as fromApp from './app';
+import AuthReducer, * as fromAuth from './auth';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import LoginReducer, * as fromLogin from './login';
+import MeasuresReducer from './measures';
 import SignupReducer, * as fromSignup from './signup';
 import StatusReducer, * as fromStatus from './status';
 
 const rootReducer = combineReducers({
   app: AppReducer,
+  auth: AuthReducer,
   bolla: BollaReducer,
   elencoBolle: ElencoBolleReducer,
   login: LoginReducer,
+  measures: MeasuresReducer,
   signup: SignupReducer,
   catalogo: CatalogoReducer,
   status: StatusReducer
@@ -52,8 +56,10 @@ export const getEditedItemSignup = (state) => {return fromSignup.getEditedItem(s
 //Dallo stato
 export const getLibreria = (state) => {return fromStatus.getLibreria(state.status)};
 export const getCatena = (state) => {return fromStatus.getCatena(state.status)};
-export const isAuthenticated = (state) => {return fromStatus.isAuthenticated(state.status)};
-export const getUser = (state) => {return fromStatus.getUser(state.status)};
+
+//da auth
+export const isAuthenticated = (state) => {return fromAuth.isAuthenticated(state.auth)};
+export const getUser = (state) => {return fromAuth.getUser(state.auth)};
 
 
 

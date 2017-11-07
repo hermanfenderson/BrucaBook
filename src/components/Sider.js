@@ -24,7 +24,7 @@ const Header = (props) => {
 
     if (props.authenticated) {
     return (
-    	<Menu onClick={onClick} theme="dark" mode="inline" defaultSelectedKeys={['1']}>
+    	<Menu onClick={onClick} theme="dark" mode="inline" >
             <Menu.Item key="1">
               <Icon type="shopping-cart" />
               <span>Acquisti</span>

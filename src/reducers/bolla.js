@@ -1,6 +1,7 @@
 //QUESTA VA SISTEMATA
 import FormReducer from '../helpers/formReducer'
 import {RESET_BOLLA } from '../actions/bolla';
+import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -37,7 +38,7 @@ const initialState = () => {
 			itemsArrayIndex: {},
 		    tableScroll: false,
 			showCatalogModal: false,
-			tableHeight:0,
+			tableHeight: 2048,
 			totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
 			editedItem: {...editedItemInitialState()}
 	    	}
@@ -173,8 +174,12 @@ export default function bolla(state = initialState(), action) {
    	    const tableHeight = state.tableHeight;
       	newState =  {...initialState(), tableHeight: tableHeight};
 		break;
-
-      
+   case STORE_MEASURE:
+   	    var measures = {...action.allMeasures};
+   	    measures[action.newMeasure.name] = action.newMeasure.number;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -100;
+   	    newState = {...state, tableHeight: height};
+        break;
     default:
         newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla);
         //newState =  state;

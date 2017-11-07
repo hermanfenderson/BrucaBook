@@ -14,6 +14,8 @@ import Firebase from 'firebase';
 
 export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
 export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
+export const  STORE_MEASURE = 'STORE_MEASURE';
+export const REMOVE_MEASURE = 'REMOVE_MEASURE';
 
 
 
@@ -75,6 +77,25 @@ export function toggleCollapsed() {
 		}
 		)
 }
+
+export function storeMeasure(newMeasureName, newMeasureNumber) {
+  var newMeasure = {name: newMeasureName, number: newMeasureNumber};
+  return function(dispatch, getState) {
+  dispatch({
+  		allMeasures: getState().measures.measures,
+		type: STORE_MEASURE,
+		newMeasure: newMeasure
+		})
+  }
+}
+
+export function removeMeasure(measureName) {
+  return {
+  type: STORE_MEASURE,
+  measureName
+  }
+}
+ 
 
 
 

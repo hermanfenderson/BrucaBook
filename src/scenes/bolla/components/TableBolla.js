@@ -4,7 +4,7 @@ import WrappedTable from '../../../components/WrappedTable'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
-                {dataField: 'titolo', label: 'Titolo'},
+                {dataField: 'titolo', label: 'Titolo', width: '320px'},
 			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '60px'},
 			    {dataField: 'pezzi', label: 'Quantità', width: '60px'},
 			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
@@ -49,7 +49,7 @@ class TableBolla extends Component
     	delete props['deleteRigaBolla']; //Non la passo liscia...
     	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	

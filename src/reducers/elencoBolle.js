@@ -6,6 +6,7 @@ import 'moment/locale/it';
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem} from '../helpers/form';
 
 import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE} from '../actions/elencoBolle';
+import {STORE_MEASURE} from '../actions';
 
 moment.locale("it");
 
@@ -83,6 +84,13 @@ export default function elencoBolle(state = initialState(), action) {
     const tableHeight = state.tableHeight;
       	newState =  {...initialState(), tableHeight: tableHeight};
       	break;
+      	
+    case STORE_MEASURE:
+   	    var measures = {...action.allMeasures};
+   	    measures[action.newMeasure.name] = action.newMeasure.number;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -100;
+   	    newState = {...state, tableHeight: height};
+        break;  	
     default:
         newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedBolla);
         //newState =  state;

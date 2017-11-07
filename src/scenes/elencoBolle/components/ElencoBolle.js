@@ -1,12 +1,19 @@
 import TableElencoBolle from '../containers/TableElencoBolle';
 import FormBolla from '../containers/FormBolla';
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom';
+
 import { Row} from 'antd'
 
 
 
 
 class ElencoBolle extends Component {
+componentDidMount() {
+    	this.props.storeMeasure('formBollaHeight', ReactDOM.findDOMNode(this.refs.formBolla).clientHeight);
+    	
+ }
+ 
   	
 //Rimosso il reset da qui... non mi serve mai resettare visto che non ho casi ambigui...devo solo resettare la riga selezionata
  componentWillMount() {
@@ -18,7 +25,7 @@ render()
   return (
  <div>	
   <Row>
-   	 <FormBolla/>
+   	 <FormBolla ref='formBolla'/>
     </Row>
      <Row>
          <TableElencoBolle/>

@@ -6,7 +6,7 @@ import {persistStore, autoRehydrate} from 'redux-persist'
 import rootReducer from '../reducers';
 import Firebase from 'firebase';
 
-var persistor;
+export var persistor;
 
 const config = {
  apiKey: "AIzaSyAfrGzYIIRlmtN50IiChv8raxSKve-a0Sc",

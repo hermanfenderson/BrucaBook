@@ -2,9 +2,8 @@
 import {USER_INFO_CHANGED } from '../actions';
 
 const initialState =  {
-  info: null,
-  user: null,
-  authenticated: true //Questo evita rimbalzi in caso di refresh
+  catena: null,
+  libreria: null
 };
 
 export default function status(state = initialState, action) {
@@ -12,19 +11,14 @@ export default function status(state = initialState, action) {
   	 case USER_INFO_CHANGED:
       	return {
       	 ...state,
-      	 authenticated: action.authenticated,
-        user: action.user,
-        catena: action.catena,
-        libreria: action.libreria,
-        info: action.info
-      	}	
+        catena: (action.info ? action.info.defaultCatena : null), //Questo in futuro cambia quando avrò gestione multi catena e multi libreria
+        libreria: (action.info ? action.info.defaultLibreria : null), //Idem
+       	}	
     default:
       return state;
   }
 }
 
-export const getCatena = (state) => {if (state.info) return state.info.catena; else return null;}; //In futuro questo lo cambierà... il resto no!
-export const getLibreria = (state) => {if (state.info) return state.info.libreria; else return null;};
-export const isAuthenticated = (state) => {return state.authenticated};
-export const getUser = (state) => {return state.user};
+export const getCatena = (state) => {return state.catena}; 
+export const getLibreria = (state) => {return state.libreria};
 

@@ -4,6 +4,7 @@
 //Gestisco anche la presenza di un utente autenticato...(anche se nel rendering sotto mi devo fidare del mio stato)
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom'
 import { LocaleProvider, Layout, Icon, Affix, Row, Col } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
@@ -15,7 +16,7 @@ import SiderComponent from '../components/Sider';
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
-import {signOutUser, listenAuthStateChanged, toggleCollapsed} from '../actions';
+import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure} from '../actions';
 import {isAuthenticated, getUser, getCollapsed} from '../reducers';
 
 //Foglio di stile...
@@ -32,17 +33,22 @@ class App extends React.Component {
   
   
 
-handleResize = () => {
- }
-
  componentDidMount() {
-    }
+ 	this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
+    this.handleResize(); //La prima volta...
+    window.addEventListener('resize', this.handleResize);
+    
+  }
 
 componentWillUnmount() {
- 
-  //QUI MANCA LA CHIUSURA DEL LISTENER DELL'AUTENTICAZIONE
-	
+    window.removeEventListener('resize', this.handleResize);
+  this.props.removeMeasure('viewPortHeight');
+  }
+
+handleResize = () => {
+  this.props.storeMeasure('viewPortHeight', window.innerHeight);
 }
+
 
   toggle = () => {
     this.props.toggleCollapsed();
@@ -52,7 +58,7 @@ componentWillUnmount() {
            
  
   render() {
-    return (
+  	return (
      <LocaleProvider locale={itIT}>	
       {this.props.authenticated ? 
       (<Layout>
@@ -72,8 +78,10 @@ componentWillUnmount() {
        
        
           <Layout >
+         
+           <Header style={{ background: '#fff', padding: 0, width: '100%' }} ref={'header'}>
+           
         
-          <Header style={{   background: '#fff', padding: 0, width: '100%' }}>
            <Affix>
            <Row  style={{backgroundColor: 'white'}}>
             <Icon
@@ -84,8 +92,8 @@ componentWillUnmount() {
             </Row>
             </Affix>
           </Header>
-       
-          <Content style={{ margin: '24px 16px', padding: 24, background: '#fff', minHeight: '100vh-48' }}>
+         
+           <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-50' }}>
           <Main authenticated={true}/>
           </Content>
         </Layout>
@@ -119,7 +127,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({signOutUser, listenAuthStateChanged, toggleCollapsed }, dispatch);
+  return bindActionCreators({signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure}, dispatch);
 }
 
 

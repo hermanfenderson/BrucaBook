@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {persistor} from '../../../store/configureStore';
 import {Redirect, Link} from 'react-router-dom';
 
 import WrappedForm from '../../../components/WrappedForm'
@@ -18,7 +19,9 @@ resetForm = () => {
 	this.props.resetEditedLogin();
 }
 
-
+componentWillMount = () => {
+	persistor.purge(); //Sporca ma me ne sbatto...
+}
 
   render() {
   	const formValues = this.props.editedItem.values;

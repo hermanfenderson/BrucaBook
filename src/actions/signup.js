@@ -20,6 +20,7 @@ if (isValid) return function(dispatch) {
 			Firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
     		 .then(response => {
     		    dispatch({type: DISMISS_AUTH_ERROR_SIGNUP});
+    		    Firebase.auth().setPersistence(Firebase.auth.Auth.Persistence.SESSION);
 			   })
 		     .catch(error => {
 		     dispatch({type: AUTH_ERROR_SIGNUP, error: error});

@@ -16,10 +16,13 @@ var loginFAtmp = new FormActions(SCENE);
 //Eccone uno...faccio il login
 loginFAtmp.submitEditedItem = (isValid,credentials) => {
 if (isValid) return function(dispatch) {
+	        
 			dispatch({type: SUBMIT_EDITED_ITEM_LOGIN});
 			Firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
     		 .then(response => {
     		    dispatch({type: DISMISS_AUTH_ERROR_LOGIN});
+    		    if(credentials.remember) Firebase.auth().setPersistence(Firebase.auth.Auth.Persistence.LOCAL);
+    		    else Firebase.auth().setPersistence(Firebase.auth.Auth.Persistence.SESSION);
 			   })
 		     .catch(error => {
 		     dispatch({type: AUTH_ERROR_LOGIN, error: error});
