@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
 import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure} from '../actions';
-import {isAuthenticated, getUser, getCollapsed} from '../reducers';
+import {isAuthenticated, getUser, getCollapsed, getHeaderInfo} from '../reducers';
 
 //Foglio di stile...
 import '../styles/app.css';
@@ -70,8 +70,7 @@ handleResize = () => {
         >
         <Affix>
      
-          <div className="logo"/>
-          <SiderComponent signOutUser={this.props.signOutUser} authenticated={this.props.authenticated}/>
+           <SiderComponent signOutUser={this.props.signOutUser} authenticated={this.props.authenticated}/>
           </Affix>
      
       </Sider>
@@ -79,7 +78,7 @@ handleResize = () => {
        
           <Layout >
          
-           <Header style={{ background: '#fff', padding: 0, width: '100%' }} ref={'header'}>
+           <Header style={{ background: '#fff', padding: 0, width: '100%' }} ref={'header'} >
            
         
            <Affix>
@@ -89,6 +88,7 @@ handleResize = () => {
               type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
             />
+             {this.props.headerInfo} 
             </Row>
             </Affix>
           </Header>
@@ -102,9 +102,9 @@ handleResize = () => {
       (<div>
          
          <Row style={{height:'100vh'}} type="flex" justify="center" align="middle">
-        		<Col span={9} />
-        		<Col span={6}><Main authenticated={false}/></Col>
-        		<Col span={9} />
+        		<Col span={9} /> 
+        		<Col span={6}><Row style={{minHeight: 200}}><div className="logoBig" > </div> </Row><Row><Main authenticated={false}/></Row></Col>
+        		<Col span={9}/>
          </Row>
         
          
@@ -122,7 +122,8 @@ function mapStateToProps(state) {
   return {
     authenticated: isAuthenticated(state),
     user: getUser(state),
-    collapsed: getCollapsed(state)
+    collapsed: getCollapsed(state),
+    headerInfo: getHeaderInfo(state)
   };
 }
 

@@ -8,8 +8,8 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-
-	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, {'bollaId':this.props.idBolla}, this.props.editedRigaBolla.values); //Per sapere cosa fare... dopo
+    const values =  {...this.props.editedRigaBolla.values, 'data': this.props.testataBolla.dataCarico};
+	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, {'bollaId':this.props.idBolla}, values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {
@@ -23,10 +23,10 @@ resetForm = () => {
   	const errorMessages = this.props.editedRigaBolla.errorMessages;
   	const prezzoMan = formValues['manSconto'];
   	const loading = this.props.editedRigaBolla.loading;
-  	const readOnlyEAN = (this.props.editedRigaBolla.selectedItem !== null)
+  	const readOnlyEAN = ((this.props.editedRigaBolla.selectedItem !== null) || (this.props.editedRigaBolla.eanState === 'PARTIAL'))
   	
   	return (
-      <WrappedForm loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+      <WrappedForm focusSet={this.props.focusSet} willFocus={this.props.willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
         <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:6}}  readOnly={readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:8}}  readOnly/>

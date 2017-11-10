@@ -12,7 +12,8 @@ const itemR = new FormReducer('LOGIN');
 
 const editedLoginValuesInitialState = 
 	  {			email: '',
-				password: ''
+				password: '',
+				remember: false
 	};
 const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedLoginValuesInitialState, {} ));

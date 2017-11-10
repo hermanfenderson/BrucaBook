@@ -49,6 +49,24 @@ exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{id
     		}
            );
            
+
+//Salvo la nuova data nelle righe già presenti...
+exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{idBolla}')
+    .onUpdate(event => 
+            {
+            const key = event.params.idBolla;	
+			console.info("Aggiorno bolla "+key);
+			const ref = event.data.ref.parent.parent.child('bolle').child(key).child('righe');
+			ref.once('value', function(snapshot) {
+				snapshot.forEach(function(childSnapshot) 
+					{
+			    	childSnapshot.ref.update({'data': event.data.val().dataCarico});
+    				})
+				})
+			}	
+    		);
+           
+           
 //Da coompletare...           
 exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/vendite/{idCassa}/{idScontrino}/righe')
     .onWrite(event => 
@@ -67,10 +85,57 @@ exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/vend
 			
     		}
            );            
-//Il registro è organizzato per catena -> Negozio -> EAN -> keyDocumento che origina il valore...
+//Il registroEAN è organizzato per catena -> Negozio -> EAN -> keyDocumento che origina il valore...
+//Caso insert o modify si limita a creare una copia dell'oggetto nel registro. 
+//Caso delete cerca nel passato quello che era...
+//Il registroData è organizzato per catena -> Negozio -> Data -> keyDocumento...
+//Per la insert vado liscio...
+//Per modify e delete: 
+//In preambolo devo cercare due info... la data com'era (old_date) e la data com'è (new_date)
+//qui il caso della modify è se non è cambiata la data... di puro insert
+//Nel caso di data cambiata... devo cancellare e reinserire
+//Caso delete... ho solo il valore attuale...
 
 //Nel caso delle bolle...  
 
+exports.inserisciRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe/{keyRiga}')
+    .onCreate(event =>
+    		{
+    			const key = event.params.keyRiga;
+    			const ean = event.data.val().ean;	
+    			const data = event.data.val().data;
+            	const newVal = Object.assign(event.data.val(), {tipo: 'bolla', id: event.params.idBolla});
+                event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                 event.data.ref.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+    		}
+          ); 
+
+exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe/{keyRiga}')
+    .onUpdate(event =>
+    		{
+    			const key = event.params.keyRiga;
+    			const ean = event.data.val().ean;	
+    			const oldData = event.data.previous.val().ean;
+    			const data = event.data.val().data;
+            	const newVal = Object.assign(event.data.val(), {tipo: 'bolla', id: event.params.idBolla});
+                event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                //Se è cambiata la data devo cancellare la vecchia riga...
+                if (oldData !== data) event.data.ref.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                event.data.ref.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+    		}
+          ); 
+
+exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe/{keyRiga}')
+    .onDelete(event =>
+    		{
+    			const key = event.params.keyRiga;
+    			const ean = event.data.previous.val().ean;	
+    			const data = event.data.previous.val().ean;
+    			event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();
+                event.data.ref.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
+    		}
+          ); 
+/*          
 exports.aggiornaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe/{keyRiga}')
     .onWrite(event => 
             {
@@ -80,13 +145,13 @@ exports.aggiornaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
             if (!event.data.exists()) 
                   {
                   const ean = event.data.previous.val().ean;
-                  return event.data.ref.parent.parent.parent.parent.child('registro/'+ean+'/'+key).remove();	
+                  return event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();	
                   }
             else 
             	  {
             	  const ean = event.data.val().ean;	
             	  const newVal = Object.assign(event.data.val(), {tipo: 'bolla', id: event.params.idBolla});
-            	  return event.data.ref.parent.parent.parent.parent.child('registro/'+ean+'/'+key).set(newVal);
+            	  return event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
             	  }
                
             //Caso riga inserita o modificata... la sostituisco integralmente. A condizione che non mi cambi EAN.... 
@@ -94,7 +159,9 @@ exports.aggiornaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
             
             }
            ); 
-//Nel caso delle vendite...
+*/
+
+//Nel caso delle vendite... TUTTO DA RISCRIVERE!!!!
 
 exports.aggiornaRegistroDaVendite = functions.database.ref('{catena}/{negozio}/vendite/{idCassa}/{idScontrino}/righe/{keyRiga}')
     .onWrite(event => 
@@ -105,14 +172,14 @@ exports.aggiornaRegistroDaVendite = functions.database.ref('{catena}/{negozio}/v
             if (!event.data.exists()) 
                   {
                   const ean = event.data.previous.val().ean;
-                  return event.data.ref.parent.parent.parent.parent.parent.child('registro/'+ean+'/'+key).remove();	
+                  return event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();	
                   }
             else 
             	  {
             	  const ean = event.data.val().ean;	
             	  const cassa_scontrino = event.params.idCassa + "/" + event.params.idScontrino;
             	  const newVal = Object.assign(event.data.val(), {tipo: 'vendita', id: cassa_scontrino});
-            	  return event.data.ref.parent.parent.parent.parent.parent.child('registro/'+ean+'/'+key).set(newVal);
+            	  return event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
             	  }
                
             //Caso riga inserita o modificata... la sostituisco integralmente. 
@@ -121,7 +188,7 @@ exports.aggiornaRegistroDaVendite = functions.database.ref('{catena}/{negozio}/v
            ); 
 
 
-exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registro/{ean}')
+exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')
     .onWrite(event => 
             {
             const ean = event.params.ean;	
@@ -161,39 +228,3 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registro/
             }
            ); 
     
-//Questa resta una traccia per utilizzare adminSDK e scrivere con una transazione... come dire TUTTO IL CUCUZZARO...
-/*
-exports.calcolaTotaleBollaCorreggere = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe')
-    .onWrite(event => {
-    	const righe = event.data.val();
-    	const bollaRefPath = event.params.catena + "/" + event.params.negozio + "/bolle/" + event.params.idBolla; 
-        var bollaRef = admin.database().ref(bollaRefPath);
-        bollaRef.transaction(function(bolla) {
- 			if (bolla)
-			{
-			var totalePezzi = 0.0;
-			var totaleGratis = 0.0;
-			var totaleImporto = 0.0;
-		  	var righe = bolla['righe'];
-		  	for(var propt in righe)
-		  		{
-			    totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
-			    totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
-			    totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-				}
-			bolla['totali']  = {'pezzi' : totalePezzi, 'gratis' : totaleGratis, 'prezzoTotale' : totaleImporto.toFixed(2)}; 
-			console.log(bolla['totali']);
-    		return (bolla);
-			}
-    		else 
-    		{
-		        var bollaReset = {'totali' : {'pezzi' : 0, 'gratis' : 0, 'prezzoTotale' : 0}};
-		        return (bollaReset);
-	    	} 
-		  },function(){},false);
-		  
-    	return event.data.ref; //Nessuna modifica
-    }); 
-    
-    */
-   

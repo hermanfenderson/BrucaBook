@@ -28,12 +28,23 @@ this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
+this.FOCUS_SET = 'FOCUS_SET_'+scene;
+
 
 
 this.itemUrl = itemUrl;
 this.itemsUrl = itemsUrl;
 this.totaliUrl = totaliUrl;
 this.preparaItem = preparaItem;
+
+
+this.focusSet = () =>
+{return({
+  type: this.FOCUS_SET,
+  
+   }
+  );
+};	
 
 
 this.setTableWindowHeight = (tableWindowHeight) =>
@@ -240,8 +251,6 @@ this.listenItem = (urlObject) => {
 //Non ritorna nessuna azione e non crea nessuna actionCreator
 this.offListenItem = (urlObject) =>
 {   const itemsUrl = this.itemsUrl;
-    console.log("Non ascolto");
-    console.log(urlObject);
 	return function(dispatch, getState) {
 	Firebase.database().ref(urlFactory(getState,itemsUrl, urlObject)).off();
     }

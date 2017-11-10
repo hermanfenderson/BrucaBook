@@ -1,6 +1,6 @@
 //QUESTA VA SISTEMATA
 import FormReducer from '../helpers/formReducer'
-import {RESET_BOLLA } from '../actions/bolla';
+import {RESET_BOLLA, TESTATA_BOLLA_CHANGED } from '../actions/bolla';
 import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
@@ -25,7 +25,8 @@ const editedRigaBollaValuesInitialState =
 				imgUrl: ''	
 	};
 const editedItemInitialState = () => {
-	return(editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} ));
+	const eiis = editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} );
+	return(eiis);
 }
 
 
@@ -40,7 +41,8 @@ const initialState = () => {
 			showCatalogModal: false,
 			tableHeight: 2048,
 			totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
-			editedItem: {...editedItemInitialState()}
+			editedItem: {...editedItemInitialState()},
+			testataBolla: null
 	    	}
     }
     
@@ -148,7 +150,7 @@ function transformAndValidateEditedRigaBolla(cei, name, value)
 
 
 function foundCompleteItem(editedItem, action) 
-	{
+	{   
 		let cei = editedItemCopy(editedItem);
         cei.loading = false;
         cei.eanStatus = 'COMPLETE';
@@ -167,7 +169,7 @@ function foundCompleteItem(editedItem, action)
         noErrors(cei,'form');
         noErrors(cei,'prezzoUnitario');
       	 cei.isValid = isValidEditedItem(cei);
-    	 return(cei);
+       return(cei);
 	}
 
 export default function bolla(state = initialState(), action) {
@@ -179,12 +181,19 @@ export default function bolla(state = initialState(), action) {
    	    const tableHeight = state.tableHeight;
       	newState =  {...initialState(), tableHeight: tableHeight};
 		break;
+		
+   case TESTATA_BOLLA_CHANGED:
+   	   if (action.payload) newState = {...state, testataBolla: action.payload};
+   	   else newState = initialState(); //Ho gestito il caso che qualcuno mi cancella mentre sto scrivendo...
+   	    break;
+   	    
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -100;
    	    newState = {...state, tableHeight: height};
         break;
+    
     default:
         newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla);
         //newState =  state;
@@ -199,10 +208,13 @@ export default function bolla(state = initialState(), action) {
  export const getTotali = (state) => {return state.totali};  
  export const getItems = (state) => {return state.itemsArray};  
  export const getEditedItem = (state) => {return state.editedItem};  
+ export const getTestataBolla = (state) => {return state.testataBolla};
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getMeasures = (state) => {return state.measures};
+ export const getWillFocus = (state) => {return state.editedItem.willFocus};
+ 
  
  
       

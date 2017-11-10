@@ -21,6 +21,10 @@ La formattazione dell'elemento è a carico del chiamante. Utilizzando tre insiem
 formColumnLayout nel caso di definzione di formGroup consente di formattare la colonna che contiene l'elemento.
 formItemLayout per definire il layout del singolo item (che a seconda se verticale o orizzontale è fatto di una o due colonne)
 buttonItemLayout idem per il bottone
+
+Ogni elemento ha la sua ref. In questo modo posso fare cose sul DOM.
+Primo superpotere... posso mettere a fuoco un campo... con la prop willFocus
+e la action focusSet che la resetta.
 */
 
 import React, {Component} from 'react'
@@ -33,7 +37,6 @@ import 'moment/locale/it';
 moment.locale("it");
 
 
-
 const FormItem = Form.Item; //Per semplicità
 
 
@@ -42,15 +45,15 @@ const renderChildren = (props, hasColumns) => {
 let children = React.Children.map(props.children, child => {
 	    if (hasColumns)
 	         return <Col {...child.props.formColumnLayout} >
-	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues})}
+	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </Col>
-	    else return React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues})
+	    else return React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})
 				}); 
    return(children);
 }
 
 const GeneralError = (props) => {
-		const { errorMessages, ...otherProps } = props;
+		const { errorMessages, setFocus, ...otherProps } = props;
 		if (errorMessages['form']) return <Alert {...otherProps} message={errorMessages['form']} type='error'/>
 		else return null
 		}
@@ -58,21 +61,21 @@ const GeneralError = (props) => {
 
 const FormButton =  (props) => 
 				{ 
-				   const {formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout,...otherProps} = props;
+				   const {formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
                    return <FormItem {...buttonItemLayout}> <Button  {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>
 				{ 
-					const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, ...otherProps} = props;
+					const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, ...otherProps} = props;
 					return(React.cloneElement(props.children, {...otherProps}));
 				}
 					
              	
   const InputDecorator = (InputComponent) => {return (props) => {
-  	     const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, ...otherProps} = props;
+  	     const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, ...otherProps} = props;
 	    const onChangeInput=(input) => {
-	    	const value = input.target ? input.target.value : input;
+	    	const value = input.target ? (input.target.checked ? input.target.checked : input.target.value) : input;
 	    	onChange(field,value)
 	    };
 	      return(
@@ -85,6 +88,7 @@ const WrapGeneric = (props) =>
         	<InputComponent value={props.formValues[field]} 
         	       onChange={onChangeInput} 
         	       readOnly={props.readOnlyForm || props.readOnly}
+        	       ref={input => { input && setFocus && setFocus(input,props.field)}}
         	       {...otherProps}
         	       />
          </FormItem>)
@@ -102,7 +106,7 @@ const FormGroup = (props) => {
 
 
 class WrappedForm extends Component {
- static Group = FormGroup;
+    static Group = FormGroup;
  
     static Input = InputDecorator(Input);
     static Checkbox = InputDecorator(Checkbox);
@@ -111,6 +115,16 @@ class WrappedForm extends Component {
     static GeneralError = GeneralError;
     static WrapGeneric = WrapGeneric;
     
+    setFocus = (input, field) => {
+    
+    	if (this.props.willFocus === field)
+    		{  
+    			input.refs.input.focus();
+    			this.props.focusSet();
+    		}
+    	
+    }
+
  
   
 	render ()
@@ -120,7 +134,7 @@ class WrappedForm extends Component {
     			layout={this.props.layout}  
     			hideRequiredMark={this.props.hideRequiredMark}
     			onSubmit={this.props.onSubmit}>
-    			{renderChildren(this.props, null)}
+    			{renderChildren({...this.props, setFocus: this.setFocus}, null)}
     		</Form>
     	</Spin>	
 	}

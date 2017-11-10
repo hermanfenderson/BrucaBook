@@ -31,6 +31,8 @@ this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
+this.FOCUS_SET = 'FOCUS_SET_'+scene;
+
 
 if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
 if (transformItem) this.transformItem = transformItem;
@@ -186,7 +188,11 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   	    const newMeasures = {...state.measures, 'tableWindowHeight': action.tableWindowHeight}
 	   	    newState = {...state, measures: newMeasures};
 	   	    break;
-	   	    
+	    case this.FOCUS_SET:
+	    	 let cei = {...state.editedItem}; //Basta la shallow copy
+	    	 cei.willFocus = null;
+	   	   newState = {...state, editedItem: cei};
+	   	    break;	    
        
 
 	    	default:

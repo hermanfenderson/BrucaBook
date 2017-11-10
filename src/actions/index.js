@@ -16,6 +16,7 @@ export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
 export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
 export const  STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
+export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 
 
 
@@ -95,6 +96,15 @@ export function removeMeasure(measureName) {
   measureName
   }
 }
+
+export function setHeaderInfo(headerInfo) {
+	return {
+		type: SET_HEADER_INFO,
+		headerInfo: headerInfo
+	}
+	
+}
+
  
 
 

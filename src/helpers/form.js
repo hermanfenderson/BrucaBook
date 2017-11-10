@@ -12,7 +12,8 @@ export const editedItemInitialState = (editedItemValuesInitialState,
 									   isValid=false, 
 									   selectedItem=null, 
 									   loading=false, 
-									   readOnlyForm: false,
+									   readOnlyForm= false,
+									   willFocus= 'ean', 
 									   eanState='BLANK',
 									   ) => {
 	
@@ -29,6 +30,8 @@ export const editedItemInitialState = (editedItemValuesInitialState,
 			isValid: isValid,
 			selectedItem: selectedItem,
 			loading: loading,
+			willFocus: willFocus,
+			readOnlyForm: readOnlyForm,
 			eanState: eanState,
 			};
 }	

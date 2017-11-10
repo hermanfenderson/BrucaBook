@@ -18,15 +18,27 @@
 
  .logo {
   content: 'BrucaBook';
-  height: 32px;
+  height: 35px;
   background: #333;
-  background-image:url('/brucabook.png');
+  background-image:url('/brucabook_small.png');
   background-repeat:no-repeat;
   
   border-radius: 6px;
-  margin: 16px;
+  margin-left: 18px;
+  margin-top: 24px;
 }
 
+.logoBig {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("/brucabook_big.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom center;
+}
  
  .login-form-forgot {
   float: right;

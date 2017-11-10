@@ -24,15 +24,18 @@ const rootReducer = combineReducers({
 export default rootReducer;
 //Dalla App
 export const getCollapsed = (state) => {return fromApp.getCollapsed(state.app)};
+export const getHeaderInfo = (state) => {return fromApp.getHeaderInfo(state.app)};
 
 //Scene Bolla
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
 export const getRigheBolla = (state) => {return fromBolla.getItems(state.bolla)};
 export const getEditedRigaBolla = (state) => {return fromBolla.getEditedItem(state.bolla)};
+export const getTestataBolla = (state) => {return fromBolla.getTestataBolla(state.bolla)};
 export const getShowCatalogModal = (state) => {return fromBolla.getShowCatalogModal(state.bolla)};
 export const getTableHeight = (state) => {return fromBolla.getTableHeight(state.bolla)};
 export const getTableScroll = (state)  => {return fromBolla.getTableScroll(state.bolla)};
 export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)};
+export const getWillFocus = (state) => {return fromBolla.getWillFocus(state.bolla)};
 
 
 //Scene ElencoBolle

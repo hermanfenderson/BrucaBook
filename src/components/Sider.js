@@ -15,15 +15,15 @@ const Header = (props) => {
 			case '1': link='/acquisti'; break;
 			case '2': link='/itemCatalogo'; break;
 			case '3': link='#signout'; props.signOutUser();break;
-			case '4': link='/login'; break;
-			case '5': link='/signup'; break;
 			default: break;
 		}
 		props.history.push(link);
 	}
 
-    if (props.authenticated) {
     return (
+    	 <div>
+    	 <div onClick= {() => {props.history.push('/')}} className="logo"/>
+        
     	<Menu onClick={onClick} theme="dark" mode="inline" >
             <Menu.Item key="1">
               <Icon type="shopping-cart" />
@@ -38,21 +38,8 @@ const Header = (props) => {
               <span>Esci</span>
             </Menu.Item>
           </Menu>
-     )}
-     else {
-     	return (
-     	<Menu onClick={onClick} theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-            <Menu.Item key="4">
-              <Icon type="user" />
-              <span>Login</span>
-            </Menu.Item>
-            <Menu.Item key="5">
-              <Icon type="video-camera" />
-              <span>Signup</span>
-            </Menu.Item>
-          </Menu>
-          )
-     }
+         </div> 
+     )
 }
 
 

@@ -11,6 +11,7 @@ import { Row} from 'antd'
 class ElencoBolle extends Component {
 componentDidMount() {
     	this.props.storeMeasure('formBollaHeight', ReactDOM.findDOMNode(this.refs.formBolla).clientHeight);
+    	this.props.setHeaderInfo('Acquisti');
     	
  }
  

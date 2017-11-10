@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
+import {Modal} from 'antd';
+
 
 
 //E' un dato.... che passo come costante...
@@ -14,6 +16,10 @@ const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
 
 var listening = false;
 
+
+
+
+
 class TableBolla extends Component 
     {
     componentDidMount() {
@@ -24,7 +30,21 @@ class TableBolla extends Component
 	}
 	
 	deleteRow = (row) => {
-		this.props.deleteBolla({'itemId':row.key});
+	   const deleteBolla = () => {this.props.deleteBolla({'itemId':row.key});};
+	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
+    		title: 'La bolla non è vuota. Vuoi elminarla?',
+    		content: 'La bolla non è vuota: se premi OK cancelli anche tutti i libri che contiene.',
+    		okText: 'Si',
+    		okType: 'danger',
+    		cancelText: 'No',
+    		onOk() {deleteBolla()
+    			
+    		},
+    		onCancel() {
+    		},});
+    		
+		//Gestisco la situazione che non sia vuota la bolla...
+		else deleteBolla();
 	}
 	
 	editRow = (row) => {
