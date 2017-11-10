@@ -31,6 +31,7 @@ export function urlFactory(getState, destination, params)
 				case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.itemId; break;
 				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle'; break;
 				case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.itemId; break;
+				case "magazzino": url = prefissoNegozio(getState)+'magazzino'; break;
 				
 				default: return null;
 			}

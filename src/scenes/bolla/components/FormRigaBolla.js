@@ -21,12 +21,13 @@ resetForm = () => {
   render() {
   	const formValues = this.props.editedRigaBolla.values;
   	const errorMessages = this.props.editedRigaBolla.errorMessages;
+  	const willFocus = this.props.editedRigaBolla.willFocus;
   	const prezzoMan = formValues['manSconto'];
   	const loading = this.props.editedRigaBolla.loading;
   	const readOnlyEAN = ((this.props.editedRigaBolla.selectedItem !== null) || (this.props.editedRigaBolla.eanState === 'PARTIAL'))
   	
   	return (
-      <WrappedForm focusSet={this.props.focusSet} willFocus={this.props.willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
         <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:6}}  readOnly={readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:8}}  readOnly/>

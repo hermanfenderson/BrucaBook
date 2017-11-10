@@ -115,7 +115,7 @@ exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
     		{
     			const key = event.params.keyRiga;
     			const ean = event.data.val().ean;	
-    			const oldData = event.data.previous.val().ean;
+    			const oldData = event.data.previous.val().data;
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'bolla', id: event.params.idBolla});
                 event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
@@ -130,7 +130,7 @@ exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/boll
     		{
     			const key = event.params.keyRiga;
     			const ean = event.data.previous.val().ean;	
-    			const data = event.data.previous.val().ean;
+    			const data = event.data.previous.val().data;
     			event.data.ref.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();
                 event.data.ref.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
     		}

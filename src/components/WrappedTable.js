@@ -57,7 +57,7 @@ render ()
   	            		})
   	            	}
   				);
-  		columns.push(
+  		if (this.props.deleteRow || this.props.editRow) columns.push(
   					{
   					'render': (text, record) => {return this.actionRowRender(text,record)},
   					'width': '60px',

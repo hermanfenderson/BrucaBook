@@ -1,6 +1,6 @@
 import FormRigaBollaComponent from '../components/FormRigaBolla'
 import {rigaBollaFA} from '../../../actions/bolla'
-import {getEditedRigaBolla, getWillFocus} from '../../../reducers'
+import {getEditedRigaBolla} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -24,7 +24,7 @@ const getEditedRigaBollaSideEffects= (state) => {
 
 
 const mapStateToProps = (state) => { 
-	return ({editedRigaBolla: getEditedRigaBollaSideEffects(state), willFocus: getWillFocus(state)})
+	return ({editedRigaBolla: getEditedRigaBollaSideEffects(state)})
 }
  
 

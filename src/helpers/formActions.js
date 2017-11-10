@@ -213,7 +213,7 @@ this.offListenTotaliChanged = (urlObject) =>
 
 //Genero tre listener... come un'unica funzione...
 this.listenItem = (urlObject) => {
-   const type1 = this.ADDED_ITEM;
+    const type1 = this.ADDED_ITEM;
    const type2 = this.CHANGED_ITEM;
    const type3 = this.DELETED_ITEM;
    

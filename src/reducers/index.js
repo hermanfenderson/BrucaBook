@@ -5,6 +5,7 @@ import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import LoginReducer, * as fromLogin from './login';
+import MagazzinoReducer, * as fromMagazzino from './magazzino';
 import MeasuresReducer from './measures';
 import SignupReducer, * as fromSignup from './signup';
 import StatusReducer, * as fromStatus from './status';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   bolla: BollaReducer,
   elencoBolle: ElencoBolleReducer,
   login: LoginReducer,
+  magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
   signup: SignupReducer,
   catalogo: CatalogoReducer,
@@ -35,7 +37,6 @@ export const getShowCatalogModal = (state) => {return fromBolla.getShowCatalogMo
 export const getTableHeight = (state) => {return fromBolla.getTableHeight(state.bolla)};
 export const getTableScroll = (state)  => {return fromBolla.getTableScroll(state.bolla)};
 export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)};
-export const getWillFocus = (state) => {return fromBolla.getWillFocus(state.bolla)};
 
 
 //Scene ElencoBolle
@@ -51,6 +52,11 @@ export const getEditedCatalogItem = (state) => {return fromCatalog.getEditedCata
 
 //Scene Login
 export const getEditedItemLogin = (state) => {return fromLogin.getEditedItem(state.login)};
+
+//Scene Magazzino
+export const getMagazzino = (state) => {return fromMagazzino.getItems(state.magazzino)};
+export const getTableMagazzinoHeight = (state) => {return fromMagazzino.getTableHeight(state.magazzino)};
+
 
 //Scene Signup
 export const getEditedItemSignup = (state) => {return fromSignup.getEditedItem(state.signup)};

@@ -6,25 +6,31 @@ import { withRouter } from 'react-router-dom';
 
 
 
-const Header = (props) => {
+class Header extends React.Component {
+  state = {
+    selectedKeys : [],
+  }
 
-	const onClick = (selection) => {
+	onClick = (selection) => {
 	let link = '';
+	
 	switch(selection.key)
 		{
 			case '1': link='/acquisti'; break;
 			case '2': link='/itemCatalogo'; break;
-			case '3': link='#signout'; props.signOutUser();break;
+			case '3': link='#signout'; this.props.signOutUser();break;
 			default: break;
 		}
-		props.history.push(link);
+		this.setState({selectedKeys : [selection.key]});
+		this.props.history.push(link);
 	}
-
-    return (
+  
+    render() {
+    	return (
     	 <div>
-    	 <div onClick= {() => {props.history.push('/')}} className="logo"/>
+    	 <div onClick= {() => {this.setState({selectedKeys : []}); this.props.history.push('/')}} className="logo"/>
         
-    	<Menu onClick={onClick} theme="dark" mode="inline" >
+    	<Menu onClick={this.onClick} theme="dark" mode="inline" selectedKeys={this.state.selectedKeys}>
             <Menu.Item key="1">
               <Icon type="shopping-cart" />
               <span>Acquisti</span>
@@ -39,7 +45,7 @@ const Header = (props) => {
             </Menu.Item>
           </Menu>
          </div> 
-     )
+     )}
 }
 
 

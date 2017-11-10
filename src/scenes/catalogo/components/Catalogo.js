@@ -2,7 +2,14 @@ import React from 'react';
 import {Row,Col} from 'antd';
 import FormCatalogo from '../containers/FormCatalogo';
 
-const Catalogo = (props) => 
+ 
+
+class Catalogo extends React.Component 
+{
+componentDidMount = () => {this.props.setHeaderInfo("Catalogo")}
+
+
+render()
 { return (
 	<Row>
 		<Col offset={6} span={12}>
@@ -12,4 +19,5 @@ const Catalogo = (props) =>
 	 )
 }
 
+}
 export default Catalogo;

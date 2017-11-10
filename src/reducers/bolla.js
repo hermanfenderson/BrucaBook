@@ -213,7 +213,6 @@ export default function bolla(state = initialState(), action) {
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getMeasures = (state) => {return state.measures};
- export const getWillFocus = (state) => {return state.editedItem.willFocus};
  
  
  

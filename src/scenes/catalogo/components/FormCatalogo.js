@@ -14,7 +14,7 @@ onSubmit = (e) => {
 resetForm = () => {
 	this.props.resetEditedCatalogItem(this.props.scene);
 }
- 
+
 
   render() {
   	const formValues = this.props.editedCatalogItem.values;
