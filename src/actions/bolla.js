@@ -1,17 +1,15 @@
 import {FormActions} from '../helpers/formActions';
 
 import Firebase from 'firebase';
-import {setHeaderInfo} from './index';
 //Questa genera i path... e mi dorvrebbe aggiungere flessibilità...
 import {urlFactory} from '../helpers/firebase';
-import moment from 'moment';
-import 'moment/locale/it';
 
 
-export const TESTATA_BOLLA_CHANGED = 'TESTATA_BOLLA_CHANGED';
+export const TESTATA_CHANGED_BOLLA = 'TESTATA_CHANGED_BOLLA';
 export const RESET_BOLLA = 'RESET_BOLLA';
 export const SCENE = 'BOLLA';
-
+export const LISTEN_TESTATA_BOLLA = 'LISTEN_TESTATA_BOLLA';
+export const OFF_LISTEN_TESTATA_BOLLA = 'OFF_LISTEN_TESTATA_BOLLA';
 
 
 //FUNZIONI DA VERIFICARE
@@ -27,36 +25,65 @@ function preparaItem(riga)
      riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
    }
 
+   
+
 //Mi serve per poter gestire un eventuale cambio data o altre info dalla testata...
 export function listenTestataBolla(bolla) 
 {
 return function(dispatch, getState) {
-	  const url = urlFactory(getState,"rigaElencoBolle", {'itemId': bolla});
-      if (url)
-      {
-      Firebase.database().ref(url).on('value', snapshot =>
-          {
-          	const riga = (snapshot.val()) ? {...snapshot.val(), 'key': bolla} : null//Per discernere la cancellazione...
-          	dispatch(
-          		{
-          			type: TESTATA_BOLLA_CHANGED,
-          			payload: riga
-          		}
-          		)
-          	 if (riga) dispatch(setHeaderInfo("Acquisti - Doc. " + snapshot.val().riferimento + ' ' 
-          						+ snapshot.val().fornitore + ' del ' + moment(snapshot.val().dataDocumento).format("L")));	
-          }
-      )
-      	return(bolla);
-      }
-      else return(null);
+	  //Mi devo procurare il periodo della bolla...
+	  const urlPeriodoBolla = urlFactory(getState,"periodoBolla", {'bollaId': bolla});
+	  if (urlPeriodoBolla)
+		{
+		 Firebase.database().ref(urlPeriodoBolla).once('value', snapshot =>
+      		{
+      			const anno = snapshot.val().anno;
+      			const mese = snapshot.val().mese;
+      			 const url = urlFactory(getState,"rigaElencoBolle", {'bollaId': bolla, anno: anno, mese: mese});
+      			 if (url)
+				      {
+				      Firebase.database().ref(url).on('value', snapshot =>
+				          {
+				          	const riga = (snapshot.val()) ? {...snapshot.val(), 'key': bolla} : null//Per discernere la cancellazione...
+				          	dispatch(
+				          		{
+				          			type: TESTATA_CHANGED_BOLLA,
+				          			payload: riga
+				          		}
+				          		)
+				          	 }
+				    	  )
+			      	dispatch(
+			      		{type: LISTEN_TESTATA_BOLLA,
+			      		object: {'bollaId': bolla}
+			      		}
+			      		)
+			      	
+			    		}
+			      else dispatch(
+			      		{type: LISTEN_TESTATA_BOLLA,
+			      		object: {'bollaId': null}
+			      		}
+			      		)
+			      		})
+		}
+		else dispatch(
+			      		{type: LISTEN_TESTATA_BOLLA,
+			      		object: {'bollaId': null}
+			      		}
+			      		);
   }
 }
 
 export function unlistenTestataBolla(bolla) 
 {
 return function(dispatch, getState) {
-      Firebase.database().ref(urlFactory(getState,"rigaElencoBolle", {'itemId': bolla})).off();
+      Firebase.database().ref(urlFactory(getState,"rigaElencoBolle", {'bollaId': bolla})).off();
+      dispatch(
+      	{
+      		type: OFF_LISTEN_TESTATA_BOLLA
+      	}
+      	)
     }	
 }
 

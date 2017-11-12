@@ -85,6 +85,10 @@ export function isValidEditedItem(editedItem) {
 	return ((Object.keys(editedItem.errors).length === 0) && editedItem.loading === false)
 }
 
+export function moment2period(moment) {
+	return({anno: moment.year(), mese: moment.month()+1}) //Mi piace di più Obione...
+}
+
 //Aggiorma EAN state... se non lo passo esplicitamente lo valuto.
 /*Gli stati sono 
 BLANK 

@@ -10,6 +10,7 @@ const listenBolla = bollaFA.listenItem;
 const offListenBolla = bollaFA.offListenItem;
 const deleteBolla = bollaFA.deleteItem;
 const toggleTableScroll = bollaFA.toggleTableScroll;
+const resetTable = bollaFA.resetTable;
 const setReadOnlyForm = setReadOnlyBollaForm;
 
 
@@ -19,7 +20,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenBolla, offListenBolla, deleteBolla, setSelectedBolla, toggleTableScroll, setReadOnlyForm }, dispatch);
+  return bindActionCreators({ listenBolla, offListenBolla, deleteBolla, setSelectedBolla, toggleTableScroll, setReadOnlyForm, resetTable }, dispatch);
 }
 
 

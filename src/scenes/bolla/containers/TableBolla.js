@@ -2,7 +2,7 @@ import TableBollaComponent from '../components/TableBolla'
 import {rigaBollaFA} from '../../../actions/bolla'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaBolla, getRigheBolla, getTableHeight, getTableScroll, getMeasures} from '../../../reducers'
+import {getEditedRigaBolla, getRigheBolla, getTableHeight, getTableScroll, getMeasures, getListeningItemBolla} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -15,7 +15,12 @@ const toggleTableScroll = rigaBollaFA.toggleTableScroll;
 
 
 const mapStateToProps = (state) => {
-	return ({data: getRigheBolla(state), tableScroll: getTableScroll(state), height: getTableHeight(state), measures: getMeasures(state), selectedItem: getEditedRigaBolla(state).selectedItem})
+	return ({data: getRigheBolla(state), tableScroll: getTableScroll(state), 
+	height: getTableHeight(state), measures: getMeasures(state), 
+	selectedItem: getEditedRigaBolla(state).selectedItem,
+	listeningItemBolla: getListeningItemBolla(state)
+		
+	})
 }
  
 

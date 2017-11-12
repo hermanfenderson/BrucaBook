@@ -1,10 +1,11 @@
 import TableElencoBolle from '../containers/TableElencoBolle';
 import FormBolla from '../containers/FormBolla';
 import React, {Component} from 'react'
+import {moment2period} from '../../../helpers/form'
 import ReactDOM from 'react-dom';
 
-import { Row} from 'antd'
-
+import { Row, Col, DatePicker, Form} from 'antd'
+const {MonthPicker} = DatePicker;
 
 
 
@@ -26,10 +27,20 @@ render()
   return (
  <div>	
   <Row>
+      <Col style={{'marginTop': '100px'}} span={4}>
+       <Form.Item
+            label="Periodo"
+          >
+       <MonthPicker value={this.props.period} onChange={this.props.setPeriodElencoBolle} format={"MM/YYYY"} />
+       </Form.Item>
+      </Col>
+       <Col span={20}>
+    
    	 <FormBolla ref='formBolla'/>
+   	 </Col>
     </Row>
      <Row>
-         <TableElencoBolle/>
+         <TableElencoBolle listeningPeriod={this.props.listeningPeriod} period={moment2period(this.props.period)} />
       </Row>
    
   </div>

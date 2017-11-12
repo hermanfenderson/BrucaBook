@@ -5,8 +5,9 @@ import 'moment/locale/it';
 
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem} from '../helpers/form';
 
-import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE} from '../actions/elencoBolle';
+import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE, SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
 import {STORE_MEASURE} from '../actions';
+
 
 moment.locale("it");
 
@@ -43,6 +44,8 @@ const initialState = () => {
 			itemsArrayIndex: {},
 		    tableScroll: false,
 			tableHeight:0,
+			period: moment(),
+			listeningItem: null,
 			editedItem: {...editedItemInitialState()}
 	    	}
     }
@@ -90,7 +93,10 @@ export default function elencoBolle(state = initialState(), action) {
    	    measures[action.newMeasure.name] = action.newMeasure.number;
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -100;
    	    newState = {...state, tableHeight: height};
-        break;  	
+        break;  
+     case SET_PERIOD_ELENCOBOLLE:
+        newState = {...state, period: action.period};
+        break;
     default:
         newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedBolla);
         //newState =  state;
@@ -107,6 +113,8 @@ export default function elencoBolle(state = initialState(), action) {
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getReadOnlyForm = (state) => {return state.editedItem.readOnlyForm};
+ export const getPeriod = (state) => {return state.period};
+ export const getListeningItem = (state) => {return state.listeningItem};
  
  
       

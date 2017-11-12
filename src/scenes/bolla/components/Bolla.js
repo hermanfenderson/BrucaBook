@@ -1,15 +1,16 @@
 import TableBolla from '../containers/TableBolla';
 import FormRigaBolla from '../containers/FormRigaBolla';
-import TotaliBolla from '../containers/TotaliBolla';
+import TotaliBolla from '../components/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
+import moment from 'moment';
+import 'moment/locale/it';
 
 import { Row, Col,  Modal, Spin} from 'antd'
 
 
-var currentIdBolla = null;
 
 class Bolla extends Component {
 
@@ -20,17 +21,24 @@ class Bolla extends Component {
  }
  
  componentWillMount() {
-
+ var currentIdBolla = null; 
+ if (this.props.listeningTestataBolla) currentIdBolla = this.props.listeningTestataBolla.bollaId;
  if (this.props.match.params.id !== currentIdBolla)	
 	{   //Faccio reset... tranne la prima volta...
 		if (currentIdBolla) 
 			{this.props.resetBolla(this.props.match.params.id);
 			 this.props.unlistenTestataBolla(currentIdBolla);
 			} 
-		currentIdBolla = this.props.listenTestataBolla(this.props.match.params.id); //In modo da caricare il valore giusto...
+		this.props.listenTestataBolla(this.props.match.params.id); //In modo da acoltare il valore giusto...
 	}
+		
  }
  
+componentDidUpdate() {
+		const riga = this.props.testataBolla;
+	if (riga) this.props.setHeaderInfo("Acquisti - Doc. " + riga.riferimento + ' ' 
+				          						+ riga.fornitore + ' del ' + moment(riga.dataDocumento).format("L"));
+}
 
 resetEditedCatalogItem = () => {
 	this.props.resetEditedCatalogItem('BOLLA');
@@ -60,7 +68,7 @@ render()
     	 <FormRigaBolla idBolla={this.props.match.params.id} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
       </Col>
       <Col span={4}>
-    	 <TotaliBolla idBolla={this.props.match.params.id}/>
+    	 <TotaliBolla testataBolla={this.props.testataBolla}/>
       </Col>
     </Row>
     

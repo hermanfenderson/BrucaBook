@@ -37,6 +37,9 @@ export const getShowCatalogModal = (state) => {return fromBolla.getShowCatalogMo
 export const getTableHeight = (state) => {return fromBolla.getTableHeight(state.bolla)};
 export const getTableScroll = (state)  => {return fromBolla.getTableScroll(state.bolla)};
 export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)};
+export const getListeningTotaliBolla = (state) => {return fromBolla.getListeningTotaliBolla(state.bolla)};
+export const getListeningTestataBolla = (state) => {return fromBolla.getListeningTestataBolla(state.bolla)};
+export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
 
 
 //Scene ElencoBolle
@@ -45,6 +48,9 @@ export const getEditedBolla = (state) => {return fromElencoBolle.getEditedItem(s
 export const getTableElencoBolleHeight = (state) => {return fromElencoBolle.getTableHeight(state.elencoBolle)};
 export const getTableElencoBolleScroll = (state)  => {return fromElencoBolle.getTableScroll(state.elencoBolle)};
 export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
+export const getPeriod = (state) => {return fromElencoBolle.getPeriod(state.elencoBolle)};
+export const getListeningItem = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
+
 
 
 //Scene Catalogo

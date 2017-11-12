@@ -1,6 +1,6 @@
 //QUESTA VA SISTEMATA
 import FormReducer from '../helpers/formReducer'
-import {RESET_BOLLA, TESTATA_BOLLA_CHANGED } from '../actions/bolla';
+import {RESET_BOLLA, TESTATA_CHANGED_BOLLA, LISTEN_TESTATA_BOLLA, OFF_LISTEN_TESTATA_BOLLA } from '../actions/bolla';
 import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
@@ -42,7 +42,9 @@ const initialState = () => {
 			tableHeight: 2048,
 			totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
 			editedItem: {...editedItemInitialState()},
-			testataBolla: null
+			testataBolla: null,
+			listeningTestataBolla: null,
+			listeningItem: null
 	    	}
     }
     
@@ -182,7 +184,7 @@ export default function bolla(state = initialState(), action) {
       	newState =  {...initialState(), tableHeight: tableHeight};
 		break;
 		
-   case TESTATA_BOLLA_CHANGED:
+   case TESTATA_CHANGED_BOLLA:
    	   if (action.payload) newState = {...state, testataBolla: action.payload};
    	   else newState = initialState(); //Ho gestito il caso che qualcuno mi cancella mentre sto scrivendo...
    	    break;
@@ -193,7 +195,12 @@ export default function bolla(state = initialState(), action) {
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -100;
    	    newState = {...state, tableHeight: height};
         break;
-    
+   case LISTEN_TESTATA_BOLLA:
+	     	newState = {...state, listeningTestataBolla: action.object}; 
+	     	break;
+   case OFF_LISTEN_TESTATA_BOLLA:
+	     	newState = {...state, listeningTestataBolla: null};
+	     	break;
     default:
         newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla);
         //newState =  state;
@@ -213,6 +220,10 @@ export default function bolla(state = initialState(), action) {
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getMeasures = (state) => {return state.measures};
+ export const getListeningTotaliBolla = (state) => {return state.listeningTotali};
+ export const getListeningTestataBolla = (state) => {return state.listeningTestataBolla};
+ export const getListeningItemBolla = (state) => {return state.listeningItem};
+ 
  
  
  

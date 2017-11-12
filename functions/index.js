@@ -7,35 +7,42 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
 //Modo "paraculo"... devo ragionare se crea problemi in transazione    
-exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}/righe')
+exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{idBolla}')
     .onWrite(event => 
             {
-            const key = event.params.idBolla;	
-           	
-            const righe = event.data.val();
-        	var totalePezzi = 0.0;
-			var totaleGratis = 0.0;
-			var totaleImporto = 0.0;
-		  	for(var propt in righe)
-		  		{
-			    totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
-			    totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
-			    totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-				}
-			const totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis, 'prezzoTotale' : totaleImporto.toFixed(2)}; 
-			console.info("Aggiornati totali");
-			const ref = event.data.ref.parent.parent.parent.child('elencoBolle').child(key);
-			if (totalePezzi + totaleGratis > 0) ref.child('totali').set(totali); //Per non perdere tempo...
-			//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
-			else 
-				{
-					ref.once("value")
-						.then(function(snapshot) {
-		    				var notEmpty = snapshot.hasChildren(); 
-		    				if (notEmpty) ref.child('totali').set(totali);
-							 });
-		    		}
-                }	
+             var eventSnapshot = event.data;
+            var righeSnapshot = eventSnapshot.child('righe');
+    		if (righeSnapshot.changed())	//Eseguo solo se è cambiato righe... non se è cambiato il period
+    			{
+	            const key = event.params.idBolla;	
+	           	
+	            const righe = event.data.val().righe;
+	            const anno = event.data.val().periodo.anno;
+	            const mese = event.data.val().periodo.mese;
+	            
+	        	var totalePezzi = 0.0;
+				var totaleGratis = 0.0;
+				var totaleImporto = 0.0;
+			  	for(var propt in righe)
+			  		{
+				    totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
+				    totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
+				    totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+					}
+				const totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis, 'prezzoTotale' : totaleImporto.toFixed(2)}; 
+				const ref = event.data.ref.parent.parent.child('elencoBolle').child(anno).child(mese).child(key);
+				if (totalePezzi + totaleGratis > 0) ref.child('totali').set(totali); //Per non perdere tempo...
+				//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
+				else 
+					{
+						ref.once("value")
+							.then(function(snapshot) {
+			    				var notEmpty = snapshot.hasChildren(); 
+			    				if (notEmpty) ref.child('totali').set(totali);
+								 });
+			    		}
+	                }	
+            	}    
            );
            
 //Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...

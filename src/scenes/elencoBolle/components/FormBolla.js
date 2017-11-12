@@ -14,6 +14,7 @@ onSubmit = (e) => {
 		this.props.history.push('/bolla/' + this.props.editedBolla.selectedItem.key);
 	}
 	//Elemento radice: il parametro del punto di destinazione è oggetto vuoto...
+	
 	else this.props.submitEditedBolla(this.props.editedBolla.isValid, this.props.editedBolla.selectedItem, {}, this.props.editedBolla.values); //Per sapere cosa fare... dopo
   }
  

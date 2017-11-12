@@ -25,7 +25,14 @@ this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
 this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
+this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
+this.LISTEN_TOTALI='LISTEN_TOTALI_'+scene;
+
+this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
+this.OFF_LISTEN_TOTALI='OFF_LISTEN_TOTALI_'+scene;
+
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
+this.RESET_TABLE = 'RESET_TABLE_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.FOCUS_SET = 'FOCUS_SET_'+scene;
@@ -179,9 +186,17 @@ this.toggleTableScroll = (toggle) => {
 	  }  
 	}
 
+this.resetTable = () => {
+ return {
+	    type: this.RESET_TABLE,
+	  }  
+	}
+	
+
 this.listenTotaliChanged = (urlObject) =>
 {
     const type = this.TOTALI_CHANGED;
+    const typeListen = this.LISTEN_TOTALI;
     const totaliUrl = this.totaliUrl;
 	 return function(dispatch, getState) {
     	 const url = urlFactory(getState,totaliUrl, urlObject);
@@ -193,9 +208,15 @@ this.listenTotaliChanged = (urlObject) =>
 	        	 payload: snapshot.val()
 	    		})
 	    	});
-	    	return (url);
+	    	dispatch({
+	   			type: typeListen,
+	   			object: urlObject,
+				})
     	}
-    	else return null;
+    	else dispatch({
+	   	type: typeListen,
+	   	object: null
+	   	})
 	}
 }	
 
@@ -203,9 +224,13 @@ this.listenTotaliChanged = (urlObject) =>
 //Non ritorna nessuna azione e non crea nessuna actionCreator... per coerenza di architettura...
 this.offListenTotaliChanged = (urlObject) =>
 {   
+	const typeUnlisten = this.OFF_LISTEN_TOTALI;
 	const totaliUrl = this.totaliUrl;
 	return function(dispatch, getState) {
 	Firebase.database().ref(urlFactory(getState,totaliUrl, urlObject)).off();
+	dispatch({
+	   	type: typeUnlisten,
+	   	})
     };
 }
 
@@ -216,11 +241,12 @@ this.listenItem = (urlObject) => {
     const type1 = this.ADDED_ITEM;
    const type2 = this.CHANGED_ITEM;
    const type3 = this.DELETED_ITEM;
+   const typeListen = this.LISTEN_ITEM;
    
    const itemsUrl = this.itemsUrl;	
   return function(dispatch, getState) {
   	const url = urlFactory(getState,itemsUrl, urlObject);
-    if (url)
+  	if (url)
     {
 	    Firebase.database().ref(url).on('child_added', snapshot => {
 	      dispatch({
@@ -240,10 +266,15 @@ this.listenItem = (urlObject) => {
 	        payload: snapshot
 	      })  
 	   });
-	if (urlObject) return(urlObject);
-	else return('');
-    }   
-	else return null;   
+	   dispatch({
+	   	type: typeListen,
+	   	object: urlObject,
+	   })
+	}   
+	else dispatch({
+	   	type: typeListen,
+	   	object: null,
+	   })   
   }
 }
 
@@ -251,8 +282,12 @@ this.listenItem = (urlObject) => {
 //Non ritorna nessuna azione e non crea nessuna actionCreator
 this.offListenItem = (urlObject) =>
 {   const itemsUrl = this.itemsUrl;
+    const typeUnlisten = this.OFF_LISTEN_ITEM;
 	return function(dispatch, getState) {
 	Firebase.database().ref(urlFactory(getState,itemsUrl, urlObject)).off();
+	dispatch({
+	   	type: typeUnlisten,
+	   })
     }
 }
 
@@ -327,6 +362,10 @@ this.changeEditedItem = (name,value) => {
 			}
 	}
 
+
+
+
+
 //Azione richiamata sia perchè il campo EAN è stato attivato per "codice breve"
 //Sia perchè a campi validi... si può scrivere...
 //this.submitEditedItem = (isValid, bollaId, valori, selectedItem) => {
@@ -343,6 +382,8 @@ this.submitEditedItem = (isValid,selectedItem,urlObject,valori) => {
 			else if(isValid) dispatch(aggiungiItem(urlObj,valori));
 	      }
 	}
+	
+	
 
 }
 

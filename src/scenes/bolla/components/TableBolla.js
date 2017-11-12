@@ -12,11 +12,11 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			   ];
 //Per gestire in modo smmooth il ricaricamento!
 
-var currentListenedIdBolla = null;
 class TableBolla extends Component 
     {
     componentDidMount() {
-    	   
+    	var currentListenedIdBolla = null;
+    	if (this.props.listeningItemBolla) currentListenedIdBolla = this.props.listeningItemBolla.bollaId;   
     		//Ascolto modifiche sulle righe della bolla
     	if (currentListenedIdBolla !== this.props.idBolla)
     	   {
@@ -24,15 +24,16 @@ class TableBolla extends Component
     	   		{this.props.offListenRigaBolla({'bollaId':currentListenedIdBolla}); 
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let objectUrl = this.props.listenRigaBolla({'bollaId':this.props.idBolla}); 
-    	   	if (objectUrl) currentListenedIdBolla = objectUrl['bollaId']; 
+    	   	this.props.listenRigaBolla({'bollaId':this.props.idBolla}); 
     	   	}
+    	   	
 	}
 	
 	
 	
+	
 	deleteRow = (row) => {
-		this.props.deleteRigaBolla({'bollaId':this.props.idBolla,'itemId':row.key});
+		this.props.deleteRigaBolla({'bollaId':this.props.idBolla,'rigaBollaId':row.key});
 	}
 	
 	editRow = (row) => {

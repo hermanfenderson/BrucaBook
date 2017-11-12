@@ -14,23 +14,42 @@ const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
 			    {dataField: 'totali.gratis', label: 'Gratis', width: '200px'},
 			   ];
 
-var listening = false;
-
-
 
 
 
 class TableBolla extends Component 
     {
-    componentDidMount() {
-    	let result = null;
-    	//Ascolto modifiche sulle bolle... non passo parametri...sono nella radice. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
-    	if (!listening) result = this.props.listenBolla();
-    	if (result === '') listening = true;
+    periodMount = () => {
+    	var currentListenedObj = this.props.listeningPeriod;
+    		//Ascolto modifiche sulle bolle... devo passare anno (voglio sentire un anno intero per ora. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
+    	if (!currentListenedObj) 
+    		{   
+    			this.props.listenBolla({anno: this.props.period.anno, mese: this.props.period.mese});
+    		}
+    	else 
+    		{
+    			if ((currentListenedObj.anno !== this.props.period.anno ) || (currentListenedObj.mese !== this.props.period.mese ))
+    				{
+    				    this.props.offListenBolla({currentListenedObj});
+    				    this.props.resetTable();
+    					this.props.listenBolla({anno: this.props.period.anno, mese: this.props.period.mese});
+    					
+    				}
+    		}
+    }
+    
+    componentDidMount = () => {
+       this.periodMount();
+    
 	}
 	
+	componentDidUpdate = () => {
+	   this.periodMount();
+	}
+	
+	
 	deleteRow = (row) => {
-	   const deleteBolla = () => {this.props.deleteBolla({'itemId':row.key});};
+	   const deleteBolla = () => {this.props.deleteBolla({'itemId':row.key}, row);};
 	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
     		title: 'La bolla non è vuota. Vuoi elminarla?',
     		content: 'La bolla non è vuota: se premi OK cancelli anche tutti i libri che contiene.',

@@ -25,12 +25,15 @@ export function urlFactory(getState, destination, params)
     {
 	  	switch(destination)
 			{
-				//Bolla: in input idBolla
-				case "totaliBolla": url = prefissoNegozio(getState)+'elencoBolle/'  + params.bollaId + '/totali'; break;
+				//Connotazione semantica dei parametri. Costa di più ma mi consente di fare meglio debug....
 				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;
-				case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.itemId; break;
-				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle'; break;
-				case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.itemId; break;
+				case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.rigaBollaId; break;
+				case "bolla":  url = prefissoNegozio(getState)+'bolle/'  + params.bollaId; break;
+			 	case "periodoBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/periodo'; break;
+				case "totaliBolla": url = prefissoNegozio(getState)+'elencoBolle/' +params.anno+'/'+params.mese+'/' + params.bollaId + '/totali'; break;
+			
+				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.anno+'/'+params.mese; break;
+				case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.anno+'/'+params.mese+'/'+params.bollaId; break;
 				case "magazzino": url = prefissoNegozio(getState)+'magazzino'; break;
 				
 				default: return null;

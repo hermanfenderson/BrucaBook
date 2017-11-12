@@ -3,7 +3,7 @@ import {resetBolla, listenTestataBolla, unlistenTestataBolla} from '../../../act
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getShowCatalogModal, getEditedCatalogItem, getTestataBolla} from '../../../reducers'
+import {getShowCatalogModal, getEditedCatalogItem, getTestataBolla, getListeningTestataBolla} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -11,7 +11,12 @@ import { bindActionCreators} from 'redux'
 const mapStateToProps = (state) => {
 	return ({showCatalogModal: getShowCatalogModal(state), 
 	         editedCatalogItem: getEditedCatalogItem(state),
-	         testataBolla: getTestataBolla(state)})
+	         testataBolla: getTestataBolla(state),
+	         listeningTestataBolla: getListeningTestataBolla(state),
+	         
+		
+		
+	})
 }
 
 function mapDispatchToProps(dispatch) {
