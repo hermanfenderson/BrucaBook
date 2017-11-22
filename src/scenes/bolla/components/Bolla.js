@@ -27,9 +27,9 @@ class Bolla extends Component {
 	{   //Faccio reset... tranne la prima volta...
 		if (currentIdBolla) 
 			{this.props.resetBolla(this.props.match.params.id);
-			 this.props.unlistenTestataBolla(currentIdBolla);
+			 this.props.unlistenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], currentIdBolla);
 			} 
-		this.props.listenTestataBolla(this.props.match.params.id); //In modo da acoltare il valore giusto...
+		this.props.listenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...
 	}
 		
  }
@@ -53,8 +53,8 @@ submitEditedCatalogItem = (e) => {
 
 render()
 {
-
-  return (
+  const period = [this.props.match.params.anno, this.props.match.params.mese];
+ return (
   <Spin spinning={!this.props.testataBolla}>	
   <div>
   
@@ -65,16 +65,16 @@ render()
       <Col span={4}>
       </Col>
       <Col span={16}>
-    	 <FormRigaBolla idBolla={this.props.match.params.id} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
+    	 <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
       </Col>
       <Col span={4}>
-    	 <TotaliBolla testataBolla={this.props.testataBolla}/>
+    	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla}/>
       </Col>
     </Row>
     
      <Row>
       
-         <TableBolla idBolla={this.props.match.params.id}/>
+         <TableBolla  period={period} idBolla={this.props.match.params.id}/>
       
     </Row>
    

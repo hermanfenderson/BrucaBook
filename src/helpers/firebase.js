@@ -18,33 +18,39 @@ export function prefissoNegozio(getState)
     }
     
 //Passo un getstate, dove voglio andare (stringa), params (oggetti)
-export function urlFactory(getState, destination, params)    
+//Posso semplificare...
+//Se params è un valore singolo... vuol dire che firebase aveva bisogno solo di quello...
+//Se è un array sono i valori a cui accedere in ordine...
+//Come zucchero semantico posso aggiungere un secondo parametro specifico del periodo che magari rende più leggibile
+//Un secondo parametro per discernere se sto vedendo una singola riga.. così semplifico l'elengo oggetti...
+// urlFactory (getState, destination, params, itemId, period)
+//Dove params è un valore singolo o un arrey
+//ItemId determina una foglia...
+//Period determina i valori da dare a anno e mese...
+
+export function urlFactory(getState, destination, params, itemId)    
 {   let url = "";
     let prefisso = prefissoNegozio(getState);
+    if (params && !Array.isArray(params)) params = [params];
     if (prefisso)
     {
 	  	switch(destination)
 			{
-				//Connotazione semantica dei parametri. Costa di più ma mi consente di fare meglio debug....
-				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe'; break;
-				case "rigaBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/righe/' +params.rigaBollaId; break;
-				case "bolla":  url = prefissoNegozio(getState)+'bolle/'  + params.bollaId; break;
-			 	case "periodoBolla": url = prefissoNegozio(getState)+'bolle/'  + params.bollaId + '/periodo'; break;
-				case "totaliBolla": url = prefissoNegozio(getState)+'elencoBolle/' +params.anno+'/'+params.mese+'/' + params.bollaId + '/totali'; break;
-			
-				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.anno+'/'+params.mese; break;
-				case "rigaElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params.anno+'/'+params.mese+'/'+params.bollaId; break;
+				//RigheBolla sta sotto anno, mese e idBolla
+				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  +params[0]+'/'+params[1] + '/'+params[2] ; break;
+				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params[0]+'/'+params[1]; break;
 				case "magazzino": url = prefissoNegozio(getState)+'magazzino'; break;
 				
 				default: return null;
 			}
+		if (itemId) url = url + '/' + itemId;	
 		return url;
     }
     else return null;
 	
 }
 
- 
+
 
 export function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
 {  //Creo un array e un indice per copia degli attuali

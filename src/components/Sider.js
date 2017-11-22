@@ -2,21 +2,19 @@
 import React from 'react';
 import {Menu, Icon} from 'antd';
 import { withRouter } from 'react-router-dom';
+import moment from 'moment';
 
 
-
-
-class Header extends React.Component {
+class Sider extends React.Component {
   state = {
     selectedKeys : [],
   }
 
 	onClick = (selection) => {
 	let link = '';
-	
 	switch(selection.key)
 		{
-			case '1': link='/acquisti'; break;
+			case '1': link='/acquisti/'+moment().format('YYYY/MM'); break;
 			case '2': link='/itemCatalogo'; break;
 			case '3': link='#signout'; this.props.signOutUser();break;
 			default: break;
@@ -49,4 +47,4 @@ class Header extends React.Component {
 }
 
 
-export default withRouter(Header);
+export default withRouter(Sider);

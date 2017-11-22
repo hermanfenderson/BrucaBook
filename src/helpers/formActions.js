@@ -1,5 +1,8 @@
 //Questo helper genera azioni data una "scene"
 //action per il form Rigabolla
+
+import moment from 'moment';
+
 import {addCreatedStamp,addChangedStamp} from './firebase';
 import Firebase from 'firebase';
 import request from 'superagent';
@@ -8,7 +11,7 @@ import {isComplete} from './catalog';
 import {urlFactory} from './firebase';
 import {isInternalEAN} from './ean';
 
-export function FormActions(scene,  preparaItem, itemUrl, itemsUrl, totaliUrl) {
+export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl) {
 //Azioni legate ad azioni di ricerca
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
@@ -22,14 +25,21 @@ this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+scene;
 this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
 this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
 this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
+this.ADD_ITEM = 'ADD_ITEM_'+scene;
+this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
+this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
+
+
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
 this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
-this.LISTEN_TOTALI='LISTEN_TOTALI_'+scene;
+//this.LISTEN_TOTALI='LISTEN_TOTALI_'+scene;
 
 this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
-this.OFF_LISTEN_TOTALI='OFF_LISTEN_TOTALI_'+scene;
+//this.OFF_LISTEN_TOTALI='OFF_LISTEN_TOTALI_'+scene;
+
+this.RESET='RESET_'+scene;
 
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
@@ -37,12 +47,77 @@ this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.FOCUS_SET = 'FOCUS_SET_'+scene;
 
+this.LISTEN_TESTATA='LISTEN_TESTATA_'+scene;
+this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
+this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
 
 
-this.itemUrl = itemUrl;
+
 this.itemsUrl = itemsUrl;
-this.totaliUrl = totaliUrl;
 this.preparaItem = preparaItem;
+this.rigaTestataUrl = rigaTestataUrl;
+
+
+
+//Mi serve per poter gestire un eventuale cambio data o altre info dalla testata...
+this.listenTestata = (params, itemId) =>  
+{
+const rigaTestataUrl = this.rigaTestataUrl;
+const typeTestataChanged = this.TESTATA_CHANGED;
+const typeListenTestata = this.LISTEN_TESTATA;
+
+return function(dispatch, getState) {
+	  //semplicemente mi aggancio alla testata...
+
+	   
+	  const url = urlFactory(getState,rigaTestataUrl, params, itemId);
+			      			 if (url)
+							      {
+							      Firebase.database().ref(url).on('value', snapshot =>
+							          {
+							          	const riga = (snapshot.val()) ? {...snapshot.val(), 'key': itemId} : null//Per discernere la cancellazione...
+							          	dispatch(
+							          			{
+							          			type: typeTestataChanged,
+							          			payload: riga
+							          			}
+							          			)
+							          	 }
+							    	  )
+						      	dispatch(
+						      		{type: typeListenTestata,
+						      		object: {params: params, itemId: itemId}
+						      		}
+						      		)
+						      	
+						    		}
+						      else dispatch(
+						      		{type: typeListenTestata,
+						      		object: null
+						      		}
+						      		)
+	   
+  }
+}
+
+
+this.unlistenTestata = (params, itemId) =>
+{
+const rigaTestataUrl = this.rigaTestataUrl;
+const typeOffListenTestata = this.OFF_LISTEN_TESTATA;
+
+	
+return function(dispatch, getState) {
+
+      Firebase.database().ref(urlFactory(getState,rigaTestataUrl, params, itemId)).off();
+      dispatch(
+      		{
+      		type: typeOffListenTestata,
+      		object: {params: params, itemId: itemId}
+      		}	
+      	)
+    }	
+}
 
 
 this.focusSet = () =>
@@ -52,6 +127,23 @@ this.focusSet = () =>
    }
   );
 };	
+
+
+this.reset = (params, idItem) => {
+  const typeReset = this.RESET;
+  const rigaTestataUrl = this.rigaTestataUrl;
+  const itemsUrl = this.itemsUrl;
+  
+  return function(dispatch, getState) {
+  	
+    Firebase.database().ref(urlFactory(getState,itemsUrl, params, idItem)).off();
+   //E non osservo più la riga di testata...
+    Firebase.database().ref(urlFactory(getState,rigaTestataUrl, params, idItem)).off();
+    
+    dispatch({type: typeReset});
+    
+  }
+}
 
 
 this.setTableWindowHeight = (tableWindowHeight) =>
@@ -191,61 +283,18 @@ this.resetTable = () => {
 	    type: this.RESET_TABLE,
 	  }  
 	}
-	
-
-this.listenTotaliChanged = (urlObject) =>
-{
-    const type = this.TOTALI_CHANGED;
-    const typeListen = this.LISTEN_TOTALI;
-    const totaliUrl = this.totaliUrl;
-	 return function(dispatch, getState) {
-    	 const url = urlFactory(getState,totaliUrl, urlObject);
-    	 if (url)
-    	{
-	    	Firebase.database().ref(url).on('value', snapshot => {
-	    		dispatch({
-	    		 type: type,
-	        	 payload: snapshot.val()
-	    		})
-	    	});
-	    	dispatch({
-	   			type: typeListen,
-	   			object: urlObject,
-				})
-    	}
-    	else dispatch({
-	   	type: typeListen,
-	   	object: null
-	   	})
-	}
-}	
-
-
-//Non ritorna nessuna azione e non crea nessuna actionCreator... per coerenza di architettura...
-this.offListenTotaliChanged = (urlObject) =>
-{   
-	const typeUnlisten = this.OFF_LISTEN_TOTALI;
-	const totaliUrl = this.totaliUrl;
-	return function(dispatch, getState) {
-	Firebase.database().ref(urlFactory(getState,totaliUrl, urlObject)).off();
-	dispatch({
-	   	type: typeUnlisten,
-	   	})
-    };
-}
-
 
 
 //Genero tre listener... come un'unica funzione...
-this.listenItem = (urlObject) => {
-    const type1 = this.ADDED_ITEM;
+this.listenItem = (params) => {
+ const type1 = this.ADDED_ITEM;
    const type2 = this.CHANGED_ITEM;
    const type3 = this.DELETED_ITEM;
    const typeListen = this.LISTEN_ITEM;
    
    const itemsUrl = this.itemsUrl;	
   return function(dispatch, getState) {
-  	const url = urlFactory(getState,itemsUrl, urlObject);
+  	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
     {
 	    Firebase.database().ref(url).on('child_added', snapshot => {
@@ -268,34 +317,37 @@ this.listenItem = (urlObject) => {
 	   });
 	   dispatch({
 	   	type: typeListen,
-	   	object: urlObject,
+	   	params: params,
 	   })
 	}   
 	else dispatch({
 	   	type: typeListen,
-	   	object: null,
+	   	params: null,
 	   })   
   }
 }
 
 
 //Non ritorna nessuna azione e non crea nessuna actionCreator
-this.offListenItem = (urlObject) =>
+this.offListenItem = (params) =>
 {   const itemsUrl = this.itemsUrl;
     const typeUnlisten = this.OFF_LISTEN_ITEM;
 	return function(dispatch, getState) {
-	Firebase.database().ref(urlFactory(getState,itemsUrl, urlObject)).off();
+	Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
 	dispatch({
 	   	type: typeUnlisten,
+	   	params: params
 	   })
     }
 }
 
 
-
+//Modifico queste tre per tornare al reducer l'ultima chiave toccata...o ancora meglio riscrivo per coerenza con altri metodi...
 
 //Disattivata la componente che opera sul magazzino...
-this.aggiungiItem = (urlObject,valori) => {
+this.aggiungiItem = (params,valori) => {
+  const typeAdd =  this.ADD_ITEM;
+ 	
   var nuovoItem = {...valori};
   const itemsUrl = this.itemsUrl;
   const toggleTableScroll = this.toggleTableScroll;
@@ -304,38 +356,74 @@ this.aggiungiItem = (urlObject,valori) => {
   return function(dispatch,getState) {
    
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
-   //DA CAPIRE COME GESTIRLO!!! 
-    //Questa riga è stata modificata.. totali calcolati da una function...
-    
-    //Firebase.database().ref(prefissoNegozio(getState) +'bolle/' + bolla + '/righe').push().set(nuovaRigaBolla);
-    Firebase.database().ref(urlFactory(getState,itemsUrl, urlObject)).push().set(nuovoItem);
-  	
+    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
+    ref.set(nuovoItem);
+   dispatch(
+   	{
+   		type: typeAdd,
+   		key: ref.key
+   	}
+   	)  	
   }
 }
 
 //Idem...
-this.aggiornaItem = (urlObject,valori) => {
-	
+this.aggiornaItem = (params,valori) => {
+    const typeChange = this.CHANGE_ITEM;
+ 	
     var nuovoItem = {...valori};
       addChangedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
     const itemUrl = this.itemUrl;
       return function(dispatch,getState) {
 
-    Firebase.database().ref(urlFactory(getState,itemUrl, urlObject)).update(nuovoItem).then(response => {
-    });
+    const ref  = Firebase.database().ref(urlFactory(getState,itemUrl, params));
+    ref.update(nuovoItem);
+    dispatch(
+   	{
+   		type: typeChange,
+   		key: ref.key
+   	}
+   	)  	 
   }
   
 }
 
-//Ripristinata a prima del magazzino...
-this.deleteItem = (urlObject) => {
-  const itemUrl = this.itemUrl;
+
+
+//Ripristinata a prima del magazzino... ORA NON PUO' FUNZIONARE!!!
+
+this.deleteItem = (params, valori, dataFieldName) => {
+var anno;
+var mese;
+var urlObject;
+const typeDelete = this.DELETE_ITEM;
+const itemsUrl = this.itemsUrl;
+const periodoUrl = this.periodoUrl;
+
+
+ 
+  if (dataFieldName)
+	{
+   	anno=moment(valori[dataFieldName], "DD/MM/YYYY").year();
+	mese=moment(valori[dataFieldName], "DD/MM/YYYY").month()+1;
+	}
+  //var urlObjectPeriod = dataFieldName ? {...urlObject, 'anno': anno, 'mese': mese} : {...urlObject}; //Lo persisto  anche nella bolla singola
   return function(dispatch, getState) {
-  Firebase.database().ref(urlFactory(getState,itemUrl, urlObject)).remove().then(response => {
-  })
+    if (dataFieldName) 
+		{Firebase.database().ref(urlFactory(getState,periodoUrl,params)).remove();
+		Firebase.database().ref(urlFactory(getState,itemsUrl, [anno,mese], params)).remove();
+		}
+	else Firebase.database().ref(urlFactory(getState,itemsUrl, null, params)).remove();
+     dispatch(
+					{
+   					type: typeDelete,
+   					key: valori.key
+   					}
+   					)   
     };
   }
+	
 
 
 
@@ -366,9 +454,11 @@ this.changeEditedItem = (name,value) => {
 
 
 
+
 //Azione richiamata sia perchè il campo EAN è stato attivato per "codice breve"
 //Sia perchè a campi validi... si può scrivere...
 //this.submitEditedItem = (isValid, bollaId, valori, selectedItem) => {
+
 
 this.submitEditedItem = (isValid,selectedItem,urlObject,valori) => {
 	      const type = this.SUBMIT_EDITED_ITEM;
@@ -383,9 +473,13 @@ this.submitEditedItem = (isValid,selectedItem,urlObject,valori) => {
 	      }
 	}
 	
+
 	
 
+
 }
+
+
 
 
 

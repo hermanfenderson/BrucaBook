@@ -10,7 +10,7 @@ import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 //mostrare.
 //la funzione transformSelectedItem prende invece dalla riga in tabella e la porta verso il form...
 
-function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem) {
+function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState) {
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
 this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+scene;
@@ -26,9 +26,12 @@ this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
 this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
 this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
 this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
-this.LISTEN_TOTALI='LISTEN_TOTALI_'+scene;
 this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
-this.OFF_LISTEN_TOTALI='OFF_LISTEN_TOTALI_'+scene;
+
+this.ADD_ITEM = 'ADD_ITEM_'+scene;
+this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
+this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
+this.RESET='RESET_'+scene;
 
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
@@ -38,6 +41,9 @@ this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
 this.FOCUS_SET = 'FOCUS_SET_'+scene;
+this.LISTEN_TESTATA='LISTEN_TESTATA_'+scene;
+this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
+this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
 
 
 if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
@@ -52,6 +58,27 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	{ var newState;
 		switch(action.type)
 		{
+			
+	case this.TESTATA_CHANGED:
+   	   if (action.payload) 
+   		{   
+   			newState = {...state, testata: action.payload};
+   			if ((!state.lastActionKey) || (action.payload.totali.lastActionKey === state.lastActionKey)) 
+   				newState = {...newState, lastActionKey: null, staleTotali: false};
+   		}
+   			
+   	   
+   	 //  else newState = initialState(); //Ho gestito il caso che qualcuno mi cancella mentre sto scrivendo...
+   	  else newState = state;
+   	    break;
+   	    
+     case this.LISTEN_TESTATA:
+	     	newState = {...state, listeningTestata: action.object}; 
+	     	break;
+   case this.OFF_LISTEN_TESTATA:
+	     	newState = {...state, listeningTestata: null};
+	     	break;
+	     	
     case this.TOGGLE_TABLE_SCROLL:
 		newState = {...state, tableScroll: action.toggle};
 		break;
@@ -174,19 +201,19 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		    
 	        break;
 	     case this.LISTEN_ITEM:
-	     	newState = {...state, listeningItem: action.object}; 
+	     	newState = {...state, listeningItem: action.params}; 
 	     	break;
 	     case this.OFF_LISTEN_ITEM:
 	     	newState = {...state, listeningItem: null};
 	     	break;
-	       case this.LISTEN_TOTALI:
-	     	newState = {...state, listeningTotali: action.object}; 
-	     	break;
-	     case this.OFF_LISTEN_TOTALI:
-	     	newState = {...state, listeningTotali: null};
-	     	break;	
+
+
+	     case this.ADD_ITEM:
+	     case this.DELETE_ITEM:
+	     case this.CHANGE_ITEM:
+	     	newState =  {...state, staleTotali: true, lastActionKey : action.key}
+	    	break;
 	     	
-	     
 		 case this.ADDED_ITEM:
 		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
 	    	break;
@@ -216,6 +243,12 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   	case this.RESET_TABLE:
 	   		newState = {...state, itemsArray: [], itemsArrayIndex: {} }
             break;
+         case this.RESET:
+   	    //Trucchismo.... salvo l'altezza della tabella
+   	    const tableHeight = state.tableHeight;
+      	newState =  {...initialState(), tableHeight: tableHeight};
+		break;
+    
 
 	    	default:
         		newState =  state;

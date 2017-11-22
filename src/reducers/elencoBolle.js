@@ -3,7 +3,7 @@ import FormReducer from '../helpers/formReducer'
 import moment from 'moment';
 import 'moment/locale/it';
 
-import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem} from '../helpers/form';
+import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, moment2period} from '../helpers/form';
 
 import {SET_READ_ONLY_BOLLA_FORM, RESET_ELENCOBOLLE, SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
 import {STORE_MEASURE} from '../actions';
@@ -44,7 +44,7 @@ const initialState = () => {
 			itemsArrayIndex: {},
 		    tableScroll: false,
 			tableHeight:0,
-			period: moment(),
+			period: moment2period(moment()),
 			listeningItem: null,
 			editedItem: {...editedItemInitialState()}
 	    	}

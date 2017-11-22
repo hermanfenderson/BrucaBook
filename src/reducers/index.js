@@ -40,6 +40,7 @@ export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)
 export const getListeningTotaliBolla = (state) => {return fromBolla.getListeningTotaliBolla(state.bolla)};
 export const getListeningTestataBolla = (state) => {return fromBolla.getListeningTestataBolla(state.bolla)};
 export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
+export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
 
 
 //Scene ElencoBolle

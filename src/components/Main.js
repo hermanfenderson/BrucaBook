@@ -26,8 +26,8 @@ const Main= (props) =>
 	return( 					<Switch>
       									<Route exact path='/' component={RequireAuth(Home)}/>
       									
-    									<Route path='/bolla/:id' component={RequireAuth(GestioneBolla)}/>
-    									<Route exact path='/acquisti' component={RequireAuth(ElencoBolle)}/>
+    									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
+    									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>
 		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
     					      			<Route path="/login" component={Login} />
 						    			<Route path="/signup" component={Signup} />

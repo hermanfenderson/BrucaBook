@@ -87,7 +87,7 @@ const WrapGeneric = (props) =>
         		label={props.label}>
         	<InputComponent value={props.formValues[field]} 
         	       onChange={onChangeInput} 
-        	       readOnly={props.readOnlyForm || props.readOnly}
+        	       disabled={props.readOnlyForm || props.readOnly}
         	       ref={input => { input && setFocus && setFocus(input,props.field)}}
         	       {...otherProps}
         	       />

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import WrappedForm from '../../../components/WrappedForm'
+import {period2month, moment2period} from '../../../helpers/form'
 
 class FormBolla extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -11,11 +12,11 @@ onSubmit = (e) => {
 	e.preventDefault();
 	//Qui devo fare reload della pagina verso la riga bolla...
 	if (this.props.readOnlyForm) {
-		this.props.history.push('/bolla/' + this.props.editedBolla.selectedItem.key);
+		this.props.history.push('/bolla/' + period2month(this.props.period) + '/' + this.props.editedBolla.selectedItem.key);
 	}
 	//Elemento radice: il parametro del punto di destinazione è oggetto vuoto...
 	
-	else this.props.submitEditedBolla(this.props.editedBolla.isValid, this.props.editedBolla.selectedItem, {}, this.props.editedBolla.values); //Per sapere cosa fare... dopo
+	else this.props.submitEditedBolla(this.props.editedBolla.isValid, this.props.editedBolla.selectedItem, moment2period(this.props.editedBolla.values.dataDocumento), this.props.editedBolla.values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {
@@ -38,7 +39,7 @@ componentWillMount = () =>
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
         <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 8}} />
         <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 8}} />
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
         <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
        </WrappedForm.Group>
         

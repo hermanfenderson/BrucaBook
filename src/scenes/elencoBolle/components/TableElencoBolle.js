@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
+import React, {Component} from 'react';
+import WrappedTable from '../../../components/WrappedTable';
+import {isEqual} from '../../../helpers/form';
 import {Modal} from 'antd';
 
 
@@ -17,23 +18,23 @@ const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
 
 
 
-class TableBolla extends Component 
+class TableElencoBolle extends Component 
     {
     periodMount = () => {
-    	var currentListenedObj = this.props.listeningPeriod;
+    	var currentListened = this.props.listeningPeriod;
     		//Ascolto modifiche sulle bolle... devo passare anno (voglio sentire un anno intero per ora. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
-    	if (!currentListenedObj) 
-    		{   
-    			this.props.listenBolla({anno: this.props.period.anno, mese: this.props.period.mese});
+    	if (!currentListened) 
+    		{   	
+    			this.props.listenBolla(this.props.period);
     		}
     	else 
     		{
-    			if ((currentListenedObj.anno !== this.props.period.anno ) || (currentListenedObj.mese !== this.props.period.mese ))
+    			if (!isEqual(currentListened,this.props.period))
     				{
-    				    this.props.offListenBolla({currentListenedObj});
+    				    this.props.offListenBolla(currentListened);
     				    this.props.resetTable();
-    					this.props.listenBolla({anno: this.props.period.anno, mese: this.props.period.mese});
-    					
+    					this.props.listenBolla(this.props.period);
+ 
     				}
     		}
     }
@@ -49,7 +50,7 @@ class TableBolla extends Component
 	
 	
 	deleteRow = (row) => {
-	   const deleteBolla = () => {this.props.deleteBolla({'itemId':row.key}, row);};
+	   const deleteBolla = () => {this.props.deleteBolla(row.key, row, 'dataDocumento');};
 	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
     		title: 'La bolla non è vuota. Vuoi elminarla?',
     		content: 'La bolla non è vuota: se premi OK cancelli anche tutti i libri che contiene.',
@@ -87,5 +88,5 @@ class TableBolla extends Component
 			)}
     }		
 	
-export default TableBolla;
+export default TableElencoBolle;
 
