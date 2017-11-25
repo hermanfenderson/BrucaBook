@@ -7,6 +7,9 @@ import Home from './Home';
 import Signup from '../scenes/signup';
 import Login from '../scenes/login';
 import ElencoBolle from '../scenes/elencoBolle';
+import ElencoCasse from '../scenes/elencoCasse';
+import Scontrino from '../scenes/scontrino';
+
 import GestioneBolla from '../scenes/bolla';
 //import GestioneScontrino from '../containers/GestioneScontrino';
 //        		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
@@ -28,6 +31,8 @@ const Main= (props) =>
       									
     									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
     									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>
+    									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
+		        					    <Route path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
     					      			<Route path="/login" component={Login} />
 						    			<Route path="/signup" component={Signup} />

@@ -147,7 +147,7 @@ exports.inserisciRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bo
     		}
           ); 
 
-exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/righe/{keyRiga}')
+exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/{keyRiga}')
     .onUpdate(event =>
     		{
     			const key =event.params.keyRiga;
@@ -162,7 +162,7 @@ exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
     		}
           ); 
 
-exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/righe/{keyRiga}')
+exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/{keyRiga}')
     .onDelete(event =>
     		{
     			const key = event.params.keyRiga;

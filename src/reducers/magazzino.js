@@ -49,6 +49,8 @@ export default function elencoBolle(state = initialState(), action) {
 //Questi rimarranno identici in tutti i casi... Posso migliorare queste ripetizioni inutili?
  export const getItems = (state) => {return state.itemsArray};  
  export const getTableHeight = (state) => {return state.tableHeight};
+ export const getListeningItem = (state) => {return state.listeningItem};
+ 
 
       
 

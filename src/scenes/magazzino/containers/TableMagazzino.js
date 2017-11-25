@@ -1,7 +1,7 @@
 import TableMagazzinoComponent from '../components/TableMagazzino'
 import {magazzinoFA} from '../../../actions/magazzino'
 
-import {getMagazzino, getTableMagazzinoHeight} from '../../../reducers'
+import {getMagazzino, getTableMagazzinoHeight, getListeningMagazzino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -10,7 +10,7 @@ const offListenMagazzino = magazzinoFA.offListenItem;
 
 
 const mapStateToProps = (state) => {
-	return ({data: getMagazzino(state),  height: getTableMagazzinoHeight(state)})
+	return ({data: getMagazzino(state),  height: getTableMagazzinoHeight(state), listening: getListeningMagazzino(state)})
 }
  
 

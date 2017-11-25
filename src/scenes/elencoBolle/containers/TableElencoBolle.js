@@ -1,5 +1,5 @@
 import TableElencoBolleComponent from '../components/TableElencoBolle'
-import {bollaFA, setReadOnlyBollaForm} from '../../../actions/elencoBolle'
+import {bollaFA} from '../../../actions/elencoBolle'
 
 import {getEditedBolla, getElencoBolle, getTableElencoBolleHeight, getTableElencoBolleScroll} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -11,8 +11,7 @@ const offListenBolla = bollaFA.offListenItem;
 const deleteBolla = bollaFA.deleteItem;
 const toggleTableScroll = bollaFA.toggleTableScroll;
 const resetTable = bollaFA.resetTable;
-const setReadOnlyForm = setReadOnlyBollaForm;
-
+const setReadOnlyForm = bollaFA.setReadOnlyForm;
 
 const mapStateToProps = (state) => {
 	return ({data: getElencoBolle(state), tableScroll: getTableElencoBolleScroll(state), height: getTableElencoBolleHeight(state), selectedItem: getEditedBolla(state).selectedItem})

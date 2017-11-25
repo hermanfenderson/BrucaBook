@@ -7,35 +7,37 @@ import {isValidEAN} from './ean';
 import {isComplete} from './catalog';
 import moment from 'moment';
 
-export const editedItemInitialState = (editedItemValuesInitialState, 
-									   errors={}, 
-									   errorMessages={}, 
-									   isValid=false, 
-									   selectedItem=null, 
-									   loading=false, 
-									   readOnlyForm= false,
-									   willFocus= 'ean', 
-									   eanState='BLANK',
-									   ) => {
+
+
+export const editedItemInitialState = (editedItemValuesInitialState, initOverrides) =>
+{
+	return {
+		 values:{...editedItemValuesInitialState},
+		 errors:{}, 
+		 errorMessages:{}, 
+		 isValid:false, 
+		 selectedItem:null, 
+		 loading:false, 
+		 readOnlyForm: false,
+		 willFocus: 'ean', 
+		 eanState: 'BLANK',
+		 ...initOverrides
+	}
+}
+
+export const initialState = (editedItemInitialState, extraInitialState) =>
+{   const initOverrides = {...extraInitialState};
+	return {
+			itemsArray: [],
+			itemsArrayIndex: {},
+		    tableScroll: false,
+			tableHeight:0,
+			listeningItem: null,
+			editedItem: editedItemInitialState,
+			...initOverrides
+	    	}
 	
- //La form viene gestita con uno stato di validità generale... isValid
- //errors è un oggetto con chiavi uguali ai campi e uno per il form in se..
- //ha codici di errore non parlanti...
- 
- //errorMessages è identico ad errors ma contiene SOLO gli errori da mostrare...
- //entrambe le strutture vengono calcolate ad ogni change...
- 
-	return { values:{...editedItemValuesInitialState},
-			errors: errors,
-			errorMessages: errorMessages,
-			isValid: isValid,
-			selectedItem: selectedItem,
-			loading: loading,
-			willFocus: willFocus,
-			readOnlyForm: readOnlyForm,
-			eanState: eanState,
-			};
-}	
+}
 
 //Passo il pezzo di stato e copio deep anzichè shallow per sicurezza
 export const editedItemCopy = (editedItem) => {

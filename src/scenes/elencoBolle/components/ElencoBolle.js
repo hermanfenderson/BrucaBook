@@ -11,10 +11,9 @@ import { Row, Col, DatePicker, Form} from 'antd'
 const {MonthPicker} = DatePicker;
 
 
-
 class ElencoBolle extends Component {
 componentDidMount() {
-    	this.props.storeMeasure('formBollaHeight', ReactDOM.findDOMNode(this.refs.formBolla).clientHeight);
+    	if (ReactDOM.findDOMNode(this.refs.formBolla)) this.props.storeMeasure('formBollaHeight', ReactDOM.findDOMNode(this.refs.formBolla).clientHeight);
     	this.props.setHeaderInfo('Acquisti');
     	
  }
@@ -22,18 +21,27 @@ componentDidMount() {
   	
 //Rimosso il reset da qui... non mi serve mai resettare visto che non ho casi ambigui...devo solo resettare la riga selezionata
  componentWillMount() {
-  this.props.setSelectedBolla(null);
+ 	
+ if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoBolle(period2moment(this.props.period));
+	
+ // this.props.setSelectedBolla(null);
 }
+
+
 
 render()
 {
-if (!isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese])) 
+if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese])) 
 	{
 		
-    const url = '/acquisti/'+period2month(this.props.period);	
-  return(<Redirect to={url} />)
+    const url = this.props.period ? '/acquisti/'+period2month(this.props.period) : '/acquisti/'+period2month([this.props.match.params.anno, this.props.match.params.mese]);	
+     return(<Redirect to={url} />)
    }
-else  return (
+else  
+{
+if (!isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoBolle(period2moment([this.props.match.params.anno, this.props.match.params.mese]));
+	
+return (
  <div>	
   <Row>
       <Col style={{'marginTop': '100px'}} span={4}>
@@ -57,6 +65,7 @@ else  return (
  
 )
 }
-
 }
+}
+
 export default ElencoBolle;

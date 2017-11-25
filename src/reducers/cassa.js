@@ -30,7 +30,11 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{});
+    const extraState = {
+						totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
+  	
+    				}
+	return initialStateHelper(eiis,extraState);
     }
     
 

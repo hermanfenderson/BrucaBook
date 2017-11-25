@@ -7,7 +7,7 @@ import 'moment/locale/it';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
 
 
-import {SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
+import {SET_PERIOD_ELENCOCASSE} from '../actions/elencoCasse';
 import {STORE_MEASURE} from '../actions';
 
 
@@ -16,14 +16,12 @@ moment.locale("it");
 //Metodi reducer per le Form
 
 const editedBollaValuesInitialState = 
-	  {			riferimento: '',
-				fornitore: '',
-				dataDocumento: moment(),
-				dataCarico: moment()	
+	  {			cassa: '1',
+				dataCassa: moment(),
 	};
 
 const editedItemInitialState = () => {
-	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {} ));
+	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {isValid:true} ));
 }
 
 
@@ -39,18 +37,17 @@ const initialState = () => {
     
 
 
-const transformEditedBolla = (row) =>
-{   row.dataDocumento = moment(row.dataDocumento).format("L");
-	row.dataCarico = moment(row.dataCarico).format("L");
+const transformEditedCassa = (row) =>
+{   row.dataCassa = moment(row.dataCassa).format("L");
 }	
+
 
 const transformSelectedItem = (cei) =>
 {
-	cei.dataDocumento = moment(cei.dataDocumento,"DD/MM/YYYY");
-	cei.dataCarico = moment(cei.dataCarico,"DD/MM/YYYY");
-}
+	cei.dataCassa = moment(cei.dataCassa,"DD/MM/YYYY");
+	}
 
-const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem); 
+const bollaR = new FormReducer('ELENCOCASSE',null, transformEditedCassa, transformSelectedItem); 
 
     
  
@@ -58,18 +55,16 @@ const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transfo
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformAndValidateEditedBolla(cei, name, value)
+function transformAndValidateEditedCassa(cei, name, value)
 {  	
 	cei.values[name] = value;
 
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
    
-   errMgmt(cei, 'riferimento','required','Campo obbligatorio',  (cei.values.riferimento.length === 0), false);
-   errMgmt(cei, 'fornitore','required','Campo obbligatorio',  (cei.values.fornitore.length === 0), false);
-   errMgmt(cei, 'dataDocumento','invalidDate','Data non valida',  (!cei.values.dataDocumento.isValid()));
-    errMgmt(cei, 'dataCarico','invalidDate','Data non valida',  (!cei.values.dataCarico.isValid()));
-   
+   errMgmt(cei, 'cassa','required','Campo obbligatorio',  (cei.values.cassa.length === 0), false);
+   errMgmt(cei, 'dataCassa','invalidDate','Data non valida',  (!cei.values.dataCassa.isValid()));
+    
    	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
@@ -78,7 +73,7 @@ function transformAndValidateEditedBolla(cei, name, value)
 
 
 
-export default function elencoBolle(state = initialState(), action) {
+export default function elencoCasse(state = initialState(), action) {
   var newState;
   switch (action.type) {
    
@@ -87,14 +82,14 @@ export default function elencoBolle(state = initialState(), action) {
     case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -100;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formCassaHeight'] -100;
    	    newState = {...state, tableHeight: height};
         break;  
-     case SET_PERIOD_ELENCOBOLLE:
+     case SET_PERIOD_ELENCOCASSE:
         newState = {...state, period: action.period};
         break;
     default:
-        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedBolla);
+        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa);
         //newState =  state;
     	break;
    

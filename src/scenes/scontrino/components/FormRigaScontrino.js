@@ -1,33 +1,46 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
 
-class FormRigaBolla extends Component {
+class FormRigaScontrino extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
+/*
 onChange = (name, value) => {
-	   	this.props.changeEditedRigaBolla(name, value)};
+	   	this.props.changeEditedRigaScontrino(name, value)};
 		
 onSubmit = (e) => {
 	e.preventDefault();
-    const values =  {...this.props.editedRigaBolla.values, 'data': this.props.testataBolla.dataCarico};
+    const values =  {...this.props.editedRigaScontrino.values, 'data': this.props.testataScontrino.dataScontrino};
     let params = this.props.period;
     params.push(this.props.idBolla);
     	   
-	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values); //Per sapere cosa fare... dopo
+	this.props.submitEditedRigaScontrino(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {
-	this.props.resetEditedRigaBolla();
+	this.props.resetEditedRigaScontrino();
 }
+*/
 
 
 
   render() {
+  	/*
   	const formValues = this.props.editedRigaBolla.values;
   	const errorMessages = this.props.editedRigaBolla.errorMessages;
   	const willFocus = this.props.editedRigaBolla.willFocus;
   	const prezzoMan = formValues['manSconto'];
   	const loading = this.props.editedRigaBolla.loading;
   	const readOnlyEAN = ((this.props.editedRigaBolla.selectedItem !== null) || (this.props.editedRigaBolla.eanState === 'PARTIAL'))
+  	*/
+  	const formValues = {};
+  	const errorMessages = {}
+  	const willFocus = null;
+  	const prezzoMan = true;
+  	const loading = false;
+  	const readOnlyEAN = false;
+  	//Tolta da sotto per il mock
+  	//<WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:4}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
@@ -39,23 +52,20 @@ resetForm = () => {
        </WrappedForm.Group>
         
         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} formColumnLayout={{span:2}}  />
-        <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} formColumnLayout={{span:2}} />
-        <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} formColumnLayout={{span:2}} />
-        <WrappedForm.Checkbox formColumnLayout={{span:2}} field='manSconto' label='Man.'/>
+        <WrappedForm.Input field='sconto' label='Sconto' disabled={prezzoMan} formColumnLayout={{span:4}}  />
+        <WrappedForm.Checkbox formColumnLayout={{span:4}} field='manSconto' label='Man.'/>
         
-        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:4}} />
-        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:3}}/>
-        <WrappedForm.Input field='gratis' label='Gratis' formColumnLayout={{span:3}}/>
+        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:5}} />
+        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:5}}/>
         <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:6}} formItemLayout={{wrapperCol: { offset: 2, span: 22 }}}/>
     
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:16}} >
-         <WrappedForm.GeneralError  formColumnLayout={{span:16}}/>
+         <WrappedForm.GeneralError  formColumnLayout={{span:14}}/>
        
-        <WrappedForm.Button type={'button'} formColumnLayout={{span:4}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.Button type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:4}}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:5}}>{(true)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
         
         
        
@@ -64,4 +74,4 @@ resetForm = () => {
     )
   }
 }
-export default FormRigaBolla;
+export default FormRigaScontrino;

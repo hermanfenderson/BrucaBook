@@ -4,6 +4,8 @@ import AuthReducer, * as fromAuth from './auth';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
+import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
+
 import LoginReducer, * as fromLogin from './login';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
 import MeasuresReducer from './measures';
@@ -15,6 +17,7 @@ const rootReducer = combineReducers({
   auth: AuthReducer,
   bolla: BollaReducer,
   elencoBolle: ElencoBolleReducer,
+  elencoCasse: ElencoCasseReducer,
   login: LoginReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
@@ -52,6 +55,15 @@ export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadO
 export const getPeriod = (state) => {return fromElencoBolle.getPeriod(state.elencoBolle)};
 export const getListeningItem = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
 
+//Scene ElencoCasse
+export const getElencoCasse = (state) => {return fromElencoCasse.getItems(state.elencoCasse)};
+export const getEditedCassa = (state) => {return fromElencoCasse.getEditedItem(state.elencoCasse)};
+export const getTableElencoCasseHeight = (state) => {return fromElencoCasse.getTableHeight(state.elencoCasse)};
+export const getTableElencoCasseScroll = (state)  => {return fromElencoCasse.getTableScroll(state.elencoCasse)};
+export const getReadOnlyFormCassa = (state)  => {return fromElencoCasse.getReadOnlyForm(state.elencoCasse)};
+export const getPeriodElencoCasse = (state) => {return fromElencoCasse.getPeriod(state.elencoCasse)};
+export const getListeningItemElencoCasse = (state) => {return fromElencoCasse.getListeningItem(state.elencoCasse)};
+
 
 
 //Scene Catalogo
@@ -63,6 +75,7 @@ export const getEditedItemLogin = (state) => {return fromLogin.getEditedItem(sta
 //Scene Magazzino
 export const getMagazzino = (state) => {return fromMagazzino.getItems(state.magazzino)};
 export const getTableMagazzinoHeight = (state) => {return fromMagazzino.getTableHeight(state.magazzino)};
+export const getListeningMagazzino = (state) => {return fromMagazzino.getListeningItem(state.magazzino)};
 
 
 //Scene Signup

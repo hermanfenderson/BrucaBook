@@ -1,7 +1,6 @@
 //Questo helper genera azioni data una "scene"
 //action per il form Rigabolla
 
-import moment from 'moment';
 
 import {addCreatedStamp,addChangedStamp} from './firebase';
 import Firebase from 'firebase';
@@ -51,6 +50,7 @@ this.LISTEN_TESTATA='LISTEN_TESTATA_'+scene;
 this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
 this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
 
+this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
 
 
 this.itemsUrl = itemsUrl;
@@ -98,6 +98,12 @@ return function(dispatch, getState) {
 						      		)
 	   
   }
+}
+
+
+this.setReadOnlyForm = () =>
+{
+	return ({'type': this.SET_READ_ONLY_FORM});
 }
 
 
@@ -345,7 +351,7 @@ this.offListenItem = (params) =>
 //Modifico queste tre per tornare al reducer l'ultima chiave toccata...o ancora meglio riscrivo per coerenza con altri metodi...
 
 //Disattivata la componente che opera sul magazzino...
-this.aggiungiItem = (params,valori) => {
+this.aggiungiItem = (params, valori) => {
   const typeAdd =  this.ADD_ITEM;
  	
   var nuovoItem = {...valori};
@@ -368,16 +374,16 @@ this.aggiungiItem = (params,valori) => {
 }
 
 //Idem...
-this.aggiornaItem = (params,valori) => {
+this.aggiornaItem = (params,itemId, valori) => {
     const typeChange = this.CHANGE_ITEM;
  	
     var nuovoItem = {...valori};
       addChangedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
-    const itemUrl = this.itemUrl;
+    const itemsUrl = this.itemsUrl;
       return function(dispatch,getState) {
 
-    const ref  = Firebase.database().ref(urlFactory(getState,itemUrl, params));
+    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
     ref.update(nuovoItem);
     dispatch(
    	{
@@ -391,34 +397,18 @@ this.aggiornaItem = (params,valori) => {
 
 
 
-//Ripristinata a prima del magazzino... ORA NON PUO' FUNZIONARE!!!
 
-this.deleteItem = (params, valori, dataFieldName) => {
-var anno;
-var mese;
-var urlObject;
+this.deleteItem = (params, itemId) => {
 const typeDelete = this.DELETE_ITEM;
 const itemsUrl = this.itemsUrl;
-const periodoUrl = this.periodoUrl;
 
 
- 
-  if (dataFieldName)
-	{
-   	anno=moment(valori[dataFieldName], "DD/MM/YYYY").year();
-	mese=moment(valori[dataFieldName], "DD/MM/YYYY").month()+1;
-	}
-  //var urlObjectPeriod = dataFieldName ? {...urlObject, 'anno': anno, 'mese': mese} : {...urlObject}; //Lo persisto  anche nella bolla singola
   return function(dispatch, getState) {
-    if (dataFieldName) 
-		{Firebase.database().ref(urlFactory(getState,periodoUrl,params)).remove();
-		Firebase.database().ref(urlFactory(getState,itemsUrl, [anno,mese], params)).remove();
-		}
-	else Firebase.database().ref(urlFactory(getState,itemsUrl, null, params)).remove();
+    Firebase.database().ref(urlFactory(getState,itemsUrl,params, itemId)).remove();
      dispatch(
 					{
    					type: typeDelete,
-   					key: valori.key
+   					key: itemId
    					}
    					)   
     };
@@ -460,16 +450,15 @@ this.changeEditedItem = (name,value) => {
 //this.submitEditedItem = (isValid, bollaId, valori, selectedItem) => {
 
 
-this.submitEditedItem = (isValid,selectedItem,urlObject,valori) => {
+this.submitEditedItem = (isValid,selectedItem,params,valori) => {
 	      const type = this.SUBMIT_EDITED_ITEM;
 	      const aggiornaItem = this.aggiornaItem;
 	      const aggiungiItem = this.aggiungiItem;
-	      const urlObj=urlObject;
-	      if (selectedItem) urlObj['itemId'] = selectedItem.key;
+	      const itemId = selectedItem ? selectedItem.key : null;
 	      return function(dispatch, getState) {
 			dispatch({type: type});
-			if (selectedItem && isValid) dispatch(aggiornaItem(urlObj,valori));
-			else if(isValid) dispatch(aggiungiItem(urlObj,valori));
+			if (selectedItem && isValid) dispatch(aggiornaItem(params, itemId, valori));
+			else if(isValid) dispatch(aggiungiItem(params,valori));
 	      }
 	}
 	

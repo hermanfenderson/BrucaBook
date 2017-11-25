@@ -21,6 +21,8 @@ this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+scene;
 this.RESET_EDITED_CATALOG_ITEM = 'RESET_EDITED_CATALOG_ITEM_'+scene;
 this.SUBMIT_EDITED_CATALOG_ITEM = 'SUBMIT_EDITED_CATALOG_ITEM_'+scene;
 
+this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
+
 this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+scene;
 this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
 this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
@@ -58,7 +60,15 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	{ var newState;
 		switch(action.type)
 		{
-			
+	
+		case this.SET_READ_ONLY_FORM:
+		{let cei = editedItemCopy(state.editedItem);
+		cei.readOnlyForm=true;
+		newState = {...state, editedItem: cei };
+		}
+		break;
+
+ 		
 	case this.TESTATA_CHANGED:
    	   if (action.payload) 
    		{   
@@ -108,7 +118,12 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
          
      case this.FOUND_CATALOG_ITEM:
      case this.FOUND_CLOUD_ITEM:
-          newState = {...state, editedItem: this.foundCompleteItem(state.editedItem, action)};
+     	{
+     	let cei = editedItemCopy(state.editedItem);
+     	cei.loading = false;
+        cei.eanState = 'COMPLETE';
+           newState = {...state, editedItem: this.foundCompleteItem(cei, action)};
+     	}
           break;
           
         
