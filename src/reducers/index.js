@@ -9,6 +9,7 @@ import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
 import LoginReducer, * as fromLogin from './login';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
 import MeasuresReducer from './measures';
+import ScontrinoReducer, * as fromScontrino from './scontrino';
 import SignupReducer, * as fromSignup from './signup';
 import StatusReducer, * as fromStatus from './status';
 
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   login: LoginReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
+  scontrino: ScontrinoReducer,
   signup: SignupReducer,
   catalogo: CatalogoReducer,
   status: StatusReducer
@@ -64,6 +66,19 @@ export const getReadOnlyFormCassa = (state)  => {return fromElencoCasse.getReadO
 export const getPeriodElencoCasse = (state) => {return fromElencoCasse.getPeriod(state.elencoCasse)};
 export const getListeningItemElencoCasse = (state) => {return fromElencoCasse.getListeningItem(state.elencoCasse)};
 
+//Scene Scontrino
+export const getTotaliScontrino = (state) => {return fromScontrino.getTotali(state.scontrino)};
+export const getRigheScontrino = (state) => {return fromScontrino.getItems(state.scontrino)};
+export const getEditedRigaScontrino = (state) => {return fromScontrino.getEditedItem(state.scontrino)};
+export const getTestataScontrino = (state) => {return fromScontrino.getTestataScontrino(state.scontrino)};
+export const getShowCatalogModalScontrino = (state) => {return fromScontrino.getShowCatalogModal(state.scontrino)};
+export const getTableHeightScontrino = (state) => {return fromScontrino.getTableHeight(state.scontrino)};
+export const getTableScrollScontrino = (state)  => {return fromScontrino.getTableScroll(state.scontrino)};
+export const getMeasuresScontrino = (state) => {return fromScontrino.getMeasures(state.scontrino)};
+export const getListeningTotaliScontrino = (state) => {return fromScontrino.getListeningTotaliScontrino(state.scontrino)};
+export const getListeningTestataScontrino = (state) => {return fromScontrino.getListeningTestataScontrino(state.scontrino)};
+export const getListeningItemScontrino = (state) => {return fromScontrino.getListeningItemScontrino(state.scontrino)};
+export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTotali(state.scontrino)};
 
 
 //Scene Catalogo

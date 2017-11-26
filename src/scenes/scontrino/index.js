@@ -22,5 +22,5 @@ Contiene:
 Ho tre colonne suddivise ciascuna in due righe (altezze variabili?)
 */
 
-import Scontrino from './components/Scontrino'; //Contenuto statico per ora...
+import Scontrino from './containers/Scontrino';
 export default Scontrino;

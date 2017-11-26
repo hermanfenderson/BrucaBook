@@ -18,7 +18,7 @@ function preparaItem(riga)
 
 
 //METODI DEL FORM
-export const scontrinoFA = new FormActions(SCENE, preparaItem, 'righeScontrino','righeElencoScontrini');
+export const rigaScontrinoFA = new FormActions(SCENE, preparaItem, 'righeScontrino','righeElencoScontrini');
 
 //Se devo fare override.... definisco metodi alternativi qui...
 

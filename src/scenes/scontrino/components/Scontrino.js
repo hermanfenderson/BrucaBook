@@ -1,9 +1,9 @@
-/*
-import TableBolla from '../containers/TableBolla';
-import FormRigaBolla from '../containers/FormRigaBolla';
-import TotaliBolla from '../components/TotaliBolla';
+
+import TableScontrino from '../containers/TableScontrino';
+import FormRigaScontrino from '../containers/FormRigaScontrino';
+import TotaliScontrino from '../components/TotaliScontrino';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
-*/
+
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
@@ -11,70 +11,74 @@ import moment from 'moment';
 import 'moment/locale/it';
 
 import { Row, Col,  Modal, Spin} from 'antd'
-import FormRigaScontrino from '../components/FormRigaScontrino';
 
 
 class Scontrino extends Component {
-/*
+
  componentDidMount() {
-    	this.props.storeMeasure('formRigaBollaHeight', ReactDOM.findDOMNode(this.refs.formRigaBolla).clientHeight);
+    	this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
     
     	
  }
  
  componentWillMount() {
- var currentIdBolla = null; 
- if (this.props.listeningTestataBolla) currentIdBolla = this.props.listeningTestataBolla.bollaId;
- if (this.props.match.params.id !== currentIdBolla)	
+ var currentIdScontrino = null; 
+ if (this.props.listeningTestataScontrino) currentIdScontrino = this.props.listeningTestataScontrino.scontrinoId;
+ if (this.props.match.params.scontrino !== currentIdScontrino)	
 	{   //Faccio reset... tranne la prima volta...
-		if (currentIdBolla) 
-			{this.props.resetBolla(this.props.match.params.id);
-			 this.props.unlistenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], currentIdBolla);
+		if (currentIdScontrino) 
+			{this.props.resetScontrino(this.props.match.params.scontrino);
+			 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  currentIdScontrino);
 			} 
-		this.props.listenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...
+		this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto...
 	}
 		
  }
  
 componentDidUpdate() {
-		const riga = this.props.testataBolla;
-	if (riga) this.props.setHeaderInfo("Acquisti - Doc. " + riga.riferimento + ' ' 
+		const riga = this.props.testataScontrino;
+	//Da mettere a posto
+	if (riga) this.props.setHeaderInfo("Cassa - Doc. " + riga.riferimento + ' ' 
 				          						+ riga.fornitore + ' del ' + moment(riga.dataDocumento).format("L"));
 }
 
 resetEditedCatalogItem = () => {
-	this.props.resetEditedCatalogItem('BOLLA');
+	this.props.resetEditedCatalogItem('SCONTRINO');
 } 
 
 submitEditedCatalogItem = (e) => {
 	e.preventDefault();
-	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, 'BOLLA'); //Per sapere cosa fare... dopo
+	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, 'SCONTRINO'); //Per sapere cosa fare... dopo
   }
  
-*/
 
 render()
 {
   const period = [this.props.match.params.anno, this.props.match.params.mese];
 return (
+<Spin spinning={!this.props.testataScontrino}>	
+ 	
   <Row>
-  <Col span={6}>
+  <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
+		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
+    </Modal>  
+  <Col span={5}>
 	<Row>Totali cassa + Pulldown
 	</Row>
 	<Row>Immagine
 	</Row>
   </Col>
-  <Col span={12}>
+  <Col span={14}>
     <Row style={{'backgroundColor': 'white'}}>
-    <FormRigaScontrino period={this.props.period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+    <FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} ref='formRigaScontrino'/>
     </Row>
     <Row>
-    Table Scontrino
+    <TableScontrino  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
     </Row>
   </Col>
-  <Col span={6}>
+  <Col span={5}>
 	<Row> 
-		Totali scontrino
+		<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
 	</Row>
 	<Row>
 		Selezioni testata
@@ -82,6 +86,7 @@ return (
   </Col>
    
   </Row>
+  </Spin>
   )
   
 /*  

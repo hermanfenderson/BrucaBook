@@ -32,7 +32,9 @@ const Main= (props) =>
     									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
     									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
-		        					    <Route path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
+		        					     <Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
+		        					
+		        					    <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
     					      			<Route path="/login" component={Login} />
 						    			<Route path="/signup" component={Signup} />
