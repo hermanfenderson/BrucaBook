@@ -18,6 +18,7 @@ moment.locale("it");
 const editedBollaValuesInitialState = 
 	  {			cassa: '1',
 				dataCassa: moment(),
+				ultimoScontrino: 0
 	};
 
 const editedItemInitialState = () => {
