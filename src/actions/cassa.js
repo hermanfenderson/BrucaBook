@@ -2,7 +2,7 @@ import {FormActions} from '../helpers/formActions';
 import Firebase from 'firebase';
 import {urlFactory} from '../helpers/firebase';
 import { browserHistory } from 'react-router';
-
+import moment from 'moment';
 export const SCENE = 'CASSA';
 
 
@@ -32,6 +32,7 @@ cassaFA.aggiungiItem = (params, valori) => {
 	const cassa = params[2];
 	var numero = null;
 	var dataCassa = null;
+	var oraScontrino = null;
 		
 	return function(dispatch,getState) 
 	   {
@@ -42,12 +43,17 @@ cassaFA.aggiungiItem = (params, valori) => {
     			cassa.ultimoScontrino++;
     			numero = cassa.ultimoScontrino;
     			dataCassa = cassa.dataCassa;
+    			oraScontrino = moment(dataCassa);
+    			oraScontrino.hour(moment().hour());
+    			oraScontrino.minute(moment().minute());
+    			console.log(oraScontrino);
     			}
     		return cassa;
 			}).then(function(success) {
 			
 			valori.numero = numero;
 			valori.dataCassa = dataCassa;
+			valori.oraScontrino = oraScontrino.valueOf();
 			const typeAdd =  cassaFA.ADD_ITEM;
 			var nuovoItem = {...valori};
 			const toggleTableScroll = cassaFA.toggleTableScroll;

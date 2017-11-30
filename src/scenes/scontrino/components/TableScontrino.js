@@ -21,7 +21,7 @@ class TableScontrino extends Component
     	   {
     	   	if (currentListenedIdScontrino) 
     	   		{
-    	   			let params = this.props.period;
+    	   			let params = [...this.props.period];
     	   			params.push(this.props.cassa)
     	   			params.push(currentListenedIdScontrino);
     

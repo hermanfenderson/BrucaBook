@@ -3,6 +3,8 @@ import TableScontrino from '../containers/TableScontrino';
 import TableCassa from '../containers/TableCassa';
 
 import FormRigaScontrino from '../containers/FormRigaScontrino';
+import FormTestataScontrino from '../containers/FormTestataScontrino';
+
 import TotaliScontrino from '../components/TotaliScontrino';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import TestataCassa from '../components/TestataCassa';
@@ -21,7 +23,7 @@ import { Row, Col,  Modal, Spin} from 'antd'
 class Scontrino extends Component {
 
  componentDidMount() {
-    	this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
+    if (ReactDOM.findDOMNode(this.refs.formRigaScontrino))	this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
     
     	
  }
@@ -55,10 +57,14 @@ class Scontrino extends Component {
  }
  
 componentDidUpdate() {
-		const riga = this.props.testataScontrino;
+		const scontrino = this.props.testataScontrino;
+		const cassa = this.props.testataCassa;
 	//Da mettere a posto
-	if (riga) this.props.setHeaderInfo("Cassa - Doc. " + riga.riferimento + ' ' 
-				          						+ riga.fornitore + ' del ' + moment(riga.dataDocumento).format("L"));
+	    var header = "Cassa ";
+	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");
+	if (scontrino) header = header + ' - scontrino n. ' + scontrino.numero;
+	
+	this.props.setHeaderInfo(header);
 }
 
 resetEditedCatalogItem = () => {
@@ -90,7 +96,7 @@ else return (
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
-  <Col span={5}>
+  <Col span={7}>
 	<Row>
 	<TestataCassa submitRigaCassa={this.submitRigaCassa}  testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
 	</Row>
@@ -112,12 +118,12 @@ else return (
     </Row>
     </Spin>
   </Col>
-  <Col span={5}>
+  <Col span={3}>
 	<Row> 
 		<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
 	</Row>
 	<Row>
-		Selezioni testata
+		<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}  ref='formTestataScontrino'/>
 	</Row>
   </Col>
    

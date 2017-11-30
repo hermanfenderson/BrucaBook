@@ -3,7 +3,7 @@ import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
-
+import moment from 'moment';
 
 const editedRigaCassaValuesInitialState = 
 	  {			numeroScontrino: 1,
@@ -24,14 +24,19 @@ const initialState = () => {
 	return initialStateHelper(eiis,extraState);
     }
     
+    
+const transformSelectedItem = (cei) =>
+{
+	cei.oraScontrino = moment(cei.oraScontrino);
 
+}
 
 
 
  
     
 //Metodi reducer per le Form
-const rigaCassaR = new FormReducer('CASSA', null, null, null, initialState); 
+const rigaCassaR = new FormReducer('CASSA', null, null, transformSelectedItem, initialState); 
 
 
 

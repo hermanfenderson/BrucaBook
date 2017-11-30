@@ -19,13 +19,13 @@ class TableCassa extends Component
     	   {
     	   	if (currentListenedIdCassa) 
     	   		{
-    	   			let params = this.props.period;
+    	   		let params = [...this.props.period];
     	   		params.push(currentListenedIdCassa);
     
     	   			this.props.offListenRigaCassa(params); 
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = this.props.period;
+    	   	let params = [...this.props.period];
     	   	params.push(this.props.cassa);
     	   	this.props.listenRigaCassa(params); 
     	   	}

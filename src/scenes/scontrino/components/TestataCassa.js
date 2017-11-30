@@ -16,7 +16,10 @@ const TestataCassa = (props) =>
 		</Spin>	
 			
 			)
-    	 else return   <Spin spinning={props.staleTotaliCassa} />	
+    	 else return   <Spin spinning={props.staleTotaliCassa}>
+    	     <Button type="primary" shape="circle" icon="plus" size={'small'} onClick={props.submitRigaCassa}/>
+		
+    	 </Spin>
     }		
 	
 export default TestataCassa;

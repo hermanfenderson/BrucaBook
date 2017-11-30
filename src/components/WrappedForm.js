@@ -28,7 +28,7 @@ e la action focusSet che la resetta.
 */
 
 import React, {Component} from 'react'
-import {Form, Alert, Button, Input, Checkbox, DatePicker, Row,Col, Spin} from 'antd';
+import {Form, Alert, Button, Input, Checkbox, DatePicker, TimePicker, InputNumber, Row,Col, Spin} from 'antd';
 import moment from 'moment';
 import 'moment/locale/it';
 
@@ -111,8 +111,10 @@ class WrappedForm extends Component {
     static Group = FormGroup;
  
     static Input = InputDecorator(Input);
+    static InputNumber = InputDecorator(InputNumber);
     static Checkbox = InputDecorator(Checkbox);
     static DatePicker = InputDecorator(DatePicker);
+    static TimePicker = InputDecorator(TimePicker);
     static Button = FormButton;
     static GeneralError = GeneralError;
     static WrapGeneric = WrapGeneric;
