@@ -50,7 +50,7 @@ const transformSelectedItem = (cei) =>
 	cei.dataCarico = moment(cei.dataCarico,"DD/MM/YYYY");
 }
 
-const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem); 
+const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem, false); 
 
     
  

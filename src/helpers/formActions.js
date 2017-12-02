@@ -302,8 +302,8 @@ this.listenItem = (params) => {
   return function(dispatch, getState) {
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
-    {
-	    Firebase.database().ref(url).on('child_added', snapshot => {
+    {  
+       Firebase.database().ref(url).on('child_added', snapshot => {
 	      dispatch({
 	        type: type1,
 	        payload: snapshot
@@ -353,13 +353,12 @@ this.offListenItem = (params) =>
 //Disattivata la componente che opera sul magazzino...
 this.aggiungiItem = (params, valori) => {
   const typeAdd =  this.ADD_ITEM;
- 	
   var nuovoItem = {...valori};
   const itemsUrl = this.itemsUrl;
   const toggleTableScroll = this.toggleTableScroll;
    addCreatedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
-  return function(dispatch,getState) {
+    return function(dispatch,getState) {
    
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
     const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();

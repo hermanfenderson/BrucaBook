@@ -41,12 +41,12 @@ export function urlFactory(getState, destination, params, itemId)
 				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params[0]+'/'+params[1]; break;
 				case "righeElencoCasse": url = prefissoNegozio(getState)+'elencoCasse/'+params[0]+'/'+params[1]; break;
 				
-				case "righeElencoScontrini": url = prefissoNegozio(getState)+'elencoCasse/'+params[0]+'/'+params[1] + '/'+params[2] + '/'+params[3]; break;
+				case "righeElencoScontrini": url = prefissoNegozio(getState)+'elencoScontrini/'+params[0]+'/'+params[1] + '/'+params[2]; break;
 				
 				//Elenco di tutte le info di una cassa...
-			    case "righeCassa": url = prefissoNegozio(getState)+'scontrino/'+params[0]+'/'+params[1]+'/'+params[2]; break;
+			    case "righeCassa": url = prefissoNegozio(getState)+'scontrini/'+params[0]+'/'+params[1]+'/'+params[2]; break;
 			    
-			    case "righeScontrino": url = prefissoNegozio(getState)+'scontrino/'+params[0]+'/'+params[1] + '/'+params[2] + '/'+params[3]; break;
+			    case "righeScontrino": url = prefissoNegozio(getState)+'scontrini/'+params[0]+'/'+params[1] + '/'+params[2] + '/'+params[3]; break;
 				
 			
 				case "magazzino": url = prefissoNegozio(getState)+'magazzino'; break;

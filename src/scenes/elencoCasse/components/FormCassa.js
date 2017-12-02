@@ -12,7 +12,7 @@ onSubmit = (e) => {
 	e.preventDefault();
 	//Qui devo fare reload della pagina verso la riga bolla...
 	if (this.props.readOnlyForm) {
-		this.props.history.push('/cassa/' + period2month(this.props.period) + '/' + this.props.editedCassa.selectedItem.key);
+		this.props.history.push('/scontrino/' + period2month(this.props.period) + '/' + this.props.editedCassa.selectedItem.key);
 	}
 	//Elemento radice: il parametro del punto di destinazione è oggetto vuoto...
 	

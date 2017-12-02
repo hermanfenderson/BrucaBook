@@ -208,7 +208,6 @@ export default function bolla(state = initialState(), action) {
 
 //Il mio primo selettore colocato https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers!!!
 //Questi rimarranno identici in tutti i casi... Posso migliorare queste ripetizioni inutili?
- export const getTotali = (state) => {return state.totali};  
  export const getItems = (state) => {return state.itemsArray};  
  export const getEditedItem = (state) => {return state.editedItem};  
  export const getTestataBolla = (state) => {return state.testata};
@@ -216,7 +215,6 @@ export default function bolla(state = initialState(), action) {
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getMeasures = (state) => {return state.measures};
- export const getListeningTotaliBolla = (state) => {return state.listeningTotali};
  export const getListeningTestataBolla = (state) => {return state.listeningTestata};
  export const getListeningItemBolla = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};

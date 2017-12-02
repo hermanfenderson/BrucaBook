@@ -3,44 +3,35 @@ import WrappedForm from '../../../components/WrappedForm'
 
 class FormRigaScontrino extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
-/*
+
 onChange = (name, value) => {
 	   	this.props.changeEditedRigaScontrino(name, value)};
 		
 onSubmit = (e) => {
 	e.preventDefault();
-    const values =  {...this.props.editedRigaScontrino.values, 'data': this.props.testataScontrino.dataScontrino};
-    let params = this.props.period;
-    params.push(this.props.idBolla);
-    	   
-	this.props.submitEditedRigaScontrino(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values); //Per sapere cosa fare... dopo
+    const values =  {...this.props.editedRigaScontrino.values, 'data': this.props.testataScontrino.dataCassa};  //Qui posso aggiungere oggetti dalla testata!!!!
+    let params = [...this.props.period];
+    params.push(this.props.cassa);
+    params.push(this.props.scontrino);
+    this.props.submitEditedRigaScontrino(this.props.editedRigaScontrino.isValid, this.props.editedRigaScontrino.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {
 	this.props.resetEditedRigaScontrino();
 }
-*/
+
 
 
 
   render() {
-  	/*
-  	const formValues = this.props.editedRigaBolla.values;
-  	const errorMessages = this.props.editedRigaBolla.errorMessages;
-  	const willFocus = this.props.editedRigaBolla.willFocus;
+  	const formValues = this.props.editedRigaScontrino.values;
+  	const errorMessages = this.props.editedRigaScontrino.errorMessages;
+  	const willFocus = this.props.editedRigaScontrino.willFocus;
   	const prezzoMan = formValues['manSconto'];
-  	const loading = this.props.editedRigaBolla.loading;
-  	const readOnlyEAN = ((this.props.editedRigaBolla.selectedItem !== null) || (this.props.editedRigaBolla.eanState === 'PARTIAL'))
-  	*/
-  	const formValues = {};
-  	const errorMessages = {}
-  	const willFocus = null;
-  	const prezzoMan = true;
-  	const loading = false;
-  	const readOnlyEAN = false;
-  	//Tolta da sotto per il mock
-  	//<WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:4}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
-        
+  	const loading = this.props.editedRigaScontrino.loading;
+  	const readOnlyEAN = ((this.props.editedRigaScontrino.selectedItem !== null) || (this.props.editedRigaScontrino.eanState === 'PARTIAL'))
+  	
+  	    
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
@@ -65,7 +56,7 @@ resetForm = () => {
        
         <WrappedForm.Button type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:5}}>{(true)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:5}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
         
         
        

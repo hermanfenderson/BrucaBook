@@ -15,7 +15,7 @@ import { Row, Col,  Modal, Spin} from 'antd'
 class Bolla extends Component {
 
  componentDidMount() {
-    	this.props.storeMeasure('formRigaBollaHeight', ReactDOM.findDOMNode(this.refs.formRigaBolla).clientHeight);
+    	if(ReactDOM.findDOMNode(this.refs.formRigaBolla)) this.props.storeMeasure('formRigaBollaHeight', ReactDOM.findDOMNode(this.refs.formRigaBolla).clientHeight);
     
     	
  }

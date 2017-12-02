@@ -9,7 +9,7 @@ onChange = (name, value) => {
 onSubmit = (e) => {
 	e.preventDefault();
     const values =  {...this.props.editedRigaBolla.values, 'data': this.props.testataBolla.dataCarico};
-    let params = this.props.period;
+    let params = [...this.props.period];
     params.push(this.props.idBolla);
     	   
 	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values); //Per sapere cosa fare... dopo

@@ -22,13 +22,14 @@ class TableBolla extends Component
     	   {
     	   	if (currentListenedIdBolla) 
     	   		{
-    	   			let params = this.props.period;
+    	   			let params = [...this.props.period];
     	   			params.push(currentListenedIdBolla);
     
     	   			this.props.offListenRigaBolla(params); 
+    	   			this.props.resetTableBolla();
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = this.props.period;
+    	   	let params = [...this.props.period];
     	   	params.push(this.props.idBolla);
     	   	this.props.listenRigaBolla(params); 
     	   	}
@@ -39,13 +40,13 @@ class TableBolla extends Component
 	
 	
 	deleteRow = (row) => {
-		let params = this.props.period;
+		let params = [...this.props.period];
     	params.push(this.props.idBolla);
 		this.props.deleteRigaBolla(params,row.key);
 	}
 	
 	editRow = (row) => {
-		let params = this.props.period;
+		let params = [...this.props.period];
     	params.push(this.props.idBolla);
 		this.props.setSelectedRigaBolla(row);
 	}

@@ -25,6 +25,11 @@ export function isPositiveInteger(number)
 	return((isInteger(number) && number >0));
 }
 
+export function isNotZeroInteger(number)
+{
+	return((isInteger(number) && number !==0));
+}
+
 
 export function isAmount(amount)
 {    

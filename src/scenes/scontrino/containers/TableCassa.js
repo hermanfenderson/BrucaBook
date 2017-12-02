@@ -1,0 +1,35 @@
+import TableCassaComponent from '../components/TableCassa'
+import {cassaFA} from '../../../actions/cassa'
+//import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
+
+import {getEditedRigaCassa, getRigheCassa, getTableHeightCassa, getTableScrollCassa, getMeasuresCassa, getListeningItemCassa} from '../../../reducers'
+import { connect} from 'react-redux'
+import { bindActionCreators} from 'redux'
+
+const setSelectedRigaCassa = cassaFA.setSelectedItem;
+const setTableWindowHeight = cassaFA.setTableWindowHeight;
+const listenRigaCassa = cassaFA.listenItem;
+const offListenRigaCassa = cassaFA.offListenItem;
+const deleteRigaCassa = cassaFA.deleteItem;
+const toggleTableScroll = cassaFA.toggleTableScroll;
+
+
+const mapStateToProps = (state) => {
+	return ({data: getRigheCassa(state), tableScroll: getTableScrollCassa(state), 
+	height: getTableHeightCassa(state), measures: getMeasuresCassa(state), 
+	selectedItem: getEditedRigaCassa(state).selectedItem,
+	listeningItemCassa: getListeningItemCassa(state)
+		
+	})
+}
+ 
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight }, dispatch);
+}
+
+
+const TableCassa = connect(mapStateToProps, mapDispatchToProps)(TableCassaComponent)
+
+
+export default TableCassa;

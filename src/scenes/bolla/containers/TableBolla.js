@@ -12,6 +12,7 @@ const listenRigaBolla = rigaBollaFA.listenItem;
 const offListenRigaBolla = rigaBollaFA.offListenItem;
 const deleteRigaBolla = rigaBollaFA.deleteItem;
 const toggleTableScroll = rigaBollaFA.toggleTableScroll;
+const resetTableBolla = rigaBollaFA.resetTable;
 
 
 const mapStateToProps = (state) => {
@@ -25,7 +26,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenRigaBolla, offListenRigaBolla, deleteRigaBolla, setSelectedRigaBolla, toggleTableScroll, setTableWindowHeight }, dispatch);
+  return bindActionCreators({ listenRigaBolla, offListenRigaBolla, resetTableBolla, deleteRigaBolla, setSelectedRigaBolla, toggleTableScroll, setTableWindowHeight }, dispatch);
 }
 
 

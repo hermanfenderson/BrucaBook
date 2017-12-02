@@ -3,7 +3,7 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 
-import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
+import {isAmount, isNotZeroInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 
 
@@ -44,7 +44,7 @@ const scontrinoR = new FormReducer('SCONTRINO', foundCompleteItem, null, null, i
 
 function discountPrice(prezzoListino, sconto)
 {  
-  return ((1 - sconto1/100) * prezzoListino).toFixed(2);    
+  return ((1 - sconto/100) * prezzoListino).toFixed(2);    
 }  
 
 //Si comporta diversamente nei vari casi...
@@ -66,7 +66,7 @@ function pricesMgmt(changedEditedRigaBolla, name)
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformAndValidateEditedRigaBolla(cei, name, value)
+function transformAndValidateEditedRigaScontrino(cei, name, value)
 {  	
 	cei.values[name] = value;
 	//Gestione cambiamenti
@@ -160,7 +160,7 @@ export default function scontrino(state = initialState(), action) {
         break;
   	
     default:
-        newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla);
+        newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
         //newState =  state;
     	break;
    
@@ -173,14 +173,14 @@ export default function scontrino(state = initialState(), action) {
  export const getTotali = (state) => {return state.totali};  
  export const getItems = (state) => {return state.itemsArray};  
  export const getEditedItem = (state) => {return state.editedItem};  
- export const getTestataBolla = (state) => {return state.testata};
+ export const getTestataScontrino = (state) => {return state.testata};
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getMeasures = (state) => {return state.measures};
- export const getListeningTotaliBolla = (state) => {return state.listeningTotali};
- export const getListeningTestataBolla = (state) => {return state.listeningTestata};
- export const getListeningItemBolla = (state) => {return state.listeningItem};
+ export const getListeningTotaliScontrino = (state) => {return state.listeningTotali};
+ export const getListeningTestataScontrino = (state) => {return state.listeningTestata};
+ export const getListeningItemScontrino = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  
  
