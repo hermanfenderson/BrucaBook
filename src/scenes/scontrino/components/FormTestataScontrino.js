@@ -9,7 +9,22 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-    const values =  this.props.editedCassa.values;  //Qui posso aggiungere oggetti dalla testata!!!!
+    var values =  {...this.props.editedCassa.values};  //Qui posso aggiungere oggetti dalla testata!!!!
+    if (this.props.editedCassa.selectedItem)
+    	{
+    	 values['oldNumero'] = this.props.editedCassa.selectedItem.numero; 	
+    	 values['numeroKey'] = null;
+    	 for (var i in this.props.data) 
+    		{
+    			if ((this.props.data[i].key !== this.props.editedCassa.selectedItem.key) && (this.props.data[i].numero === this.props.editedCassa.values.numero)) 
+    				{
+    				 values['numeroKey'] = 	this.props.data[i].key;
+    				 break;
+    				}
+    		}
+    	}
+    	
+    		
     let params = [...this.props.period];
     params.push(this.props.cassa);
     params.push(this.props.scontrino);

@@ -46,7 +46,7 @@ export function urlFactory(getState, destination, params, itemId)
 				//Elenco di tutte le info di una cassa...
 			    case "righeCassa": url = prefissoNegozio(getState)+'scontrini/'+params[0]+'/'+params[1]+'/'+params[2]; break;
 			    
-			    case "righeScontrino": url = prefissoNegozio(getState)+'scontrini/'+params[0]+'/'+params[1] + '/'+params[2] + '/'+params[3]; console.log(url); break;
+			    case "righeScontrino": url = prefissoNegozio(getState)+'scontrini/'+params[0]+'/'+params[1] + '/'+params[2] + '/'+params[3]; break;
 				
 			
 				case "magazzino": url = prefissoNegozio(getState)+'magazzino'; break;

@@ -9,8 +9,8 @@ import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 //la funzione transforItem se c'e' è responsabile di trasformare il risultato di firebase in uno compatibile con la tabella che voglio
 //mostrare.
 //la funzione transformSelectedItem prende invece dalla riga in tabella e la porta verso il form...
-
-function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState) {
+//KeepOnSubmit non resetta il form al submit... serve per le casse..
+function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState, keepOnSubmit) {
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
 this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+scene;
@@ -181,7 +181,8 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 				
 			if (state.editedItem.isValid)
 		    	{
-		    	newState = {...state, editedItem: {...editedItemInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
+		    	if (keepOnSubmit) newState = state;
+		    	else newState = {...state, editedItem: {...editedItemInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
 		    	}
 		    else if ('ean' in state.editedItem.values)
 		    	{

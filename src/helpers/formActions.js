@@ -302,8 +302,8 @@ this.listenItem = (params) => {
   return function(dispatch, getState) {
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
-    {
-	    Firebase.database().ref(url).on('child_added', snapshot => {
+    {  
+       Firebase.database().ref(url).on('child_added', snapshot => {
 	      dispatch({
 	        type: type1,
 	        payload: snapshot

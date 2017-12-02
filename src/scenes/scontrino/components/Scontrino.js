@@ -92,7 +92,7 @@ if (this.props.selectedScontrino && this.props.selectedScontrino.key && (this.pr
 	}
 else return (
  	
-  <Row>
+  <Row gutter={16}>
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  

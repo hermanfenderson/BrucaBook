@@ -9,11 +9,13 @@ admin.initializeApp(functions.config().firebase);
 exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}/totali')
     .onWrite(event => 
             {
-             const key = event.params.idScontrino;	
              const cassa = event.params.idCassa;
              const anno = event.params.anno;
              const mese = event.params.mese;
-			 
+			 var key = event.params.idScontrino;	
+            //Come prima cosa determino cosa è cambiato...
+            key = event.data.val().lastActionKey;
+            //POi calcolo i totali...
             const righeRef = event.data.ref.parent.parent;
             righeRef.once("value").then(function(snapshot) 
 						      {
@@ -24,12 +26,13 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
 		  							{
 		  							if (elencoScontrini[propt].totali)
 		  								{
-		                    			totalePezzi = parseInt(elencoScontrini[propt].totali.pezzi) + totalePezzi;
+		  								totalePezzi = parseInt(elencoScontrini[propt].totali.pezzi) + totalePezzi;
 		                    			totaleImporto = parseFloat(elencoScontrini[propt].totali.prezzoTotale) + totaleImporto;
 		  								}
 		  							}
 		  					  const totali = {'pezzi' : totalePezzi, 
 											  'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : key}; 
+											  
 							 const ref = event.data.ref.parent.parent.parent.parent.parent.parent.child('elencoCasse').child(anno).child(mese).child(cassa);
 							 if (totalePezzi > 0) ref.child('totali').set(totali); //Per non perdere tempo...
 							//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
@@ -179,7 +182,37 @@ exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{an
 			return event.data.ref.parent.parent.parent.parent.child('bolle').child(anno).child(mese).child(key).remove();
     		}
            );
-           
+         
+//Idem per gli scontrini...
+
+exports.purgeScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
+    .onDelete(event => 
+            {
+            const key = event.params.idScontrino;
+            const cassa = event.params.idCassa;
+                const anno = event.params.anno;
+             const mese = event.params.mese;
+		
+            
+			console.info("Cancello scontrino "+key);
+			return event.data.ref.parent.parent.parent.parent.parent.child('scontrini').child(anno).child(mese).child(cassa).child(key).remove();
+    		}
+           );
+
+//Idem per le casse... cancello solo elencoScontrini che propaga l'effetto...
+exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{anno}/{mese}/{idCassa}')
+    .onDelete(event => 
+            {
+            const cassa = event.params.idCassa;
+                const anno = event.params.anno;
+             const mese = event.params.mese;
+		
+            
+			console.info("Cancello cassa "+cassa);
+			return event.data.ref.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).remove();
+    		}
+           );
+
 
 //Salvo la nuova data nelle righe già presenti...
 exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{idBolla}')

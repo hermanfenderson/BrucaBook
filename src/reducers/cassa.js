@@ -1,9 +1,16 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 
-import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import moment from 'moment';
+
+const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
+const CHANGE_ITEM_CASSA = 'CHANGE_ITEM_CASSA';
+const DELETE_ITEM_CASSA = 'DELETE_ITEM_CASSA';
+
+const ADD_ITEM_SCONTRINO = 'ADD_ITEM_SCONTRINO';
+const CHANGE_ITEM_SCONTRINO= 'CHANGE_ITEM_SCONTRINO';
+const DELETE_ITEM_SCONTRINO = 'DELETE_ITEM_SCONTRINO';
 
 const editedRigaCassaValuesInitialState = 
 	  {			numeroScontrino: 1,
@@ -27,8 +34,16 @@ const initialState = () => {
     
 const transformSelectedItem = (cei) =>
 {
-	cei.oraScontrino = moment(cei.oraScontrino);
+    var	oraScontrino = moment(cei.dataCassa);
+    oraScontrino.hour(moment(cei.oraScontrino, "HH:mm").hour());
+    oraScontrino.minute(moment(cei.oraScontrino, "HH:mm").minute());
+	cei.oraScontrino = oraScontrino;
 
+}
+
+const transformEditedCassa = (row) =>
+{   
+	row.oraScontrino = moment(row.oraScontrino).format("HH:mm");
 }
 
 
@@ -36,7 +51,7 @@ const transformSelectedItem = (cei) =>
  
     
 //Metodi reducer per le Form
-const rigaCassaR = new FormReducer('CASSA', null, null, transformSelectedItem, initialState); 
+const rigaCassaR = new FormReducer('CASSA', null, transformEditedCassa, transformSelectedItem, initialState, true); 
 
 
 
@@ -69,7 +84,20 @@ export default function cassa(state = initialState(), action) {
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] -100;
    	    newState = {...state, tableHeight: height};
         break;
-  	
+   //Over-ride del reducer form... gestisco diversamente i totali...     
+   case ADD_ITEM_CASSA:
+   case CHANGE_ITEM_CASSA:
+   case DELETE_ITEM_CASSA:
+   	
+	     	newState =  {...state, staleTotali: false}
+	    	break;	
+	//I totali sono stale se cambia una voce dello scontrino sottostante... non la cassa in se!    	
+    case ADD_ITEM_SCONTRINO:
+   case CHANGE_ITEM_SCONTRINO:
+   case DELETE_ITEM_SCONTRINO:
+   	
+	     	newState =  {...state, staleTotali: true, lastActionKey : action.key}
+	    	break;	    	
     default:
         newState = rigaCassaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaCassa);
         //newState =  state;
