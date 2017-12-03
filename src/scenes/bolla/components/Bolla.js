@@ -10,7 +10,8 @@ import 'moment/locale/it';
 
 import { Row, Col,  Modal, Spin} from 'antd'
 
-
+var currentIdBolla = null; 
+ 
 
 class Bolla extends Component {
 
@@ -21,7 +22,6 @@ class Bolla extends Component {
  }
  
  componentWillMount() {
- var currentIdBolla = null; 
  if (this.props.listeningTestataBolla) currentIdBolla = this.props.listeningTestataBolla.bollaId;
  if (this.props.match.params.id !== currentIdBolla)	
 	{   //Faccio reset... tranne la prima volta...

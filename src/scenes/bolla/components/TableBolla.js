@@ -10,12 +10,14 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
 			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
+
+var currentListenedIdBolla = null;
+
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableBolla extends Component 
     {
     componentDidMount() {
-    	var currentListenedIdBolla = null;
     	if (this.props.listeningItemBolla) currentListenedIdBolla = this.props.listeningItemBolla[2];   
     		//Ascolto modifiche sulle righe della bolla
     	if (currentListenedIdBolla !== this.props.idBolla)
