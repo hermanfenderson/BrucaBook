@@ -91,19 +91,24 @@ export function childDeleted(payload, state, dataArrayName, dataIndexName)
    var dataIndexNew = {...(state[dataIndexName])};
    //Cerco nell'indice la riga nell'array da cancellare  
    var index = dataIndexNew[payload.key];
-  //Cancello la riga nell'indice
-   delete dataIndexNew[payload.key]
-  //Cancello la rigna nell'array
-   dataArrayNew.splice(index,1);
-  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
-   for(var propt in dataIndexNew){
-          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
-      }
-   //Aggiorno lo stato passando nuovo array e nuovo indice   
-   var newState = {...state};
-   newState[dataArrayName] = dataArrayNew;
-   newState[dataIndexName] = dataIndexNew;                    
-   return newState;
+   //Antirimbalzo...
+   if (index>=0) 
+		{
+	  //Cancello la riga nell'indice
+	   delete dataIndexNew[payload.key]
+	  //Cancello la rigna nell'array
+	   dataArrayNew.splice(index,1);
+	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
+	   for(var propt in dataIndexNew){
+	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
+	      }
+	   //Aggiorno lo stato passando nuovo array e nuovo indice   
+	   let newState = {...state};
+	   newState[dataArrayName] = dataArrayNew;
+	   newState[dataIndexName] = dataIndexNew;                    
+	   return newState;
+	   }
+	else return {...state};
 }
 
 export function childChanged(payload, state, dataArrayName, dataIndexName, transformItem)
@@ -112,18 +117,23 @@ export function childChanged(payload, state, dataArrayName, dataIndexName, trans
    var dataIndex = state[dataIndexName];
   //Vedo in quale posizione devo modificare
   var index = dataIndex[payload.key];
-  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
-   var tmp = payload.val();
-   tmp['key'] = payload.key;
- //Se è definita una funzione di trasformazione la applico
-   if (transformItem) transformItem(tmp);
-  
-   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
-  
-  //Aggiorno lo stato passando nuovo array e nuovo indice
-   var newState = {...state};
-   newState[dataArrayName] = dataArrayNew;
-   return newState;
+   //Antirimbalzo
+   if (index>=0) 
+		{
+		  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
+		   var tmp = payload.val();
+		   tmp['key'] = payload.key;
+		 //Se è definita una funzione di trasformazione la applico
+		   if (transformItem) transformItem(tmp);
+		  
+		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
+		  
+		  //Aggiorno lo stato passando nuovo array e nuovo indice
+		   var newState = {...state};
+		   newState[dataArrayName] = dataArrayNew;
+		   return newState;
+		}
+	else return {...state};   
 }
 
 export function addCreatedStamp(record)

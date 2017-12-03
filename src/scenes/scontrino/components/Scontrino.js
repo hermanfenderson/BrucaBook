@@ -19,6 +19,9 @@ import 'moment/locale/it';
 
 import { Row, Col,  Modal, Spin} from 'antd'
 
+var currentIdCassa = null;
+var currentIdScontrino = null; 
+  
 
 class Scontrino extends Component {
 
@@ -30,7 +33,6 @@ class Scontrino extends Component {
  
  componentWillMount() {
  //Sento sia lo scontrino che la cassa...
- var currentIdCassa = null;
  if (this.props.listeningTestataCassa) currentIdCassa = this.props.listeningTestataCassa.itemId;
  if (this.props.match.params.cassa !== currentIdCassa)	
 	{ 
@@ -42,7 +44,6 @@ class Scontrino extends Component {
 		if (this.props.match.params.cassa) this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
 	}
 	
- var currentIdScontrino = null; 
  if (this.props.listeningTestataScontrino) currentIdScontrino = this.props.listeningTestataScontrino.itemId;
  if (this.props.match.params.scontrino !== currentIdScontrino)	
 	{ 

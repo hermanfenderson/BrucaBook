@@ -9,13 +9,15 @@ const header = [{dataField: 'numero', label: '#', width: '30px'},
                 {dataField: 'totali.pezzi', label: 'Q.tà', width: '35px'},
 			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: '55px'}
 			   ];
+
+var currentListenedIdCassa = null;
+   
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableCassa extends Component 
     {
     componentDidMount() {
-    	var currentListenedIdCassa = null;
-    	if (this.props.listeningItemCassa) currentListenedIdCassa = this.props.listeningItemCassa[2];   
+     	if (this.props.listeningItemCassa) currentListenedIdCassa = this.props.listeningItemCassa[2];   
     		//Ascolto modifiche sulle righe della bolla
     	if (currentListenedIdCassa !== this.props.cassa)
     	   {

@@ -9,18 +9,20 @@ const header = [{dataField: 'ean', label: 'EAN', width: '140px'},
 			    {dataField: 'pezzi', label: 'Q.tà', width: '60px'},
 			     {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
+var currentListenedIdScontrino = null;
+    
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableScontrino extends Component 
     {
     componentDidMount() {
-    	var currentListenedIdScontrino = null;
     	if (this.props.listeningItemScontrino) currentListenedIdScontrino = this.props.listeningItemScontrino[3];   
     		//Ascolto modifiche sulle righe della bolla
+    	
     	if (currentListenedIdScontrino !== this.props.scontrino)
     	   {
     	   	if (currentListenedIdScontrino) 
-    	   		{
+    	   		{   
     	   			let params = [...this.props.period];
     	   			params.push(this.props.cassa)
     	   			params.push(currentListenedIdScontrino);
