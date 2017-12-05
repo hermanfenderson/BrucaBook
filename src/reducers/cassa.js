@@ -11,6 +11,7 @@ const DELETE_ITEM_CASSA = 'DELETE_ITEM_CASSA';
 const ADD_ITEM_SCONTRINO = 'ADD_ITEM_SCONTRINO';
 const CHANGE_ITEM_SCONTRINO= 'CHANGE_ITEM_SCONTRINO';
 const DELETE_ITEM_SCONTRINO = 'DELETE_ITEM_SCONTRINO';
+const SET_REDIRECT_CASSA = 'SET_REDIRECT_CASSA';
 
 const editedRigaCassaValuesInitialState = 
 	  {			numeroScontrino: 1,
@@ -26,7 +27,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-    const extraState = {
+    const extraState = {shouldRedirect : false,
                   }
 	return initialStateHelper(eiis,extraState);
     }
@@ -77,7 +78,9 @@ function transformAndValidateEditedRigaCassa(cei, name, value)
 export default function cassa(state = initialState(), action) {
   var newState;
   switch (action.type) {
-    
+   case SET_REDIRECT_CASSA:
+   		newState = {...state, shouldRedirect: action.shouldRedirect};
+   		break;
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
@@ -118,6 +121,7 @@ export default function cassa(state = initialState(), action) {
  export const getListeningTestataCassa = (state) => {return state.listeningTestata};
  export const getListeningItemCassa = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
+ export const shouldRedirect = (state) => {return state.shouldRedirect};
  
  
  

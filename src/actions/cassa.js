@@ -4,6 +4,7 @@ import {urlFactory, addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 
 import moment from 'moment';
 export const SCENE = 'CASSA';
+const SET_REDIRECT_CASSA = 'SET_REDIRECT_CASSA';
 
 
 //FUNZIONI DA VERIFICARE
@@ -17,7 +18,14 @@ function preparaItem(riga)
 
    
 
-
+export function setRedirect(redirect)
+{
+	return {
+		type: SET_REDIRECT_CASSA,
+		shouldRedirect: redirect
+	}
+	
+}
 
 //METODI DEL FORM
 export const cassaFA = new FormActions(SCENE, preparaItem, 'righeElencoScontrini','righeElencoCasse');
@@ -46,7 +54,6 @@ cassaFA.aggiungiItem = (params, valori) => {
     			oraScontrino = moment(dataCassa);
     			oraScontrino.hour(moment().hour());
     			oraScontrino.minute(moment().minute());
-    			console.log(oraScontrino);
     			}
     		return cassa;
 			}).then(function(success) {
@@ -69,6 +76,7 @@ cassaFA.aggiungiItem = (params, valori) => {
    					}
    					)  	
 			nuovoItem['key'] = ref.key;
+			nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
 			dispatch(cassaFA.setSelectedItem(nuovoItem));
 			})
 

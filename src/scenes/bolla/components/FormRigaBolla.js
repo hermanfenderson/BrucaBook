@@ -8,7 +8,15 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-    const values =  {...this.props.editedRigaBolla.values, 'data': this.props.testataBolla.dataCarico};
+	var valuesTestata = {...this.props.testataBolla};
+	delete valuesTestata.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
+    delete valuesTestata.createdBy;
+    delete valuesTestata.createdAt;
+    delete valuesTestata.changedBy;
+    delete valuesTestata.changedAt;
+    delete valuesTestata.key;
+	valuesTestata.data = valuesTestata.dataCarico;
+    const values =  {...this.props.editedRigaBolla.values, ...valuesTestata};
     let params = [...this.props.period];
     params.push(this.props.idBolla);
     	   

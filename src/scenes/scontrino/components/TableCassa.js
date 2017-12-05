@@ -67,6 +67,7 @@ class TableCassa extends Component
 		let params = [...this.props.period];
     	params.push(this.props.cassa);
     	this.props.setSelectedRigaCassa(row);
+    	this.props.setRedirect(true);
 	}
 
     

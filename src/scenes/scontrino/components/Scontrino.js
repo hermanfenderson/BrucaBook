@@ -27,11 +27,12 @@ class Scontrino extends Component {
 
  componentDidMount() {
     if (ReactDOM.findDOMNode(this.refs.formRigaScontrino))	this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
-    
+   
     	
  }
  
  componentWillMount() {
+ if (this.props.shouldRedirectCassa)	this.props.setRedirect(false);	   	
  //Sento sia lo scontrino che la cassa...
  if (this.props.listeningTestataCassa) currentIdCassa = this.props.listeningTestataCassa.itemId;
  if (this.props.match.params.cassa !== currentIdCassa)	
@@ -54,8 +55,10 @@ class Scontrino extends Component {
 			} 
 		if (this.props.match.params.scontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto...
 	}
-		
+	
  }
+ 
+
  
 componentDidUpdate() {
 		const scontrino = this.props.testataScontrino;
@@ -66,6 +69,15 @@ componentDidUpdate() {
 	if (scontrino) header = header + ' - scontrino n. ' + scontrino.numero;
 	
 	this.props.setHeaderInfo(header);
+}
+
+
+componentWillUnmount() {
+	
+  if (!this.props.shouldRedirectCassa && !this.props.match.params.scontrino) 
+		{this.props.setSelectedRigaCassa(null);
+		currentIdScontrino = null; }
+    
 }
 
 resetEditedCatalogItem = () => {
@@ -81,13 +93,15 @@ submitRigaCassa = (e) => {
 	e.preventDefault();
 	this.props.submitRigaCassa(true, null, [this.props.match.params.anno, this.props.match.params.mese, this.props.match.params.cassa],{});
 }  
+
  
 
 render()
 {
   const period = [this.props.match.params.anno, this.props.match.params.mese];
-if (this.props.selectedScontrino && this.props.selectedScontrino.key && (this.props.selectedScontrino.key !== this.props.match.params.scontrino)) 
+if (this.props.shouldRedirectCassa && this.props.selectedScontrino && this.props.selectedScontrino.key && (this.props.selectedScontrino.key !== this.props.match.params.scontrino)) 
 	{
+	
     const url = '/scontrino/' + this.props.match.params.anno + '/' + this.props.match.params.mese + '/' + this.props.match.params.cassa + '/' + this.props.selectedScontrino.key
 	return (<Redirect to={url} />);
 	}
@@ -132,36 +146,7 @@ else return (
   
   )
   
-/*  
- return (
-  <Spin spinning={!this.props.testataBolla}>	
-  <div>
-  
-    <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
-		<FormCatalogo isModal={true} readOnlyEAN={true} scene='BOLLA'/>
-    </Modal>  
-    <Row style={{'backgroundColor': 'white'}}>
-      <Col span={4}>
-      </Col>
-      <Col span={16}>
-    	 <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
-      </Col>
-      <Col span={4}>
-    	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla}/>
-      </Col>
-    </Row>
-    
-     <Row>
-      
-         <TableBolla  period={period} idBolla={this.props.match.params.id}/>
-      
-    </Row>
-   
-  </div>
-  </Spin>
- 
- 
-)*/
+
 
 
 }

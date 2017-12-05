@@ -9,7 +9,15 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-    const values =  {...this.props.editedRigaScontrino.values, 'data': this.props.testataScontrino.dataCassa};  //Qui posso aggiungere oggetti dalla testata!!!!
+	var valuesTestata = {...this.props.testataScontrino};
+	delete valuesTestata.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
+    delete valuesTestata.createdBy;
+    delete valuesTestata.createdAt;
+    delete valuesTestata.changedBy;
+    delete valuesTestata.changedAt;
+    delete valuesTestata.key;
+	valuesTestata.data = valuesTestata.dataCassa;
+    const values =  {...this.props.editedRigaScontrino.values, ...valuesTestata};
     let params = [...this.props.period];
     params.push(this.props.cassa);
     params.push(this.props.scontrino);

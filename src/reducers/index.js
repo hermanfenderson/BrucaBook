@@ -76,6 +76,7 @@ export const getMeasuresCassa = (state) => {return fromCassa.getMeasures(state.c
 export const getListeningTestataCassa = (state) => {return fromCassa.getListeningTestataCassa(state.cassa)};
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
 export const isStaleTotaliCassa = (state) => {return fromCassa.isStaleTotali(state.cassa)};
+export const shouldRedirectCassa = (state) => {return fromCassa.shouldRedirect(state.cassa)};
 
 
 //Scene Scontrino
