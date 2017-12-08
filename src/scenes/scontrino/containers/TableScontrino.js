@@ -2,7 +2,7 @@ import TableScontrinoComponent from '../components/TableScontrino'
 import {rigaScontrinoFA} from '../../../actions/scontrino'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaScontrino, getRigheScontrino, getTableHeightScontrino, getTableScrollScontrino, getMeasuresScontrino, getListeningItemScontrino} from '../../../reducers'
+import {getEditedRigaScontrino, getRigheScontrino, getTableHeightScontrino, getTableScrollScontrino, getMeasuresScontrino, getListeningItemScontrino, getListenersItemScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -18,7 +18,8 @@ const mapStateToProps = (state) => {
 	return ({data: getRigheScontrino(state), tableScroll: getTableScrollScontrino(state), 
 	height: getTableHeightScontrino(state), measures: getMeasuresScontrino(state), 
 	selectedItem: getEditedRigaScontrino(state).selectedItem,
-	listeningItemScontrino: getListeningItemScontrino(state)
+	listeningItemScontrino: getListeningItemScontrino(state),
+	listenersItemScontrino: getListenersItemScontrino(state)
 		
 	})
 }

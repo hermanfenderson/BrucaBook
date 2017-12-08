@@ -47,9 +47,11 @@ ordinaryRowRender = (cell,row) => {
 
 render ()
      {
+   
     let columns = this.props.header.map((header) => 
   	            	{
   	            		return({
+  	            	'key': header.dataField,		
   	             	'title':  header.label,
   	             	'dataIndex': header.dataField,
   	             	 'width': header.width,
@@ -57,15 +59,18 @@ render ()
   	            		})
   	            	}
   				);
-  		if (this.props.deleteRow || this.props.editRow) columns.push(
-  					{
+  	let actionColumn = {
+  		            'key': 'Selezione',
   					'render': (text, record) => {return this.actionRowRender(text,record)},
-  					'width': '60px',
+  					'width': this.props.actionWidth || '60px',
   					'title': 'Sel.'
-  	            	}
-  	            	
-  				)	
-  	    return(
+  	            	};
+  	if (this.props.deleteRow || this.props.editRow) 
+  		{if (this.props.actionFirst)
+  		    columns.unshift(actionColumn);
+			else columns.push(actionColumn);
+  		}
+    return(
         	 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        		);	
      }	

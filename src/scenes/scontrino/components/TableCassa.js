@@ -1,6 +1,84 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
+import ReactDOM from 'react-dom'
+import { Icon, Table } from 'antd';
+
 import {Modal} from 'antd';
+
+class WrappedTable extends React.Component {
+componentDidMount()
+  {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+  }
+  
+  
+
+  componentDidUpdate() {
+	   if (this.props.tableScroll)
+			{
+	        this.node.scrollTop = this.node.scrollHeight;
+			this.props.toggleTableScroll(false); //Resetto lo scroll...
+			}
+ }
+	
+selectRow = (row) => {
+ 	if(this.props.selectRow) this.props.selectRow(row);
+ }
+ 
+ 
+actionRowRender = (cell, row) => {
+   return (
+        <div>
+        {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(row)}}/>} 
+		{(this.props.editRow) && <Icon type="edit" onClick={() => { this.props.editRow(row)}}/>}  
+        </div>
+        );
+ }
+ 
+ 
+ 
+ordinaryRowRender = (cell,row) => {
+ if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
+ else  return(<div onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
+ 
+} 
+
+
+render ()
+     {
+   
+    let columns = this.props.header.map((header) => 
+  	            	{
+  	            	var rigaScontrinoSpan = 0;
+  	            	if (header.label === '#') rigaScontrinoSpan = 3;
+  	            	if (header.label === 'Q.tà') rigaScontrinoSpan = 1;
+  	            	if (header.label === 'Tot.') rigaScontrinoSpan = 1;
+  	            	
+  	            		return({
+  	            	'key': header.dataField,		
+  	             	'title':  header.label,
+  	             	'dataIndex': header.dataField,
+  	             	 'width': header.width,
+  	             	'render': (text, record) => {return {children: this.ordinaryRowRender(text,record),
+  	             					                     props: {colSpan: (record.tipo === 'scontrino' ? 1 : rigaScontrinoSpan)}}}
+  	            		})
+  	            	}
+  				);
+  	let actionColumn = {
+  		            'key': 'Selezione',
+  					'render': (text, record) => {return {children: this.actionRowRender(text,record), 
+  												         props: {colSpan: (record.tipo === 'scontrino' ? 1 : 0)}}},
+  					'width': this.props.actionWidth || '60px',
+  					'title': 'Sel.'
+  	            	};
+  	if (this.props.deleteRow || this.props.editRow) 
+  		{if (this.props.actionFirst)
+  		    columns.unshift(actionColumn);
+			else columns.push(actionColumn);
+  		}
+    return(
+        	 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+       		);	
+     }	
+} 
 
 
 //E' un dato.... che passo come costante...
@@ -80,7 +158,7 @@ class TableCassa extends Component
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
-			<WrappedTable {...props}  size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props} actionWidth={'30px'} actionFirst={true} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	

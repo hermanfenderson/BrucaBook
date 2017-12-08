@@ -1,4 +1,7 @@
+//Ho rotto la schiavitù della wrapped table... in questo caso vado meglio custom....
 import React, {Component} from 'react'
+
+
 import WrappedTable from '../../../components/WrappedTable'
 
 
@@ -27,7 +30,7 @@ class TableScontrino extends Component
     	   			params.push(this.props.cassa)
     	   			params.push(currentListenedIdScontrino);
     
-    	   			this.props.offListenRigaScontrino(params); 
+    	   			this.props.offListenRigaScontrino(params, this.props.listenersItemScontrino); 
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
     	   	let params = this.props.period;

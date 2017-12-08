@@ -217,7 +217,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		    
 	        break;
 	     case this.LISTEN_ITEM:
-	     	newState = {...state, listeningItem: action.params}; 
+	     	newState = {...state, listeningItem: action.params, listenersItem: action.listeners}; 
 	     	break;
 	     case this.OFF_LISTEN_ITEM:
 	     	newState = {...state, listeningItem: null};

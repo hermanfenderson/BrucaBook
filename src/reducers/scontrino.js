@@ -181,6 +181,8 @@ export default function scontrino(state = initialState(), action) {
  export const getListeningTotaliScontrino = (state) => {return state.listeningTotali};
  export const getListeningTestataScontrino = (state) => {return state.listeningTestata};
  export const getListeningItemScontrino = (state) => {return state.listeningItem};
+ export const getListenersItemScontrino = (state) => {return state.listenersItem};
+
  export const isStaleTotali = (state) => {return state.staleTotali};
  
  

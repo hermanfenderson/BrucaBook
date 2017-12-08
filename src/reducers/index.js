@@ -89,6 +89,8 @@ export const getTableScrollScontrino = (state)  => {return fromScontrino.getTabl
 export const getMeasuresScontrino = (state) => {return fromScontrino.getMeasures(state.scontrino)};
 export const getListeningTestataScontrino = (state) => {return fromScontrino.getListeningTestataScontrino(state.scontrino)};
 export const getListeningItemScontrino = (state) => {return fromScontrino.getListeningItemScontrino(state.scontrino)};
+export const getListenersItemScontrino = (state) => {return fromScontrino.getListenersItemScontrino(state.scontrino)};
+
 export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTotali(state.scontrino)};
 
 

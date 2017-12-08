@@ -1,5 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
+import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO} from '../actions/cassa';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import moment from 'moment';
@@ -7,6 +8,12 @@ import moment from 'moment';
 const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
 const CHANGE_ITEM_CASSA = 'CHANGE_ITEM_CASSA';
 const DELETE_ITEM_CASSA = 'DELETE_ITEM_CASSA';
+
+const ADDED_ITEM_CASSA = 'ADDED_ITEM_CASSA';
+const CHANGED_ITEM_CASSA = 'CHANGED_ITEM_CASSA';
+const DELETED_ITEM_CASSA = 'DELETED_ITEM_CASSA';
+
+
 
 const ADD_ITEM_SCONTRINO = 'ADD_ITEM_SCONTRINO';
 const CHANGE_ITEM_SCONTRINO= 'CHANGE_ITEM_SCONTRINO';
@@ -47,7 +54,219 @@ const transformEditedCassa = (row) =>
 	row.oraScontrino = moment(row.oraScontrino).format("HH:mm");
 }
 
+/*Struttura dati di dataIndex
+scontrini
+	scontrino -> precedente (num.scontrino), prossimo (num.scontrino), key (chiave scontrino), length (lunghezza scontrino compreso header) 
+chiavi
+    chiave -> pos_array
+*/
+//Ogni volta che devo riallineare le chiavi... 
+function updateChiavi(dataArray, dataIndex, start)
+{
+	for (var i=start; i<dataArray.length; i++)
+		{
+		dataIndex.chiavi[dataArray[i].key] = i;
+		}
+}
 
+//Queste vanno modificate per essere adattate ad avere figli...
+function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
+{  //Creo un array e un indice per copia degli attuali
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndexNew = {...(state[dataIndexName])};
+  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
+   var tmp = payload.val();
+   tmp['key'] = payload.key;
+   tmp['tipo'] = 'scontrino';
+    //Se è definita una funzione di trasformazione la applico
+   if (transformItem) transformItem(tmp);
+
+   //Se è il primo scontrino a entrare inizializzo le strutture...
+   if (!dataIndexNew.scontrini)
+		{
+		dataIndexNew.scontrini = {};	
+        dataIndexNew.scontrini[tmp.numero] = {'precedente': null, 'successivo': null, 'key': tmp['key'], 'leng': 1};
+        dataArrayNew[0] = tmp;
+        dataIndexNew.chiavi = {};
+        dataIndexNew.chiavi[tmp.key] = 0;
+		}
+		
+   else {
+   	    //Determino la posizione dello scontrino...
+   	    //E' un nuovo primo?
+   	    if (tmp['numero'] < dataArrayNew[0].numero)
+   			{
+   				dataIndexNew.scontrini[tmp.numero] = {'precedente': null, 'successivo': dataArrayNew[0].numero, 'key': tmp['key'], 'leng': 1};
+   				
+   			}
+   		else {
+   			var propt = dataArrayNew[0].numero;
+	   	    while (propt)
+	   	    	{
+	   	        
+	   	        //Ho trovato il mio posto... dopo uno più piccolo di me e prima di null oppure di più grande di me...
+	   	         if ((propt <= tmp['numero']) && ((!dataIndexNew.scontrini[propt].successivo) || (dataIndexNew.scontrini[propt].successivo > tmp['numero'])))
+		   	        {
+		   	        	
+		   	         let precedente = propt;
+		   	         let successivo = dataIndexNew.scontrini[propt].successivo;
+		   	         let inizio = dataIndexNew.chiavi[dataIndexNew.scontrini[propt].key] + dataIndexNew.scontrini[propt].leng;
+		   	         dataIndexNew.scontrini[propt].successivo = tmp['numero']; //Aggiorno la catena 
+		   	         dataIndexNew.scontrini[tmp.numero] = {'precedente': precedente, 'successivo': successivo, 'key': tmp['key'], 'leng': 1};
+		   	         dataArrayNew.splice(inizio,0, tmp);
+		        	 //Aggiorno il puntatore delle chiavi...
+		        	 updateChiavi(dataArrayNew, dataIndexNew, inizio);
+		   	         break;
+		   	        }
+	   	         propt = dataIndexNew.scontrini[propt].successivo;
+	   	    	}
+   			}	
+		}	
+   
+  //Aggiorno lo stato passando nuovo array e nuovo indice
+   var newState = {...state};
+   newState[dataArrayName] = dataArrayNew;
+   newState[dataIndexName] = dataIndexNew;                    
+   return newState;
+}
+
+function childDeleted(payload, state, dataArrayName, dataIndexName)
+{  //Creo un array e un indice per copia degli attuali
+ 
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndexNew = {...(state[dataIndexName])};
+   //Cerco nell'indice la riga nell'array da cancellare  
+   var index = dataIndexNew[payload.key];
+   //Antirimbalzo...
+   if (index>=0) 
+		{
+	  //Cancello la riga nell'indice
+	   delete dataIndexNew[payload.key]
+	  //Cancello la rigna nell'array
+	   dataArrayNew.splice(index,1);
+	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
+	   for(var propt in dataIndexNew){
+	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
+	      }
+	   //Aggiorno lo stato passando nuovo array e nuovo indice   
+	   let newState = {...state};
+	   newState[dataArrayName] = dataArrayNew;
+	   newState[dataIndexName] = dataIndexNew;                    
+	   return newState;
+	   }
+	else return {...state};
+}
+
+function childChanged(payload, state, dataArrayName, dataIndexName, transformItem)
+{  //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
+/*
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndex = state[dataIndexName];
+  //Vedo in quale posizione devo modificare
+  var index = dataIndex[payload.key];
+   //Antirimbalzo
+   if (index>=0) 
+		{
+		  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
+		   var tmp = payload.val();
+		   tmp['key'] = payload.key;
+		 //Se è definita una funzione di trasformazione la applico
+		   if (transformItem) transformItem(tmp);
+		  
+		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
+		  
+		  //Aggiorno lo stato passando nuovo array e nuovo indice
+		   var newState = {...state};
+		   newState[dataArrayName] = dataArrayNew;
+		   return newState;
+		}
+	else return {...state};  
+	*/
+	return {...state} //Aggiunto per debug...
+}
+
+
+function subChildAdded(payload, state, dataArrayName, dataIndexName, transformItem)
+{  //Creo un array e un indice per copia degli attuali
+
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndexNew = {...(state[dataIndexName])};
+  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
+   var tmp = payload.val();
+   tmp['key'] = payload.key;
+   tmp['tipo'] = 'rigaScontrino';
+   var numero = tmp['numero'];
+   tmp['numero'] = tmp['titolo'];
+   tmp['totali'] = {pezzi: tmp['pezzi'], prezzoTotale: tmp['prezzoTotale']};
+    //Se è definita una funzione di trasformazione la applico
+   if (transformItem) transformItem(tmp);
+   
+   //Lo metto nella prima posizione utile nello scontrino giusto... 
+   var posScontrino = dataIndexNew.chiavi[dataIndexNew.scontrini[numero].key];
+   var posRiga = posScontrino + dataIndexNew.scontrini[numero].leng;
+   dataIndexNew.scontrini[numero].leng++; //e allungo di uno la sua lunghezza...
+   
+   dataArrayNew.splice(posRiga,0, tmp);
+   //Aggiorno il puntatore delle chiavi...
+   updateChiavi(dataArrayNew, dataIndexNew, posRiga);
+    let newState = {...state};
+	   
+    newState[dataArrayName] = dataArrayNew;
+    newState[dataIndexName] = dataIndexNew;                    
+   return newState;
+}
+
+function subChildDeleted(payload, state, dataArrayName, dataIndexName)
+{  //Creo un array e un indice per copia degli attuali
+ 
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndexNew = {...(state[dataIndexName])};
+   //Cerco nell'indice la riga nell'array da cancellare  
+   var index = dataIndexNew[payload.key];
+   //Antirimbalzo...
+   if (index>=0) 
+		{
+	  //Cancello la riga nell'indice
+	   delete dataIndexNew[payload.key]
+	  //Cancello la rigna nell'array
+	   dataArrayNew.splice(index,1);
+	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
+	   for(var propt in dataIndexNew){
+	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
+	      }
+	   //Aggiorno lo stato passando nuovo array e nuovo indice   
+	   let newState = {...state};
+	   newState[dataArrayName] = dataArrayNew;
+	   newState[dataIndexName] = dataIndexNew;                    
+	   return newState;
+	   }
+	else return {...state};
+}
+
+function subChildChanged(payload, state, dataArrayName, dataIndexName, transformItem)
+{  //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndex = state[dataIndexName];
+  //Vedo in quale posizione devo modificare
+  var index = dataIndex[payload.key];
+   //Antirimbalzo
+   if (index>=0) 
+		{
+		  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
+		   var tmp = payload.val();
+		   tmp['key'] = payload.key;
+		 //Se è definita una funzione di trasformazione la applico
+		   if (transformItem) transformItem(tmp);
+		  
+		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
+		  
+		  //Aggiorno lo stato passando nuovo array e nuovo indice
+		   var newState = {...state};
+		   newState[dataArrayName] = dataArrayNew;
+		   return newState;
+		}
+	else return {...state};   
+}
 
  
     
@@ -94,13 +313,41 @@ export default function cassa(state = initialState(), action) {
    	
 	     	newState =  {...state, staleTotali: false}
 	    	break;	
+	    	
+	    	
 	//I totali sono stale se cambia una voce dello scontrino sottostante... non la cassa in se!    	
-    case ADD_ITEM_SCONTRINO:
+   case ADD_ITEM_SCONTRINO:
    case CHANGE_ITEM_SCONTRINO:
    case DELETE_ITEM_SCONTRINO:
    	
 	     	newState =  {...state, staleTotali: true, lastActionKey : action.key}
-	    	break;	    	
+	    	break;	 
+  //FACCIO OVERRIDE DEL REDUCER QUI...
+  
+   case ADDED_ITEM_CASSA:
+		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa); 
+	    	break;
+	       
+	case DELETED_ITEM_CASSA:
+	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	break;
+	   
+	case CHANGED_ITEM_CASSA:
+			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa); 
+	    	break;    
+	    	
+    case ADDED_RIGASCONTRINO:
+		 	newState = subChildAdded(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	break;
+	       
+	case DELETED_RIGASCONTRINO:
+	    	newState = subChildDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	break;
+	   
+	case CHANGED_RIGASCONTRINO:
+			newState = subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	break;    
+	    	
     default:
         newState = rigaCassaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaCassa);
         //newState =  state;

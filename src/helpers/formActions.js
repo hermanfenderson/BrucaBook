@@ -303,19 +303,19 @@ this.listenItem = (params) => {
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
     {  
-       Firebase.database().ref(url).on('child_added', snapshot => {
+       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
 	      dispatch({
 	        type: type1,
 	        payload: snapshot
 	      })
 	    });
-	   Firebase.database().ref(url).on('child_changed', snapshot => {
+	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
 	      dispatch({
 	        type: type2,
 	        payload: snapshot
 	      })  
 	   });
-	   Firebase.database().ref(url).on('child_removed', snapshot => {
+	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
 	      dispatch({
 	        type: type3,
 	        payload: snapshot
@@ -324,6 +324,7 @@ this.listenItem = (params) => {
 	   dispatch({
 	   	type: typeListen,
 	   	params: params,
+	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
 	   })
 	}   
 	else dispatch({
@@ -335,11 +336,17 @@ this.listenItem = (params) => {
 
 
 //Non ritorna nessuna azione e non crea nessuna actionCreator
-this.offListenItem = (params) =>
+this.offListenItem = (params, listeners=null) =>
 {   const itemsUrl = this.itemsUrl;
     const typeUnlisten = this.OFF_LISTEN_ITEM;
 	return function(dispatch, getState) {
-	Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
+	if (listeners) 
+		{
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.added);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.changed);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.removed);
+		}
+	else Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
 	dispatch({
 	   	type: typeUnlisten,
 	   	params: params
