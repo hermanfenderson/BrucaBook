@@ -54,6 +54,26 @@ const transformEditedCassa = (row) =>
 	row.oraScontrino = moment(row.oraScontrino).format("HH:mm");
 }
 
+
+const debugState = (newState) =>
+{
+ console.log(newState.itemsArray);
+ for (var propt in newState.itemsArrayIndex.scontrini)
+	{
+		console.log(propt);
+		 console.log(newState.itemsArrayIndex.scontrini[propt]);
+	}
+ for (var propt2 in newState.itemsArrayIndex.chiavi)
+	{
+		console.log(propt2);
+		 console.log(newState.itemsArrayIndex.chiavi[propt2]);
+	}
+	
+
+		
+			
+	
+}
 /*Struttura dati di dataIndex
 scontrini
 	scontrino -> precedente (num.scontrino), prossimo (num.scontrino), key (chiave scontrino), length (lunghezza scontrino compreso header) 
@@ -70,7 +90,7 @@ function updateChiavi(dataArray, dataIndex, start)
 }
 
 //Queste vanno modificate per essere adattate ad avere figli...
-function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
+function childAdded(payload, state, dataArrayName, dataIndexName, transformItem, forcedTmp)
 {  //Creo un array e un indice per copia degli attuali
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndexNew = {...(state[dataIndexName])};
@@ -78,11 +98,12 @@ function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
    var tmp = payload.val();
    tmp['key'] = payload.key;
    tmp['tipo'] = 'scontrino';
+   if (forcedTmp) tmp = forcedTmp;
     //Se è definita una funzione di trasformazione la applico
    if (transformItem) transformItem(tmp);
 
    //Se è il primo scontrino a entrare inizializzo le strutture...
-   if (!dataIndexNew.scontrini)
+   if (dataArrayNew.length === 0)
 		{
 		dataIndexNew.scontrini = {};	
         dataIndexNew.scontrini[tmp.numero] = {'precedente': null, 'successivo': null, 'key': tmp['key'], 'leng': 1};
@@ -93,29 +114,32 @@ function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
 		
    else {
    	    //Determino la posizione dello scontrino...
-   	    //E' un nuovo primo?
+   	    //E' un nuovo primo?  
    	    if (tmp['numero'] < dataArrayNew[0].numero)
    			{
    				dataIndexNew.scontrini[tmp.numero] = {'precedente': null, 'successivo': dataArrayNew[0].numero, 'key': tmp['key'], 'leng': 1};
-   				
+   				dataIndexNew.scontrini[dataArrayNew[0].numero].precedente = tmp.numero;
+   				dataArrayNew.splice(0, 0, tmp);
+   				//Aggiorno il puntatore delle chiavi...
+		        updateChiavi(dataArrayNew, dataIndexNew, 0);
+		   	         
    			}
    		else {
    			var propt = dataArrayNew[0].numero;
 	   	    while (propt)
 	   	    	{
-	   	        
 	   	        //Ho trovato il mio posto... dopo uno più piccolo di me e prima di null oppure di più grande di me...
 	   	         if ((propt <= tmp['numero']) && ((!dataIndexNew.scontrini[propt].successivo) || (dataIndexNew.scontrini[propt].successivo > tmp['numero'])))
 		   	        {
-		   	        	
-		   	         let precedente = propt;
-		   	         let successivo = dataIndexNew.scontrini[propt].successivo;
-		   	         let inizio = dataIndexNew.chiavi[dataIndexNew.scontrini[propt].key] + dataIndexNew.scontrini[propt].leng;
-		   	         dataIndexNew.scontrini[propt].successivo = tmp['numero']; //Aggiorno la catena 
-		   	         dataIndexNew.scontrini[tmp.numero] = {'precedente': precedente, 'successivo': successivo, 'key': tmp['key'], 'leng': 1};
-		   	         dataArrayNew.splice(inizio,0, tmp);
-		        	 //Aggiorno il puntatore delle chiavi...
-		        	 updateChiavi(dataArrayNew, dataIndexNew, inizio);
+		   	        	let precedente = propt;
+		   	        	let successivo = dataIndexNew.scontrini[propt].successivo;
+		   	        	let inizio = dataIndexNew.chiavi[dataIndexNew.scontrini[propt].key] + dataIndexNew.scontrini[propt].leng;
+		   	        	dataIndexNew.scontrini[propt].successivo = tmp['numero']; //Aggiorno la catena 
+		   	        	dataIndexNew.scontrini[tmp.numero] = {'precedente': precedente, 'successivo': successivo, 'key': tmp['key'], 'leng': 1};
+		   	        	dataArrayNew.splice(inizio,0, tmp);
+		   	        	updateChiavi(dataArrayNew, dataIndexNew, inizio);
+		   	         //Aggiorno il puntatore delle chiavi...
+		        	 
 		   	         break;
 		   	        }
 	   	         propt = dataIndexNew.scontrini[propt].successivo;
@@ -130,24 +154,42 @@ function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
    return newState;
 }
 
-function childDeleted(payload, state, dataArrayName, dataIndexName)
+function childDeleted(payload, state, dataArrayName, dataIndexName, forcedNumber)
 {  //Creo un array e un indice per copia degli attuali
- 
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndexNew = {...(state[dataIndexName])};
    //Cerco nell'indice la riga nell'array da cancellare  
-   var index = dataIndexNew[payload.key];
+   var index = dataIndexNew.chiavi[payload.key];
+   var numero = payload.val().numero;
+   if (forcedNumber) numero = forcedNumber; //Gestisco la cancellazione dalla change...
+   if (forcedNumber) index = dataIndexNew.chiavi[dataIndexNew.scontrini[numero].key];
+   var leng = dataIndexNew.scontrini[numero].leng;
    //Antirimbalzo...
    if (index>=0) 
 		{
-	  //Cancello la riga nell'indice
-	   delete dataIndexNew[payload.key]
-	  //Cancello la rigna nell'array
-	   dataArrayNew.splice(index,1);
-	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
-	   for(var propt in dataIndexNew){
-	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
-	      }
+	  console.log("cancello lo scontrino numero "+ numero);
+	  console.log("opera alla posizione " + index + " per lunghezza " + leng);
+	  //Sgancio dalla catena lo scontrino che cancello...
+	  var precedente = dataIndexNew.scontrini[numero].precedente;
+	  var successivo = dataIndexNew.scontrini[numero].successivo;
+	  if (precedente) dataIndexNew.scontrini[precedente].successivo = successivo;
+	  if (successivo) dataIndexNew.scontrini[successivo].precedente = precedente;
+	  delete dataIndexNew.scontrini[numero];
+	  //Per tutte le righe interessate
+	  for (var i=index; i<index+leng; i++)
+		   {	
+		  //Visto che sto tagliando l'array... ogni volta cancello nella stessa posizione!	
+		  //Cancello la riga nell'indice
+		   delete dataIndexNew.chiavi[dataArrayNew[index].key];
+		   //Cancello la riga nell'array
+		   dataArrayNew.splice(index,1);
+		   }
+	  //Aggiorno da quella posizione tutti gli indici...
+	 
+	  updateChiavi(dataArrayNew, dataIndexNew, index);
+   
+	
+	
 	   //Aggiorno lo stato passando nuovo array e nuovo indice   
 	   let newState = {...state};
 	   newState[dataArrayName] = dataArrayNew;
@@ -158,42 +200,113 @@ function childDeleted(payload, state, dataArrayName, dataIndexName)
 }
 
 function childChanged(payload, state, dataArrayName, dataIndexName, transformItem)
-{  //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
-/*
+{  
+   //Due casi... uno base in cui non ho cambiato lo scontrino... e uno in cui lo ho cambiato... in cui devo chiamare una insert 
+   //e una delete...	
+   //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
    var dataArrayNew = state[dataArrayName].slice();
-   var dataIndex = state[dataIndexName];
+   var dataIndexNew = state[dataIndexName];
+ 
   //Vedo in quale posizione devo modificare
-  var index = dataIndex[payload.key];
-   //Antirimbalzo
-   if (index>=0) 
+  var index = dataIndexNew.chiavi[payload.key];
+  var scontrino = (dataArrayNew[index]) ? dataArrayNew[index].numero : null; //se non lo trovo...l'ho cancellato
+  //Caso facile...
+  if (scontrino === payload.val().numero) 
 		{
-		  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
-		   var tmp = payload.val();
-		   tmp['key'] = payload.key;
-		 //Se è definita una funzione di trasformazione la applico
-		   if (transformItem) transformItem(tmp);
-		  
-		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
-		  
-		  //Aggiorno lo stato passando nuovo array e nuovo indice
-		   var newState = {...state};
-		   newState[dataArrayName] = dataArrayNew;
-		   return newState;
+		   //Antirimbalzo
+		   if (index>=0) 
+				{
+				  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
+				 var tmp = payload.val();
+				 tmp['key'] = payload.key;
+				 tmp['tipo'] = 'scontrino';
+   
+				 //Se è definita una funzione di trasformazione la applico
+				   if (transformItem) transformItem(tmp);
+				  
+				   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
+				  
+				  //Aggiorno lo stato passando nuovo array e nuovo indice
+				   let newState = {...state};
+				   newState[dataArrayName] = dataArrayNew;
+				   newState[dataIndexName] = dataIndexNew;                    
+				   return newState;
+				}
+			else return {...state};  
 		}
-	else return {...state};  
-	*/
-	return {...state} //Aggiunto per debug...
+  else 
+	{   
+		let newState = {...state};
+		if (scontrino)
+		{
+		  console.log("sono lo scontrino " + scontrino + " e voglio diventare lo scontrino " + payload.val().numero);
+		   //Strategia alternativa.... cancello tutto ciò che ho e lo tratto alla stregua di una riga nuova (tanto arrivano i figli...)
+		   //Mi faccio una copia delle righe che mi interessano...
+		   const childrenPos = index + 1; 
+		   const childrenLen = dataIndexNew.scontrini[scontrino].leng - 1;
+		   const childrenCopy = dataArrayNew.slice(childrenPos , childrenPos + childrenLen );
+		   newState = childDeleted(payload, newState, dataArrayName, dataIndexName, scontrino);
+		 console.log("ho cancellato la mia origine... " +scontrino);
+		 debugState(newState);
+		
+		   var father2;
+		   //Se la mia destinazione esiste già... salvo le sue righe e faccio uno swap...
+		   var scontrino2 = payload.val().numero;
+		   if (dataIndexNew.scontrini[scontrino2])
+				{   
+					let key2 = dataIndexNew.scontrini[scontrino2].key;
+		            father2 = {...dataArrayNew[dataIndexNew.chiavi[key2]]};
+		            console.log(father2);
+		            //TUTTA DA SCRIVERE... MA FRANCAMENTE MI STO INCARTANDO...
+		            console.log("ma lo scontrino " + scontrino2 + " esiste già...");
+					newState = childDeleted(payload, newState, dataArrayName, dataIndexName, scontrino2);
+					console.log("lo cancello... ecco lo stato dopo la cancellazione...tanto arriva dopo...");
+					debugState(newState);
+					//console.log("e mi metto al posto... di quello che ho cancellato....")
+					//father2.numero = scontrino;
+					//newState = childAdded(payload, newState, dataArrayName, dataIndexName, null, father2);
+					//debugState(newState);
+					
+		
+				}
+		 }
+		    newState = childAdded(payload, newState, dataArrayName, dataIndexName, transformEditedCassa);
+		   console.log("stato dopo essermi inserito...");
+		   	 debugState(newState);
+		
+		// newState = childAdded(payload, newState, dataArrayName, dataIndexName, transformEditedCassa, father2);
+		   /* 
+		   for (var i in childrenCopy)
+				{let tmp = childrenCopy[i];
+				 //All'inverso...
+					tmp['titolo'] = tmp['numero'];
+				 	
+					tmp['numero'] = payload.val().numero;
+					tmp['pezzi'] = tmp.totali.pezzi;
+					tmp['prezzoTotale'] = tmp.totali.prezzoTotale;
+				    newState = subChildAdded(payload, newState, dataArrayName, dataIndexName, null, tmp);
+	   	
+				}
+		  */
+			return newState;
+		
+	
+		   
+		   
+	}
+	
 }
 
 
-function subChildAdded(payload, state, dataArrayName, dataIndexName, transformItem)
+function subChildAdded(payload, state, dataArrayName, dataIndexName, transformItem, forceTmp)
 {  //Creo un array e un indice per copia degli attuali
 
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndexNew = {...(state[dataIndexName])};
   //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
    var tmp = payload.val();
-   tmp['key'] = payload.key;
+   if (forceTmp) tmp = forceTmp; 
+   if (!forceTmp) tmp['key'] = payload.key;
    tmp['tipo'] = 'rigaScontrino';
    var numero = tmp['numero'];
    tmp['numero'] = tmp['titolo'];
@@ -222,18 +335,22 @@ function subChildDeleted(payload, state, dataArrayName, dataIndexName)
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndexNew = {...(state[dataIndexName])};
    //Cerco nell'indice la riga nell'array da cancellare  
-   var index = dataIndexNew[payload.key];
-   //Antirimbalzo...
+   var index = dataIndexNew.chiavi[payload.key];
+   var numero = payload.val().numero;
+    //Antirimbalzo...
    if (index>=0) 
 		{
 	  //Cancello la riga nell'indice
-	   delete dataIndexNew[payload.key]
+	   delete dataIndexNew.chiavi[payload.key]
+	   //Decremento la lunghezza dello scontrino
+	   dataIndexNew.scontrini[numero].leng--; //e allungo di uno la sua lunghezza...
 	  //Cancello la rigna nell'array
 	   dataArrayNew.splice(index,1);
-	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
-	   for(var propt in dataIndexNew){
-	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
-	      }
+	  //Aggiorno da quella posizione tutti gli indici...
+	  updateChiavi(dataArrayNew, dataIndexNew, index);
+   
+	
+	
 	   //Aggiorno lo stato passando nuovo array e nuovo indice   
 	   let newState = {...state};
 	   newState[dataArrayName] = dataArrayNew;
@@ -248,24 +365,29 @@ function subChildChanged(payload, state, dataArrayName, dataIndexName, transform
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndex = state[dataIndexName];
   //Vedo in quale posizione devo modificare
-  var index = dataIndex[payload.key];
+  var index = dataIndex.chiavi[payload.key];
    //Antirimbalzo
+   console.log("sono cambiato! "+index);
+  
    if (index>=0) 
 		{
-		  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
 		   var tmp = payload.val();
 		   tmp['key'] = payload.key;
-		 //Se è definita una funzione di trasformazione la applico
+		   tmp['tipo'] = 'rigaScontrino';
+		   tmp['numero'] = tmp['titolo'];
+		   tmp['totali'] = {pezzi: tmp['pezzi'], prezzoTotale: tmp['prezzoTotale']};
+		    //Se è definita una funzione di trasformazione la applico
 		   if (transformItem) transformItem(tmp);
-		  
+		   
 		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
 		  
 		  //Aggiorno lo stato passando nuovo array e nuovo indice
-		   var newState = {...state};
-		   newState[dataArrayName] = dataArrayNew;
-		   return newState;
+		   let newState = {...state};
+	   newState[dataArrayName] = dataArrayNew;
+	   newState[dataIndexName] = dataIndex;                    
+	   return newState;
 		}
-	else return {...state};   
+	else return subChildAdded(payload, state, dataArrayName, dataIndexName, transformItem) ;   
 }
 
  
@@ -333,7 +455,7 @@ export default function cassa(state = initialState(), action) {
 	    	break;
 	   
 	case CHANGED_ITEM_CASSA:
-			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa); 
+		    newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa); 
 	    	break;    
 	    	
     case ADDED_RIGASCONTRINO:
@@ -369,9 +491,6 @@ export default function cassa(state = initialState(), action) {
  export const getListeningItemCassa = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const shouldRedirect = (state) => {return state.shouldRedirect};
- 
- 
- 
  
       
 

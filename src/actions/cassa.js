@@ -110,6 +110,7 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 	return function(dispatch,getState) 
 	   {
 	   	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
+	   		var ref; 
 		refCassa.transaction( function(cassa) {
     		if (cassa) 
     			{
@@ -117,13 +118,15 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
     			}
     		return cassa;
 			}).then(function(success) {
+		   //Se devo swappare i numeri lo faccio qui...
 			
+		   		
 		   const typeChange =  cassaFA.CHANGE_ITEM;
 			var nuovoItem = {...valori};
 			addChangedStamp(nuovoItem);
 			preparaItem(nuovoItem);
   
-			var ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], itemId));
+			ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], itemId));
            ref.update(nuovoItem);
 			dispatch(
    					{
@@ -134,16 +137,15 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 			nuovoItem['key'] = ref.key;
 			dispatch(cassaFA.setSelectedItem(nuovoItem));
 			
-			//Se devo swappare i numeri lo faccio qui...
 			
-			if (numeroKey)
+			
+			})
+            	if (numeroKey)
 				{
 				ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], numeroKey));	
 				ref.update({'numero' : oldNumero});	
 				}
-			
-			})
-
+		
 
 
 			//Non mi serve chiamare la funzione originale...
