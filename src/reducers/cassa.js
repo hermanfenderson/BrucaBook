@@ -55,25 +55,7 @@ const transformEditedCassa = (row) =>
 }
 
 
-const debugState = (newState) =>
-{
- console.log(newState.itemsArray);
- for (var propt in newState.itemsArrayIndex.scontrini)
-	{
-		console.log(propt);
-		 console.log(newState.itemsArrayIndex.scontrini[propt]);
-	}
- for (var propt2 in newState.itemsArrayIndex.chiavi)
-	{
-		console.log(propt2);
-		 console.log(newState.itemsArrayIndex.chiavi[propt2]);
-	}
-	
 
-		
-			
-	
-}
 /*Struttura dati di dataIndex
 scontrini
 	scontrino -> precedente (num.scontrino), prossimo (num.scontrino), key (chiave scontrino), length (lunghezza scontrino compreso header) 
@@ -167,8 +149,6 @@ function childDeleted(payload, state, dataArrayName, dataIndexName, forcedNumber
    //Antirimbalzo...
    if (index>=0) 
 		{
-	  console.log("cancello lo scontrino numero "+ numero);
-	  console.log("opera alla posizione " + index + " per lunghezza " + leng);
 	  //Sgancio dalla catena lo scontrino che cancello...
 	  var precedente = dataIndexNew.scontrini[numero].precedente;
 	  var successivo = dataIndexNew.scontrini[numero].successivo;
@@ -239,55 +219,20 @@ function childChanged(payload, state, dataArrayName, dataIndexName, transformIte
 		let newState = {...state};
 		if (scontrino)
 		{
-		  console.log("sono lo scontrino " + scontrino + " e voglio diventare lo scontrino " + payload.val().numero);
 		   //Strategia alternativa.... cancello tutto ciò che ho e lo tratto alla stregua di una riga nuova (tanto arrivano i figli...)
 		   //Mi faccio una copia delle righe che mi interessano...
-		   const childrenPos = index + 1; 
-		   const childrenLen = dataIndexNew.scontrini[scontrino].leng - 1;
-		   const childrenCopy = dataArrayNew.slice(childrenPos , childrenPos + childrenLen );
 		   newState = childDeleted(payload, newState, dataArrayName, dataIndexName, scontrino);
-		 console.log("ho cancellato la mia origine... " +scontrino);
-		 debugState(newState);
-		
-		   var father2;
+
 		   //Se la mia destinazione esiste già... salvo le sue righe e faccio uno swap...
 		   var scontrino2 = payload.val().numero;
 		   if (dataIndexNew.scontrini[scontrino2])
 				{   
-					let key2 = dataIndexNew.scontrini[scontrino2].key;
-		            father2 = {...dataArrayNew[dataIndexNew.chiavi[key2]]};
-		            console.log(father2);
-		            //TUTTA DA SCRIVERE... MA FRANCAMENTE MI STO INCARTANDO...
-		            console.log("ma lo scontrino " + scontrino2 + " esiste già...");
 					newState = childDeleted(payload, newState, dataArrayName, dataIndexName, scontrino2);
-					console.log("lo cancello... ecco lo stato dopo la cancellazione...tanto arriva dopo...");
-					debugState(newState);
-					//console.log("e mi metto al posto... di quello che ho cancellato....")
-					//father2.numero = scontrino;
-					//newState = childAdded(payload, newState, dataArrayName, dataIndexName, null, father2);
-					//debugState(newState);
-					
+
 		
 				}
 		 }
 		    newState = childAdded(payload, newState, dataArrayName, dataIndexName, transformEditedCassa);
-		   console.log("stato dopo essermi inserito...");
-		   	 debugState(newState);
-		
-		// newState = childAdded(payload, newState, dataArrayName, dataIndexName, transformEditedCassa, father2);
-		   /* 
-		   for (var i in childrenCopy)
-				{let tmp = childrenCopy[i];
-				 //All'inverso...
-					tmp['titolo'] = tmp['numero'];
-				 	
-					tmp['numero'] = payload.val().numero;
-					tmp['pezzi'] = tmp.totali.pezzi;
-					tmp['prezzoTotale'] = tmp.totali.prezzoTotale;
-				    newState = subChildAdded(payload, newState, dataArrayName, dataIndexName, null, tmp);
-	   	
-				}
-		  */
 			return newState;
 		
 	

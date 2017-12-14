@@ -39,8 +39,8 @@ actionRowRender = (cell, row) => {
  
  
 ordinaryRowRender = (cell,row) => {
- if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
- else  return(<div onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
+ if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ else  return(<div onClick={() => { this.selectRow(row)}}>{cell}</div>);
  
 } 
 

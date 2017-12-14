@@ -20,7 +20,7 @@ componentDidMount()
  }
 	
 selectRow = (row) => {
- 	if(this.props.selectRow) this.props.selectRow(row);
+ 	if(this.props.selectRow  && (row.tipo === 'scontrino')) {console.log(row); this.props.selectRow(row)};
  }
  
  
@@ -28,7 +28,7 @@ actionRowRender = (cell, row) => {
    return (
         <div>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(row)}}/>} 
-		{(this.props.editRow) && <Icon type="edit" onClick={() => { this.props.editRow(row)}}/>}  
+		{(this.props.editRow) && (row.tipo === 'scontrino') && <Icon type="edit" onClick={() => { this.props.editRow(row)}}/>}  
         </div>
         );
  }
@@ -36,8 +36,8 @@ actionRowRender = (cell, row) => {
  
  
 ordinaryRowRender = (cell,row) => {
- if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
- else  return(<div onClick={() => { this.props.selectRow(row)}}>{cell}</div>);
+ if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ else  return(<div onClick={() => { this.selectRow(row)}}>{cell}</div>);
  
 } 
 

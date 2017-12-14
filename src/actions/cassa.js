@@ -82,6 +82,7 @@ cassaFA.aggiungiItem = (params, valori) => {
 			nuovoItem['key'] = ref.key;
 			nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
 			dispatch(cassaFA.setSelectedItem(nuovoItem));
+			dispatch(setRedirect(true));
 			})
 
 
@@ -166,6 +167,7 @@ const listenRigheScontrino = (cassaParams, scontrinoKey) =>
    const itemsUrl = 'righeScontrino';	
    const params = [...cassaParams]
    params.push(scontrinoKey);
+   
    return function(dispatch, getState) {
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
@@ -212,8 +214,7 @@ const offListenRigheScontrino = (cassaParams, scontrinoKey) =>
    const itemsUrl = 'righeScontrino';	
    const params = [...cassaParams]
    params.push(scontrinoKey);
- 
-	return function(dispatch, getState) {
+ 	return function(dispatch, getState) {
 	Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
 	dispatch({
 	   	type: typeUnlisten,
