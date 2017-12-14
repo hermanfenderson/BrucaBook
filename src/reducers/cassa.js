@@ -370,7 +370,7 @@ export default function cassa(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] -100;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] -  measures['testataCassaHeight'] -100;
    	    newState = {...state, tableHeight: height};
         break;
    //Over-ride del reducer form... gestisco diversamente i totali...     

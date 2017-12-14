@@ -11,6 +11,11 @@ function preparaItem(riga)
       riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
      riga['prezzoUnitario'] = parseFloat(riga['prezzoUnitario']).toFixed(2);
      riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
+     //Elimino i riferimenti ai totali (che vengono calcolati e non vanno persistiti... e al tipo che serve solo in visualizzazione)
+     	if ('totali' in riga) {delete riga.totali};
+     	if ('tipo' in riga) {delete riga.tipo};
+     	
+    
    }
 
    

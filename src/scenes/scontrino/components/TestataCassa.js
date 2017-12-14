@@ -2,24 +2,29 @@ import React from 'react'
 import {Button, Spin, Row} from 'antd'
 
 
-const TestataCassa = (props) => 
+class TestataCassa extends React.Component 
+{
+render()
     {
-    const totali = props.testataCassa ? props.testataCassa.totali : null;
+    const totali = this.props.testataCassa ? this.props.testataCassa.totali : null;
     	 if (totali) return(
-		  <Spin spinning={props.staleTotaliCassa}>	
-
+		  
 			<div>
-				<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={props.submitRigaCassa}/>
+		
+				<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.props.submitRigaCassa}/>
+			<Spin spinning={this.props.staleTotaliCassa}>	
+
 			<Row> Copie: {totali.pezzi} </Row>
 				<Row> Totale: {totali.prezzoTotale} </Row>
+			</Spin>	
+		
 			</div>
-		</Spin>	
 			
 			)
-    	 else return   <Spin spinning={props.staleTotaliCassa}>
-    	     <Button type="primary" shape="circle" icon="plus" size={'small'} onClick={props.submitRigaCassa}/>
+    	 else return   <Spin spinning={this.props.staleTotaliCassa}>
+    	     <Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.props.submitRigaCassa}/>
 		
     	 </Spin>
     }		
-	
+}	
 export default TestataCassa;

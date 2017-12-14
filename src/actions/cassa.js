@@ -16,7 +16,9 @@ export const OFF_LISTEN_RIGASCONTRINO = 'OFF_LISTEN_RIGASCONTRINO';
 function preparaItem(riga)
    {
    	riga['oraScontrino'] = riga['oraScontrino'].valueOf();
-   	
+   	//Questi vengono calcolati... oppure servono a visualizzre...
+   	if ('totali' in riga) {delete riga.totali};
+    if ('tipo' in riga) {delete riga.tipo};
      
    }
 

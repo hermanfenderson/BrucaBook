@@ -26,8 +26,10 @@ var currentIdScontrino = null;
 class Scontrino extends Component {
 
  componentDidMount() {
-    if (ReactDOM.findDOMNode(this.refs.formRigaScontrino))	this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
-   
+    if (ReactDOM.findDOMNode(this.refs.formRigaScontrino)) this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
+    	
+    if (ReactDOM.findDOMNode(this.refs.testataCassa)) 	this.props.storeMeasure('testataCassaHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
+    
     	
  }
  
@@ -113,7 +115,7 @@ else return (
     </Modal>  
   <Col span={7}>
 	<Row>
-	<TestataCassa submitRigaCassa={this.submitRigaCassa}  testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
+	<TestataCassa ref='testataCassa' submitRigaCassa={this.submitRigaCassa}  testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
 	</Row>
 	<Row>Immagine
 	</Row>

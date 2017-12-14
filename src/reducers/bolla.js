@@ -35,26 +35,6 @@ const initialState = () => {
     
 
 
-/*
-
-const initialState = () => {
-
-	return {
-			itemsArray: [],
-			itemsArrayIndex: {},
-		    tableScroll: false,
-		    lastActionKey: null,
-			staleTotali: true,
-			showCatalogModal: false,
-			tableHeight: 2048,
-			totali: {pezzi : 0, gratis : 0, prezzoTotale : 0.0},
-			editedItem: {...editedItemInitialState()},
-			testata: null,
-			listeningTestata: null,
-			listeningItem: null
-	    	}
-    }
- */
  
     
 //Metodi reducer per le Form
