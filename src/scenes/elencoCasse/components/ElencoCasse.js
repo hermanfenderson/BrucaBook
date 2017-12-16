@@ -44,7 +44,7 @@ if (!isEqual(this.props.period,[this.props.match.params.anno, this.props.match.p
 return (
  <div>	
   <Row>
-      <Col style={{'marginTop': '100px'}} span={4}>
+      <Col style={{'marginTop': '30px'}} span={4}>
        <Form.Item
             label="Periodo"
           >
@@ -53,12 +53,17 @@ return (
       </Col>
        <Col span={20}>
     
-   	 <FormCassa ref='formCassa' period={this.props.period}/>
-   	 </Col>
+   <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
+  	 </Col>
     </Row>
      <Row>
-         <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
-      </Row>
+     <Col span={4} />
+         <Col span={20}>
+    
+   	 <FormCassa ref='formCassa' period={this.props.period}/>
+   	 </Col>
+ 
+             </Row>
    
   </div>
  

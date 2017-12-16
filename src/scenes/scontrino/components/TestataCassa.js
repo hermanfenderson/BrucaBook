@@ -11,7 +11,6 @@ render()
 		  
 			<div>
 		
-				<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.props.submitRigaCassa}/>
 			<Spin spinning={this.props.staleTotaliCassa}>	
 
 			<Row> Copie: {totali.pezzi} </Row>

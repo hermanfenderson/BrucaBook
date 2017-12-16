@@ -40,11 +40,13 @@ if (this.props.period && !isEqual(this.props.period,[this.props.match.params.ann
 else  
 {
 if (!isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoBolle(period2moment([this.props.match.params.anno, this.props.match.params.mese]));
+//Era...       <Col style={{'marginTop': '100px'}} span={4}>
 	
 return (
  <div>	
   <Row>
-      <Col style={{'marginTop': '100px'}} span={4}>
+  
+      <Col style={{'marginTop': '30px'}} span={4}>
        <Form.Item
             label="Periodo"
           >
@@ -52,13 +54,18 @@ return (
        </Form.Item>
       </Col>
        <Col span={20}>
-    
-   	 <FormBolla ref='formBolla' period={this.props.period}/>
-   	 </Col>
+      <TableElencoBolle listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
+   
+   	 	 </Col>
     </Row>
      <Row>
-         <TableElencoBolle listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
-      </Row>
+     <Col span={4} />
+     
+      <Col span={20}>
+     
+     <FormBolla ref='formBolla' period={this.props.period}/>
+     </Col>
+          </Row>
    
   </div>
  

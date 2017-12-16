@@ -2,6 +2,7 @@ import TableBolla from '../containers/TableBolla';
 import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../components/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
+import BookImg from '../../../components/BookImg'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
@@ -62,20 +63,26 @@ render()
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='BOLLA'/>
     </Modal>  
     <Row style={{'backgroundColor': 'white'}}>
-      <Col span={4}>
-      </Col>
-      <Col span={16}>
-    	 <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
-      </Col>
-      <Col span={4}>
+   <Col span={4}>
     	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla}/>
       </Col>
-    </Row>
+ 
+       <Col span={20}>
+     <TableBolla  period={period} idBolla={this.props.match.params.id}/>
+      
+    	   </Col>
+      </Row>
     
      <Row>
-      
-         <TableBolla  period={period} idBolla={this.props.match.params.id}/>
-      
+     <Col span={4}>
+     <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} />
+
+      </Col>
+       <Col span={20}>
+    
+      <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
+      </Col>
+        
     </Row>
    
   </div>
