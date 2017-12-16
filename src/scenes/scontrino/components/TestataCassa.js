@@ -12,9 +12,11 @@ render()
 			<div>
 		
 			<Spin spinning={this.props.staleTotaliCassa}>	
-
+			
+			<Row> Totale cassa: {totali.prezzoTotale} </Row>
+			<Row> Scontrini: {totali.scontrini} </Row>
 			<Row> Copie: {totali.pezzi} </Row>
-				<Row> Totale: {totali.prezzoTotale} </Row>
+				
 			</Spin>	
 		
 			</div>

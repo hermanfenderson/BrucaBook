@@ -21,9 +21,11 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
 						      {
 						      var totalePezzi = 0.0;
 							  var totaleImporto = 0.0;
+							  var scontrini = 0;
 							  elencoScontrini = snapshot.val();
 							  for(var propt in elencoScontrini)
 		  							{
+		  							scontrini++;	
 		  							if (elencoScontrini[propt].totali)
 		  								{
 		  								totalePezzi = parseInt(elencoScontrini[propt].totali.pezzi) + totalePezzi;
@@ -31,6 +33,7 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
 		  								}
 		  							}
 		  					  const totali = {'pezzi' : totalePezzi, 
+		  					                  'scontrini' : scontrini,
 											  'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : key}; 
 											  
 							 const ref = event.data.ref.parent.parent.parent.parent.parent.parent.child('elencoCasse').child(anno).child(mese).child(cassa);
