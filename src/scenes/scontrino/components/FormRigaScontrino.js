@@ -51,20 +51,20 @@ resetForm = () => {
        </WrappedForm.Group>
         
         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Input field='sconto' label='Sconto' disabled={prezzoMan} formColumnLayout={{span:4}}  />
-        <WrappedForm.Checkbox formColumnLayout={{span:4}} field='manSconto' label='Man.'/>
+        <WrappedForm.Input field='sconto' label='Sconto' disabled={prezzoMan} formColumnLayout={{span:2}}  />
+        <WrappedForm.Checkbox formColumnLayout={{span:2}} field='manSconto' label='Man.'/>
         
-        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:5}} />
-        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:5}}/>
-        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:6}} formItemLayout={{wrapperCol: { offset: 2, span: 22 }}}/>
-    
+        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:4}} />
+        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:4}}/>
+        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:4}} formItemLayout={{wrapperCol: { offset: 2, span: 22 }}}/>
+    <WrappedForm.Button type={'button'} itemStyle={{paddingTop: '30px'}} formColumnLayout={{span:4}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       	
+        <WrappedForm.Button  type="primary" htmlType="submit" itemStyle={{paddingTop: '30px'}} formColumnLayout={{span:4}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:16}} >
-         <WrappedForm.GeneralError  formColumnLayout={{span:14}}/>
+         <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
        
-        <WrappedForm.Button type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
-       	
-        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:5}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
         
         
        

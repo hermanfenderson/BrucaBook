@@ -61,8 +61,8 @@ const GeneralError = (props) => {
 
 const FormButton =  (props) => 
 				{ 
-				   const {formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
-                   return <FormItem {...buttonItemLayout}> <Button  {...otherProps} /> </FormItem>
+				   const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
+                   return <FormItem style={itemStyle}  {...buttonItemLayout}> <Button  {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>
@@ -73,7 +73,7 @@ const WrapGeneric = (props) =>
 					
              	
   const InputDecorator = (InputComponent) => {return (props) => {
-  	     const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, ...otherProps} = props;
+  	     const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, ...otherProps} = props;
 	    const onChangeInput=(input) => {
 	    	//const value = input.target ? (('checked' in input.target) ? input.target.checked : input.target.value) : input;
 	    	const value = input.target ? (input.target.type ==='checkbox' ? input.target.checked : input.target.value) : input;
@@ -86,7 +86,8 @@ const WrapGeneric = (props) =>
         		required={props.required}
         		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
         		help={props.errorMessages[props.field]}
-        		label={props.label}>
+        		label={props.label}
+        		style={itemStyle}>
         	<InputComponent value={props.formValues[field]} 
         	       onChange={onChangeInput} 
         	       disabled={props.readOnlyForm || props.readOnly}

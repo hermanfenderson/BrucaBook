@@ -6,7 +6,7 @@ import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
 import {getShowCatalogModalScontrino, getEditedCatalogItem, getTestataScontrino, getListeningTestataScontrino, 
-		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa, shouldRedirectCassa} from '../../../reducers'
+		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa, shouldRedirectCassa} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataScontrino = rigaScontrinoFA.listenTestata;
@@ -27,6 +27,7 @@ const mapStateToProps = (state) => {
 	         staleTotali: isStaleTotaliScontrino(state),
 	         testataCassa: getTestataCassa(state),
 	         staleTotaliCassa: isStaleTotaliCassa(state),
+	         editedRigaScontrino: getEditedRigaScontrino(state),
 	         selectedScontrino: getEditedRigaCassa(state).selectedItem,
 	         listeningTestataCassa: getListeningTestataCassa(state),
 	         shouldRedirectCassa: shouldRedirectCassa(state)

@@ -1,6 +1,13 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.2.0
+Cambiato il paradigma... Dettagli sotto... totali sopra. In questo modo da sinistra a destra e da sopra a sotto si procede sempre
+in maggior dettaglio....
+Creato uno "stub" bookImg... da richiamare per mostrare l'immagine di un EAN...
+Eliminato il campo gratis dall'elenco casse e inserito il calcolo del totale degli scontrini...
+
+
 Versione 0.1.4 
 Ultimo rilascio 0.1.x Parto con implementazione inventario. Ho fatto hammering dei bachi più ovvi... Ci torno in seguito.
 

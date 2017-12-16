@@ -11,19 +11,19 @@ render()
 		  
 			<div>
 		
-				<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.props.submitRigaCassa}/>
 			<Spin spinning={this.props.staleTotaliCassa}>	
-
+			
+			<Row> Totale cassa: {totali.prezzoTotale} </Row>
+			<Row> Scontrini: {totali.scontrini} </Row>
 			<Row> Copie: {totali.pezzi} </Row>
-				<Row> Totale: {totali.prezzoTotale} </Row>
+				
 			</Spin>	
 		
 			</div>
 			
 			)
     	 else return   <Spin spinning={this.props.staleTotaliCassa}>
-    	     <Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.props.submitRigaCassa}/>
-		
+    	     
     	 </Spin>
     }		
 }	
