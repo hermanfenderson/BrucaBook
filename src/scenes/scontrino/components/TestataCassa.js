@@ -21,8 +21,7 @@ render()
 			
 			)
     	 else return   <Spin spinning={this.props.staleTotaliCassa}>
-    	     <Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.props.submitRigaCassa}/>
-		
+    	     
     	 </Spin>
     }		
 }	

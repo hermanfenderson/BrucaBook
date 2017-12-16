@@ -114,7 +114,7 @@ else return (
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
-  <Col span={6}>
+  <Col style={{'backgroundColor': '#F0F0F0'}} span={7}>
 	
     <Row>
     	<TestataCassa ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
@@ -125,46 +125,50 @@ else return (
 	</Row>
 
   </Col>
-  <Col span={18}>
+  <Col span={17}>
   <Row>
-    	<Col span={4}>
-	    </Col>   
-		<Col span={3}>
-			<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.submitRigaCassa}/>
+    	<Col span={5}>
+			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
+		</Col>
+		<Col span={19}>
+	    <Row>
+	    	<Col span={3}>
+				<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.submitRigaCassa}/>
 		
-	</Col>
-		<Col span={17}>
+			</Col>
+			<Col span={21}>
 	
-		<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}  ref='formTestataScontrino'/>
-	</Col>
-	</Row>
+				<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}  ref='formTestataScontrino'/>
+			</Col>
+		</Row>
+		<Row>
+   		
+		   <Spin spinning={!this.props.testataScontrino}>	
+   	
+			
+					<TableScontrino  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+		   </Spin>
+	   	</Row>
+			   
+	   </Col>
+	   
+	</Row>  
 	
-	
-   <Spin spinning={!this.props.testataScontrino}>	
-   	<Row>
-   	<Col span={4}>
-		<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
-	</Col>
-		<Col span={20}>
+       <Row style={{'backgroundColor': 'White'}}>
+    		<Col span={5}>
 
-	 <TableScontrino  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
-       </Col>
-	</Row>
-    <Row style={{'backgroundColor': 'white'}}>
-     <Col span={4}>
-
-<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} />
+				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} />
 
 	
-  </Col>
-  <Col span={20}>
+		  </Col>
+		  <Col span={19}>
 
 
-    <FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} ref='formRigaScontrino'/>
-       </Col>
+    		<FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} ref='formRigaScontrino'/>
+    	  </Col>
 
      </Row>
-     </Spin>
+     
   </Col>
  
    
