@@ -20,8 +20,12 @@ import GestioneBolla from '../scenes/bolla';
 import GestioneItemCatalog from '../scenes/catalogo';
 
 
+    
+    
 const Main= (props) => 
-{    const authenticated = props.authenticated;
+{  	const authenticated = props.authenticated;
+    const email = (props.user) ? props.user.email : null;
+    
      const RequireAuth = (Component) => {return((props) => {
      	                   	return (authenticated ?  <Component {...props}/>:  <Redirect to='/login' />);
     						})}
@@ -34,8 +38,8 @@ const Main= (props) =>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
 		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
-		        					
-		
+		        					    <Route path="/cambioPassword" render={(props) => <Signup {...props} email={email}/>} />
+    					      		                   
 		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
     					      			<Route path="/login" component={Login} />
 						    			<Route path="/signup" component={Signup} />

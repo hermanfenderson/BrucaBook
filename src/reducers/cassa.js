@@ -22,7 +22,7 @@ const DELETE_ITEM_SCONTRINO = 'DELETE_ITEM_SCONTRINO';
 const SET_REDIRECT_CASSA = 'SET_REDIRECT_CASSA';
 
 const editedRigaCassaValuesInitialState = 
-	  {			numeroScontrino: 1,
+	  {			
 	            oraScontrino: null,
 	};
 	

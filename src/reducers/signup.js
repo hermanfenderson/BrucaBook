@@ -4,8 +4,8 @@ import FormReducer from '../helpers/formReducer';
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  showError, noErrors} from '../helpers/form';
 import {isValidEmail} from '../helpers/validators';
 //Override
-import {SUBMIT_EDITED_ITEM_SIGNUP} from '../actions/signup';
-import {AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP} from '../actions/signup';
+import {SUBMIT_EDITED_ITEM_SIGNUP, SUBMIT_NEW_PASSWORD} from '../actions/signup';
+import {AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_NEW_PASSWORD} from '../actions/signup';
 
 //Metodi reducer per le Form
 const itemR = new FormReducer('SIGNUP'); 
@@ -60,6 +60,7 @@ export default function signup(state = initialState(), action) {
   switch (action.type) {
    //Over-ride del caso di submit... non devo cancellare il form
    case SUBMIT_EDITED_ITEM_SIGNUP:
+   case SUBMIT_NEW_PASSWORD:
 		    //Posso sottomettere il form se lo stato della riga è valido
 			if (!state.editedItem.isValid)
 		        {
@@ -77,12 +78,20 @@ export default function signup(state = initialState(), action) {
 		    		newState = {...state, 'editedItem': cei};     	
 		        
 		  }
-        break;		  
+        break;	
     case DISMISS_AUTH_ERROR_SIGNUP:
 		  {
 		  	let cei = editedItemCopy(state.editedItem);
 		    		  noErrors(cei, 'form'); //ELIMINO GLI ERRORI DAL FORM...
 		    		newState = {...state, 'editedItem': cei};     	
+		        
+		  }
+        break;	    
+     case DISMISS_AUTH_ERROR_NEW_PASSWORD:
+
+    	  {
+		  	let cei = {...editedItemInitialState()};
+		  	newState = {...state, 'editedItem': cei};     	
 		        
 		  }
         break;		      

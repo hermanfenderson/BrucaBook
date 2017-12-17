@@ -43,7 +43,7 @@ const FormItem = Form.Item; //Per semplicità
 //Gestisco pmChange separatamente per consentire l'over-ride della funzione onChange...
 const renderChildren = (props, hasColumns) => {
 let children = React.Children.map(props.children, child => {
-	    if (hasColumns)
+	    if(child) if (hasColumns)
 	         return <Col {...child.props.formColumnLayout} >
 	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </Col>

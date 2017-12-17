@@ -4,6 +4,7 @@ import {Menu, Icon} from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
 
+const SubMenu = Menu.SubMenu;
 
 class Sider extends React.Component {
   state = {
@@ -17,7 +18,8 @@ class Sider extends React.Component {
 			case '1': link='/acquisti/'+moment().format('YYYY/MM'); break;
 			case '2': link='/vendite/'+moment().format('YYYY/MM'); break;
 			case '3': link='/itemCatalogo'; break;
-			case '4': link='#signout'; this.props.signOutUser();break;
+			case '4': link='/cambioPassword'; break;
+			case '5': link='#signout'; this.props.signOutUser();break;
 			default: break;
 		}
 		this.setState({selectedKeys : [selection.key]});
@@ -42,10 +44,16 @@ class Sider extends React.Component {
               <Icon type="book" />
               <span>Catalogo</span>
             </Menu.Item>
-            <Menu.Item key="4">
-              <Icon type="logout" />
-              <span>Esci</span>
-            </Menu.Item>
+            <SubMenu key="sub1" title={<span><Icon type="user" /><span>Utente</span></span>}>
+	            <Menu.Item key="4">
+	              <Icon type="retweet" />
+	              <span>Cambia password</span>
+	            </Menu.Item>
+	            <Menu.Item key="5">
+	              <Icon type="logout" />
+	              <span>Esci</span>
+	            </Menu.Item>
+	         </SubMenu>   
           </Menu>
          </div> 
      )}

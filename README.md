@@ -1,6 +1,9 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.2.2
+Gestione cambio password e password dimenticata
+
 Versione 0.2.1
 Bug fixing: Cancellare uno scontrino non aggiornava i totali di cassa.
 Bug fixing: Cancellare uno scontrino non eliminava lo scontrino dalla sezione di dettaglio
