@@ -2,7 +2,7 @@ import TableCassaComponent from '../components/TableCassa'
 import {cassaFA, setRedirect} from '../../../actions/cassa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaCassa, getRigheCassa, getTableHeightCassa, getTableScrollCassa, getMeasuresCassa, getListeningItemCassa} from '../../../reducers'
+import {getEditedRigaCassa, getRigheCassa, getRigheCassaIndex, getTableHeightCassa, getTableScrollCassa, getMeasuresCassa, getListeningItemCassa} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -18,7 +18,8 @@ const mapStateToProps = (state) => {
 	return ({data: getRigheCassa(state), tableScroll: getTableScrollCassa(state), 
 	height: getTableHeightCassa(state), measures: getMeasuresCassa(state), 
 	selectedItem: getEditedRigaCassa(state).selectedItem,
-	listeningItemCassa: getListeningItemCassa(state)
+	listeningItemCassa: getListeningItemCassa(state),
+	index: getRigheCassaIndex(state)
 		
 	})
 }

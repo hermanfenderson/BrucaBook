@@ -68,6 +68,7 @@ export const getListeningItemElencoCasse = (state) => {return fromElencoCasse.ge
 
 //Scene Cassa
 export const getRigheCassa = (state) => {return fromCassa.getItems(state.cassa)};
+export const getRigheCassaIndex = (state) => {return fromCassa.getItemsIndex(state.cassa)};
 export const getEditedRigaCassa = (state) => {return fromCassa.getEditedItem(state.cassa)};
 export const getTestataCassa = (state) => {return fromCassa.getTestataCassa(state.cassa)};
 export const getTableHeightCassa = (state) => {return fromCassa.getTableHeight(state.cassa)};

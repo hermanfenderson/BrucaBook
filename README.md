@@ -1,6 +1,15 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.2.1
+Bug fixing: Cancellare uno scontrino non aggiornava i totali di cassa.
+Bug fixing: Cancellare uno scontrino non eliminava lo scontrino dalla sezione di dettaglio
+Bug fixing: Non veniva controllato che il numero scontrino è intero positivo
+Bug fixing: In fase di reload non veniva caricata la riga dello scontrino nello stato
+Bug fixing: Non consento di cancellare le maschere con date o ore
+
+
+
 Versione 0.2.0
 Cambiato il paradigma... Dettagli sotto... totali sopra. In questo modo da sinistra a destra e da sopra a sotto si procede sempre
 in maggior dettaglio....

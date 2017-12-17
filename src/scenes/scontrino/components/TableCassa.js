@@ -7,6 +7,8 @@ import {Modal} from 'antd';
 class WrappedTable extends React.Component {
 componentDidMount()
   {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+     
+   
   }
   
   
@@ -17,10 +19,15 @@ componentDidMount()
 	        this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
+		if (this.props.scontrino && !this.props.selectedItem) {
+     	
+     if (this.props.index.chiavi && this.props.index.chiavi[this.props.scontrino] && this.props.data[this.props.index.chiavi[this.props.scontrino]]) this.props.selectRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
+     	
+     }	
  }
 	
 selectRow = (row) => {
- 	if(this.props.selectRow  && (row.tipo === 'scontrino')) {console.log(row); this.props.selectRow(row)};
+ 	if(this.props.selectRow  && (row.tipo === 'scontrino')) {this.props.selectRow(row)};
  }
  
  

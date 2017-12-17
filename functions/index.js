@@ -13,9 +13,10 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
              const anno = event.params.anno;
              const mese = event.params.mese;
 			 var key = event.params.idScontrino;	
+			 if (event.data.val()) key = event.data.val().lastActionKey;
+			 console.log(key);
             //Come prima cosa determino cosa è cambiato...
-            key = event.data.val().lastActionKey;
-            //POi calcolo i totali...
+           //POi calcolo i totali...
             const righeRef = event.data.ref.parent.parent;
             righeRef.once("value").then(function(snapshot) 
 						      {
@@ -34,7 +35,7 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
 		  							}
 		  					  const totali = {'pezzi' : totalePezzi, 
 		  					                  'scontrini' : scontrini,
-											  'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : key}; 
+											  'prezzoTotale' : totaleImporto.toFixed(2), 'lastActionKey' : key}; 
 											  
 							 const ref = event.data.ref.parent.parent.parent.parent.parent.parent.child('elencoCasse').child(anno).child(mese).child(cassa);
 							 if (totalePezzi > 0) ref.child('totali').set(totali); //Per non perdere tempo...

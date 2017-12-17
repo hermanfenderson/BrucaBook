@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Spin, Row} from 'antd'
+import {Spin, Row} from 'antd'
 
 
 class TestataCassa extends React.Component 

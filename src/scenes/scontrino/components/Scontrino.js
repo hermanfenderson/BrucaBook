@@ -108,6 +108,11 @@ if (this.props.shouldRedirectCassa && this.props.selectedScontrino && this.props
     const url = '/scontrino/' + this.props.match.params.anno + '/' + this.props.match.params.mese + '/' + this.props.match.params.cassa + '/' + this.props.selectedScontrino.key
 	return (<Redirect to={url} />);
 	}
+else if (!this.props.selectedScontrino && this.props.shouldRedirectCassa)	
+	{
+	const url = '/scontrino/' + this.props.match.params.anno + '/' + this.props.match.params.mese + '/' + this.props.match.params.cassa; 
+	return (<Redirect to={url} />);	
+	}
 else return (
  	
   <Row gutter={16}>
@@ -121,7 +126,7 @@ else return (
     </Row>
 	
 	<Row>
-	 <TableCassa  period={period} cassa={this.props.match.params.cassa} />
+	 <TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</Row>
 
   </Col>

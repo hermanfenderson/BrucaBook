@@ -3,6 +3,7 @@ import {STORE_MEASURE} from '../actions';
 import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO} from '../actions/cassa';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
+import {isPositiveInteger} from '../helpers/validators'
 import moment from 'moment';
 
 const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
@@ -312,7 +313,6 @@ function subChildChanged(payload, state, dataArrayName, dataIndexName, transform
   //Vedo in quale posizione devo modificare
   var index = dataIndex.chiavi[payload.key];
    //Antirimbalzo
-   console.log("sono cambiato! "+index);
   
    if (index>=0) 
 		{
@@ -351,6 +351,7 @@ function transformAndValidateEditedRigaCassa(cei, name, value)
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
     errMgmt(cei, 'oraScontrino','invalidTime','Ora non valida',  (!cei.values.oraScontrino.isValid()));
+    errMgmt(cei, 'numero','notPositive','Numero > 0',  (!isPositiveInteger(cei.values.numero)));
   
   	
     //Se ho anche solo un errore... sono svalido.
@@ -376,11 +377,14 @@ export default function cassa(state = initialState(), action) {
    //Over-ride del reducer form... gestisco diversamente i totali...     
    case ADD_ITEM_CASSA:
    case CHANGE_ITEM_CASSA:
-   case DELETE_ITEM_CASSA:
    	
 	     	newState =  {...state, staleTotali: false}
 	    	break;	
 	    	
+   case DELETE_ITEM_CASSA:
+   			newState =  {...state, staleTotali: true, lastActionKey : action.key}
+   	        break;
+   	    	
 	    	
 	//I totali sono stale se cambia una voce dello scontrino sottostante... non la cassa in se!    	
    case ADD_ITEM_SCONTRINO:
@@ -426,7 +430,8 @@ export default function cassa(state = initialState(), action) {
 
 //Il mio primo selettore colocato https://egghead.io/lessons/javascript-redux-colocating-selectors-with-reducers!!!
 //Questi rimarranno identici in tutti i casi... Posso migliorare queste ripetizioni inutili?
- export const getItems = (state) => {return state.itemsArray};  
+ export const getItems = (state) => {return state.itemsArray}; 
+ export const getItemsIndex = (state) => {return state.itemsArrayIndex};
  export const getEditedItem = (state) => {return state.editedItem};  
  export const getTestataCassa = (state) => {return state.testata};
  export const getTableHeight = (state) => {return state.tableHeight};

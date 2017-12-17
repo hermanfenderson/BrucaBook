@@ -157,6 +157,25 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 		}
 }
 
+
+cassaFA.deleteItem = (params, itemId) => {
+const typeDelete = cassaFA.DELETE_ITEM;
+
+
+  return function(dispatch, getState) {
+    Firebase.database().ref(urlFactory(getState,'righeElencoScontrini',params, itemId)).remove();
+     dispatch(
+					{
+   					type: typeDelete,
+   					key: itemId
+   					}
+   					)   
+   	dispatch(cassaFA.setSelectedItem(null));
+	dispatch(setRedirect(true));				
+    };
+  }
+	
+
 const listenRigheScontrino = (cassaParams, scontrinoKey) =>
 {
 //Genero tre listener... come un'unica funzione...

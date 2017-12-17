@@ -38,7 +38,7 @@ componentWillMount = () =>
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
         <WrappedForm.Input field='cassa' label='Cassa'  required={true} formColumnLayout={{span: 8}} />
-        <WrappedForm.DatePicker field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedCassa.selectedItem!==null)}/>
+        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedCassa.selectedItem!==null)}/>
          </WrappedForm.Group>
         
      

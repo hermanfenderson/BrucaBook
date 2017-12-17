@@ -39,8 +39,8 @@ componentWillMount = () =>
          <WrappedForm.Group formGroupLayout={{gutter:16}}>
         <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 5}} />
         <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 5}} />
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
        <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
         <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
