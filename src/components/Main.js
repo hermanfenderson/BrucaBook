@@ -4,8 +4,7 @@ import React from 'react';
 
 import { Switch, Route, Redirect} from 'react-router-dom'
 import Home from './Home';
-import Signup from '../scenes/signup';
-import Login from '../scenes/login';
+import UserMgmt from '../scenes/userMgmt';
 import ElencoBolle from '../scenes/elencoBolle';
 import ElencoCasse from '../scenes/elencoCasse';
 import Scontrino from '../scenes/scontrino';
@@ -38,11 +37,11 @@ const Main= (props) =>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
 		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
-		        					    <Route path="/cambioPassword" render={(props) => <Signup {...props} email={email}/>} />
+		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props} email={email}/>} />
     					      		                   
 		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
-    					      			<Route path="/login" component={Login} />
-						    			<Route path="/signup" component={Signup} />
+    					      			
+						    		
 						            </Switch>
 		)
 }

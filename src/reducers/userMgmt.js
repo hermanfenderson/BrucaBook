@@ -4,16 +4,17 @@ import FormReducer from '../helpers/formReducer';
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  showError, noErrors} from '../helpers/form';
 import {isValidEmail} from '../helpers/validators';
 //Override
-import {SUBMIT_EDITED_ITEM_SIGNUP, SUBMIT_NEW_PASSWORD} from '../actions/signup';
-import {AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_NEW_PASSWORD} from '../actions/signup';
+import {SUBMIT_EDITED_ITEM_USERMGMT} from '../actions/userMgmt';
+import {AUTH_ERROR_LOGIN, DISMISS_AUTH_ERROR_LOGIN, AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP, AUTH_ERROR_NEW_PASSWORD, DISMISS_AUTH_ERROR_NEW_PASSWORD, SET_USERMGMT_MODE, RESET_USERMGMT_STATE} from '../actions/userMgmt';
 
 //Metodi reducer per le Form
-const itemR = new FormReducer('SIGNUP'); 
+const itemR = new FormReducer('USERMGMT'); 
 
 const editedSignupValuesInitialState = 
 	  {			email: '',
 				password: '',
-				confirmPassword: ''
+				confirmPassword: '',
+				remember: false
 	};
 const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedSignupValuesInitialState, {} ));
@@ -25,7 +26,7 @@ const editedItemInitialState = () => {
 const initialState = () => {
 
 	return {
-		    editedItem: {...editedItemInitialState()}
+		    editedItem: {...editedItemInitialState()},
 	    	}
     }
     
@@ -37,7 +38,8 @@ const initialState = () => {
 function transformAndValidateEditedSignup(cei, name, value)
 {  	
 	cei.values[name] = value;
-
+	//Trucchismo per tenere la seconda copia della password allineata nel modulo di login
+    if ((name === 'password') && (cei.userMgmtMode === 'login')) cei.values.confirmPassword = value;
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
     cei.errors = {};
@@ -55,13 +57,12 @@ function transformAndValidateEditedSignup(cei, name, value)
 
 
 
-export default function signup(state = initialState(), action) {
+export default function userMgmt(state = initialState(), action) {
   var newState;
   switch (action.type) {
    //Over-ride del caso di submit... non devo cancellare il form
-   case SUBMIT_EDITED_ITEM_SIGNUP:
-   case SUBMIT_NEW_PASSWORD:
-		    //Posso sottomettere il form se lo stato della riga è valido
+   case SUBMIT_EDITED_ITEM_USERMGMT:
+ 		    //Posso sottomettere il form se lo stato della riga è valido
 			if (!state.editedItem.isValid)
 		        {
 		        	let cei = editedItemCopy(state.editedItem);
@@ -72,6 +73,8 @@ export default function signup(state = initialState(), action) {
 		    else newState = state;    
 	   break;
 	case AUTH_ERROR_SIGNUP:
+	case AUTH_ERROR_LOGIN:
+	
 		  {
 		  	let cei = editedItemCopy(state.editedItem);
 		    		     errMgmt(cei,'form','loginError',action.error.message,true,true);
@@ -79,22 +82,64 @@ export default function signup(state = initialState(), action) {
 		        
 		  }
         break;	
-    case DISMISS_AUTH_ERROR_SIGNUP:
+        
+    case AUTH_ERROR_NEW_PASSWORD:
 		  {
 		  	let cei = editedItemCopy(state.editedItem);
+		  	    cei.userMgmtState = 'passwordChangeKO'
+		    		     errMgmt(cei,'form','loginError',action.error.message,true,true);
+		    		newState = {...state, 'editedItem': cei};     	
+		        
+		  }
+        break;	
+    case DISMISS_AUTH_ERROR_LOGIN:    
+   		  {
+		  	let cei = editedItemCopy(state.editedItem);
+		     cei.userMgmtState = 'loginOK'	
 		    		  noErrors(cei, 'form'); //ELIMINO GLI ERRORI DAL FORM...
 		    		newState = {...state, 'editedItem': cei};     	
 		        
 		  }
-        break;	    
+        break;	  
+    
+    case DISMISS_AUTH_ERROR_SIGNUP:
+		  {
+		  	let cei = editedItemCopy(state.editedItem);
+		     cei.userMgmtState = 'signupOK'	
+		    		  noErrors(cei, 'form'); //ELIMINO GLI ERRORI DAL FORM...
+		    		newState = {...state, 'editedItem': cei};     	
+		        
+		  }
+        break;	   
+        
      case DISMISS_AUTH_ERROR_NEW_PASSWORD:
 
     	  {
+    	  	
 		  	let cei = {...editedItemInitialState()};
+		  	  cei.userMgmtState = 'passwordChangeOK'
+		    
 		  	newState = {...state, 'editedItem': cei};     	
 		        
 		  }
-        break;		      
+        break;	
+     case SET_USERMGMT_MODE: 
+     	{
+     	let cei = editedItemCopy(state.editedItem);
+		     cei.userMgmtMode = action.mode;
+		    newState = {...state, 'editedItem': cei};     
+     		break;
+     	}
+      case RESET_USERMGMT_STATE: 
+     	{
+     	console.log("sono qui");
+     	let cei = editedItemCopy(state.editedItem);
+		   cei.userMgmtState = ''
+		    
+		  newState = {...state, 'editedItem': cei}; 
+		  break;
+		   
+     	}	
     default:
         newState = itemR.updateState(state,action,editedItemInitialState, transformAndValidateEditedSignup);
     	break;
@@ -104,6 +149,7 @@ export default function signup(state = initialState(), action) {
 }
 
 export const getEditedItem = (state) => {return state.editedItem};
+
 
 
  

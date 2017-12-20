@@ -6,12 +6,10 @@ import BollaReducer, * as fromBolla from './bolla';
 import CassaReducer, * as fromCassa from './cassa';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
-
-import LoginReducer, * as fromLogin from './login';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
 import MeasuresReducer from './measures';
 import ScontrinoReducer, * as fromScontrino from './scontrino';
-import SignupReducer, * as fromSignup from './signup';
+import UserMgmtReducer, * as fromUserMgmt from './userMgmt';
 import StatusReducer, * as fromStatus from './status';
 
 const rootReducer = combineReducers({
@@ -21,11 +19,10 @@ const rootReducer = combineReducers({
   cassa: CassaReducer,
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
-  login: LoginReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
   scontrino: ScontrinoReducer,
-  signup: SignupReducer,
+  userMgmt: UserMgmtReducer,
   catalogo: CatalogoReducer,
   status: StatusReducer
 });
@@ -98,8 +95,6 @@ export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTo
 //Scene Catalogo
 export const getEditedCatalogItem = (state) => {return fromCatalog.getEditedCatalogItem(state.catalogo)};
 
-//Scene Login
-export const getEditedItemLogin = (state) => {return fromLogin.getEditedItem(state.login)};
 
 //Scene Magazzino
 export const getMagazzino = (state) => {return fromMagazzino.getItems(state.magazzino)};
@@ -107,8 +102,8 @@ export const getTableMagazzinoHeight = (state) => {return fromMagazzino.getTable
 export const getListeningMagazzino = (state) => {return fromMagazzino.getListeningItem(state.magazzino)};
 
 
-//Scene Signup
-export const getEditedItemSignup = (state) => {return fromSignup.getEditedItem(state.signup)};
+//Scene UserMgmt
+export const getEditedItemUserMgmt = (state) => {return fromUserMgmt.getEditedItem(state.userMgmt)};
 
 
 //Dallo stato

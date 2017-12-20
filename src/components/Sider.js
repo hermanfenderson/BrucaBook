@@ -18,7 +18,7 @@ class Sider extends React.Component {
 			case '1': link='/acquisti/'+moment().format('YYYY/MM'); break;
 			case '2': link='/vendite/'+moment().format('YYYY/MM'); break;
 			case '3': link='/itemCatalogo'; break;
-			case '4': link='/cambioPassword'; break;
+			case '4': link='/userMgmt?mode=changePassword'; break;
 			case '5': link='#signout'; this.props.signOutUser();break;
 			default: break;
 		}

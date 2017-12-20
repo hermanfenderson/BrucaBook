@@ -34,7 +34,7 @@ class App extends React.Component {
   
 
  componentDidMount() {
- 	this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
+ 	if (ReactDOM.findDOMNode(this.refs.header)) this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
     this.handleResize(); //La prima volta...
     window.addEventListener('resize', this.handleResize);
     

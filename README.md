@@ -2,7 +2,8 @@ BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
 Versione 0.2.2
-Gestione cambio password e password dimenticata
+Gestione cambio password e password dimenticata:
+- ho una sola scene per tutto lo userMgmt (ho eliminato la scene login e ridenominato quella signup)
 
 Versione 0.2.1
 Bug fixing: Cancellare uno scontrino non aggiornava i totali di cassa.

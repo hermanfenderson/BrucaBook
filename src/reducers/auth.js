@@ -5,7 +5,7 @@ import {USER_INFO_CHANGED } from '../actions';
 const initialState =  {
   info: null,
   user: null,
-  authenticated: true //Questo evita rimbalzi in caso di refresh
+  authenticated: false 
 };
 
 export default function auth(state = initialState, action) {
