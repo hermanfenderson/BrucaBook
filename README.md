@@ -4,6 +4,8 @@ Utilizza React e Firebase.
 Versione 0.2.2
 Gestione cambio password e password dimenticata:
 - ho una sola scene per tutto lo userMgmt (ho eliminato la scene login e ridenominato quella signup)
+- gestisco correttamente il reset della password, il cambio password e tutto il resto... 
+
 
 Versione 0.2.1
 Bug fixing: Cancellare uno scontrino non aggiornava i totali di cassa.

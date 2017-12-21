@@ -7,7 +7,8 @@ import Firebase from 'firebase';
 //Questa genera i path... e mi dorvrebbe aggiungere flessibilità...
 export const SCENE = 'USERMGMT';
 export const SUBMIT_EDITED_ITEM_USERMGMT = 'SUBMIT_EDITED_ITEM_USERMGMT' //Override
-export const SUBMIT_NEW_PASSWORD = 'SUBMIT_NEW_PASSWORD';
+export const RESET_MAIL_SENT = 'RESET_MAIL_SENT';
+export const RESET_MAIL_ERROR = 'RESET_MAIL_ERROR';
 export const AUTH_ERROR_SIGNUP = 'AUTH_ERROR_SIGNUP'
 export const AUTH_ERROR_NEW_PASSWORD = 'AUTH_ERROR_NEW_PASSWORD'
 export const AUTH_ERROR_LOGIN = 'AUTH_ERROR_LOGIN'
@@ -17,14 +18,31 @@ export const DISMISS_AUTH_ERROR_SIGNUP = 'DISMISS_AUTH_ERROR_SIGNUP'
 export const DISMISS_AUTH_ERROR_NEW_PASSWORD = 'DISMISS_AUTH_ERROR_NEW_PASSWORD'
 export const SET_USERMGMT_MODE = 'SET_USERMGMT_MODE'
 export const RESET_USERMGMT_STATE = 'RESET_USERMGMT_STATE'
+export const VERIFY_CODE = 'VERIFY_CODE'
+export const CODE_OK = 'CODE_OK'
+export const CODE_KO = 'CODE_KO'
 
 //METODI DEL FORM
+export const verifyCode= (oobCode) =>
+{
+	return function(dispatch) {
+			Firebase.auth().verifyPasswordResetCode(oobCode)
+    		 .then(email => {
+    		    dispatch({type: CODE_OK, email: email});
+			   })
+		     .catch(error => {
+		     dispatch({type: CODE_KO, error: error});
+	      });
+		}
+}
+
 var loginFAtmp = new FormActions(SCENE);
 
 //Se devo fare override.... definisco metodi alternativi qui...
 //Eccone uno...faccio il login
+
 		
-loginFAtmp.submitEditedItem = (isValid,credentials, mode) => {
+loginFAtmp.submitEditedItem = (isValid,credentials, mode, oobCode) => {
 if (isValid && mode==='login') return function(dispatch) {
 	        
 			Firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password)
@@ -64,7 +82,33 @@ if (isValid && mode==='changePassword') return function(dispatch) {
 			});
 			
 		}
+		
+if (isValid && mode==='resetPassword') return function(dispatch) {
+		    var newPassword = credentials.password;
 
+			Firebase.auth().confirmPasswordReset(oobCode, newPassword).then(response => {
+			// Update successful.
+			dispatch({type: DISMISS_AUTH_ERROR_NEW_PASSWORD});
+			}).catch(error => {
+			 // An error happened.
+			dispatch({type: AUTH_ERROR_NEW_PASSWORD, error: error}); 
+			});
+			
+		}
+		
+if (isValid && mode==='requestPasswordReset') return function(dispatch) {
+	 console.log(credentials);
+			Firebase.auth().sendPasswordResetEmail(credentials.email, null)
+    .then(function() {
+      dispatch({type: RESET_MAIL_SENT});
+		
+    })
+    .catch(function(error) {
+      // Error occurred. Inspect error.code.
+      dispatch({type: RESET_MAIL_ERROR, error: error}); 	
+    });
+            
+	}
 return({type: SUBMIT_EDITED_ITEM_USERMGMT});
 
 	

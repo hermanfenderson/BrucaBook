@@ -26,7 +26,7 @@ const Main= (props) =>
     const email = (props.user) ? props.user.email : null;
     
      const RequireAuth = (Component) => {return((props) => {
-     	                   	return (authenticated ?  <Component {...props}/>:  <Redirect to='/login' />);
+     	                   	return (authenticated ?  <Component {...props}/>:  <Redirect to='/userMgmt?mode=login' />);
     						})}
     						
 	return( 					<Switch>

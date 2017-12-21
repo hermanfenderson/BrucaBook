@@ -6,6 +6,7 @@ import queryString from 'query-string';
 
 var query;
 var mode;
+var nextUrl = '/';
 class FormUserMgmt extends Component {
 //Casi tracciati
 //Signup
@@ -19,12 +20,15 @@ componentWillMount = () =>{
   	mode = query.mode;
   	this.props.setMode(mode);
   	var modeTxt = null;
-
+    if (mode==='resetPassword') this.props.verifyCode(query.oobCode);
   	if (this.props.email) {this.props.changeEditedSignup('email', this.props.email);}
   	switch(mode)
   	{
-  		case 'changePassword': case 'resetPassword':
+  		case 'changePassword': 
+  		case 'resetPassword':
   				modeTxt = 'Scegli una nuova password'; break;
+  		default:
+  				modeTxt = '';
   	}
   	if (modeTxt) this.props.setHeaderInfo(modeTxt);
 }	
@@ -32,20 +36,21 @@ componentWillMount = () =>{
 
 
 componentDidUpdate = () =>{
+
 const redoLogin = () =>{
-	this.props.signOutUser(); this.props.history.push('/userMgmt?mode=login');
+	mode='login'; nextUrl = '/userMgmt?mode=changePassword'; this.props.signOutUser(); this.props.history.push('/userMgmt?mode=login');
 }
 const redirectHome = () => {
-this.props.history.push('/')	
+this.props.resetState();
+this.props.history.push(nextUrl);	
 }
 
-if (this.props.editedItem.userMgmtState === 'passwordChangeOK') {this.props.resetState(); message.info("Cambio password effettuato",2,this.props.history.push('/'));}
-if (this.props.editedItem.userMgmtState === 'loginOK') {this.props.resetState(); message.info("Login effettuato",2,this.props.history.push('/'));}
-if (this.props.editedItem.userMgmtState === 'signupOK') {this.props.resetState(); message.info("Utente creato e login effettuato",2,this.props.history.push('/'));}
-
-if (this.props.editedItem.userMgmtState === 'passwordChangeKO') 
-	{   this.props.resetState();
-		Modal.confirm({
+if (this.props.editedItem.userMgmtState === 'passwordChangeOK') {this.props.resetState(); message.info("Cambio password effettuato",2,redirectHome());}
+if (this.props.editedItem.userMgmtState === 'loginOK') {this.props.resetState(); message.info("Login effettuato",2,redirectHome()); nextUrl = '/';}
+if (this.props.editedItem.userMgmtState === 'signupOK') {this.props.resetState(); message.info("Utente creato e login effettuato",2,redirectHome());}
+if (this.props.editedItem.userMgmtState === 'codeKO') {mode='requestPasswordReset'; this.props.resetState(); this.props.history.push('/userMgmt?mode=requestPasswordReset');} 
+if (this.props.editedItem.userMgmtState === 'passwordChangeKO' && mode === 'changePassword') 
+	{   Modal.confirm({
     		title: 'Impossibile cambiare la password',
     		content: 'Per cambiare la password devi fare di nuovo il login. Procedo?',
     		okText: 'Si',
@@ -72,7 +77,7 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-	this.props.submitEditedSignup(this.props.editedItem.isValid, this.props.editedItem.values, mode); //Per sapere cosa fare... dopo
+	this.props.submitEditedSignup(this.props.editedItem.isValid, this.props.editedItem.values, mode, query.oobCode); //Per sapere cosa fare... dopo
   }
  
 
@@ -86,7 +91,7 @@ onSubmit = (e) => {
   	const formValues = this.props.editedItem.values;
   	const errorMessages = this.props.editedItem.errorMessages;
   	return (
-  	  (this.props.editedItem.userMgmtState === 'emailSent') ?
+  	  (this.props.editedItem.userMgmtState === 'mailOK') ?
   	  <span>
   	  Riceverei a breve una mail con un link per il reset della tua password.
   	  </span> 
@@ -117,7 +122,7 @@ onSubmit = (e) => {
          null}
         
            
-        <WrappedForm.Button type="primary" htmlType="submit" className="login-form-button"> {(this.props.email) ? 'Cambia password': (mode==='requestPasswordReset') ? 'Richiedi il link' : (mode==='login') ? 'Accedi' : 'Registrati'}</WrappedForm.Button>
+        <WrappedForm.Button type="primary" htmlType="submit" className="login-form-button"> {(this.props.email || mode==='resetPassword') ? 'Cambia password': (mode==='requestPasswordReset') ? 'Richiedi il link' : (mode==='login') ? 'Accedi' : 'Registrati'}</WrappedForm.Button>
        {(mode==='signup') ? <WrappedForm.WrapGeneric><div>Hai già un account? <a href="/userMgmt?mode=login">esegui il login</a></div></WrappedForm.WrapGeneric> : null}
        {(mode==='requestPasswordReset') ? <WrappedForm.WrapGeneric><div>Ricordi la password? <a href="/userMgmt?mode=login">esegui il login</a></div></WrappedForm.WrapGeneric> : null}
        {(mode==='login') ? <WrappedForm.WrapGeneric><div>Oppure <a href="/userMgmt?mode=signup">registrati ora</a></div></WrappedForm.WrapGeneric> : null}

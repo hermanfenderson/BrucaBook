@@ -6,7 +6,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom'
-import { LocaleProvider, Layout, Icon, Affix, Row, Col } from 'antd';
+import { LocaleProvider, Layout, Icon, Affix, Row, Col, Spin } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
 
 
@@ -57,10 +57,14 @@ handleResize = () => {
            
            
  
+
   render() {
   	return (
      <LocaleProvider locale={itIT}>	
-      {this.props.authenticated ? 
+      {(this.props.authenticated === null)? 
+      <Spin />
+      :
+      (this.props.authenticated === true) ?
       (<Layout>
       
         <Sider style={{height: '100vh'}}
@@ -115,6 +119,7 @@ handleResize = () => {
     );
   }
 }
+
 
 
         

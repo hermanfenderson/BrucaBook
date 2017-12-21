@@ -4,8 +4,8 @@ import FormReducer from '../helpers/formReducer';
 import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  showError, noErrors} from '../helpers/form';
 import {isValidEmail} from '../helpers/validators';
 //Override
-import {SUBMIT_EDITED_ITEM_USERMGMT} from '../actions/userMgmt';
-import {AUTH_ERROR_LOGIN, DISMISS_AUTH_ERROR_LOGIN, AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP, AUTH_ERROR_NEW_PASSWORD, DISMISS_AUTH_ERROR_NEW_PASSWORD, SET_USERMGMT_MODE, RESET_USERMGMT_STATE} from '../actions/userMgmt';
+import {SUBMIT_EDITED_ITEM_USERMGMT, RESET_MAIL_SENT, RESET_MAIL_ERROR} from '../actions/userMgmt';
+import {AUTH_ERROR_LOGIN, DISMISS_AUTH_ERROR_LOGIN, AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP, AUTH_ERROR_NEW_PASSWORD, DISMISS_AUTH_ERROR_NEW_PASSWORD, SET_USERMGMT_MODE, RESET_USERMGMT_STATE, CODE_OK, CODE_KO} from '../actions/userMgmt';
 
 //Metodi reducer per le Form
 const itemR = new FormReducer('USERMGMT'); 
@@ -46,8 +46,8 @@ function transformAndValidateEditedSignup(cei, name, value)
      
 //Mostro l'errore solo in fase di validazione	
    errMgmt(cei, 'email','invalidEmail','email non valida', !isValidEmail(cei.values.email), (!isValidEmail(cei.values.email) && cei.values.email.length >0));
-   errMgmt(cei, 'password','blankPassword','password obbligatoria', (cei.values.password.length === 0), false);
-   errMgmt(cei, 'confirmPassword','notIdentic','le password non coincidono', (!(cei.values.password === cei.values.confirmPassword)), (cei.values.confirmPassword.length > 0) && (!(cei.values.password === cei.values.confirmPassword)));
+   if (cei.userMgmtMode !== 'requestPasswordReset') errMgmt(cei, 'password','blankPassword','password obbligatoria', (cei.values.password.length === 0), false);
+   if (cei.userMgmtMode !== 'requestPasswordReset') errMgmt(cei, 'confirmPassword','notIdentic','le password non coincidono', (!(cei.values.password === cei.values.confirmPassword)), (cei.values.confirmPassword.length > 0) && (!(cei.values.password === cei.values.confirmPassword)));
   	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
@@ -61,6 +61,44 @@ export default function userMgmt(state = initialState(), action) {
   var newState;
   switch (action.type) {
    //Over-ride del caso di submit... non devo cancellare il form
+   case CODE_OK:
+   	   {
+   	   let cei = editedItemCopy(state.editedItem);
+		     cei.userMgmtState = 'codeOK'	
+		     cei.values.email = action.email
+		     noErrors(cei, 'form'); //ELIMINO GLI ERRORI DAL FORM...
+		    newState = {...state, 'editedItem': cei};   
+   	   }
+		break    
+   case CODE_KO:
+   	   {
+		  	let cei = editedItemCopy(state.editedItem);
+		  	cei.userMgmtState = 'codeKO'	
+		    		     errMgmt(cei,'form','codeError',action.error.message,true,true);
+		    console.log("cei");
+		    		newState = {...state, 'editedItem': cei};     	
+		        
+		  }
+		  break;
+		  
+   case RESET_MAIL_SENT: 
+   	{
+		  	let cei = editedItemCopy(state.editedItem);
+		     cei.userMgmtState = 'mailOK'	
+		    		  noErrors(cei, 'form'); //ELIMINO GLI ERRORI DAL FORM...
+		    		newState = {...state, 'editedItem': cei};     	
+		        
+		  }
+        break;	 
+   case RESET_MAIL_ERROR:
+   	 {
+		  	let cei = editedItemCopy(state.editedItem);
+		    		     errMgmt(cei,'form','mailError',action.error.message,true,true);
+		    		newState = {...state, 'editedItem': cei};     	
+		        
+		  }
+        break;	
+        
    case SUBMIT_EDITED_ITEM_USERMGMT:
  		    //Posso sottomettere il form se lo stato della riga è valido
 			if (!state.editedItem.isValid)
@@ -85,9 +123,9 @@ export default function userMgmt(state = initialState(), action) {
         
     case AUTH_ERROR_NEW_PASSWORD:
 		  {
-		  	let cei = editedItemCopy(state.editedItem);
-		  	    cei.userMgmtState = 'passwordChangeKO'
-		    		     errMgmt(cei,'form','loginError',action.error.message,true,true);
+		  let cei = editedItemCopy(state.editedItem);
+		  cei.userMgmtState = 'passwordChangeKO'
+		    		    // errMgmt(cei,'form','loginError',action.error.message,true,true);
 		    		newState = {...state, 'editedItem': cei};     	
 		        
 		  }
@@ -132,8 +170,7 @@ export default function userMgmt(state = initialState(), action) {
      	}
       case RESET_USERMGMT_STATE: 
      	{
-     	console.log("sono qui");
-     	let cei = editedItemCopy(state.editedItem);
+     		let cei = editedItemCopy(state.editedItem);
 		   cei.userMgmtState = ''
 		    
 		  newState = {...state, 'editedItem': cei}; 
