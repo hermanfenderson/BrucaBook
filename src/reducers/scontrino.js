@@ -155,7 +155,7 @@ export default function scontrino(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaScontrinoHeight'] -100;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['testataScontrinoHeight'] - measures['formRigaScontrinoHeight'] -150;
    	    newState = {...state, tableHeight: height};
         break;
   	
@@ -184,6 +184,7 @@ export default function scontrino(state = initialState(), action) {
  export const getListenersItemScontrino = (state) => {return state.listenersItem};
 
  export const isStaleTotali = (state) => {return state.staleTotali};
+ export const getMessageBuffer = (state) => {return state.messageBuffer};
  
  
  

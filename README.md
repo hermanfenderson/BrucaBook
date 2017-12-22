@@ -1,6 +1,19 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+
+Versione 0.2.4 (da realizzare) 
+GLi utenti che si registrano vanno in una sandbox in cui possono giocare senza fare danni.
+La catena è "sandbox", la libreria è "sandbox".
+
+Gestione corretta numeri scontrino
+
+Versione 0.2.3
+Inserito un concetto di "messageBuffer" nel formHelper... se è pieno... mostro un messaggio...
+Con esso mostro le giacenze a ogni inserimento in bolla e scontrino!
+Bug fixing: le altezze non venivano più calcolate bene in bolla e scontrino...
+
+
 Versione 0.2.2
 Gestione cambio password e password dimenticata:
 - ho una sola scene per tutto lo userMgmt (ho eliminato la scene login e ridenominato quella signup)

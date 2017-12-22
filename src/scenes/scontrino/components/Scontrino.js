@@ -9,6 +9,7 @@ import TotaliScontrino from '../components/TotaliScontrino';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import TestataCassa from '../components/TestataCassa';
 import BookImg from '../../../components/BookImg'
+import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
@@ -30,6 +31,7 @@ class Scontrino extends Component {
     if (ReactDOM.findDOMNode(this.refs.formRigaScontrino)) this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
     	
     if (ReactDOM.findDOMNode(this.refs.testataCassa)) 	this.props.storeMeasure('testataCassaHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
+    if (ReactDOM.findDOMNode(this.refs.formTestataScontrino)) 	this.props.storeMeasure('testataScontrinoHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
     
     	
  }
@@ -132,6 +134,8 @@ else return (
   </Col>
   <Col span={17}>
   <Row>
+  <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
+  
     	<Col span={5}>
 			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
 		</Col>

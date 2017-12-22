@@ -44,7 +44,7 @@ class TableBolla extends Component
 	deleteRow = (row) => {
 		let params = [...this.props.period];
     	params.push(this.props.idBolla);
-		this.props.deleteRigaBolla(params,row.key);
+		this.props.deleteRigaBolla(params,row.key,row);
 	}
 	
 	editRow = (row) => {

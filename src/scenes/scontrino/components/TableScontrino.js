@@ -48,7 +48,7 @@ class TableScontrino extends Component
 		let params = [...this.props.period];
     	params.push(this.props.cassa);
     	params.push(this.props.scontrino);
-		this.props.deleteRigaScontrino(params,row.key);
+		this.props.deleteRigaScontrino(params,row.key,row);
 	}
 	
 	editRow = (row) => {

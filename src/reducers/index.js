@@ -43,6 +43,7 @@ export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)
 export const getListeningTestataBolla = (state) => {return fromBolla.getListeningTestataBolla(state.bolla)};
 export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
+export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 
 
 //Scene ElencoBolle
@@ -90,6 +91,7 @@ export const getListeningItemScontrino = (state) => {return fromScontrino.getLis
 export const getListenersItemScontrino = (state) => {return fromScontrino.getListenersItemScontrino(state.scontrino)};
 
 export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTotali(state.scontrino)};
+export const getMessageBufferScontrino = (state) => {return fromBolla.getMessageBuffer(state.scontrino)};
 
 
 //Scene Catalogo

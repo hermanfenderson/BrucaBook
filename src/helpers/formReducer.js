@@ -4,7 +4,7 @@ import {errMgmt, editedItemCopy, showError, showAllErrors} from '../helpers/form
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode} from '../helpers/validators';
 import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
-
+import React from 'react';
 
 //la funzione transforItem se c'e' è responsabile di trasformare il risultato di firebase in uno compatibile con la tabella che voglio
 //mostrare.
@@ -29,6 +29,8 @@ this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
 this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
 this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
 this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
+this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
+
 
 this.ADD_ITEM = 'ADD_ITEM_'+scene;
 this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
@@ -46,6 +48,8 @@ this.FOCUS_SET = 'FOCUS_SET_'+scene;
 this.LISTEN_TESTATA='LISTEN_TESTATA_'+scene;
 this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
 this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
+this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
+this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
 
 
 if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
@@ -68,7 +72,22 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		}
 		break;
 
+ 	case this.PUSH_MESSAGE: 
+ 		{
+ 		let messageBuf = [...state.messageBuffer];
+ 		messageBuf.push(action.element);
+ 		newState = {...state, messageBuffer: messageBuf};
+ 		}
+ 		break;
  		
+  	case this.SHIFT_MESSAGE: 
+ 		{
+ 		let messageBuf = [...state.messageBuffer];
+ 		messageBuf.shift();
+ 		newState = {...state, messageBuffer: messageBuf};
+ 		}
+ 		break;
+  		
 	case this.TESTATA_CHANGED:
    	   if (action.payload) 
    		{   
@@ -264,7 +283,19 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
    	    const tableHeight = state.tableHeight;
       	newState =  {...initialState(), tableHeight: tableHeight};
 		break;
-    
+		
+		case this.EAN_STOCK_CHANGED:
+			{   
+				let element = <span><span style={{fontWeight: 'bold'}}>{action.titolo}</span><span> a magazzino: </span><span style={{fontWeight: 'bold'}}>{action.pezzi}</span></span>
+  
+				let messageBuf = [...state.messageBuffer];
+ 				messageBuf.push(element);
+ 				newState = {...state, messageBuffer: messageBuf};
+ 			}
+			break;
+        
+      
+        
 
 	    	default:
         		newState =  state;

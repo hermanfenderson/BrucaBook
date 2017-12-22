@@ -3,6 +3,7 @@ import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../components/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import BookImg from '../../../components/BookImg'
+import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
@@ -56,7 +57,9 @@ render()
 {
   const period = [this.props.match.params.anno, this.props.match.params.mese];
  return (
-  <Spin spinning={!this.props.testataBolla}>	
+ 
+  <Spin spinning={!this.props.testataBolla}>
+  <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   <div>
   
     <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>

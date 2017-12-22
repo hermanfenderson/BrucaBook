@@ -33,7 +33,7 @@ export function setRedirect(redirect)
 	
 }
 
-//METODI DEL FORM
+//METODI DEL FORM anche qui visualizzo i totali...
 export const cassaFA = new FormActions(SCENE, preparaItem, 'righeElencoScontrini','righeElencoCasse');
 
 

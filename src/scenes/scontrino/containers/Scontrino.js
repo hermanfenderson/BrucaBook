@@ -6,17 +6,20 @@ import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
 import {getShowCatalogModalScontrino, getEditedCatalogItem, getTestataScontrino, getListeningTestataScontrino, 
-		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa, shouldRedirectCassa} from '../../../reducers'
+		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa, shouldRedirectCassa, getMessageBufferScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataScontrino = rigaScontrinoFA.listenTestata;
 const unlistenTestataScontrino = rigaScontrinoFA.unlistenTestata;
 const resetScontrino = rigaScontrinoFA.reset;
+
 const submitRigaCassa = cassaFA.submitEditedItem;
 const listenTestataCassa = cassaFA.listenTestata;
 const unlistenTestataCassa = cassaFA.unlistenTestata;
 const resetCassa = cassaFA.reset;
 const setSelectedRigaCassa = cassaFA.setSelectedItem;
+const shiftMessage = rigaScontrinoFA.shiftMessage;
+
 
 
 const mapStateToProps = (state) => {
@@ -30,8 +33,8 @@ const mapStateToProps = (state) => {
 	         editedRigaScontrino: getEditedRigaScontrino(state),
 	         selectedScontrino: getEditedRigaCassa(state).selectedItem,
 	         listeningTestataCassa: getListeningTestataCassa(state),
-	         shouldRedirectCassa: shouldRedirectCassa(state)
-
+	         shouldRedirectCassa: shouldRedirectCassa(state),
+			 messageBuffer: getMessageBufferScontrino(state)
 	  
 		
 		
@@ -39,7 +42,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ resetScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
+  return bindActionCreators({ shiftMessage, resetScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
   listenTestataScontrino, unlistenTestataScontrino, storeMeasure, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa, setRedirect}, dispatch);
 }
 

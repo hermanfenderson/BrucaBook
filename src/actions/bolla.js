@@ -21,7 +21,8 @@ function preparaItem(riga)
 
 
 //METODI DEL FORM
-export const rigaBollaFA = new FormActions(SCENE, preparaItem, 'righeBolla','righeElencoBolle');
+//Il true... indica che voglio la gestione dello stock nei messaggi informativi
+export const rigaBollaFA = new FormActions(SCENE, preparaItem, 'righeBolla','righeElencoBolle', true);
 
 //Se devo fare override.... definisco metodi alternativi qui...
 

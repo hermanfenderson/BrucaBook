@@ -4,15 +4,15 @@
 //Gestisco anche la presenza di un utente autenticato...(anche se nel rendering sotto mi devo fidare del mio stato)
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router-dom'
-import { LocaleProvider, Layout, Icon, Affix, Row, Col, Spin } from 'antd';
+import { LocaleProvider, Layout,  Affix, Row, Col, Spin } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
 
 
 //import Header from '../components/Header';
 import Main from '../components/Main';
 import SiderComponent from '../components/Sider';
+import Header from '../components/Header';
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
@@ -22,7 +22,7 @@ import {isAuthenticated, getUser, getCollapsed, getHeaderInfo} from '../reducers
 //Foglio di stile...
 import '../styles/app.css';
 
-const { Header, Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 
 class App extends React.Component {
@@ -34,11 +34,14 @@ class App extends React.Component {
   
 
  componentDidMount() {
- 	if (ReactDOM.findDOMNode(this.refs.header)) this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
+ 	
+ 	//this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
     this.handleResize(); //La prima volta...
     window.addEventListener('resize', this.handleResize);
     
   }
+
+
 
 componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
@@ -50,10 +53,7 @@ handleResize = () => {
 }
 
 
-  toggle = () => {
-    this.props.toggleCollapsed();
-  }
-
+ 
            
            
  
@@ -66,7 +66,6 @@ handleResize = () => {
       :
       (this.props.authenticated === true) ?
       (<Layout>
-      
         <Sider style={{height: '100vh'}}
           trigger={null}
           collapsible
@@ -81,21 +80,9 @@ handleResize = () => {
        
        
           <Layout >
-         
-           <Header style={{ background: '#fff', padding: 0, width: '100%' }} ref={'header'} >
+           <Header toggleCollapsed={this.props.toggleCollapsed} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
+      
            
-        
-           <Affix>
-           <Row  style={{backgroundColor: 'white'}}>
-            <Icon
-              className="trigger"
-              type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-              onClick={this.toggle}
-            />
-             {this.props.headerInfo} 
-            </Row>
-            </Affix>
-          </Header>
          
            <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-50' }}>
           <Main authenticated={true} user={this.props.user}/>

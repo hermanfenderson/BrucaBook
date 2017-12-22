@@ -23,6 +23,7 @@ componentDidMount() {
  componentWillMount() {
  	
  if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoCasse(period2moment(this.props.period));
+ if (!isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoCasse(period2moment([this.props.match.params.anno, this.props.match.params.mese]));
 	
  // this.props.setSelectedBolla(null);
 }
@@ -39,8 +40,7 @@ if (this.props.period && !isEqual(this.props.period,[this.props.match.params.ann
    }
 else  
 {
-if (!isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoCasse(period2moment([this.props.match.params.anno, this.props.match.params.mese]));
-	
+//	
 return (
  <div>	
   <Row>

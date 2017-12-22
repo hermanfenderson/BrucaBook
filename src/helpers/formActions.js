@@ -10,7 +10,7 @@ import {isComplete} from './catalog';
 import {urlFactory} from './firebase';
 import {isInternalEAN} from './ean';
 
-export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl) {
+export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl, stockMessageQueue=false) {
 //Azioni legate ad azioni di ricerca
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
@@ -28,6 +28,7 @@ this.ADD_ITEM = 'ADD_ITEM_'+scene;
 this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
 this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
 
+this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
 
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
@@ -51,13 +52,17 @@ this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
 this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
 
 this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
+this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
+this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
 
 
 this.itemsUrl = itemsUrl;
 this.preparaItem = preparaItem;
 this.rigaTestataUrl = rigaTestataUrl;
+this.stockMessageQueue = stockMessageQueue;
 
-
+this.pushMessage = (element) => {return {type: this.PUSH_MESSAGE, element: element}}
+this.shiftMessage = () => {return {type: this.SHIFT_MESSAGE}}
 
 //Mi serve per poter gestire un eventuale cambio data o altre info dalla testata...
 this.listenTestata = (params, itemId) =>  
@@ -355,13 +360,40 @@ this.offListenItem = (params, listeners=null) =>
 }
 
 
-//Modifico queste tre per tornare al reducer l'ultima chiave toccata...o ancora meglio riscrivo per coerenza con altri metodi...
+this.stockMessageQueueListener = (valori) =>
+{      
+	const type2 = this.EAN_STOCK_CHANGED;
+	var i=0;
+		return function(dispatch, getState) {
+		const url = urlFactory(getState,'magazzino',null,valori.ean);
+		Firebase.database().ref(url).on('value', snapshot => {
+	      //Tricky... mi serve il secondo risultato della listen....
+	      i++;
+	      if (i>1) 
+	      {Firebase.database().ref(url).off();
+	      //Se ho null... i pezzi sono 0
+	      let pezzi = 0;
+	      if (snapshot.val()) pezzi = snapshot.val().pezzi;
+	      dispatch({
+	        type: type2,
+	        titolo: valori.titolo,
+	        autore: valori.autore,
+	        pezzi: pezzi,
+	        ean: valori.ean
+	      })
+	      }
+	   });
+	    
+	   
+		} 
+}
 
-//Disattivata la componente che opera sul magazzino...
 this.aggiungiItem = (params, valori) => {
   const typeAdd =  this.ADD_ITEM;
   var nuovoItem = {...valori};
   const itemsUrl = this.itemsUrl;
+  const stockMessageQueue = this.stockMessageQueue;
+  const stockMessageQueueListener = this.stockMessageQueueListener;
   const toggleTableScroll = this.toggleTableScroll;
    addCreatedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
@@ -376,13 +408,15 @@ this.aggiungiItem = (params, valori) => {
    		key: ref.key
    	}
    	)  	
+   if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));	
   }
 }
 
-//Idem...
 this.aggiornaItem = (params,itemId, valori) => {
     const typeChange = this.CHANGE_ITEM;
- 	
+ 	 const stockMessageQueue = this.stockMessageQueue;
+ const stockMessageQueueListener = this.stockMessageQueueListener;
+  
     var nuovoItem = {...valori};
       addChangedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
@@ -397,17 +431,20 @@ this.aggiornaItem = (params,itemId, valori) => {
    		key: ref.key
    	}
    	)  	 
+   	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));
   }
   
 }
 
 
 
-
-this.deleteItem = (params, itemId) => {
+//Una forzatura chiedere ean come parametro aggiuntivo in alcuni casi......ma mi evito una chiamata del tutto inutile
+this.deleteItem = (params, itemId, valori=null) => {
 const typeDelete = this.DELETE_ITEM;
 const itemsUrl = this.itemsUrl;
-
+const stockMessageQueue = this.stockMessageQueue;
+ const stockMessageQueueListener = this.stockMessageQueueListener;
+  
 
   return function(dispatch, getState) {
     Firebase.database().ref(urlFactory(getState,itemsUrl,params, itemId)).remove();
@@ -417,6 +454,7 @@ const itemsUrl = this.itemsUrl;
    					key: itemId
    					}
    					)   
+   	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));				
     };
   }
 	
