@@ -3,7 +3,9 @@ import {USER_INFO_CHANGED } from '../actions';
 
 const initialState =  {
   catena: null,
-  libreria: null
+  libreria: null,
+  nomeLibreria: '',
+  nick: ''
 };
 
 export default function status(state = initialState, action) {
@@ -13,6 +15,8 @@ export default function status(state = initialState, action) {
       	 ...state,
         catena: (action.info ? action.info.defaultCatena : null), //Questo in futuro cambia quando avrò gestione multi catena e multi libreria
         libreria: (action.info ? action.info.defaultLibreria : null), //Idem
+        nomeLibreria: (action.info ? action.info.elencoLibrerie[action.info.defaultCatena].librerie[action.info.defaultLibreria] : null), //Idem
+        nick: (action.info ? action.info.nick : null)
        	}	
     default:
       return state;
@@ -21,4 +25,5 @@ export default function status(state = initialState, action) {
 
 export const getCatena = (state) => {return state.catena}; 
 export const getLibreria = (state) => {return state.libreria};
+export const getInfo = (state) => {return state};
 

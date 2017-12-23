@@ -111,6 +111,7 @@ export const getEditedItemUserMgmt = (state) => {return fromUserMgmt.getEditedIt
 //Dallo stato
 export const getLibreria = (state) => {return fromStatus.getLibreria(state.status)};
 export const getCatena = (state) => {return fromStatus.getCatena(state.status)};
+export const getInfo = (state) => {return fromStatus.getInfo(state.status)};
 
 //da auth
 export const isAuthenticated = (state) => {return fromAuth.isAuthenticated(state.auth)};

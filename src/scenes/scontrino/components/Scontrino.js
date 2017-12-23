@@ -23,10 +23,13 @@ import { Row, Col,  Modal, Spin, Button} from 'antd'
 
 var currentIdCassa = null;
 var currentIdScontrino = null; 
-  
+ 
+ //<TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 
 class Scontrino extends Component {
 
+
+				  
  componentDidMount() {
     if (ReactDOM.findDOMNode(this.refs.formRigaScontrino)) this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
     	
@@ -125,10 +128,11 @@ else return (
 	
     <Row>
     	<TestataCassa ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
+	
     </Row>
 	
 	<Row>
-	 <TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+	<TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</Row>
 
   </Col>

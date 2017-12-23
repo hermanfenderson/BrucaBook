@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
-import { Icon, Table } from 'antd';
+import { Icon, Table} from 'antd';
 
 import {Modal} from 'antd';
 
@@ -81,8 +81,8 @@ render ()
   		    columns.unshift(actionColumn);
 			else columns.push(actionColumn);
   		}
-    return(
-        	 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+    return(//Ho inserito Menu per poterlo infilare in un dropdown...
+    		 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        		);	
      }	
 } 

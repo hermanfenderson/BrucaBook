@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
 import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure} from '../actions';
-import {isAuthenticated, getUser, getCollapsed, getHeaderInfo} from '../reducers';
+import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo} from '../reducers';
 
 //Foglio di stile...
 import '../styles/app.css';
@@ -80,7 +80,7 @@ handleResize = () => {
        
        
           <Layout >
-           <Header toggleCollapsed={this.props.toggleCollapsed} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
+           <Header toggleCollapsed={this.props.toggleCollapsed} info={this.props.info} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
       
            
          
@@ -115,7 +115,8 @@ function mapStateToProps(state) {
     authenticated: isAuthenticated(state),
     user: getUser(state),
     collapsed: getCollapsed(state),
-    headerInfo: getHeaderInfo(state)
+    headerInfo: getHeaderInfo(state),
+    info: getInfo(state)
   };
 }
 

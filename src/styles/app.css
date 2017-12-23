@@ -28,6 +28,29 @@
   margin-top: 24px;
 }
 
+.userBox{
+text-align: right;
+
+}
+
+.userTextBox{
+margin-right: 5px;
+}
+
+.avatar{
+vertical-align: middle;
+margin-right: 15px;
+}
+
+/*
+.userName{
+border-style: dotted;
+}
+*/
+
+	
+
+
 .logoBig {
     position: absolute;
     top: 0;
