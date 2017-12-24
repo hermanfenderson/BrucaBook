@@ -13,7 +13,7 @@ export const AUTH_ERROR_SIGNUP = 'AUTH_ERROR_SIGNUP'
 export const AUTH_ERROR_NEW_PASSWORD = 'AUTH_ERROR_NEW_PASSWORD'
 export const AUTH_ERROR_LOGIN = 'AUTH_ERROR_LOGIN'
 export const DISMISS_AUTH_ERROR_LOGIN = 'DISMISS_AUTH_ERROR_LOGIN'
-
+export const USER_CONFIGURATION_CHANGED = 'USER_CONFIGURATION_CHANGED'
 export const DISMISS_AUTH_ERROR_SIGNUP = 'DISMISS_AUTH_ERROR_SIGNUP'
 export const DISMISS_AUTH_ERROR_NEW_PASSWORD = 'DISMISS_AUTH_ERROR_NEW_PASSWORD'
 export const SET_USERMGMT_MODE = 'SET_USERMGMT_MODE'
@@ -56,12 +56,52 @@ if (isValid && mode==='login') return function(dispatch) {
 	      });
 		}
 		
+if (isValid && mode==='configuration') return function(dispatch) {
+	         let infoUser = {nick: credentials.nick};
+	         let uid = Firebase.auth().currentUser.uid;
+	         Firebase.database().ref('/utenti/'+uid).update(infoUser).then(
+	         	snapshot =>
+	         		{ //Ho toccato i parametri utente...
+	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
+	         		}
+	         	
+	         	)
+	        	
+	    		    			
+		
+		}		
+		
 if (isValid && mode==='signup') return function(dispatch) {
 			Firebase.auth().createUserWithEmailAndPassword(credentials.email, credentials.password)
     		 .then(response => {
-    		    dispatch({type: DISMISS_AUTH_ERROR_SIGNUP});
-    		    Firebase.auth().setPersistence(Firebase.auth.Auth.Persistence.SESSION);
-			   })
+	    		 	//Qui inserisco la creazione dei dati accessori...
+	    		 	let uid = response.uid;
+	    		 	//Una query per cercare il default della libreria...
+	    		 	Firebase.database().ref('/librerie').once('value', snapshot => 
+	    		 				{
+	    		 				let elenco = snapshot.val();
+	    		 				let defaultCatena = elenco.defaultCatena;
+	    		 				let defaultLibreria= elenco.defaultLibreria;
+	    					    let infoUser = {'nome': credentials.nome, 
+	    					    			    'cognome': credentials.cognome,
+	    					    				'email': credentials.email,
+	    					    				'nick': credentials.nick,
+	    					    				'defaultCatena': defaultCatena,
+	    					    				'defaultLibreria': defaultLibreria,
+	    					    				'elencoLibrerie': {[defaultCatena]:  
+	    					    					
+	    					    					{'nome': elenco.elencoLibrerie[defaultCatena].nome,
+	    					    					 'librerie': {[defaultLibreria]: elenco.elencoLibrerie[defaultCatena].librerie[defaultLibreria]}
+	    					    					 }
+	    					    					}
+	    					    				
+	    					    				}	
+	    					    Firebase.database().ref('/utenti/'+uid).set(infoUser); //Scrivo i dati utente...				
+	    		    			dispatch({type: DISMISS_AUTH_ERROR_SIGNUP});
+	    		    			Firebase.auth().setPersistence(Firebase.auth.Auth.Persistence.SESSION);
+	    						});
+	    		 	
+					})
 		     .catch(error => {
 		     dispatch({type: AUTH_ERROR_SIGNUP, error: error});
 	      });

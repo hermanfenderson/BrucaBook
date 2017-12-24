@@ -51,6 +51,7 @@ export function urlFactory(getState, destination, params, itemId)
 			
 				case "magazzino": url = prefissoNegozio(getState)+'magazzino'; break;
 				
+				
 				default: return null;
 			}
 		if (itemId) url = url + '/' + itemId;	

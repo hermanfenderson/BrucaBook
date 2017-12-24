@@ -1,6 +1,7 @@
 //Isolo la componente di autenticazione per consentire di persistere correttamente solo la parte di stato che deve essere persistita
 
 import {USER_INFO_CHANGED} from '../actions';
+import {USER_CONFIGURATION_CHANGED} from '../actions/userMgmt'
 
 const initialState =  {
   info: null,
@@ -18,6 +19,14 @@ export default function auth(state = initialState, action) {
         user: action.user,
         info: action.info //Elementi persistiti nel database in corrispondenza all'utente
       	}	
+      	
+      case USER_CONFIGURATION_CHANGED:
+      	let info = {...state.info, ...action.info}
+      	return {
+      	 ...state,
+        info: info //Elementi persistiti nel database in corrispondenza all'utente
+      	}		
+      	
      
       
     default:

@@ -1,7 +1,7 @@
 import FormUserMgmtComponent from '../components/FormUserMgmt'
 import {loginFA, setMode, resetState, verifyCode} from '../../../actions/userMgmt'
 import {signOutUser, setHeaderInfo} from '../../../actions'
-import {getEditedItemUserMgmt, isAuthenticated} from '../../../reducers'
+import {getEditedItemUserMgmt, isAuthenticated, getInfo} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -11,7 +11,7 @@ const resetEditedSignup = loginFA.resetEditedItem;
 
 
 const mapStateToProps = (state) => { 
-	return ({editedItem: getEditedItemUserMgmt(state), authenticated: isAuthenticated(state)})
+	return ({editedItem: getEditedItemUserMgmt(state), authenticated: isAuthenticated(state), info: getInfo(state)})
 }
  
 

@@ -16,10 +16,10 @@ const { Option, OptGroup } = Select;
     </OptGroup>
 */
 
-const SelectBookstore = (props) =>
+class SelectBookstore extends React.Component 
 {
 	
-let optGroups = ((list)	=> {
+optGroups = ((list)	=> {
 	let phrase = [];
 	for (var propt in list)
 		{let phrase2 = [];
@@ -31,21 +31,21 @@ let optGroups = ((list)	=> {
 			//phrase.push(</OptGroup>)
 		}
 	return(phrase);	
-})(props.bookstoresList);
+})(this.props.bookstoresList);
 
 
 
-let defaultValue = props.defaultCatena+'/'+props.defaultLibreria;
-	return(
-  <Select
-    defaultValue={defaultValue}
-    style={{ width: 200 }}
-    onChange={props.handleChange}
+defaultValue = this.props.defaultCatena+'/'+this.props.defaultLibreria;
+	render()
+  {	
+  return (<Select
+    defaultValue={this.defaultValue}
+    onChange={this.props.handleChange}
   >
-  {optGroups}
+  {this.optGroups}
   </Select>
-  
-		)
+  );
+ }
 }
 
 export default SelectBookstore;

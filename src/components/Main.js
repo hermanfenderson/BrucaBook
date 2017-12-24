@@ -23,7 +23,6 @@ import GestioneItemCatalog from '../scenes/catalogo';
     
 const Main= (props) => 
 {  	const authenticated = props.authenticated;
-    const email = (props.user) ? props.user.email : null;
     
      const RequireAuth = (Component) => {return((props) => {
      	                   	return (authenticated ?  <Component {...props}/>:  <Redirect to='/userMgmt?mode=login' />);
@@ -37,7 +36,7 @@ const Main= (props) =>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
 		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
-		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props} email={email}/>} />
+		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props}/>} />
     					      		                   
 		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
     					      			

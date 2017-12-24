@@ -7,6 +7,7 @@ import queryString from 'query-string';
 var query;
 var mode;
 var nextUrl = '/';
+var buttonText;
 class FormUserMgmt extends Component {
 //Casi tracciati
 //Signup
@@ -21,16 +22,39 @@ componentWillMount = () =>{
   	this.props.setMode(mode);
   	var modeTxt = null;
     if (mode==='resetPassword') this.props.verifyCode(query.oobCode);
-  	if (this.props.email) {this.props.changeEditedSignup('email', this.props.email);}
+  	if (this.props.info) 
+  		{
+  		this.props.changeEditedSignup('email', this.props.info.email);
+  		this.props.changeEditedSignup('nome', this.props.info.nome);
+  		this.props.changeEditedSignup('cognome', this.props.info.cognome);
+  		this.props.changeEditedSignup('nick', this.props.info.nick);
+  		}
   	switch(mode)
   	{
   		case 'changePassword': 
   		case 'resetPassword':
   				modeTxt = 'Scegli una nuova password'; break;
+  		case 'configuration':
+  				modeTxt = 'Configurazione utente'; break;
   		default:
   				modeTxt = '';
   	}
   	if (modeTxt) this.props.setHeaderInfo(modeTxt);
+    switch(mode)
+  		{
+  			case 'resetPassword':
+  			case 'changePassword':
+  			buttonText = 'Cambia password'; break;
+  			case 'requestPasswordReset':
+  			buttonText = 'Richiedi il link'; break;
+  			case 'login': 
+  			buttonText = 'Accedi'; break;
+  			case 'configuration': 
+  			buttonText = 'Aggiorna'; break;
+  			default:
+  			buttonText = 'Registrati'; break;
+  		}
+  
 }	
 
 
@@ -46,6 +70,8 @@ this.props.history.push(nextUrl);
 }
 
 if (this.props.editedItem.userMgmtState === 'passwordChangeOK') {this.props.resetState(); message.info("Cambio password effettuato",2,redirectHome());}
+if (this.props.editedItem.userMgmtState === 'changeOK') {this.props.resetState(); message.info("Configurazione aggiornata",2,redirectHome());}
+
 if (this.props.editedItem.userMgmtState === 'loginOK') {this.props.resetState(); message.info("Login effettuato",2,redirectHome()); nextUrl = '/';}
 if (this.props.editedItem.userMgmtState === 'signupOK') {this.props.resetState(); message.info("Utente creato e login effettuato",2,redirectHome());}
 if (this.props.editedItem.userMgmtState === 'codeKO') {mode='requestPasswordReset'; this.props.resetState(); this.props.history.push('/userMgmt?mode=requestPasswordReset');} 
@@ -96,17 +122,36 @@ onSubmit = (e) => {
   	  Riceverei a breve una mail con un link per il reset della tua password.
   	  </span> 
   	    :
-  		((this.props.authenticated) && (mode !== 'changePassword')) ? <Redirect to='/' /> :	
+  		((this.props.authenticated) && ((mode !== 'changePassword')&&(mode !== 'configuration'))) ? <Redirect to='/' /> :	
        
    	
        <WrappedForm formClass="signup-form" layout='horizontal' readOnlyForm={false} loading={false} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
      
-           <WrappedForm.Input disabled={this.props.email!==undefined && this.props.email!==null} required={!this.props.email} label='Email' field='email' />
-        {(mode!=='requestPasswordReset') ?
+           <WrappedForm.Input disabled={(this.props.authenticated)} required={!this.props.authenticated} label='Email' field='email' />
+        
+        {((mode === 'signup')||(mode === 'configuration')) ?
+        <WrappedForm.Input disabled={(mode === 'configuration')} required={(mode === 'signup')} label='Nome' field='nome' />
+        : null }
+        
+         {((mode === 'signup')||(mode === 'configuration')) ?
+        <WrappedForm.Input disabled={(mode === 'configuration')} required={(mode === 'signup')}   label='Cognome' field='cognome' />
+        : null }
+          {(mode === 'configuration') ?
+        <WrappedForm.Input required={(mode === 'configuration')} label='Nick' field='nick' />
+        : null }
+        
+          {(mode === 'configuration') ?
+        <WrappedForm.SelectBookstore required={(mode === 'configuration')} defaultCatena={this.props.info.catena} defaultLibreria={this.props.info.libreria} 
+bookstoresList={this.props.info.elencoLibrerie} label='Libreria' field='libreria' />
+        : null }
+        
+       
+       
+        {((mode!=='requestPasswordReset') && (mode!=='configuration')) ?
         <WrappedForm.Input required={true}  label='Password' type="password" field='password' />
         : null }
         
-        {((mode!=='requestPasswordReset') && (mode!=='login')  ) ?
+        {((mode!=='requestPasswordReset') && (mode!=='configuration') && (mode!=='login')  ) ?
         
          <WrappedForm.Input  required={true} field='confirmPassword' label='Ripeti password' type='password'/>
         : null }
@@ -122,7 +167,7 @@ onSubmit = (e) => {
          null}
         
            
-        <WrappedForm.Button type="primary" htmlType="submit" className="login-form-button"> {(this.props.email || mode==='resetPassword') ? 'Cambia password': (mode==='requestPasswordReset') ? 'Richiedi il link' : (mode==='login') ? 'Accedi' : 'Registrati'}</WrappedForm.Button>
+        <WrappedForm.Button type="primary" htmlType="submit" className="login-form-button"> {buttonText} </WrappedForm.Button>
        {(mode==='signup') ? <WrappedForm.WrapGeneric><div>Hai già un account? <a href="/userMgmt?mode=login">esegui il login</a></div></WrappedForm.WrapGeneric> : null}
        {(mode==='requestPasswordReset') ? <WrappedForm.WrapGeneric><div>Ricordi la password? <a href="/userMgmt?mode=login">esegui il login</a></div></WrappedForm.WrapGeneric> : null}
        {(mode==='login') ? <WrappedForm.WrapGeneric><div>Oppure <a href="/userMgmt?mode=signup">registrati ora</a></div></WrappedForm.WrapGeneric> : null}

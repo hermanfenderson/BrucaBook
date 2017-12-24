@@ -1,5 +1,7 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
 import {USER_INFO_CHANGED } from '../actions';
+import {USER_CONFIGURATION_CHANGED} from '../actions/userMgmt'
+
 
 const initialState =  {
   catena: null,
@@ -16,8 +18,16 @@ export default function status(state = initialState, action) {
         catena: (action.info ? action.info.defaultCatena : null), //Questo in futuro cambia quando avrò gestione multi catena e multi libreria
         libreria: (action.info ? action.info.defaultLibreria : null), //Idem
         nomeLibreria: (action.info ? action.info.elencoLibrerie[action.info.defaultCatena].librerie[action.info.defaultLibreria] : null), //Idem
-        nick: (action.info ? action.info.nick : null)
+        nick: (action.info ? action.info.nick : ''),
+        nome: (action.info ? action.info.nome : ''),
+        cognome: (action.info ? action.info.cognome : ''),
+        email: (action.info ? action.info.email : ''),
+        elencoLibrerie: (action.info ? action.info.elencoLibrerie : null),
        	}	
+     case USER_CONFIGURATION_CHANGED:
+     	return {
+     		...state, ...action.info
+     	}
     default:
       return state;
   }
