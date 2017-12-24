@@ -40,7 +40,7 @@ defaultValue = this.props.defaultCatena+'/'+this.props.defaultLibreria;
   {	
   return (<Select
     defaultValue={this.defaultValue}
-    onChange={this.props.handleChange}
+    onChange={this.props.onChange}
   >
   {this.optGroups}
   </Select>

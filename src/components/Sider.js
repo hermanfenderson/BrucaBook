@@ -19,7 +19,8 @@ class Sider extends React.Component {
 			case '2': link='/vendite/'+moment().format('YYYY/MM'); break;
 			case '3': link='/itemCatalogo'; break;
 			case '4': link='/userMgmt?mode=changePassword'; break;
-			case '5': link='/#signout'; this.props.signOutUser();break;
+			case '5': link='/userMgmt?mode=configuration'; break;
+			case '6': link='/#signout'; this.props.signOutUser();break;
 			default: break;
 		}
 		this.setState({selectedKeys : [selection.key]});
@@ -47,9 +48,13 @@ class Sider extends React.Component {
             <SubMenu key="sub1" title={<span><Icon type="user" /><span>Utente</span></span>}>
 	            <Menu.Item key="4">
 	              <Icon type="retweet" />
-	              <span>Cambia password</span>
+	              <span>Password</span>
 	            </Menu.Item>
 	            <Menu.Item key="5">
+	              <Icon type="setting" />
+	              <span>Configurazione</span>
+	            </Menu.Item>
+	            <Menu.Item key="6">
 	              <Icon type="logout" />
 	              <span>Esci</span>
 	            </Menu.Item>

@@ -23,6 +23,8 @@ export const CODE_OK = 'CODE_OK'
 export const CODE_KO = 'CODE_KO'
 
 //METODI DEL FORM
+
+
 export const verifyCode= (oobCode) =>
 {
 	return function(dispatch) {
@@ -58,6 +60,12 @@ if (isValid && mode==='login') return function(dispatch) {
 		
 if (isValid && mode==='configuration') return function(dispatch) {
 	         let infoUser = {nick: credentials.nick};
+	         if (credentials.libreria) 
+	        	{   let libreria = credentials.libreria.split("/");
+	        		infoUser.defaultCatena = libreria[0];
+	        		infoUser.defaultLibreria = libreria[1];
+	        	
+	        	}
 	         let uid = Firebase.auth().currentUser.uid;
 	         Firebase.database().ref('/utenti/'+uid).update(infoUser).then(
 	         	snapshot =>

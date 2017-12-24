@@ -25,8 +25,13 @@ export default function status(state = initialState, action) {
         elencoLibrerie: (action.info ? action.info.elencoLibrerie : null),
        	}	
      case USER_CONFIGURATION_CHANGED:
+     	let info = {nick: action.info.nick};
+     	if (action.info.defaultLibreria) info.libreria = action.info.defaultLibreria;
+     	if (action.info.defaultCatena) info.catena = action.info.defaultCatena;
+     	if (action.info.defaultLibreria) info.nomeLibreria = state.elencoLibrerie[action.info.defaultCatena].librerie[action.info.defaultLibreria]; //Idem
+        
      	return {
-     		...state, ...action.info
+     		...state, ...info
      	}
     default:
       return state;
