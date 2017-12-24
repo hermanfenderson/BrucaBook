@@ -15,11 +15,8 @@ class FormUserMgmt extends Component {
 //RequestPasswordReset
 //ChangePassword (unico a utente loggato)
 //ResetPassword
-
-componentWillMount = () =>{
-	query = queryString.parse(this.props.location.search);
-  	mode = query.mode;
-  	this.props.setMode(mode);
+initMode = () => {
+	this.props.setMode(mode);
   	var modeTxt = null;
     if (mode==='resetPassword') this.props.verifyCode(query.oobCode);
   	if (this.props.info) 
@@ -54,12 +51,23 @@ componentWillMount = () =>{
   			default:
   			buttonText = 'Registrati'; break;
   		}
-  
+	
+}
+componentWillMount = () =>{
+	query = queryString.parse(this.props.location.search);
+  	mode = query.mode;
+  	this.initMode();
 }	
 
 
 
 componentDidUpdate = () =>{
+	query = queryString.parse(this.props.location.search);
+    if (mode !== query.mode)
+    	{
+    		mode = query.mode;
+    		this.initMode();
+    	}
 
 const redoLogin = () =>{
 	mode='login'; nextUrl = '/userMgmt?mode=changePassword'; this.props.signOutUser(); this.props.history.push('/userMgmt?mode=login');

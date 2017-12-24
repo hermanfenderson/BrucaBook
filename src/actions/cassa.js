@@ -169,9 +169,29 @@ const typeDelete = cassaFA.DELETE_ITEM;
    					type: typeDelete,
    					key: itemId
    					}
-   					)   
+   					) 
+   					
    	dispatch(cassaFA.setSelectedItem(null));
-	dispatch(setRedirect(true));				
+	dispatch(setRedirect(true));
+	//Aggiorno ultimoScontrino a ultimo valore utile...
+	const anno = params[0];
+	const mese = params[1];
+	const cassa = params[2];
+
+	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
+		refCassa.transaction( function(cassa) {
+    		if (cassa) 
+    			{
+    			const refScontrini = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini',params));
+    			let ultimoScontrinoAttuale = 0;
+    			refScontrini.once('value', snapshot => {
+    				let scontrini = snapshot.val();
+    				for (var propt in scontrini) {if (scontrini[propt].numero > ultimoScontrinoAttuale) ultimoScontrinoAttuale = scontrini[propt].numero;}
+    				});
+    			cassa.ultimoScontrino = ultimoScontrinoAttuale;
+    			}
+    		return cassa;
+			})
     };
   }
 	

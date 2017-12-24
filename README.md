@@ -2,7 +2,7 @@ BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
 
-Versione 0.2.4 (da realizzare) 
+Versione 0.2.4 
 GLi utenti che si registrano vanno in una sandbox in cui possono giocare senza fare danni.
 La catena è "sandbox", la libreria è "sandbox".
 Ho inserito una nuova sezione in database e ho creato una select specifica che legge la fetta di sezione abilitata per un utente.

@@ -80,7 +80,7 @@ handleResize = () => {
        
        
           <Layout >
-           <Header toggleCollapsed={this.props.toggleCollapsed} info={this.props.info} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
+           <Header toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
       
            
          
