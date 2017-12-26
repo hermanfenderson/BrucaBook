@@ -6,6 +6,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Icon, Table } from 'antd';
 
+var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo stato...
 
 class WrappedTable extends React.Component {
 componentDidMount()
@@ -15,6 +16,7 @@ componentDidMount()
   
 
   componentDidUpdate() {
+  	lastRowClicked = this.props.highlightedRowKey; //Ma quando arriva me la prendo...
 	   if (this.props.tableScroll)
 			{
 	        this.node.scrollTop = this.node.scrollHeight;
@@ -31,18 +33,25 @@ actionRowRender = (cell, row) => {
    return (
         <div>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(row)}}/>} 
-		{(this.props.editRow) && <Icon type="edit" onClick={() => { this.props.editRow(row)}}/>}  
+		{(this.props.editRow) && <Icon type="edit" onClick={() => { lastRowClicked = row.key;  this.props.editRow(row)}}/>}  
         </div>
         );
  }
  
  
- 
-ordinaryRowRender = (cell,row) => {
- if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
- else  return(<div onClick={() => { this.selectRow(row)}}>{cell}</div>);
- 
+rowClassName = (record,index) => {
+	return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-highlight' : 'ant-table-row');
 } 
+ordinaryRowRender = (cell,row) => {
+
+if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}}>{cell}</div>);
+ else  return(<div>{cell}</div>);
+
+} 
+
+onRow=(record, other) => ({
+  onClick: () => {if (lastRowClicked!== record.key) {lastRowClicked = record.key; this.selectRow(record);}}
+})
 
 
 render ()
@@ -71,7 +80,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(
-        	 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+        	 <Table onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        		);	
      }	
 } 

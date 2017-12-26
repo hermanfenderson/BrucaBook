@@ -1,6 +1,10 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.3.1
+Due miglioramenti in gestione tabelle... click in qualsiasi punto della riga e riga tutta evidenziata.
+
+
 Versione 0.3.0
 Bug fixing: elenco giornale cassa perdeva i listeners saltando da uno scontrino all'altro (#112)
 Bug fixing: Se cancellavo uno scontrino vuoto... il totale della cassa andava in clessidra (#113)

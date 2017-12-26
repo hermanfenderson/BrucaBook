@@ -4,6 +4,10 @@
 	padding-top: 0px;
 	padding-bottom: 0px;
 }
+
+.ant-table-row-highlight{
+ background-color: #e6f7ff;
+}
  .trigger {
   font-size: 18px;
   line-height: 64px;
