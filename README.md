@@ -5,6 +5,7 @@ Versione 0.3.0
 Bug fixing: elenco giornale cassa perdeva i listeners saltando da uno scontrino all'altro (#112)
 Bug fixing: Se cancellavo uno scontrino vuoto... il totale della cassa andava in clessidra (#113)
 Bug fixing: Il form di change della testata andava disabilitato se non avevo uno scontrino selezionato (#115)
+Bug fixing: Magazzino non veniva resettato quando cambiovo libreria (#111)
 
 
 Versione 0.2.4 

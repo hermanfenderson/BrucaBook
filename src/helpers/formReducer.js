@@ -278,6 +278,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   	case this.RESET_TABLE:
 	   		newState = {...state, itemsArray: [], itemsArrayIndex: {} }
             break;
+            
          case this.RESET:
    	    //Trucchismo.... salvo l'altezza della tabella
    	    const tableHeight = state.tableHeight;

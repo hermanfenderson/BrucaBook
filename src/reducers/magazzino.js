@@ -1,25 +1,28 @@
 //QUESTA VA SISTEMATA
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
+import {initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper} from '../helpers/form';
 
 //Metodi reducer per le Form
 
 
 
+const editedMagazzinoValuesInitialState = {}
 
+const editedItemInitialState = () => {
+	return(editedItemInitialStateHelper(editedMagazzinoValuesInitialState, {} ));
+}
 
-const magazzinoR = new FormReducer('MAGAZZINO',null); 
 
 const initialState = () => {
-
-	return {
-			itemsArray: [],
-			itemsArrayIndex: {},
-		    tableScroll: false,
-			tableHeight:0
-	    	}
+    const eiis = editedItemInitialState();
+	return initialStateHelper(eiis,{});
     }
     
+
+
+    
+const magazzinoR = new FormReducer('MAGAZZINO',null, null, null, initialState); 
 
 
 

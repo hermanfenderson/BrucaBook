@@ -1,6 +1,6 @@
 
 import {FormActions} from '../helpers/formActions';
-
+import {urlFactory} from '../helpers/firebase';
 
 import Firebase from 'firebase';
 
@@ -58,7 +58,7 @@ if (isValid && mode==='login') return function(dispatch) {
 	      });
 		}
 		
-if (isValid && mode==='configuration') return function(dispatch) {
+if (isValid && mode==='configuration') return function(dispatch, getState) {
 	         let infoUser = {nick: credentials.nick};
 	         if (credentials.libreria) 
 	        	{   let libreria = credentials.libreria.split("/");
@@ -70,7 +70,11 @@ if (isValid && mode==='configuration') return function(dispatch) {
 	         Firebase.database().ref('/utenti/'+uid).update(infoUser).then(
 	         	snapshot =>
 	         		{ //Ho toccato i parametri utente...
+	         		//Ricarico il magazzino
+	         			Firebase.database().ref(urlFactory(getState,'magazzino', null)).off();
+	         			dispatch({type: 'RESET_MAGAZZINO'});
 	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
+	         			
 	         			
 	         		}
 	         	
