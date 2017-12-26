@@ -19,18 +19,20 @@ var currentListenedIdScontrino = null;
 class TableScontrino extends Component 
     {
     componentDidMount() {
+    	   		
     	if (this.props.listeningItemScontrino) currentListenedIdScontrino = this.props.listeningItemScontrino[3];   
     		//Ascolto modifiche sulle righe della bolla
     	
-    	if (currentListenedIdScontrino !== this.props.scontrino)
+    	if ((currentListenedIdScontrino !== this.props.scontrino))
     	   {
     	   	if (currentListenedIdScontrino) 
     	   		{   
+    	   			   
+    
     	   			let params = [...this.props.period];
     	   			params.push(this.props.cassa)
     	   			params.push(currentListenedIdScontrino);
-    
-    	   			this.props.offListenRigaScontrino(params, this.props.listenersItemScontrino); 
+                   	this.props.offListenRigaScontrino(params, this.props.listenersItemScontrino); 
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
     	   	let params = this.props.period;
@@ -60,8 +62,7 @@ class TableScontrino extends Component
 
     
     	render() { 
-    
-    	let props = {...this.props};
+      	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	

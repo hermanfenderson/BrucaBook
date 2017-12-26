@@ -68,9 +68,10 @@ cassaFA.aggiungiItem = (params, valori) => {
 			valori.dataCassa = dataCassa;
 			valori.oraScontrino = oraScontrino.valueOf();
 			const typeAdd =  cassaFA.ADD_ITEM;
-			var nuovoItem = {...valori};
-			addCreatedStamp(nuovoItem);
+			var nuovoItem = {...valori}; //Fix del baco in cancellazione di scontrino vuoto...
+	        addCreatedStamp(nuovoItem);
 			preparaItem(nuovoItem);
+			nuovoItem['totali'] = {pezzi: 0, prezzoTotale: '0.00'};
 			const toggleTableScroll = cassaFA.toggleTableScroll;
 			dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
     	    const ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa])).push();

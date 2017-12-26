@@ -71,6 +71,7 @@ if (isValid && mode==='configuration') return function(dispatch) {
 	         	snapshot =>
 	         		{ //Ho toccato i parametri utente...
 	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
+	         			
 	         		}
 	         	
 	         	)

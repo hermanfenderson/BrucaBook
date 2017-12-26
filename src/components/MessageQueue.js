@@ -8,7 +8,7 @@ class MessageQueue extends React.Component {
 	componentDidUpdate()
 	{
 		if (this.props.messageBuffer.length > 0)
-			{   console.log(this.props.messageBuffer);
+			{   
 				message.info(this.props.messageBuffer[0]);
 			    this.props.shiftMessage();
 			}

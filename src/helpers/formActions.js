@@ -147,7 +147,8 @@ this.reset = (params, idItem) => {
   
   return function(dispatch, getState) {
   	
-    Firebase.database().ref(urlFactory(getState,itemsUrl, params, idItem)).off();
+   Firebase.database().ref(urlFactory(getState,itemsUrl, params, idItem)).off();
+   
    //E non osservo più la riga di testata...
     Firebase.database().ref(urlFactory(getState,rigaTestataUrl, params, idItem)).off();
     
@@ -347,9 +348,9 @@ this.offListenItem = (params, listeners=null) =>
 	return function(dispatch, getState) {
 	if (listeners) 
 		{
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.added);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.changed);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.removed);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_added',listeners.added);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_changed',listeners.changed);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_removed',listeners.removed);
 		}
 	else Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
 	dispatch({

@@ -58,7 +58,8 @@ class Scontrino extends Component {
 	{ 
 		if (currentIdScontrino) 
 			{
-			this.props.resetScontrino(currentIdScontrino);
+			if (this.props.match.params.scontrino) this.props.resetTableScontrino(currentIdScontrino);
+			else this.props.resetScontrino(currentIdScontrino);
 			 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  currentIdScontrino);
 			} 
 		if (this.props.match.params.scontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto...

@@ -5,13 +5,15 @@ import {cassaFA, setRedirect} from '../../../actions/cassa'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getShowCatalogModalScontrino, getEditedCatalogItem, getTestataScontrino, getListeningTestataScontrino, 
+import {getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, 
 		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa, shouldRedirectCassa, getMessageBufferScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataScontrino = rigaScontrinoFA.listenTestata;
 const unlistenTestataScontrino = rigaScontrinoFA.unlistenTestata;
+const resetTableScontrino = rigaScontrinoFA.resetTable;
 const resetScontrino = rigaScontrinoFA.reset;
+
 
 const submitRigaCassa = cassaFA.submitEditedItem;
 const listenTestataCassa = cassaFA.listenTestata;
@@ -34,7 +36,8 @@ const mapStateToProps = (state) => {
 	         selectedScontrino: getEditedRigaCassa(state).selectedItem,
 	         listeningTestataCassa: getListeningTestataCassa(state),
 	         shouldRedirectCassa: shouldRedirectCassa(state),
-			 messageBuffer: getMessageBufferScontrino(state)
+			 messageBuffer: getMessageBufferScontrino(state),
+			 listenersItemScontrino: getListenersItemScontrino(state)
 	  
 		
 		
@@ -42,7 +45,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ shiftMessage, resetScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
+  return bindActionCreators({ shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
   listenTestataScontrino, unlistenTestataScontrino, storeMeasure, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa, setRedirect}, dispatch);
 }
 
