@@ -46,13 +46,7 @@ vertical-align: middle;
 margin-right: 15px;
 }
 
-/*
-.userName{
-border-style: dotted;
-}
-*/
 
-	
 
 
 .logoBig {
@@ -73,6 +67,31 @@ border-style: dotted;
 }
  .login-form-button {
   width: 100%;
+}
+
+.header-cassa {
+font-weight: bold;
+}
+
+.header-scontrino {
+font-weight: bold;
+}
+
+ .nuovo-scontrino-button {
+  width: 100%;
+}
+
+.sezione-scontrino {
+	
+border: 2px solid #1890ff;
+    border-radius: 5px;
+}
+
+.input-numero-scontrino {
+width: 55px;	
+}
+.input-ora-scontrino {
+width: 75px;	
 }
 
  

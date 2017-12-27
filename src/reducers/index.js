@@ -7,7 +7,7 @@ import CassaReducer, * as fromCassa from './cassa';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
-import MeasuresReducer from './measures';
+import MeasuresReducer, * as fromMeasures from './measures';
 import ScontrinoReducer, * as fromScontrino from './scontrino';
 import UserMgmtReducer, * as fromUserMgmt from './userMgmt';
 import StatusReducer, * as fromStatus from './status';
@@ -39,7 +39,6 @@ export const getTestataBolla = (state) => {return fromBolla.getTestataBolla(stat
 export const getShowCatalogModal = (state) => {return fromBolla.getShowCatalogModal(state.bolla)};
 export const getTableHeight = (state) => {return fromBolla.getTableHeight(state.bolla)};
 export const getTableScroll = (state)  => {return fromBolla.getTableScroll(state.bolla)};
-export const getMeasures = (state) => {return fromBolla.getMeasures(state.bolla)};
 export const getListeningTestataBolla = (state) => {return fromBolla.getListeningTestataBolla(state.bolla)};
 export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
@@ -71,7 +70,6 @@ export const getEditedRigaCassa = (state) => {return fromCassa.getEditedItem(sta
 export const getTestataCassa = (state) => {return fromCassa.getTestataCassa(state.cassa)};
 export const getTableHeightCassa = (state) => {return fromCassa.getTableHeight(state.cassa)};
 export const getTableScrollCassa = (state)  => {return fromCassa.getTableScroll(state.cassa)};
-export const getMeasuresCassa = (state) => {return fromCassa.getMeasures(state.cassa)};
 export const getListeningTestataCassa = (state) => {return fromCassa.getListeningTestataCassa(state.cassa)};
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
 export const isStaleTotaliCassa = (state) => {return fromCassa.isStaleTotali(state.cassa)};
@@ -85,7 +83,6 @@ export const getTestataScontrino = (state) => {return fromScontrino.getTestataSc
 export const getShowCatalogModalScontrino = (state) => {return fromScontrino.getShowCatalogModal(state.scontrino)};
 export const getTableHeightScontrino = (state) => {return fromScontrino.getTableHeight(state.scontrino)};
 export const getTableScrollScontrino = (state)  => {return fromScontrino.getTableScroll(state.scontrino)};
-export const getMeasuresScontrino = (state) => {return fromScontrino.getMeasures(state.scontrino)};
 export const getListeningTestataScontrino = (state) => {return fromScontrino.getListeningTestataScontrino(state.scontrino)};
 export const getListeningItemScontrino = (state) => {return fromScontrino.getListeningItemScontrino(state.scontrino)};
 export const getListenersItemScontrino = (state) => {return fromScontrino.getListenersItemScontrino(state.scontrino)};
@@ -116,6 +113,10 @@ export const getInfo = (state) => {return fromStatus.getInfo(state.status)};
 //da auth
 export const isAuthenticated = (state) => {return fromAuth.isAuthenticated(state.auth)};
 export const getUser = (state) => {return fromAuth.getUser(state.auth)};
+
+//da measures
+export const getMeasures = (state) => {return fromMeasures.getMeasures(state.measures)};
+
 
 
 

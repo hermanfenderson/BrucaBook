@@ -23,3 +23,6 @@ export default function measures(state = initialState, action) {
       return state;
   }
 }
+
+export const getMeasures = (state) => {return state.measures};
+ 

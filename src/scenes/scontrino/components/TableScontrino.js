@@ -6,8 +6,8 @@ import WrappedTable from '../../../components/WrappedTable'
 
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '140px'},
-                {dataField: 'titolo', label: 'Titolo', width: '360px'},
+const header = [{dataField: 'ean', label: 'EAN', width: '145px'},
+                {dataField: 'titolo', label: 'Titolo', width: '355px'},
 			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '70px'},
 			    {dataField: 'pezzi', label: 'Q.tà', width: '60px'},
 			     {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}

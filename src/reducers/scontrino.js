@@ -177,7 +177,6 @@ export default function scontrino(state = initialState(), action) {
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
- export const getMeasures = (state) => {return state.measures};
  export const getListeningTotaliScontrino = (state) => {return state.listeningTotali};
  export const getListeningTestataScontrino = (state) => {return state.listeningTestata};
  export const getListeningItemScontrino = (state) => {return state.listeningItem};

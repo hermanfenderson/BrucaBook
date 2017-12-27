@@ -194,7 +194,6 @@ export default function bolla(state = initialState(), action) {
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
- export const getMeasures = (state) => {return state.measures};
  export const getListeningTestataBolla = (state) => {return state.listeningTestata};
  export const getListeningItemBolla = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};

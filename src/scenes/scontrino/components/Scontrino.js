@@ -107,6 +107,7 @@ submitRigaCassa = (e) => {
 
 render()
 {
+	
   const period = [this.props.match.params.anno, this.props.match.params.mese];
 if (this.props.shouldRedirectCassa && this.props.selectedScontrino && this.props.selectedScontrino.key && (this.props.selectedScontrino.key !== this.props.match.params.scontrino)) 
 	{
@@ -128,32 +129,51 @@ else return (
   <Col style={{'backgroundColor': '#F0F0F0'}} span={7}>
 	
     <Row>
+    <Col className='header-cassa' span={6}>
+  
+    Cassa {this.props.testataCassa ? this.props.testataCassa.cassa : ''}
+    </Col>
+    <Col span={18}>
+    	<Button type="primary" icon="plus" size={'small'} className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
+     </Col>
+   
+    </Row>
+    <Row>
     	<TestataCassa ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
 	
     </Row>
 	
-	<Row>
+	<Row style={{height: this.props.measures ? this.props.measures['viewPortHeight']-180: '100px'}}>
 	<TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</Row>
 
   </Col>
-  <Col span={17}>
+  <Col style={{height: this.props.measures ? this.props.measures['viewPortHeight']-144: '100px'}} span={17} className='sezione-scontrino'>
+  <Spin spinning={!this.props.match.params.scontrino}>
   <Row>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   
-    	<Col span={5}>
-			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
-		</Col>
-		<Col span={19}>
-	    <Row>
-	    	<Col span={3}>
-				<Button type="primary" shape="circle" icon="plus" size={'small'} onClick={this.submitRigaCassa}/>
+    	<Col span={6}>
+    	<Row  className='header-scontrino'>
+    	Scontrino
+    	</Row>
+    	<Row>
+    	
+			
 		
-			</Col>
-			<Col span={21}>
+		
+		
 	
-				<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}  ref='formTestataScontrino'/>
-			</Col>
+			<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}  ref='formTestataScontrino'/>
+			
+    	</Row>
+    	<Row>
+			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
+		</Row>
+		</Col>
+		<Col span={18}>
+	    <Row>
+	    	
 		</Row>
 		<Row>
    		
@@ -182,7 +202,7 @@ else return (
     	  </Col>
 
      </Row>
-     
+   </Spin>  
   </Col>
  
    

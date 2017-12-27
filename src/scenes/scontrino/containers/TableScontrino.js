@@ -2,7 +2,7 @@ import TableScontrinoComponent from '../components/TableScontrino'
 import {rigaScontrinoFA} from '../../../actions/scontrino'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaScontrino, getRigheScontrino, getTableHeightScontrino, getTableScrollScontrino, getMeasuresScontrino, getListeningItemScontrino, getListenersItemScontrino} from '../../../reducers'
+import {getEditedRigaScontrino, getRigheScontrino, getTableHeightScontrino, getTableScrollScontrino, getListeningItemScontrino, getListenersItemScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -16,7 +16,7 @@ const toggleTableScroll = rigaScontrinoFA.toggleTableScroll;
 
 const mapStateToProps = (state) => {
 	return ({data: getRigheScontrino(state), tableScroll: getTableScrollScontrino(state), 
-	height: getTableHeightScontrino(state), measures: getMeasuresScontrino(state), 
+	height: getTableHeightScontrino(state),  
 	selectedItem: getEditedRigaScontrino(state).selectedItem,
 	listeningItemScontrino: getListeningItemScontrino(state),
 	listenersItemScontrino: getListenersItemScontrino(state)
