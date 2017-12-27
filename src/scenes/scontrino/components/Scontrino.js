@@ -126,7 +126,7 @@ else return (
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
-  <Col style={{'backgroundColor': '#F0F0F0'}} span={7}>
+  <Col  style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-40 : '100px', 'backgroundColor': '#F0F0F0'}} span={7}>
 	
     <Row>
     <Col className='header-cassa' span={6}>
@@ -143,12 +143,12 @@ else return (
 	
     </Row>
 	
-	<Row style={{height: this.props.measures ? this.props.measures['viewPortHeight']-180: '100px'}}>
-	<TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+	<Row>
+	    <TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</Row>
 
   </Col>
-  <Col style={{height: this.props.measures ? this.props.measures['viewPortHeight']-144: '100px'}} span={17} className='sezione-scontrino'>
+  <Col style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-40 : '100px'}} span={17} className='sezione-scontrino'>
   <Spin spinning={!this.props.match.params.scontrino}>
   <Row>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />

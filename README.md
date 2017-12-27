@@ -3,7 +3,7 @@ Utilizza React e Firebase.
 
 Versione 0.3.2 
 Bug fixing: Il form di change della testata andava disabilitato se non avevo uno scontrino selezionato (#115)
-Feature: Ho reso più evidenti le sezioni di scontrino
+Feature: Ho reso più evidenti le sezioni di scontrino sistemando le lunghezze delle colonne
 Refactoring codice: Alcuni richiami a getMeasures... non servivano a niente (#116)
 
 Versione 0.3.1
