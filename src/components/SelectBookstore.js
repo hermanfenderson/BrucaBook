@@ -6,15 +6,7 @@
 import React from 'react';
 import { Select } from 'antd';
 const { Option, OptGroup } = Select;
- /*
- <OptGroup label="Manager">
-      <Option value="jack">Jack</Option>
-      <Option value="lucy">Lucy</Option>
-    </OptGroup>
-    <OptGroup label="Engineer">
-      <Option value="Yiminghe">yiminghe</Option>
-    </OptGroup>
-*/
+ 
 
 class SelectBookstore extends React.Component 
 {

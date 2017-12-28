@@ -38,8 +38,7 @@ const mapStateToProps = (state) => {
 	         shouldRedirectCassa: shouldRedirectCassa(state),
 			 messageBuffer: getMessageBufferScontrino(state),
 			 listenersItemScontrino: getListenersItemScontrino(state),
-			 measures: getMeasures(state)
-	  
+			 measures: getMeasures(state),
 		
 		
 	})

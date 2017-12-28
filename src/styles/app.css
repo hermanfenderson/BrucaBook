@@ -1,5 +1,19 @@
+/* anti-bounce */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
 
+#app {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
 
+/*footer*/
 .ant-layout-footer {
 	padding-top: 0px;
 	padding-bottom: 0px;
@@ -23,7 +37,7 @@
  .logo {
   content: 'BrucaBook';
   height: 35px;
-  background: #333;
+  background: black;
   background-image:url('/brucabook_small.png');
   background-repeat:no-repeat;
   
@@ -32,6 +46,7 @@
   margin-top: 24px;
 }
 
+/*sezione avatar - menu utente */
 .userBox{
 text-align: right;
 
@@ -48,7 +63,7 @@ margin-right: 15px;
 
 
 
-
+/* sezione userMgmt non autenticato */
 .logoBig {
     position: absolute;
     top: 0;
@@ -69,6 +84,7 @@ margin-right: 15px;
   width: 100%;
 }
 
+/*scene scontrino */
 .header-cassa {
 font-weight: bold;
 }
@@ -94,4 +110,15 @@ width: 55px;
 width: 75px;	
 }
 
+
+/*tabella cassa in scene scontrino*/
+.tabella-cassa-row {
+	font-size: 12px;
+}
+
+/*Immagine libri*/
+.book-img {
+	margin: 30px;
+	
+}
  

@@ -1,6 +1,14 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.3.3
+Bug fixing: Eliminato il bounce fastidioso sulle pagine (#121)
+Refactoring: Ripulito il foglio di stile con commenti...
+Refactoring: Eliminate immagini inutili
+Bug fixing: In reload non ricaricava lo scontrino (questa era tricky... zero vale false ) (#118) 
+Feature: Resa parametrica in foglio di stile la dimensione della tabella cassa (il font) (#122)
+Feature: Spazio per l'immagine del libro in foglio di stile (#123)
+
 Versione 0.3.2 
 Bug fixing: Il form di change della testata andava disabilitato se non avevo uno scontrino selezionato (#115)
 Feature: Ho reso più evidenti le sezioni di scontrino sistemando le lunghezze delle colonne

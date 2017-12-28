@@ -84,7 +84,7 @@ handleResize = () => {
       
            
          
-           <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-50' }}>
+           <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-74' }}>
           <Main authenticated={true} user={this.props.user}/>
           </Content>
         </Layout>

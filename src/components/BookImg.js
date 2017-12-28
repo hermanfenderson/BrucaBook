@@ -5,7 +5,7 @@ const { Meta } = Card;
 const BookImg = (props) =>
 {
 	return(
-  <Card
+  <Card className='book-img'
     hoverable
     cover={<img alt="notAvailable" src="/image.png" />}
   >

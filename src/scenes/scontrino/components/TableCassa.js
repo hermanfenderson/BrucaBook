@@ -7,7 +7,7 @@ import {Modal} from 'antd';
 class WrappedTable extends React.Component {
 componentDidMount()
   {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
-     
+   
    
   }
   
@@ -20,8 +20,9 @@ componentDidMount()
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
 		if (this.props.scontrino && !this.props.selectedItem) {
-     	
-     if (this.props.index.chiavi && this.props.index.chiavi[this.props.scontrino] && this.props.data[this.props.index.chiavi[this.props.scontrino]]) this.props.selectRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
+     	 	if (this.props.index.chiavi && (this.props.index.chiavi[this.props.scontrino]>=0) && this.props.data[this.props.index.chiavi[this.props.scontrino]]) 
+    			{this.props.selectRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
+    			}
      	
      }	
  }
@@ -82,7 +83,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(//Ho inserito Menu per poterlo infilare in un dropdown...
-    		 <Table ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+    		 <Table size='small' rowClassName='tabella-cassa-row' ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        		);	
      }	
 } 

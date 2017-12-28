@@ -80,7 +80,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(
-        	 <Table onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+        	 <Table size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
        		);	
      }	
 } 

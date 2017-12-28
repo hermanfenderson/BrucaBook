@@ -62,7 +62,9 @@ class Scontrino extends Component {
 			else this.props.resetScontrino(currentIdScontrino);
 			 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  currentIdScontrino);
 			} 
-		if (this.props.match.params.scontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto...
+		if (this.props.match.params.scontrino) 
+			{this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+			}
 	}
 	
  }
@@ -126,7 +128,7 @@ else return (
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
-  <Col  style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-40 : '100px', 'backgroundColor': '#F0F0F0'}} span={7}>
+  <Col  style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-48 : '100px', 'backgroundColor': '#F0F0F0'}} span={6}>
 	
     <Row>
     <Col className='header-cassa' span={6}>
@@ -148,7 +150,7 @@ else return (
 	</Row>
 
   </Col>
-  <Col style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-40 : '100px'}} span={17} className='sezione-scontrino'>
+  <Col style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-48 : '100px'}} span={18} className='sezione-scontrino'>
   <Spin spinning={!this.props.match.params.scontrino}>
   <Row>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
@@ -164,7 +166,7 @@ else return (
 		
 		
 	
-			<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}  ref='formTestataScontrino'/>
+			<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} data={this.props.data}  ref='formTestataScontrino'/>
 			
     	</Row>
     	<Row>
