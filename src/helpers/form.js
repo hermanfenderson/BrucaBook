@@ -21,7 +21,6 @@ export const editedItemInitialState = (editedItemValuesInitialState, initOverrid
 		 readOnlyForm: false,
 		 willFocus: 'ean', 
 		 eanState: 'BLANK',
-		 
 		 ...initOverrides
 	}
 }
@@ -35,6 +34,8 @@ export const initialState = (editedItemInitialState, extraInitialState) =>
 			tableHeight:0,
 			listeningItem: null,
 			messageBuffer: [],
+			 filters: {},
+		
 			editedItem: editedItemInitialState,
 			...initOverrides
 	    	}

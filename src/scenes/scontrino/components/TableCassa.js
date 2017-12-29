@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { Icon, Table} from 'antd';
 
 import {Modal} from 'antd';
+var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo stato...
 
 class WrappedTable extends React.Component {
 componentDidMount()
@@ -41,7 +42,9 @@ actionRowRender = (cell, row) => {
         );
  }
  
- 
+ rowClassName = (record,index) => {
+	return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-highlight tabella-cassa-row' : 'ant-table-row tabella-cassa-row');
+} 
  
 ordinaryRowRender = (cell,row) => {
  if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
@@ -49,7 +52,11 @@ ordinaryRowRender = (cell,row) => {
  
 } 
 
+onRow=(record, other) => ({
+  onClick: () => {if (lastRowClicked!== record.key) {lastRowClicked = record.key; this.selectRow(record);}}
+})
 
+  
 render ()
      {
    
@@ -70,6 +77,22 @@ render ()
   	            		})
   	            	}
   				);
+  				
+  	let data = (this.props.filters) ? 
+  		this.props.data.map((record) => 
+  			{
+  			//Il record è buono... se non esiste quel campo nel record oppure esiste e la regex è rispettata	
+  			let good = true;
+  			
+  			for (var prop in this.props.filters)
+  					
+  				{  let regex = new RegExp(this.props.filters[prop],'i');
+  					if ((record[prop]) && (!record[prop].match(regex))) good = false;
+  				}
+  			return (good ? {...record} : null) 
+  			}).filter((record => !!record)) :
+  			this.props.data;
+  			
   	let actionColumn = {
   		            'key': 'Selezione',
   					'render': (text, record) => {return {children: this.actionRowRender(text,record), 
@@ -83,7 +106,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(//Ho inserito Menu per poterlo infilare in un dropdown...
-    		 <Table size='small' rowClassName='tabella-cassa-row' ref='antTable' scroll={{ y: this.props.height}} size={'middle'}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+    		 <Table size='small' onRow={this.onRow} rowClassName={this.rowClassName} ref='antTable' scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data}/>
        		);	
      }	
 } 
@@ -156,17 +179,19 @@ class TableCassa extends Component
     	this.props.setRedirect(true);
 	}
 
-    
+   
     	render() { 
-    
-    	let props = {...this.props};
+        let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
+    	  
+    	  
 			<WrappedTable {...props} actionWidth={'30px'} actionFirst={true} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			
 			)}
     }		
 	

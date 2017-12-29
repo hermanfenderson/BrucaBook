@@ -53,6 +53,7 @@ export default function elencoBolle(state = initialState(), action) {
  export const getItems = (state) => {return state.itemsArray};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getListeningItem = (state) => {return state.listeningItem};
+ export const getFilters = (state) => {return state.filters};
  
 
       

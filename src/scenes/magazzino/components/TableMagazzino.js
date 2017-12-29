@@ -5,8 +5,8 @@ import WrappedTable from '../../../components/WrappedTable'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'key', label: 'EAN', width: '150px'},
-			    {dataField: 'autore', label: 'Autore', width: '300px'},
 			    {dataField: 'titolo', label: 'Titolo', width: '300px'},
+			    {dataField: 'autore', label: 'Autore', width: '300px'},
 			    {dataField: 'pezzi', label: 'Pezzi', width: '100px'},
 			   ];
 
@@ -16,9 +16,7 @@ const header = [{dataField: 'key', label: 'EAN', width: '150px'},
 class TableMagazzino extends Component 
     {
     componentDidMount() {
-    	console.log("monto");
-    	console.log(this.props.listening);
-    	//Ascolto modifiche sulle bolle... non passo parametri...sono nella radice. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
+     //Ascolto modifiche sulle bolle... non passo parametri...sono nella radice. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
     	if (this.props.listening!=='')  this.props.listenMagazzino("");
     		
 	}

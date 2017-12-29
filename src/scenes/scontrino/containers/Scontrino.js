@@ -5,7 +5,7 @@ import {cassaFA, setRedirect} from '../../../actions/cassa'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, getMeasures,
+import {getFiltersCassa, getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, getMeasures,
 		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa, shouldRedirectCassa, getMessageBufferScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -20,6 +20,9 @@ const listenTestataCassa = cassaFA.listenTestata;
 const unlistenTestataCassa = cassaFA.unlistenTestata;
 const resetCassa = cassaFA.reset;
 const setSelectedRigaCassa = cassaFA.setSelectedItem;
+const setFilter = cassaFA.setFilter;
+
+
 const shiftMessage = rigaScontrinoFA.shiftMessage;
 
 
@@ -39,13 +42,13 @@ const mapStateToProps = (state) => {
 			 messageBuffer: getMessageBufferScontrino(state),
 			 listenersItemScontrino: getListenersItemScontrino(state),
 			 measures: getMeasures(state),
-		
+			 filters: getFiltersCassa(state)	
 		
 	})
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
+  return bindActionCreators({ setFilter, shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
   listenTestataScontrino, unlistenTestataScontrino, storeMeasure, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa, setRedirect}, dispatch);
 }
 

@@ -74,6 +74,7 @@ export const getListeningTestataCassa = (state) => {return fromCassa.getListenin
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
 export const isStaleTotaliCassa = (state) => {return fromCassa.isStaleTotali(state.cassa)};
 export const shouldRedirectCassa = (state) => {return fromCassa.shouldRedirect(state.cassa)};
+export const getFiltersCassa = (state) => { return fromCassa.getFilters(state.cassa)};
 
 
 //Scene Scontrino
@@ -99,6 +100,7 @@ export const getEditedCatalogItem = (state) => {return fromCatalog.getEditedCata
 export const getMagazzino = (state) => {return fromMagazzino.getItems(state.magazzino)};
 export const getTableMagazzinoHeight = (state) => {return fromMagazzino.getTableHeight(state.magazzino)};
 export const getListeningMagazzino = (state) => {return fromMagazzino.getListeningItem(state.magazzino)};
+export const getFiltersMagazzino = (state) => {return fromMagazzino.getFilters(state.magazzino)};
 
 
 //Scene UserMgmt

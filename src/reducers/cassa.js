@@ -441,6 +441,7 @@ export default function cassa(state = initialState(), action) {
  export const getListeningItemCassa = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const shouldRedirect = (state) => {return state.shouldRedirect};
+ export const getFilters = (state) => {return state.filters};
  
       
 

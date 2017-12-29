@@ -1,5 +1,6 @@
 /*
-
+Modificata per gestire filtri full text case insentive in and logico... 
+forma: filters={{titolo: 'arte', autore: 'paola'}} 
 */
 
 import React from 'react';
@@ -74,13 +75,28 @@ render ()
   					'width': this.props.actionWidth || '60px',
   					'title': 'Sel.'
   	            	};
+  	let data = (this.props.filters) ? 
+  		this.props.data.map((record) => 
+  			{
+  			//Il record è buono... se non esiste quel campo nel record oppure esiste e la regex è rispettata	
+  			let good = true;
+  			
+  			for (var prop in this.props.filters)
+  					
+  				{  let regex = new RegExp(this.props.filters[prop],'i');
+  					if ((record[prop]) && (!record[prop].match(regex))) good = false;
+  				}
+  			return (good ? {...record} : null) 
+  			}).filter((record => !!record)) :
+  			this.props.data;
+  			
   	if (this.props.deleteRow || this.props.editRow) 
   		{if (this.props.actionFirst)
   		    columns.unshift(actionColumn);
 			else columns.push(actionColumn);
   		}
     return(
-        	 <Table size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={this.props.data}/>
+        	 <Table size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data}/>
        		);	
      }	
 } 

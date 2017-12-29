@@ -22,6 +22,9 @@ this.RESET_EDITED_CATALOG_ITEM = 'RESET_EDITED_CATALOG_ITEM_'+scene;
 this.SUBMIT_EDITED_CATALOG_ITEM = 'SUBMIT_EDITED_CATALOG_ITEM_'+scene;
 
 this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
+this.SET_FILTER = 'SET_FILTER_'+scene;
+this.RESET_FILTER = 'RESET_FILTER_'+scene;
+
 
 this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+scene;
 this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
@@ -71,7 +74,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		newState = {...state, editedItem: cei };
 		}
 		break;
-
+    
  	case this.PUSH_MESSAGE: 
  		{
  		let messageBuf = [...state.messageBuffer];
@@ -87,7 +90,20 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
  		newState = {...state, messageBuffer: messageBuf};
  		}
  		break;
+ 		
+ 	case this.RESET_FILTER:
+  		{
+  		let filters = {}	
+  		newState = {...state, filters: filters}	
+  		}
+  		break;	
   		
+  	case this.SET_FILTER:
+  		{
+  		let filters = {...state.filters, [action.name]: action.value}	
+  		newState = {...state, filters: filters}	
+  		}
+  		break;
 	case this.TESTATA_CHANGED:
    	   if (action.payload) 
    		{   

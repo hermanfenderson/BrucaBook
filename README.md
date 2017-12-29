@@ -1,6 +1,14 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.4.0
+Comincio a lavorare all'inventario.
+Feature (nascosta): Rendo wrappedtable capace di filtrare per regex. A questo fine passo una prop a wrappedtable che è un oggetto.
+					I valori dell'oggetto li metto in input fields nello stato di ogni form che usa form helper...
+Abilitata la ricerca in magazzino e nella tabella cassa
+Modificata la wrappedtable di tabella cassa per stesse caratteristiche di wrappedtable generica...
+
+
 Versione 0.3.3
 Bug fixing: Eliminato il bounce fastidioso sulle pagine (#121)
 Refactoring: Ripulito il foglio di stile con commenti...

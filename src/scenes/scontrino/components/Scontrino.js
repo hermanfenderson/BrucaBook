@@ -141,12 +141,12 @@ else return (
    
     </Row>
     <Row>
-    	<TestataCassa ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
+    	<TestataCassa filters={this.props.filters} setFilter={this.props.setFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
 	
     </Row>
 	
 	<Row>
-	    <TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+	    <TableCassa  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</Row>
 
   </Col>

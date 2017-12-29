@@ -19,14 +19,14 @@ const mapStateToProps = (state) => {
 	height: getTableHeightCassa(state), 
 	selectedItem: getEditedRigaCassa(state).selectedItem,
 	listeningItemCassa: getListeningItemCassa(state),
-	index: getRigheCassaIndex(state)
-		
+	index: getRigheCassaIndex(state),
+	
 	})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight, setRedirect }, dispatch);
+  return bindActionCreators({listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight, setRedirect }, dispatch);
 }
 
 

@@ -19,7 +19,9 @@ this.FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_'+scene;
 this.FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_'+scene;
 this.NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_'+scene;
 this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+scene;
-	
+
+this.SET_FILTER = 'SET_FILTER_'+scene;
+this.RESET_FILTER = 'RESET_FILTER_'+scene;
 this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+scene;
 this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
 this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
@@ -128,6 +130,21 @@ return function(dispatch, getState) {
       		}	
       	)
     }	
+}
+
+this.setFilter = (name, value) =>
+{
+   return({type: this.SET_FILTER,
+   	name: name,
+   	value: value
+   })	
+}
+
+this.resetFilter = () =>
+{
+   return({type: this.RESET_FILTER,
+   	
+   })	
 }
 
 
