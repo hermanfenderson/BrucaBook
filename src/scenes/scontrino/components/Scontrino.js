@@ -141,7 +141,7 @@ else return (
    
     </Row>
     <Row>
-    	<TestataCassa filters={this.props.filters} setFilter={this.props.setFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
+    	<TestataCassa filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
 	
     </Row>
 	

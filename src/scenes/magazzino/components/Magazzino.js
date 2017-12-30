@@ -18,7 +18,7 @@ render()
   return (
  <div>	
       <Row>
-      <FilterMagazzino filters={this.props.filters} setFilter={this.props.setFilter} />
+      <FilterMagazzino filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
       <Row>
       

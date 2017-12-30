@@ -22,8 +22,9 @@ render()
 				
 			</Spin>
 				<WrappedForm  onChange={this.onChange} loading={false} formValues={this.props.filters} errorMessages={{}}>
-        			 <WrappedForm.Group formGroupLayout={{gutter:16}}>
-    					<WrappedForm.Input placeholder='filtra titolo' field='titolo' formColumnLayout={{span:24}} />
+        			 <WrappedForm.Group formGroupLayout={{gutter:8}}>
+    					<WrappedForm.Input placeholder='filtra titolo' field='titolo' formColumnLayout={{span:20}} />
+        				   <WrappedForm.Button icon="close-circle-o" type={'button'} formColumnLayout={{span:3}} onClick={this.props.resetFilter}></WrappedForm.Button>
         				</WrappedForm.Group>
     			</WrappedForm>
 

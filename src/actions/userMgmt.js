@@ -73,6 +73,9 @@ if (isValid && mode==='configuration') return function(dispatch, getState) {
 	         		//Ricarico il magazzino
 	         			Firebase.database().ref(urlFactory(getState,'magazzino', null)).off();
 	         			dispatch({type: 'RESET_MAGAZZINO'});
+	         			Firebase.database().ref(urlFactory(getState,'righeElencoInventari', null)).off();
+	         			dispatch({type: 'RESET_ELENCOINVENTARI'});
+	         			
 	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
 	         			
 	         			

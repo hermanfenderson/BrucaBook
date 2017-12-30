@@ -6,6 +6,9 @@ import BollaReducer, * as fromBolla from './bolla';
 import CassaReducer, * as fromCassa from './cassa';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
+import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
+import InventarioReducer, * as fromInventario from './inventario';
+
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
 import MeasuresReducer, * as fromMeasures from './measures';
 import ScontrinoReducer, * as fromScontrino from './scontrino';
@@ -19,6 +22,8 @@ const rootReducer = combineReducers({
   cassa: CassaReducer,
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
+  elencoInventari: ElencoInventariReducer,
+  inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
   scontrino: ScontrinoReducer,
@@ -53,6 +58,27 @@ export const getTableElencoBolleScroll = (state)  => {return fromElencoBolle.get
 export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
 export const getPeriod = (state) => {return fromElencoBolle.getPeriod(state.elencoBolle)};
 export const getListeningItem = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
+
+//Scene Inventario
+export const getRigheInventario = (state) => {return fromInventario.getItems(state.inventario)};
+export const getEditedRigaInventario = (state) => {return fromInventario.getEditedItem(state.inventario)};
+export const getTestataInventario = (state) => {return fromInventario.getTestataBolla(state.inventario)};
+export const getShowCatalogModalInventario = (state) => {return fromInventario.getShowCatalogModal(state.inventario)};
+export const getTableHeightInventario = (state) => {return fromInventario.getTableHeight(state.inventario)};
+export const getTableScrollInventario = (state)  => {return fromInventario.getTableScroll(state.inventario)};
+export const getListeningTestataInventario = (state) => {return fromInventario.getListeningTestataBolla(state.inventario)};
+export const getListeningItemInventario = (state) => {return fromInventario.getListeningItemBolla(state.inventario)};
+export const isStaleTotaliInventario = (state) => {return fromInventario.isStaleTotali(state.inventario)};
+export const getMessageBufferInventario = (state) => {return fromInventario.getMessageBuffer(state.inventario)};
+
+
+//Scene ElencoInventari
+export const getElencoInventari = (state) => {return fromElencoInventari.getItems(state.elencoInventari)};
+export const getEditedInventario = (state) => {return fromElencoInventari.getEditedItem(state.elencoInventari)};
+export const getTableElencoInventariHeight = (state) => {return fromElencoInventari.getTableHeight(state.elencoInventari)};
+export const getTableElencoInventariScroll = (state)  => {return fromElencoInventari.getTableScroll(state.elencoInventari)};
+export const getReadOnlyFormInventario = (state)  => {return fromElencoInventari.getReadOnlyForm(state.elencoInventari)};
+export const getListeningItemElencoInventari = (state) => {return fromElencoInventari.getListeningItem(state.elencoInventari)};
 
 //Scene ElencoCasse
 export const getElencoCasse = (state) => {return fromElencoCasse.getItems(state.elencoCasse)};

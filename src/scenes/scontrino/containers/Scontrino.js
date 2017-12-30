@@ -21,6 +21,7 @@ const unlistenTestataCassa = cassaFA.unlistenTestata;
 const resetCassa = cassaFA.reset;
 const setSelectedRigaCassa = cassaFA.setSelectedItem;
 const setFilter = cassaFA.setFilter;
+const resetFilter = cassaFA.resetFilter;
 
 
 const shiftMessage = rigaScontrinoFA.shiftMessage;
@@ -48,7 +49,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setFilter, shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
+  return bindActionCreators({ resetFilter, setFilter, shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
   listenTestataScontrino, unlistenTestataScontrino, storeMeasure, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa, setRedirect}, dispatch);
 }
 

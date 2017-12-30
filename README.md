@@ -1,6 +1,12 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.4.1
+Creo ElencoInventario per copia di ElencoBolle e Inventario per copia di Bolle.
+Inventario ragiona con chiave EAN.
+Bug fixing: Non venivano resettati i filtri in magazzino (#130)
+Feature: Inserito un mini-tasto reset nella ricerca cassa (#131)
+
 Versione 0.4.0
 Comincio a lavorare all'inventario.
 Feature (nascosta): Rendo wrappedtable capace di filtrare per regex. A questo fine passo una prop a wrappedtable che è un oggetto.
