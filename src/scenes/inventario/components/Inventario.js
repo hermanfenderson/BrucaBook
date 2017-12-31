@@ -30,9 +30,9 @@ class Inventario extends Component {
 		if (currentIdInventario) 
 			{this.props.resetInventario(this.props.match.params.id);
 			//Ragiono solo per anno...
-			 this.props.unlistenTestataInventario([this.props.match.params.anno], currentIdInventario);
+			 this.props.unlistenTestataInventario(null, currentIdInventario);
 			} 
-		this.props.listenTestataInventario([this.props.match.params.anno], this.props.match.params.id); //In modo da acoltare il valore giusto...
+		this.props.listenTestataInventario(null, this.props.match.params.id); //In modo da acoltare il valore giusto...
 	}
 		
  }
@@ -55,10 +55,9 @@ submitEditedCatalogItem = (e) => {
 
 render()
 {
-  const period = [this.props.match.params.anno, '01'];
- return (
+   return (
  
-  <Spin spinning={!this.props.testataBolla}>
+  <Spin spinning={!this.props.testataInventario}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   <div>
   
@@ -71,7 +70,7 @@ render()
       </Col>
  
        <Col span={20}>
-     <TableInventario  period={period} idInventario={this.props.match.params.id}/>
+     <TableInventario  idInventario={this.props.match.params.id}/>
       
     	   </Col>
       </Row>
@@ -83,7 +82,7 @@ render()
       </Col>
        <Col span={20}>
     
-      <FormRigaInventario idInventario={this.props.match.params.id} period={period} testataInventario={this.props.testataInventario} ref='formRigaInventario'/>
+      <FormRigaInventario idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} ref='formRigaInventario'/>
       </Col>
         
     </Row>

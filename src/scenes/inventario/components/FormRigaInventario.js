@@ -8,7 +8,7 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-	var valuesTestata = {...this.props.testataBolla};
+	var valuesTestata = {...this.props.testataInventario};
 	delete valuesTestata.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
     delete valuesTestata.createdBy;
     delete valuesTestata.createdAt;
@@ -17,13 +17,9 @@ onSubmit = (e) => {
     delete valuesTestata.key;
 	valuesTestata.data = valuesTestata.dataInventario;
     const values =  {...this.props.editedRigaInventario.values, ...valuesTestata};
-   // let params = [...this.props.period];
-   //Solo l'anno
-    let params = [];
-    params[0] = this.props.period[0];
-    params.push(this.props.idBolla);
+   
     	   
-	this.props.submitEditedRigaInventario(this.props.editedRigaInventario.isValid, this.props.editedRigaInventario.selectedItem, params, values); //Per sapere cosa fare... dopo
+	this.props.submitEditedRigaInventario(this.props.editedRigaInventario.isValid, this.props.editedRigaInventario.selectedItem, this.props.idInventario, values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {
@@ -49,7 +45,9 @@ resetForm = () => {
        </WrappedForm.Group>
         
         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:2}}/>
+        <WrappedForm.Input field='stock' label='Magazzino' formColumnLayout={{span:2}} disabled/>
+       
+        <WrappedForm.InputNumber field='pezzi' label='Variazione' formColumnLayout={{span:5}}/>
        <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
         <WrappedForm.Button  itemStyle={{paddingTop: '30px'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>

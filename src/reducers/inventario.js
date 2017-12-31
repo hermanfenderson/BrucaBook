@@ -1,7 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 
-import {isNotNegativeInteger} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 
 
@@ -10,7 +9,8 @@ const editedRigaBollaValuesInitialState =
 				titolo: '',
 				autore: '',
 				prezzoListino: '',
-				pezzi: '0',
+				stock: 0,
+				pezzi: 0,
 				imgUrl: ''	
 	};
 	
@@ -70,7 +70,7 @@ function transformAndValidateEditedRigaInventario(cei, name, value)
 
   
 		
-     errMgmt(cei, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.pezzi));
+     errMgmt(cei, 'pezzi','notInteger','numero intero',  ((value) => {return !Number.isInteger(value)})(cei.values.pezzi));
   	
   	
     //Se ho anche solo un errore... sono svalido.
@@ -89,6 +89,7 @@ function foundCompleteItem(editedItem, action)
     	cei.values.titolo = action.item.titolo;
     	cei.values.autore = action.item.autore;
     	cei.values.prezzoListino = action.item.prezzoListino;
+    	if (action.item.stock) cei.values.stock = action.item.stock; 
     	if ('editore' in cei.values) cei.values.editore = action.item.editore;
     	
      	

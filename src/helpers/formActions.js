@@ -9,8 +9,11 @@ import {isComplete} from './catalog';
 
 import {urlFactory} from './firebase';
 import {isInternalEAN} from './ean';
-
-export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl, stockMessageQueue=false) {
+//3 modificatori...
+//stockMessageQueue aggiorna con la info dello stock
+//getStock... passa lo stock quando viene cercato il catalogo
+//onEAN.... persiste EAN e non una key...
+export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl, stockMessageQueue=false, getStock=false, onEAN=false) {
 //Azioni legate ad azioni di ricerca
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
@@ -186,8 +189,24 @@ this.setTableWindowHeight = (tableWindowHeight) =>
 
 //Funzioni da MIGRARE... che vuol dire?
 
-this.foundCatalogItem = (item) =>
-{return({
+this.foundCatalogItem = (ean,item) =>
+{
+//Qui prendo il valore dello stock a magazzino... se richiesto.
+let type = this.FOUND_CATALOG_ITEM;
+if (getStock) 
+{
+	return function(dispatch, getState) {
+       	const url = urlFactory(getState,'magazzino',null,ean);
+		Firebase.database().ref(url).once('value', snapshot => {
+		 let itemCpy = {...item, stock: snapshot.val().pezzi}
+	      dispatch({
+	        type: type,
+	        item: itemCpy
+	      })
+	      });
+	 }   
+}
+else return({
   type: this.FOUND_CATALOG_ITEM,
   item: item
    }
@@ -266,7 +285,7 @@ this.searchCatalogItem = (ean) =>
       var promise = new Promise( function (resolve, reject) {
           Firebase.database().ref('catalogo/'+ean).once('value').then(
                  (payload) => {
-                       if (payload.val()) dispatch(foundCatalogItem(payload.val()));
+                       if (payload.val()) dispatch(foundCatalogItem(ean,payload.val()));
                        else {
                        		dispatch(notFoundCatalogItem());
                        		dispatch(searchCloudItem(ean));
@@ -418,7 +437,9 @@ this.aggiungiItem = (params, valori) => {
     return function(dispatch,getState) {
    
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
-    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
+   var ref; 
+    if(!onEAN) ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
+    else ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, valori.ean));
     ref.set(nuovoItem);
    dispatch(
    	{

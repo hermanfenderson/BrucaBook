@@ -322,7 +322,7 @@ exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/boll
     		}
           ); 
 
-//Nel caso delle bolle...  
+//Nel caso degli scontrini...  
 
 exports.inserisciRegistroDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}/{keyRiga}')
     .onCreate(event =>
@@ -363,6 +363,44 @@ exports.eliminaRegistroDaScontrini = functions.database.ref('{catena}/{negozio}/
           ); 
           
 
+//Nel caso dell'inventario
+exports.inserisciRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
+    .onCreate(event =>
+    		{
+    			const key =  event.params.keyRiga; //Corrisponde a EAN...
+    			const ean = event.data.val().ean;	
+    			const data = event.data.val().data;
+            	const newVal = Object.assign(event.data.val(), {tipo: 'inventario', id: event.params.idInventario});
+                event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                event.data.ref.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+    		}
+          ); 
+
+exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
+    .onUpdate(event =>
+    		{
+    			const key =event.params.keyRiga;
+    			const ean = event.data.val().ean;	
+    			const oldData = event.data.previous.val().data;
+    			const data = event.data.val().data;
+            	const newVal = Object.assign(event.data.val(), {tipo: 'inventario', id:  event.params.idInventario});
+                event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                //Se è cambiata la data devo cancellare la vecchia riga...
+                if (oldData !== data) event.data.ref.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                event.data.ref.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+    		}
+          ); 
+
+exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
+    .onDelete(event =>
+    		{
+    			const key = event.params.keyRiga;
+    			const ean = event.data.previous.val().ean;	
+    			const data = event.data.previous.val().data;
+    			event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();
+                event.data.ref.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
+    		}
+          ); 
 
 exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')
     .onWrite(event => 
@@ -393,7 +431,14 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
 		  					totalePezzi = totalePezzi - parseInt(righe[propt].pezzi);
 			    		
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-							}	
+							}
+							
+						if (righe[propt].tipo == "inventario")
+		  					{
+		  					totalePezzi = totalePezzi + parseInt(righe[propt].pezzi);
+			    		
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}		
 		  				}	
 			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore}; 
             	  return event.data.ref.parent.parent.child('magazzino/'+ean).set(totali);

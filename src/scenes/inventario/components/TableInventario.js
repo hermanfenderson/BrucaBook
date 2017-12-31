@@ -16,28 +16,21 @@ var currentListenedIdInventario = null;
 class TableInventario extends Component 
     {
     componentDidMount() {
-    	if (this.props.listeningItemInventario) currentListenedIdInventario = this.props.listeningItemInventario[1];   
+    	if (this.props.listeningItemInventario) currentListenedIdInventario = this.props.listeningItemInventario;   
     		//Ascolto modifiche sulle righe della bolla
     	if (currentListenedIdInventario !== this.props.idInventario)
     	   {
     	   	if (currentListenedIdInventario) 
     	   		{
-    	   			//Solo anno
-    	   			//let params = [...this.props.period];
-    	   			let params = [];
-    	   			params[0] = this.props.period[0];
-    	   			params.push(currentListenedIdInventario);
+    	   		
     
-    	   			this.props.offListenRigaInventario(params); 
+    	   			this.props.offListenRigaInventario(currentListenedIdInventario); 
     	   			this.props.resetTableInventario();
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
     	   	
-    	   	let params = [];
-    	   	params[0] = this.props.period[0];
-    	   		
-    	   	params.push(this.props.idInventario);
-    	   	this.props.listenRigaInventario(params); 
+    	   	
+    	   	this.props.listenRigaInventario(this.props.idInventario); 
     	   	}
     	   	
 	}
@@ -46,16 +39,12 @@ class TableInventario extends Component
 	
 	
 	deleteRow = (row) => {
-		let params = [];
-    	params[0] = this.props.period[0];
-    	params.push(this.props.idInventario);
-		this.props.deleteRigaInventario(params,row.key,row);
+	
+    	this.props.deleteRigaInventario(this.props.idInventario,row.key,row);
 	}
 	
 	editRow = (row) => {
-		let params = [];
-    	params[0] = this.props.period[0];
-    	params.push(this.props.idInventario);
+		
 		this.props.setSelectedRigaInventario(row);
 	}
 
