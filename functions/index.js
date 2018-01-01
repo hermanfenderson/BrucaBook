@@ -440,7 +440,7 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}		
 		  				}	
-			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore}; 
+			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino}; 
             	  return event.data.ref.parent.parent.child('magazzino/'+ean).set(totali);
             	  }
                

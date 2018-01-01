@@ -1,5 +1,5 @@
 import InventarioComponent from '../components/Inventario'
-import {rigaInventarioFA} from '../../../actions/inventario'
+import {rigaInventarioFA, generaRighe} from '../../../actions/inventario'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
@@ -10,6 +10,7 @@ const listenTestataInventario = rigaInventarioFA.listenTestata;
 const unlistenTestataInventario = rigaInventarioFA.unlistenTestata;
 const resetInventario = rigaInventarioFA.reset;
 const shiftMessage = rigaInventarioFA.shiftMessage;
+
 
 
 const mapStateToProps = (state) => {
@@ -27,7 +28,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ shiftMessage, resetInventario, submitEditedCatalogItem, resetEditedCatalogItem, 
+  return bindActionCreators({ generaRighe, shiftMessage, resetInventario, submitEditedCatalogItem, resetEditedCatalogItem, 
   listenTestataInventario, unlistenTestataInventario, storeMeasure, setHeaderInfo}, dispatch);
 }
 

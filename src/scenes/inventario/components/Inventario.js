@@ -10,7 +10,7 @@ import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
 
-import { Row, Col,  Modal, Spin} from 'antd'
+import { Row, Col,  Modal, Spin, Button} from 'antd'
 
 var currentIdInventario = null; 
  
@@ -53,6 +53,10 @@ submitEditedCatalogItem = (e) => {
  
 
 
+generaRighe = () => {
+	this.props.generaRighe(this.props.match.params.id)
+}
+
 render()
 {
    return (
@@ -66,6 +70,7 @@ render()
     </Modal>  
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
+         <Button onClick={this.generaRighe}> Carica </Button>
     	 <TotaliInventario staleTotali={this.props.staleTotali} testataInventario={this.props.testataInventario}/>
       </Col>
  

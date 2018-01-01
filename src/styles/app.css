@@ -21,7 +21,15 @@ html, body {
 
 .ant-table-row-highlight{
  background-color: #e6f7ff;
+ color: #108ee9;
+ font-weight: bold;
 }
+
+.ant-table-row-pinned{
+ font-weight: bold;
+}
+
+
  .trigger {
   font-size: 18px;
   line-height: 64px;

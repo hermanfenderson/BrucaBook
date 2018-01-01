@@ -32,6 +32,8 @@ this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
 this.ADD_ITEM = 'ADD_ITEM_'+scene;
 this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
 this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
+this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+scene;
+
 
 this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
 
@@ -68,6 +70,9 @@ this.stockMessageQueue = stockMessageQueue;
 
 this.pushMessage = (element) => {return {type: this.PUSH_MESSAGE, element: element}}
 this.shiftMessage = () => {return {type: this.SHIFT_MESSAGE}}
+
+
+
 
 //Mi serve per poter gestire un eventuale cambio data o altre info dalla testata...
 this.listenTestata = (params, itemId) =>  
@@ -473,6 +478,26 @@ this.aggiornaItem = (params,itemId, valori) => {
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));
   }
   
+}
+
+//Pinnare una riga
+this.togglePin = (params, itemId, valori, pinnedField) =>
+{
+	  const typeTogglePin = this.TOGGLE_PIN_ITEM;
+	   var nuovoItem = {...valori, [pinnedField]: !valori[pinnedField]};
+      const itemsUrl = this.itemsUrl;
+      return function(dispatch,getState) {
+
+    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
+    ref.update(nuovoItem);
+    dispatch(
+   	{
+   		type: typeTogglePin,
+   		key: ref.key
+   	}
+   	)   
+ 
+	}
 }
 
 

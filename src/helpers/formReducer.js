@@ -38,6 +38,8 @@ this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
 this.ADD_ITEM = 'ADD_ITEM_'+scene;
 this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
 this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
+this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+scene;
+
 this.RESET='RESET_'+scene;
 
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
@@ -264,6 +266,10 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	     case this.CHANGE_ITEM:
 	     	newState =  {...state, staleTotali: true, lastActionKey : action.key}
 	    	break;
+	     
+	     case this.TOGGLE_PIN_ITEM:
+	     	newState = state;
+	     	break;
 	     	
 		 case this.ADDED_ITEM:
 		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 

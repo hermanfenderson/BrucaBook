@@ -12,6 +12,7 @@ const offListenRigaInventario = rigaInventarioFA.offListenItem;
 const deleteRigaInventario = rigaInventarioFA.deleteItem;
 const toggleTableScroll = rigaInventarioFA.toggleTableScroll;
 const resetTableInventario = rigaInventarioFA.resetTable;
+const togglePin = rigaInventarioFA.togglePin;
 
 
 const mapStateToProps = (state) => {
@@ -25,7 +26,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenRigaInventario, offListenRigaInventario, resetTableInventario, deleteRigaInventario, setSelectedRigaInventario, toggleTableScroll, setTableWindowHeight }, dispatch);
+  return bindActionCreators({ togglePin, listenRigaInventario, offListenRigaInventario, resetTableInventario, deleteRigaInventario, setSelectedRigaInventario, toggleTableScroll, setTableWindowHeight }, dispatch);
 }
 
 

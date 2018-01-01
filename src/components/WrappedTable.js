@@ -1,6 +1,9 @@
 /*
 Modificata per gestire filtri full text case insentive in and logico... 
 forma: filters={{titolo: 'arte', autore: 'paola'}} 
+
+Aggiungo il concetto di pinned...funziona con un campo boolean che passo come parametro e con un metodo da chiamare
+quando viene premuto...
 */
 
 import React from 'react';
@@ -35,18 +38,22 @@ actionRowRender = (cell, row) => {
         <div>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { lastRowClicked = row.key; this.props.deleteRow(row)}}/>} 
 		{(this.props.editRow) && <Icon type="edit" onClick={() => { lastRowClicked = row.key;  this.props.editRow(row)}}/>}  
+       	{(this.props.pinRow) && <Icon type={(row[this.props.pinField]) ? "pushpin" : "pushpin-o" } onClick={() => { lastRowClicked = row.key;  this.props.pinRow(row)}}/>}  
+       
         </div>
         );
  }
  
  
 rowClassName = (record,index) => {
-	return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-highlight' : 'ant-table-row');
+	let rowClassName = (record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-highlight' : 'ant-table-row';
+	if (this.props.pinField && record[this.props.pinField]) rowClassName += ' ant-table-row-pinned';
+	return(rowClassName);
 } 
+
 ordinaryRowRender = (cell,row) => {
 
-if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}}>{cell}</div>);
- else  return(<div>{cell}</div>);
+ return(<div>{cell}</div>);
 
 } 
 

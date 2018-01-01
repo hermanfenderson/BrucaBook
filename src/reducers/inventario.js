@@ -1,5 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
+import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 
@@ -111,8 +112,12 @@ export default function inventario(state = initialState(), action) {
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formInventarioHeight'] -150;
    	    newState = {...state, tableHeight: height};
         break;
-  	
+   case GENERA_RIGHE_INVENTARIO:
+   	    newState = state;
+   	    break;
+   	    
     default:
+    
         newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
         //newState =  state;
     	break;

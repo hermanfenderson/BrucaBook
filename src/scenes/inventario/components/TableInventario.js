@@ -48,6 +48,9 @@ class TableInventario extends Component
 		this.props.setSelectedRigaInventario(row);
 	}
 
+    pinRow = (row) => {
+    	this.props.togglePin(this.props.idInventario,row.key,row, 'pinned');
+    }
     
     	render() { 
     
@@ -58,7 +61,7 @@ class TableInventario extends Component
     	delete props['deleteRigaInventario']; //Non la passo liscia...
     	delete props['setSelectedRigaInventario']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	
