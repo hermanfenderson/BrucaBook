@@ -12,6 +12,7 @@ import Scontrino from '../scenes/scontrino';
 import GestioneBolla from '../scenes/bolla';
 import Inventario from '../scenes/inventario';
 import ElencoInventari from '../scenes/elencoInventari';
+import DettagliArticolo from '../scenes/dettagliArticolo';
 //import GestioneScontrino from '../containers/GestioneScontrino';
 //        		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
 //      		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
@@ -35,6 +36,7 @@ const Main= (props) =>
       									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
 		        					   	<Route path='/inventario/:id' component={RequireAuth(Inventario)}/>
     									<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
+    									<Route path='/dettagli/:ean' component={RequireAuth(DettagliArticolo)}/>
     								
     									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
     									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>

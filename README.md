@@ -1,6 +1,11 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.4.3
+Prima versione di un component che mostra i dettagli di un EAN (storico)
+Gestione di un bottone per tornare indietro in header
+Tasto specifico nel form del magazzino per vedere i dettagli...
+
 Versione 0.4.2 
 Creata funzione in table per evidenziare una riga (Pinned)...
 Aggiunta gestione dei pin in inventario...

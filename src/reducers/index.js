@@ -8,7 +8,7 @@ import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
 import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
 import InventarioReducer, * as fromInventario from './inventario';
-
+import DettagliArticoloReducer, * as fromDettagliArticolo from './dettagliArticolo';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
 import MeasuresReducer, * as fromMeasures from './measures';
 import ScontrinoReducer, * as fromScontrino from './scontrino';
@@ -20,6 +20,7 @@ const rootReducer = combineReducers({
   auth: AuthReducer,
   bolla: BollaReducer,
   cassa: CassaReducer,
+  dettagliArticolo: DettagliArticoloReducer,
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
   elencoInventari: ElencoInventariReducer,
@@ -49,6 +50,9 @@ export const getListeningItemBolla = (state) => {return fromBolla.getListeningIt
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 
+//Scena DettagliArticolo
+export const getListeningEAN = (state) => {return fromDettagliArticolo.getListeningEAN(state.dettagliArticolo)};
+export const getDettagliEAN = (state) => {return fromDettagliArticolo.getDettagliEAN(state.dettagliArticolo)};
 
 //Scene ElencoBolle
 export const getElencoBolle = (state) => {return fromElencoBolle.getItems(state.elencoBolle)};
