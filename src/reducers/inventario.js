@@ -109,7 +109,7 @@ export default function inventario(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formInventarioHeight'] -150;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaInventarioHeight'] -150;
    	    newState = {...state, tableHeight: height};
         break;
    case GENERA_RIGHE_INVENTARIO:

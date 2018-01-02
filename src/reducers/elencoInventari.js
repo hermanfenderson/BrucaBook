@@ -15,7 +15,8 @@ moment.locale("it");
 //Metodi reducer per le Form
 
 const editedBollaValuesInitialState = 
-	  {			dataInventario: moment()	
+	  {			dataInventario: moment(),
+				note: ''
 	};
 
 const editedItemInitialState = () => {

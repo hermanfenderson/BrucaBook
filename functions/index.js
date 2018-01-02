@@ -367,7 +367,7 @@ exports.eliminaRegistroDaScontrini = functions.database.ref('{catena}/{negozio}/
 exports.inserisciRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
     .onCreate(event =>
     		{
-    			const key =  event.params.keyRiga; //Corrisponde a EAN...
+    			const key =  event.params.idInventario+event.params.keyRiga; //Corrisponde a EAN...quindi lo allungo per unicità
     			const ean = event.data.val().ean;	
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'inventario', id: event.params.idInventario});
@@ -379,7 +379,7 @@ exports.inserisciRegistroDaInventario = functions.database.ref('{catena}/{negozi
 exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
     .onUpdate(event =>
     		{
-    			const key =event.params.keyRiga;
+    			const key = event.params.idInventario+event.params.keyRiga;
     			const ean = event.data.val().ean;	
     			const oldData = event.data.previous.val().data;
     			const data = event.data.val().data;
@@ -394,7 +394,7 @@ exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio
 exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
     .onDelete(event =>
     		{
-    			const key = event.params.keyRiga;
+    			const key = event.params.idInventario+event.params.keyRiga;
     			const ean = event.data.previous.val().ean;	
     			const data = event.data.previous.val().data;
     			event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();

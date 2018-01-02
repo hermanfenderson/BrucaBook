@@ -35,7 +35,7 @@ return function(dispatch, getState) {
 		  const index = getState().inventario.itemsArrayIndex;
 		  for (var propt in righe) 
 			{
-			 if (!(index[propt]>=0)) 
+			 if (!(index[propt]>=0) && (righe[propt].pezzi !== 0)) 
 				{   let row = {...righe[propt], ean: propt, pinned: true, pezzi: 0, stock: righe[propt].pezzi }
 				    
 					dispatch(rigaInventarioFA.aggiungiItem(inventarioId,row));

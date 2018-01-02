@@ -6,6 +6,12 @@ Creata funzione in table per evidenziare una riga (Pinned)...
 Aggiunta gestione dei pin in inventario...
 Inserito tasto in inventario per inserire righe automatiche (tutte pinned)
 Aggiunto il prezzo nel magazzino
+La chiave in registroEAN e registroData è stata allungata (idInventario+EAN)
+Bug fixing: inventario sforava le dimensioni (#135)
+Feature: solo le righe non a zero vengono caricate in inventario (#136)
+Feature: inserito un campo note in elencoInventari (#132)
+Bug fixing: crash spostandosi da un campo svalido (#134)
+Disabilitato per ora il calcolo totali in inventario (devo decidere cosa visualizzare)
 
 
 Versione 0.4.1

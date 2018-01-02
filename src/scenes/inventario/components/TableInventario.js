@@ -5,8 +5,12 @@ import WrappedTable from '../../../components/WrappedTable'
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
                 {dataField: 'titolo', label: 'Titolo', width: '320px'},
+                {dataField: 'autore', label: 'Autore', width: '280px'},
+			    
 			    {dataField: 'prezzoListino', label: 'Prezzo', width: '60px'},
-			    {dataField: 'pezzi', label: 'Quantità', width: '60px'},
+			    {dataField: 'stock', label: 'Stock', width: '60px'},
+			   
+			    {dataField: 'pezzi', label: 'Delta', width: '60px'},
 			   ];
 
 var currentListenedIdInventario = null;
