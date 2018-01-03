@@ -53,6 +53,7 @@ export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuff
 //Scena DettagliArticolo
 export const getListeningEAN = (state) => {return fromDettagliArticolo.getListeningEAN(state.dettagliArticolo)};
 export const getDettagliEAN = (state) => {return fromDettagliArticolo.getDettagliEAN(state.dettagliArticolo)};
+export const getHeaderEAN = (state) => {return fromDettagliArticolo.getHeaderEAN(state.dettagliArticolo)};
 
 //Scene ElencoBolle
 export const getElencoBolle = (state) => {return fromElencoBolle.getItems(state.elencoBolle)};

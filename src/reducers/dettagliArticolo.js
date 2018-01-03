@@ -1,8 +1,9 @@
-import {LISTEN_EAN , ITEM_DETAILS, OFF_LISTEN_EAN} from '../actions/dettagliArticolo';
+import {LISTEN_EAN , ITEM_DETAILS, ITEM_HEADER, OFF_LISTEN_EAN} from '../actions/dettagliArticolo';
 
 const initialState =  {
   listeningEAN: null,
-  dettagliEAN: null
+  dettagliEAN: null,
+  headerEAN: null,
 };
 
 export default function dettagliArticolo(state = initialState, action) {
@@ -17,9 +18,16 @@ export default function dettagliArticolo(state = initialState, action) {
       	 ...state,
         dettagliEAN: action.payload.val()
       	}
+        case ITEM_HEADER:
+     	return {
+      	 ...state,
+        headerEAN: action.payload.val()
+      	}	
      case OFF_LISTEN_EAN:
      	return {
      		...state,
+     		dettagliEAN: null,
+     		headerEAN: null,
      		listeningEAN: null
      	}
     default:
@@ -29,4 +37,5 @@ export default function dettagliArticolo(state = initialState, action) {
 
 export const getListeningEAN = (state) => {return state.listeningEAN};
 export const getDettagliEAN = (state) => {return state.dettagliEAN};
+export const getHeaderEAN = (state) => {return state.headerEAN};
 

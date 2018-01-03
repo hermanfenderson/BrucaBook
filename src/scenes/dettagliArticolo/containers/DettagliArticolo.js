@@ -1,7 +1,7 @@
 import DettagliArticoloComponent from '../components/DettagliArticolo'
 import {setHeaderInfo} from  '../../../actions'
 import {listenEAN, offListenEAN} from '../../../actions/dettagliArticolo';
-import {getDettagliEAN, getListeningEAN} from  '../../../reducers'
+import {getDettagliEAN, getHeaderEAN, getListeningEAN} from  '../../../reducers'
 
 
 import { connect} from 'react-redux'
@@ -18,6 +18,7 @@ function mapDispatchToProps(dispatch) {
 const mapStateToProps = (state) => {
 	return ({
 	         dettagliEAN: getDettagliEAN(state),
+	         headerEAN: getHeaderEAN(state),
 	         listeningEAN: getListeningEAN(state)
 		
 	})

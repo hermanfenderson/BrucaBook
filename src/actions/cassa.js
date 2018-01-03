@@ -47,7 +47,7 @@ cassaFA.aggiungiItem = (params, valori) => {
 	var numero = null;
 	var dataCassa = null;
 	var oraScontrino = null;
-		
+	var numeroCassa = null;	
 	return function(dispatch,getState) 
 	   {
 	   	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
@@ -57,13 +57,14 @@ cassaFA.aggiungiItem = (params, valori) => {
     			cassa.ultimoScontrino++;
     			numero = cassa.ultimoScontrino;
     			dataCassa = cassa.dataCassa;
+    			numeroCassa = cassa.cassa;
     			oraScontrino = moment(dataCassa);
     			oraScontrino.hour(moment().hour());
     			oraScontrino.minute(moment().minute());
     			}
     		return cassa;
 			}).then(function(success) {
-			
+			valori.cassa = numeroCassa;
 			valori.numero = numero;
 			valori.dataCassa = dataCassa;
 			valori.oraScontrino = oraScontrino.valueOf();

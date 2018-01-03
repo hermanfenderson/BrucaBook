@@ -7,7 +7,7 @@ import { Row} from 'antd'
 
 var listening = null;
 class DettagliArticolo extends Component {
-componentDidMount() {
+componentWillMount() {
 	    if (listening !== this.props.match.params.ean)
 	    {
     	this.props.setHeaderInfo('Dettagli ' + this.props.match.params.ean);
@@ -22,7 +22,7 @@ render()
   return (
  <div>	
       <Row>
-         
+         {this.props.headerEAN ? this.props.headerEAN.titolo + ' - ' + this.props.headerEAN.autore + ' - in magazzino: ' +  this.props.headerEAN.pezzi : null}
       </Row>
       <Row>
        <TableDettagliArticolo dettagli={this.props.dettagliEAN} />
