@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
+import { withRouter } from 'react-router-dom';
 
 
 //E' un dato.... che passo come costante...
@@ -56,6 +57,10 @@ class TableInventario extends Component
     	this.props.togglePin(this.props.idInventario,row.key,row, 'pinned');
     }
     
+    detailRow = (row) => {
+    	this.props.history.push('/dettagli/'+row.ean);
+    }
+    
     	render() { 
     
     	let props = {...this.props};
@@ -65,9 +70,9 @@ class TableInventario extends Component
     	delete props['deleteRigaInventario']; //Non la passo liscia...
     	delete props['setSelectedRigaInventario']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} detailRow={this.detailRow} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	
-export default TableInventario;
+export default withRouter(TableInventario);
 

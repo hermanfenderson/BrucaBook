@@ -17,6 +17,7 @@ onSubmit = (e) => {
     delete valuesTestata.key;
 	valuesTestata.data = valuesTestata.dataInventario;
     const values =  {...this.props.editedRigaInventario.values, ...valuesTestata};
+    console.log(values);
     values.pinned = false;
     	   
 	this.props.submitEditedRigaInventario(this.props.editedRigaInventario.isValid, this.props.editedRigaInventario.selectedItem, this.props.idInventario, values); //Per sapere cosa fare... dopo

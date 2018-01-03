@@ -1,4 +1,4 @@
-//import TableDettagliArticolo from '../components/TableDettagliArticolo';
+import TableDettagliArticolo from '../components/TableDettagliArticolo';
 import React, {Component} from 'react'
 
 import { Row} from 'antd'
@@ -18,14 +18,14 @@ componentDidMount() {
  
   	
 render()
-{
+{ 
   return (
  <div>	
       <Row>
+         
       </Row>
       <Row>
-      
-       {/*  <TableMagazzino filters={this.props.filters */}
+       <TableDettagliArticolo dettagli={this.props.dettagliEAN} />
       </Row>
    
   </div>

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
+import { withRouter } from 'react-router-dom';
 
 
 
@@ -12,9 +13,13 @@ const header = [{dataField: 'key', label: 'EAN', width: '150px'},
 
 
 
-
 class TableMagazzino extends Component 
     {
+    	
+    detailRow = (row) => {
+    	this.props.history.push('/dettagli/'+row.key);
+    }
+	
     componentDidMount() {
      //Ascolto modifiche sulle bolle... non passo parametri...sono nella radice. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
     	if (this.props.listening!=='')  this.props.listenMagazzino("");
@@ -26,9 +31,9 @@ class TableMagazzino extends Component
     	render() { 
     	let props = {...this.props};
     	  return(
-			<WrappedTable {...props} header={header}/>
+			<WrappedTable {...props} detailRow={this.detailRow}  header={header}/>
 			)}
     }		
 	
-export default TableMagazzino;
+export default withRouter(TableMagazzino);
 
