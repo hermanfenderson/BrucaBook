@@ -19,9 +19,12 @@ const header = [
 const convertDetails = (inputData) =>
 {
 	let data = [];
-	for (var propt in inputData) 
-		{
-			let row = {key: propt, ...inputData[propt]};
+     for (var propt2 in inputData)
+      {
+	  for (var propt in inputData[propt2]) 
+		{   
+			let input = inputData[propt2];
+			let row = {key: propt, ...input[propt]};
 			if (row.tipo === 'scontrino') row.pezzi = -1 * row.pezzi;
 			row.data = moment(row.data).format('DD-MM-YYYY');
 			row.dettagli = (function(tipo) {  
@@ -36,6 +39,7 @@ const convertDetails = (inputData) =>
 					})(row.tipo);
 			data.push(row);
 		}
+      }	
 	return data;	
 }
 

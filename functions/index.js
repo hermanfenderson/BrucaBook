@@ -291,7 +291,7 @@ exports.inserisciRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bo
     			const ean = event.data.val().ean;	
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'bolla', id: event.params.anno + '/'+ event.params.mese + '/'+event.params.idBolla});
-                event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
                  event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
     		}
           ); 
@@ -304,9 +304,15 @@ exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
     			const oldData = event.data.previous.val().data;
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'bolla', id:  event.params.anno + '/'+ event.params.mese + '/'+ event.params.idBolla});
-                event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
-                //Se è cambiata la data devo cancellare la vecchia riga...
-                if (oldData !== data) event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+//Se è cambiata la data devo cancellare la vecchia riga...
+                if (oldData !== data) 
+                	{
+                	event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                	event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
+                		
+                	}
+                event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
+      
                 event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
     		}
           ); 
@@ -317,7 +323,7 @@ exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/boll
     			const key = event.params.keyRiga;
     			const ean = event.data.previous.val().ean;	
     			const data = event.data.previous.val().data;
-    			event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();
+    			event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
                 event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
     		}
           ); 
@@ -331,7 +337,7 @@ exports.inserisciRegistroDaScontrino = functions.database.ref('{catena}/{negozio
     			const ean = event.data.val().ean;	
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'scontrino', id: event.params.anno + '/'+ event.params.mese + '/'+event.params.idCassa + '/'+event.params.idScontrino});
-                event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
                  event.data.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
     		}
           ); 
@@ -344,9 +350,15 @@ exports.modificaRegistroDaScontrino = functions.database.ref('{catena}/{negozio}
     			const oldData = event.data.previous.val().data;
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'scontrino', id:  event.params.anno + '/'+ event.params.mese + '/'+ +event.params.idCassa + '/'+event.params.idScontrino});
-                event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
                 //Se è cambiata la data devo cancellare la vecchia riga...
-                if (oldData !== data) event.data.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                if (oldData !== data) 
+                	{
+                	event.data.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                	event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
+                		
+                	}
+                event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
+      
                 event.data.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
     		}
           ); 
@@ -357,7 +369,7 @@ exports.eliminaRegistroDaScontrini = functions.database.ref('{catena}/{negozio}/
     			const key = event.params.keyRiga;
     			const ean = event.data.previous.val().ean;	
     			const data = event.data.previous.val().data;
-    			event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();
+    			event.data.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
                 event.data.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
     		}
           ); 
@@ -371,7 +383,7 @@ exports.inserisciRegistroDaInventario = functions.database.ref('{catena}/{negozi
     			const ean = event.data.val().ean;	
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'inventario', id: event.params.idInventario});
-                event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
+                event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
                 event.data.ref.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
     		}
           ); 
@@ -384,10 +396,17 @@ exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio
     			const oldData = event.data.previous.val().data;
     			const data = event.data.val().data;
             	const newVal = Object.assign(event.data.val(), {tipo: 'inventario', id:  event.params.idInventario});
-                event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).set(newVal);
-                //Se è cambiata la data devo cancellare la vecchia riga...
-                if (oldData !== data) event.data.ref.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                 //Se è cambiata la data devo cancellare la vecchia riga...
+                if (oldData !== data) 
+                	{
+                	event.data.ref.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                	event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
+          		
+                	}
+                event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
+      
                 event.data.ref.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+
     		}
           ); 
 
@@ -397,7 +416,7 @@ exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}
     			const key = event.params.idInventario+event.params.keyRiga;
     			const ean = event.data.previous.val().ean;	
     			const data = event.data.previous.val().data;
-    			event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+key).remove();
+    			event.data.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
                 event.data.ref.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
     		}
           ); 
@@ -417,9 +436,11 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
             	  var totalePezzi = 0;
         		  var titolo;
                   var autore;
-          	      
-            	  righe = event.data.val();	
-            	  for(var propt in righe)
+          	      var righe;
+            	  date = event.data.val();	
+            	  for(var propt2 in date)
+		  			{righe = date[propt2];
+		  				for (var propt in righe)	
 		  				{
 		  				 if (righe[propt].tipo == "bolla")
 		  					{
@@ -439,7 +460,8 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
 			    		
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}		
-		  				}	
+		  				}
+		  		     }	
 			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino}; 
             	  return event.data.ref.parent.parent.child('magazzino/'+ean).set(totali);
             	  }
