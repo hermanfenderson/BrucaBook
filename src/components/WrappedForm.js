@@ -77,7 +77,7 @@ const WrapGeneric = (props) =>
   	     const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, ...otherProps} = props;
 	    const onChangeInput=(input) => {
 	    	//const value = input.target ? (('checked' in input.target) ? input.target.checked : input.target.value) : input;
-	    	const value = input? (input.target ? (input.target.type ==='checkbox' ? input.target.checked : input.target.value) : input) : null;
+	    	const value = (input !==null) ? (input.target ? (input.target.type ==='checkbox' ? input.target.checked : input.target.value) : input) : null;
 	    	
 	    	onChange(field,value)
 	    };

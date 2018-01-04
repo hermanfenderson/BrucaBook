@@ -23,6 +23,8 @@ import { Row, Col,  Modal, Spin, Button} from 'antd'
 
 var currentIdCassa = null;
 var currentIdScontrino = null; 
+var scontrino = null;
+var cassa = null;
  
  //<TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 
@@ -72,8 +74,8 @@ class Scontrino extends Component {
 
  
 componentDidUpdate() {
-		const scontrino = this.props.testataScontrino;
-		const cassa = this.props.testataCassa;
+		scontrino = this.props.testataScontrino;
+		cassa = this.props.testataCassa;
 	//Da mettere a posto
 	    var header = "Cassa ";
 	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");

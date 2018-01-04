@@ -13,7 +13,7 @@ import 'moment/locale/it';
 import { Row, Col,  Modal, Spin} from 'antd'
 
 var currentIdBolla = null; 
- 
+var riga = null; 
 
 class Bolla extends Component {
 
@@ -37,9 +37,12 @@ class Bolla extends Component {
  }
  
 componentDidUpdate() {
-		const riga = this.props.testataBolla;
+   if (riga !== this.props.testataBolla) 
+	{riga = this.props.testataBolla;
 	if (riga) this.props.setHeaderInfo("Acquisti - Doc. " + riga.riferimento + ' ' 
 				          						+ riga.fornitore + ' del ' + moment(riga.dataDocumento).format("L"));
+
+	}	
 }
 
 resetEditedCatalogItem = () => {

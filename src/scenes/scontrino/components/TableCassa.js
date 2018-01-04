@@ -8,7 +8,7 @@ var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo s
 class WrappedTable extends React.Component {
 componentDidMount()
   {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
-   
+    
    
   }
   
@@ -20,7 +20,7 @@ componentDidMount()
 	        this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
-		if (this.props.scontrino && !this.props.selectedItem) {
+		if ((this.props.scontrino && !this.props.selectedItem) || (this.props.scontrino && this.props.selectedItem && (this.props.scontrino !== this.props.selectedItem.key))) {
      	 	if (this.props.index.chiavi && (this.props.index.chiavi[this.props.scontrino]>=0) && this.props.data[this.props.index.chiavi[this.props.scontrino]]) 
     			{this.props.selectRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
     			}

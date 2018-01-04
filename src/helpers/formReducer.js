@@ -110,7 +110,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
    	   if (action.payload) 
    		{   
    			newState = {...state, testata: action.payload};
-   			if ((!state.lastActionKey) || (action.payload.totali.lastActionKey === state.lastActionKey)) 
+   			if ((!state.lastActionKey) || (action.payload.totali && (action.payload.totali.lastActionKey === state.lastActionKey))) 
    				newState = {...newState, lastActionKey: null, staleTotali: false};
    		}
    			

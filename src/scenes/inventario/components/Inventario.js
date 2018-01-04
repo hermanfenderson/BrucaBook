@@ -13,7 +13,7 @@ import 'moment/locale/it';
 import { Row, Col,  Modal, Spin, Button} from 'antd'
 
 var currentIdInventario = null; 
- 
+var riga = null; 
 
 class Inventario extends Component {
 
@@ -38,8 +38,10 @@ class Inventario extends Component {
  }
  
 componentDidUpdate() {
-		const riga = this.props.testataInventario;
-	if (riga) this.props.setHeaderInfo("Inventario del " + moment(riga.dataDocumento).format("L"));
+	if (riga !== this.props.testataInventario) 
+		{riga = this.props.testataInventario;
+		 if (riga) this.props.setHeaderInfo("Inventario del " + moment(riga.dataDocumento).format("L"));
+		}
 }
 
 resetEditedCatalogItem = () => {

@@ -222,51 +222,57 @@ exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{an
 exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{idBolla}')
     .onUpdate(event => 
             {
-            const key = event.params.idBolla;	
-            const anno = event.params.anno;
-            const mese = event.params.mese;
-            var values = Object.assign({}, event.data.val());
-		    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
-		    delete values.createdBy;
-		    delete values.createdAt;
-		    delete values.changedBy;
-		    delete values.changedAt;
-		    delete values.key;
-		    values.data = values.dataCarico;
-			console.info("Aggiorno bolla "+key);
-			const ref = event.data.ref.parent.parent.parent.parent.child('bolle').child(anno).child(mese).child(key);
-			ref.once('value', function(snapshot) {
-				snapshot.forEach(function(childSnapshot) 
-					{
-			    	childSnapshot.ref.update(values);
-    				})
-				})
-			}	
+            if (!event.data.child('totali').changed()) //Per discernere cambiamenti genuini in testata
+              {
+	            const key = event.params.idBolla;	
+	            const anno = event.params.anno;
+	            const mese = event.params.mese;
+	            var values = Object.assign({}, event.data.val());
+			    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
+			    delete values.createdBy;
+			    delete values.createdAt;
+			    delete values.changedBy;
+			    delete values.changedAt;
+			    delete values.key;
+			    values.data = values.dataCarico;
+				console.info("Aggiorno bolla "+key);
+				const ref = event.data.ref.parent.parent.parent.parent.child('bolle').child(anno).child(mese).child(key);
+				ref.once('value', function(snapshot) {
+					snapshot.forEach(function(childSnapshot) 
+						{
+				    	childSnapshot.ref.update(values);
+	    				})
+					})
+				}
+			  }	
     		);
            
  exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
     .onUpdate(event => 
             {
-            const key = event.params.idScontrino;	
-            const anno = event.params.anno;
-            const mese = event.params.mese;
-            const cassa = event.params.idCassa;
-		    var values = Object.assign({}, event.data.val());
-		    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
-		    delete values.createdBy;
-		    delete values.createdAt;
-		    delete values.changedBy;
-		    delete values.changedAt;
-		    delete values.key;
-		    values.data = values.dataCassa;
-			console.info("Aggiorno scontrino "+key);
-			const ref = event.data.ref.parent.parent.parent.parent.parent.child('scontrini').child(anno).child(mese).child(cassa).child(key);
-			ref.once('value', function(snapshot) {
-				snapshot.forEach(function(childSnapshot) 
-					{
-			    	childSnapshot.ref.update(values);
-    				})
-				})
+            if (!event.data.child('totali').changed()) //Per discernere cambiamenti genuini in testata
+              {	
+	            const key = event.params.idScontrino;	
+	            const anno = event.params.anno;
+	            const mese = event.params.mese;
+	            const cassa = event.params.idCassa;
+			    var values = Object.assign({}, event.data.val());
+			    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
+			    delete values.createdBy;
+			    delete values.createdAt;
+			    delete values.changedBy;
+			    delete values.changedAt;
+			    delete values.key;
+			    values.data = values.dataCassa;
+				console.info("Aggiorno scontrino "+key);
+				const ref = event.data.ref.parent.parent.parent.parent.parent.child('scontrini').child(anno).child(mese).child(cassa).child(key);
+				ref.once('value', function(snapshot) {
+					snapshot.forEach(function(childSnapshot) 
+						{
+				    	childSnapshot.ref.update(values);
+	    				})
+					})
+              }	
 			}	
     		);
               

@@ -1,6 +1,14 @@
 BrucaBook è un gestionale (tutto da costruire) per librerie indipendenti.
 Utilizza React e Firebase.
 
+Versione 0.4.5
+Bug fixing: Da inventario non puntava allo scontrino giusto se avevo già aperto quello scontrino (#146)
+Bug fixing: Non consentiva di modificare le note di una testata inventario (#143)
+Bug fixing: Crash in caricamento inventario su lastActionKey, correggendo in realtà tutto formReducer (#133)
+Bug fixing: Cancellando in sequenza più righe...si creava una riga vuota (#142)
+Bug fixing: Non gestiva il valore 0 negli input! Tutti.... (#151)
+Bug fixing: SetHeaderInfo chiamato a sproposito (#152)
+
 
 Versione 0.4.4 
 Gestione RegistroEAN per data 
