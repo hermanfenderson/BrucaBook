@@ -219,7 +219,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 			if (state.editedItem.isValid)
 		    	{
 		    	if (keepOnSubmit) newState = state;
-		    	else newState = {...state, editedItem: {...editedItemInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
+		    	else  newState = {...state, editedItem: {...editedItemInitialState()}};  //Reset dello stato della riga bolla...basta la copia superficiale
 		    	}
 		    else if ('ean' in state.editedItem.values)
 		    	{

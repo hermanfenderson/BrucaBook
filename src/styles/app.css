@@ -129,4 +129,12 @@ width: 75px;
 	margin: 30px;
 	
 }
+
+/*form...campi nascosti più evidenti*/
+.ant-input-disabled {
+    background-color: #f5f5f5;
+    opacity: 1;
+    cursor: not-allowed;
+    color: rgba(0, 0, 0, 0.65);
+}
  

@@ -1,6 +1,6 @@
 
 
-function isInteger(x) {
+export function isInteger(x) {
     return x % 1 === 0;
 }
 
@@ -29,6 +29,8 @@ export function isNotZeroInteger(number)
 {
 	return((isInteger(number) && number !==0));
 }
+
+
 
 
 export function isAmount(amount)

@@ -20,13 +20,15 @@ const getEditedRigaInventarioSideEffects= (state) => {
 		                    //Qui posso capire se la riga c'è già...
 		                    if (state.inventario.itemsArrayIndex[erb.values.ean]>=0)
 		                		{
-		                		erb.eanState = 'COMPLETE'; //Mi metto alla ricerca.....
+		                		erb.eanState = 'COMPLETE'; //Non mi metto alla ricerca...
 								erb.loading = false;
+								erb.willFocus = 'pezzi'; //Devi solo darmi i pezzi...
 		                		store.dispatch(setSelectedItem(state.inventario.itemsArray[state.inventario.itemsArrayIndex[erb.values.ean]]))
 		                    	}
 		                    else
 		                    	{
 								erb.eanState = 'PARTIAL'; //Mi metto alla ricerca.....
+								
 								store.dispatch(searchCatalogItem(erb.values.ean));
 		                    	}
 							}

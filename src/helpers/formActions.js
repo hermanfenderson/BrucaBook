@@ -203,7 +203,7 @@ if (getStock)
 	return function(dispatch, getState) {
        	const url = urlFactory(getState,'magazzino',null,ean);
 		Firebase.database().ref(url).once('value', snapshot => {
-		 let itemCpy = {...item, stock: snapshot.val().pezzi}
+		 let itemCpy = {...item, stock: snapshot.val() ? snapshot.val().pezzi : 0}
 	      dispatch({
 	        type: type,
 	        item: itemCpy

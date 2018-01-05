@@ -3,9 +3,9 @@ import {STORE_MEASURE} from '../actions';
 import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
+import {isInteger} from '../helpers/validators';
 
-
-const editedRigaBollaValuesInitialState = 
+const editedInventarioValuesInitialState = 
 	  {			ean: '',
 				titolo: '',
 				autore: '',
@@ -18,7 +18,7 @@ const editedRigaBollaValuesInitialState =
 	
 
 const editedItemInitialState = () => {
-	return(editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} ));
+	return(editedItemInitialStateHelper(editedInventarioValuesInitialState, {willFocus: 'ean'} ));
 }
 
 
@@ -71,7 +71,7 @@ function transformAndValidateEditedRigaInventario(cei, name, value)
 
   
 		
-     errMgmt(cei, 'pezzi','notInteger','numero intero',  ((value) => {return !Number.isInteger(value)})(cei.values.pezzi));
+     errMgmt(cei, 'pezzi','notInteger','numero intero',  ((value) => {return !isInteger(value)})(cei.values.pezzi));
   	
   	
     //Se ho anche solo un errore... sono svalido.
@@ -83,10 +83,7 @@ function transformAndValidateEditedRigaInventario(cei, name, value)
 function foundCompleteItem(editedItem, action) 
 	{   
 		let cei = editedItemCopy(editedItem);
-		 
-		 cei.willFocus = 'pezzi';
-     
-       	//Copio l'esito della ricerca...
+		//Copio l'esito della ricerca...
     	cei.values.titolo = action.item.titolo;
     	cei.values.autore = action.item.autore;
     	cei.values.prezzoListino = action.item.prezzoListino;
@@ -99,6 +96,7 @@ function foundCompleteItem(editedItem, action)
         noErrors(cei,'ean');
         noErrors(cei,'form');
       	 cei.isValid = isValidEditedItem(cei);
+      	 cei.willFocus = 'pezzi';
        return(cei);
 	}
 
