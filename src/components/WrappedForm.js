@@ -125,7 +125,7 @@ class WrappedForm extends Component {
     setFocus = (input, field) => {
     
     	if (this.props.willFocus === field)
-    		{   console.log(input);
+    		{  
     			input.focus();
     		
     			

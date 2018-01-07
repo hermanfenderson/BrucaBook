@@ -27,9 +27,9 @@ class TableElencoInventari extends Component
 	
 	deleteRow = (row) => {
 	   const deleteInventario = () => {this.props.deleteInventario(this.props.period, row.key);};
-	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
+	   if(row.totali && row.totali.righe > 0)	Modal.confirm({
     		title: "L'Inventario non è vuota. Vuoi elminarlo?",
-    		content: "L'Inventario non è vuota: se premi OK cancelli anche tutti i libri che contiene.",
+    		content: "L'Inventario non è vuoto: se premi OK cancelli anche tutti i libri che contiene.",
     		okText: 'Si',
     		okType: 'danger',
     		cancelText: 'No',

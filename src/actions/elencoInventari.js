@@ -1,4 +1,5 @@
 import {FormActions} from '../helpers/formActions';
+import {store} from '../index.js'; //Mi serve per i totali inventario
 
 export const SCENE = 'ELENCOINVENTARI';
 
@@ -10,7 +11,9 @@ function preparaItem(riga)
    	riga['dataInventario'] = riga['dataInventario'].valueOf();
    	riga['data'] = riga['dataInventario']; 
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
-   	if ('totali' in riga) {delete riga.totali}
+   	//if ('totali' in riga) {delete riga.totali}
+   	//IN questo caso... calcolo un pezzo di totali...
+   	if (!riga['totali']) riga['totali'] = {magazzino: store.getState().magazzino.itemsArray.length, righe: 0}
    	
     
      }

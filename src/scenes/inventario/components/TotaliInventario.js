@@ -9,7 +9,7 @@ const TotaliInventario = (props) =>
 		  <Spin spinning={props.staleTotali}>	
 
 			<div>
-			<Row> Copie: {totali.pezzi} </Row>
+			<Row> Titoli {totali.righe} / {totali.magazzino} </Row>
 			</div>
 		</Spin>	
 			

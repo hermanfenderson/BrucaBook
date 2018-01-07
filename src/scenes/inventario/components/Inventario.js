@@ -73,7 +73,7 @@ render()
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
          <Button onClick={this.generaRighe}> Carica </Button>
-    {/*	 <TotaliInventario staleTotali={this.props.staleTotali} testataInventario={this.props.testataInventario*/}
+        <TotaliInventario staleTotali={this.props.staleTotali} testataInventario={this.props.testataInventario} />
       </Col>
  
        <Col span={20}>

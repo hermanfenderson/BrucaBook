@@ -163,8 +163,7 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
 				{
 					ref.once("value")
 						.then(function(snapshot) {
-							console.log(snapshot.val());
-		    				var notEmpty = snapshot.hasChildren(); 
+							var notEmpty = snapshot.hasChildren(); 
 		    				if (notEmpty) ref.child('totali').set(totali);
 							 });
 		    		}
@@ -172,6 +171,57 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
         	   
            );
            
+exports.calcolaTotaleInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}')
+    .onWrite(event => 
+            {
+             const key = event.params.idInventario;	
+           	
+            var righeSnapshot = event.data;
+            var idItem = null;	
+           	
+            const righe = event.data.val();
+            
+        	var totale = 0;
+			for(var propt in righe)
+		  		{
+		  		if (righeSnapshot.child(propt).changed()) idItem = propt; //Prendo la riga cambiata...	
+			    totale++;
+				}
+			//Se non la ho....  è una riga cancellata...
+			if (!idItem)
+				{
+				var oldRighe=righeSnapshot.previous.val();
+				for (var propt in oldRighe) 
+							{
+							if (righe) 
+								{if (!righe[propt]) 
+									{idItem = propt; //prendo la riga cancellata
+									break;
+									}
+								}	
+							else	
+								{
+									idItem = propt; //prendo l'ultima rimasta nel passato
+									break;
+								}
+							}		
+				}
+			const totali = {'righe' : totale, lastActionKey : idItem}; 
+			const ref = event.data.ref.parent.parent.child('elencoInventari').child(key);
+			if (totale > 0) ref.child('totali').update(totali);
+			else 
+				{
+					ref.once("value")
+						.then(function(snapshot) {
+							var notEmpty = snapshot.hasChildren(); 
+		    				if (notEmpty) ref.child('totali').update(totali);
+							 });
+                }	
+            }   
+           );
+       
+
+
 //Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...
 
 exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{idBolla}')
@@ -214,6 +264,16 @@ exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{an
             
 			console.info("Cancello cassa "+cassa);
 			return event.data.ref.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).remove();
+    		}
+           );
+
+exports.purgeInventario =  functions.database.ref('{catena}/{negozio}/elencoInventari/{idInventario}')
+    .onDelete(event => 
+            {
+            const inventario = event.params.idInventario;
+            
+			console.info("Cancello inventario "+inventario);
+			return event.data.ref.parent.parent.child('inventari').child(inventario).remove();
     		}
            );
 
