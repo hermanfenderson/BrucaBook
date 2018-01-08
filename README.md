@@ -3,7 +3,7 @@ Utilizza React e Firebase.
 
 Versione 0.4.7
 Portato antd a versione 3.1.0
-Feature: calcolati i totali occorrenze in creazione di inventario e aggiornati i totali...
+Feature: calcolati i totali occorrenze in creazione di inventario e aggiornati i totali...(nel modo corretto #158)
 Bug fixing: consentiva cancellazione di inventari non vuoti (#156)
 
 
