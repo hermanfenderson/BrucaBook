@@ -14,6 +14,7 @@ import MeasuresReducer, * as fromMeasures from './measures';
 import ScontrinoReducer, * as fromScontrino from './scontrino';
 import UserMgmtReducer, * as fromUserMgmt from './userMgmt';
 import StatusReducer, * as fromStatus from './status';
+import ReadmeViewerReducer, * as fromReadmeViewer from './readmeViewer';
 
 const rootReducer = combineReducers({
   app: AppReducer,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
+  readmeViewer: ReadmeViewerReducer,
   scontrino: ScontrinoReducer,
   userMgmt: UserMgmtReducer,
   catalogo: CatalogoReducer,
@@ -151,6 +153,8 @@ export const getUser = (state) => {return fromAuth.getUser(state.auth)};
 export const getMeasures = (state) => {return fromMeasures.getMeasures(state.measures)};
 
 
-
+//da readmeViewer
+export const getReadme = (state) => {return fromReadmeViewer.getReadme(state.readmeViewer)};
+export const getReadmeHeight = (state) => {return fromReadmeViewer.getReadmeHeight(state.readmeViewer)};
 
  
