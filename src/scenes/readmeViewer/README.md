@@ -1,9 +1,15 @@
-BrucaBook V.0.5.0
+BrucaBook V.0.5.1
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.5.1
+* Ripristinata la gestione inputNumber sostituita in 0.4.6 (correzione suggerita in antd #8846)
+* Sistemata la visibilità di README.md (messa in una modal)
+* Messa in redux la selezione del menu in modo da sanare due bachi in visualizzazione insiti nel modo in cui avevo scritto il codice (#153, #159). Ogni voce di menu andrà aggiornata sia nel sider che nell'header.
+* Eliminato il component userMenu che faceva casino e non consentiva la chiusura del menu in dropdown (#154)
+
 ### Versione 0.5.0  
 * Feature... Rendo visibile README.md  (piccola modifica al processo di build) in una voce di menu
 * README.md in formato markdown

@@ -31,7 +31,7 @@ class TableMagazzino extends Component
     	render() { 
     	let props = {...this.props};
     	  return(
-			<WrappedTable {...props} detailRow={this.detailRow}  header={header}/>
+			<WrappedTable {...props} selectRow={this.detailRow} detailRow={this.detailRow}  header={header}/>
 			)}
     }		
 	

@@ -107,7 +107,6 @@ export const getTableScrollCassa = (state)  => {return fromCassa.getTableScroll(
 export const getListeningTestataCassa = (state) => {return fromCassa.getListeningTestataCassa(state.cassa)};
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
 export const isStaleTotaliCassa = (state) => {return fromCassa.isStaleTotali(state.cassa)};
-export const shouldRedirectCassa = (state) => {return fromCassa.shouldRedirect(state.cassa)};
 export const getFiltersCassa = (state) => { return fromCassa.getFilters(state.cassa)};
 
 

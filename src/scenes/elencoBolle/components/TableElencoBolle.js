@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import WrappedTable from '../../../components/WrappedTable';
+import {withRouter} from 'react-router-dom'
+
 import {isEqual} from '../../../helpers/form';
 import {Modal} from 'antd';
-
+import {period2month} from '../../../helpers/form'
 
 
 //E' un dato.... che passo come costante...
@@ -77,6 +79,7 @@ class TableElencoBolle extends Component
 	selectRow = (row) => {
 		this.props.setSelectedBolla(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
+		this.props.history.push('/bolla/' + period2month(this.props.period) + '/' + row.key);
 	}
 
     
@@ -91,5 +94,5 @@ class TableElencoBolle extends Component
 			)}
     }		
 	
-export default TableElencoBolle;
+export default withRouter(TableElencoBolle);
 

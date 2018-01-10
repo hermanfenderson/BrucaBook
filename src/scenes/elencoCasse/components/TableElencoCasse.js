@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import WrappedTable from '../../../components/WrappedTable';
 import {isEqual} from '../../../helpers/form';
 import {Modal} from 'antd';
+import {period2month} from '../../../helpers/form'
+import {withRouter} from 'react-router-dom'
 
 
 
@@ -76,6 +78,8 @@ class TableElencoCasse extends Component
 	selectRow = (row) => {
 		this.props.setSelectedCassa(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
+	    this.props.history.push('/scontrino/' + period2month(this.props.period) + '/' + row.key);
+
 	}
 
     
@@ -90,5 +94,5 @@ class TableElencoCasse extends Component
 			)}
     }		
 	
-export default TableElencoCasse;
+export default withRouter(TableElencoCasse);
 

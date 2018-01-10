@@ -52,6 +52,9 @@ class TableBolla extends Component
     	params.push(this.props.idBolla);
 		this.props.setSelectedRigaBolla(row);
 	}
+	
+
+	
 
     
     	render() { 

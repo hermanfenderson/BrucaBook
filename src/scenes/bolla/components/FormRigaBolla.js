@@ -47,10 +47,11 @@ resetForm = () => {
        </WrappedForm.Group>
         
         <WrappedForm.Group formGroupLayout={{gutter:16}}>
+        <WrappedForm.Checkbox formColumnLayout={{span:1}} field='manSconto' label='Man.'/>
+       
         <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} formColumnLayout={{span:2}}  />
         <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} formColumnLayout={{span:2}} />
         <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} formColumnLayout={{span:2}} />
-        <WrappedForm.Checkbox formColumnLayout={{span:1}} field='manSconto' label='Man.'/>
         
         <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:3}} />
         <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:2}}/>

@@ -13,10 +13,11 @@ import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
-import {Redirect} from 'react-router-dom';
 
 import moment from 'moment';
 import 'moment/locale/it';
+import {withRouter} from 'react-router-dom'
+import {period2month} from '../../../helpers/form'
 
 
 import { Row, Col,  Modal, Spin, Button} from 'antd'
@@ -42,8 +43,8 @@ class Scontrino extends Component {
  }
  
  componentWillMount() {
- if (this.props.shouldRedirectCassa)	this.props.setRedirect(false);	   	
- //Sento sia lo scontrino che la cassa...
+ 	
+  //Sento sia lo scontrino che la cassa...
  if (this.props.listeningTestataCassa) currentIdCassa = this.props.listeningTestataCassa.itemId;
  if (this.props.match.params.cassa !== currentIdCassa)	
 	{ 
@@ -76,6 +77,7 @@ class Scontrino extends Component {
 componentDidUpdate() {
 		scontrino = this.props.testataScontrino;
 		cassa = this.props.testataCassa;
+
 	//Da mettere a posto
 	    var header = "Cassa ";
 	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");
@@ -87,7 +89,7 @@ componentDidUpdate() {
 
 componentWillUnmount() {
 	
-  if (!this.props.shouldRedirectCassa && !this.props.match.params.scontrino) 
+  if (!this.props.match.params.scontrino) 
 		{this.props.setSelectedRigaCassa(null);
 		currentIdScontrino = null; }
     
@@ -104,27 +106,19 @@ submitEditedCatalogItem = (e) => {
  
 submitRigaCassa = (e) => {
 	e.preventDefault();
-	this.props.submitRigaCassa(true, null, [this.props.match.params.anno, this.props.match.params.mese, this.props.match.params.cassa],{});
+    let key = this.props.submitRigaCassa(true, null, [this.props.match.params.anno, this.props.match.params.mese, this.props.match.params.cassa],{});
+    this.props.history.push('/scontrino/'+ period2month([this.props.match.params.anno, this.props.match.params.mese]) + '/' +this.props.match.params.cassa + '/'+key  );
 }  
 
  
 
 render()
 {
+
 	
   const period = [this.props.match.params.anno, this.props.match.params.mese];
-if (this.props.shouldRedirectCassa && this.props.selectedScontrino && this.props.selectedScontrino.key && (this.props.selectedScontrino.key !== this.props.match.params.scontrino)) 
-	{
-	
-    const url = '/scontrino/' + this.props.match.params.anno + '/' + this.props.match.params.mese + '/' + this.props.match.params.cassa + '/' + this.props.selectedScontrino.key
-	return (<Redirect to={url} />);
-	}
-else if (!this.props.selectedScontrino && this.props.shouldRedirectCassa)	
-	{
-	const url = '/scontrino/' + this.props.match.params.anno + '/' + this.props.match.params.mese + '/' + this.props.match.params.cassa; 
-	return (<Redirect to={url} />);	
-	}
-else return (
+
+return (
  	
   <Row gutter={16}>
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
@@ -220,4 +214,4 @@ else return (
 }
 
 }
-export default Scontrino;
+export default withRouter(Scontrino);

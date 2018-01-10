@@ -33,6 +33,8 @@ const convertDetails = (inputData) =>
     					return 'cassa '+row.cassa+' sc. '+row.numero;
 					 case 'bolla':
     				    return 'rif. '+row.riferimento+' '+row.fornitore;
+    				 case 'inventario':
+    				 	return row.note;
     				 default:
     					return '';
 					}
@@ -53,7 +55,7 @@ detailRow = (row) => {
     	render() { 
     	let props = {...this.props};
     	  return(
-			<WrappedTable {...props} header={header} detailRow={this.detailRow} data={convertDetails(this.props.dettagli)} />
+			<WrappedTable {...props} header={header} selectRow={this.detailRow} detailRow={this.detailRow} data={convertDetails(this.props.dettagli)} />
 			)}
     }		
 	

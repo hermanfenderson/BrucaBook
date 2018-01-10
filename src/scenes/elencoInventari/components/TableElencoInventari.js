@@ -2,12 +2,17 @@ import React, {Component} from 'react';
 import WrappedTable from '../../../components/WrappedTable';
 import {Modal} from 'antd';
 
+import {withRouter} from 'react-router-dom'
 
 
 //E' un dato.... che passo come costante...
 const header = [
 				{dataField: 'dataInventario', label: 'Data inventario', width: '200px'},
-			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '200px'},
+				{dataField: 'note', label: 'Note', width: '400px'},
+				
+			   {dataField: 'totali.righe', label: 'Inventario', width: '100px'},
+			    {dataField: 'totali.magazzino', label: 'Magazzino', width: '100px'},
+			   
 			    ];
 
 
@@ -50,6 +55,7 @@ class TableElencoInventari extends Component
 	selectRow = (row) => {
 		this.props.setSelectedInventario(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
+		this.props.history.push('/inventario/' + row.key);
 	}
 
     
@@ -64,5 +70,5 @@ class TableElencoInventari extends Component
 			)}
     }		
 	
-export default TableElencoInventari;
+export default withRouter(TableElencoInventari);
 

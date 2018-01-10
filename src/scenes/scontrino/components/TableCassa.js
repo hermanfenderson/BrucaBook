@@ -1,6 +1,10 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import { Icon, Table} from 'antd';
+import {period2month} from '../../../helpers/form'
+import {withRouter} from 'react-router-dom'
+
+
 
 import {Modal} from 'antd';
 var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo stato...
@@ -36,8 +40,8 @@ selectRow = (row) => {
 actionRowRender = (cell, row) => {
    return (
         <div>
-        {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(row)}}/>} 
-		{(this.props.editRow) && (row.tipo === 'scontrino') && <Icon type="edit" onClick={() => { this.props.editRow(row)}}/>}  
+        {(this.props.deleteRow) && <Icon type="delete" onClick={() => { lastRowClicked = row.key; this.props.deleteRow(row)}}/>} 
+		{(this.props.editRow) && (row.tipo === 'scontrino') && <Icon type="edit" onClick={() => { lastRowClicked = row.key; this.props.editRow(row)}}/>}  
         </div>
         );
  }
@@ -53,7 +57,7 @@ ordinaryRowRender = (cell,row) => {
 } 
 
 onRow=(record, other) => ({
-  onClick: () => {if (lastRowClicked!== record.key) {lastRowClicked = record.key; this.selectRow(record);}}
+  onClick: () => {if (lastRowClicked!== record.key) {console.log("sono qui"); lastRowClicked = record.key; this.selectRow(record);}}
 })
 
   
@@ -151,6 +155,7 @@ class TableCassa extends Component
 	   	    let params = [...this.props.period];
     		params.push(this.props.cassa);
 	   		this.props.deleteRigaCassa(params, row.key);
+	   		this.props.history.push('/scontrino/'+ period2month(this.props.period) + '/' +this.props.cassa);
 	   };
 	   
 	   if(row.totali && row.totali.pezzi > 0)	Modal.confirm({
@@ -176,7 +181,7 @@ class TableCassa extends Component
 		let params = [...this.props.period];
     	params.push(this.props.cassa);
     	this.props.setSelectedRigaCassa(row);
-    	this.props.setRedirect(true);
+    	this.props.history.push('/scontrino/'+ period2month(this.props.period) + '/' +this.props.cassa + '/'+row.key  );
 	}
 
    
@@ -195,5 +200,5 @@ class TableCassa extends Component
 			)}
     }		
 	
-export default TableCassa;
+export default withRouter(TableCassa);
 

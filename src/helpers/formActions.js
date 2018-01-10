@@ -453,7 +453,9 @@ this.aggiungiItem = (params, valori) => {
    	}
    	)  	
    if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));	
+   return(ref.key);
   }
+  
 }
 
 this.aggiornaItem = (params,itemId, valori) => {
@@ -476,8 +478,9 @@ this.aggiornaItem = (params,itemId, valori) => {
    	}
    	)  	 
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));
+   	 return(itemId); 
   }
-  
+ 
 }
 
 //Pinnare una riga
@@ -562,11 +565,13 @@ this.submitEditedItem = (isValid,selectedItem,params,valori) => {
 	      const type = this.SUBMIT_EDITED_ITEM;
 	      const aggiornaItem = this.aggiornaItem;
 	      const aggiungiItem = this.aggiungiItem;
+	      var key = null;
 	      const itemId = selectedItem ? selectedItem.key : null;
 	      return function(dispatch, getState) {
 			dispatch({type: type});
-			if (selectedItem && isValid) dispatch(aggiornaItem(params, itemId, valori));
-			else if(isValid) dispatch(aggiungiItem(params,valori));
+			if (selectedItem && isValid) key=dispatch(aggiornaItem(params, itemId, valori));
+			else if(isValid) key=dispatch(aggiungiItem(params,valori));
+			return(key);
 	      }
 	}
 	

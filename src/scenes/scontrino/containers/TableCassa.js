@@ -1,5 +1,5 @@
 import TableCassaComponent from '../components/TableCassa'
-import {cassaFA, setRedirect} from '../../../actions/cassa'
+import {cassaFA} from '../../../actions/cassa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
 import {getEditedRigaCassa, getRigheCassa, getRigheCassaIndex, getTableHeightCassa, getTableScrollCassa, getListeningItemCassa} from '../../../reducers'
@@ -26,7 +26,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight, setRedirect }, dispatch);
+  return bindActionCreators({listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight }, dispatch);
 }
 
 

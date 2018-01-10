@@ -4,7 +4,6 @@ import {urlFactory, addCreatedStamp,addChangedStamp} from '../helpers/firebase';
 
 import moment from 'moment';
 export const SCENE = 'CASSA';
-export const SET_REDIRECT_CASSA = 'SET_REDIRECT_CASSA';
 export const ADDED_RIGASCONTRINO = 'ADDED_RIGASCONTRINO';
 export const CHANGED_RIGASCONTRINO = 'CHANGED_RIGASCONTRINO';
 export const DELETED_RIGASCONTRINO = 'DELETED_RIGASCONTRINO';
@@ -24,14 +23,7 @@ function preparaItem(riga)
 
    
 
-export function setRedirect(redirect)
-{
-	return {
-		type: SET_REDIRECT_CASSA,
-		shouldRedirect: redirect
-	}
-	
-}
+
 
 //METODI DEL FORM anche qui visualizzo i totali...
 export const cassaFA = new FormActions(SCENE, preparaItem, 'righeElencoScontrini','righeElencoCasse');
@@ -50,6 +42,7 @@ cassaFA.aggiungiItem = (params, valori) => {
 	var numeroCassa = null;	
 	return function(dispatch,getState) 
 	   {
+	   	const ref = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa])).push();
 	   	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
 		refCassa.transaction( function(cassa) {
     		if (cassa) 
@@ -75,7 +68,7 @@ cassaFA.aggiungiItem = (params, valori) => {
 			nuovoItem['totali'] = {pezzi: 0, prezzoTotale: '0.00'};
 			const toggleTableScroll = cassaFA.toggleTableScroll;
 			dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
-    	    const ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa])).push();
+    	    //ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa])).push();
     		ref.set(nuovoItem);
 			dispatch(
    					{
@@ -86,14 +79,13 @@ cassaFA.aggiungiItem = (params, valori) => {
 			nuovoItem['key'] = ref.key;
 			nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
 			dispatch(cassaFA.setSelectedItem(nuovoItem));
-			dispatch(setRedirect(true));
+			
 			})
-
-
+           
 
 			//Non mi serve chiamare la funzione originale...
 			//dispatch(aggiungiItemSuper(params, valori));
-		
+		return(ref.key);
 		}
 }
 
@@ -152,7 +144,7 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 				}
 		
 
-
+            
 			//Non mi serve chiamare la funzione originale...
 			//dispatch(aggiungiItemSuper(params, valori));
 		
@@ -174,7 +166,6 @@ const typeDelete = cassaFA.DELETE_ITEM;
    					) 
    					
    	dispatch(cassaFA.setSelectedItem(null));
-	dispatch(setRedirect(true));
 	//Aggiorno ultimoScontrino a ultimo valore utile...
 	const anno = params[0];
 	const mese = params[1];
