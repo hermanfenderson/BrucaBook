@@ -1,10 +1,11 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
-import {TOGGLE_COLLAPSED} from '../actions';
+import {TOGGLE_COLLAPSED, SET_MENU_SELECTED_KEYS} from '../actions';
 export const SET_HEADER_INFO='SET_HEADER_INFO';
 
 const initialState =  {
   collapsed: false,
-  headerInfo: ''
+  headerInfo: '',
+  menuSelectedKeys: [],
 };
 
 export default function status(state = initialState, action) {
@@ -19,6 +20,12 @@ export default function status(state = initialState, action) {
       	 ...state,
         headerInfo: action.headerInfo
       	}
+     case SET_MENU_SELECTED_KEYS:
+     	return {
+      	 ...state,
+        menuSelectedKeys: action.menuSelectedKeys
+      	}
+      	
     default:
       return state;
   }
@@ -26,4 +33,5 @@ export default function status(state = initialState, action) {
 
 export const getCollapsed = (state) => {return state.collapsed};
 export const getHeaderInfo = (state) => {return state.headerInfo};
+export const getMenuSelectedKeys = (state) => {return state.menuSelectedKeys};
 

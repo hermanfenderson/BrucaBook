@@ -16,8 +16,8 @@ import Header from '../components/Header';
 import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
-import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure} from '../actions';
-import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo} from '../reducers';
+import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure, setMenuSelectedKeys} from '../actions';
+import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo, getMenuSelectedKeys} from '../reducers';
 
 //Foglio di stile...
 import '../styles/app.css';
@@ -73,14 +73,14 @@ handleResize = () => {
         >
         <Affix>
      
-           <SiderComponent signOutUser={this.props.signOutUser} authenticated={this.props.authenticated}/>
+           <SiderComponent signOutUser={this.props.signOutUser} authenticated={this.props.authenticated} setMenuSelectedKeys={this.props.setMenuSelectedKeys} menuSelectedKeys={this.props.menuSelectedKeys}/>
           </Affix>
      
       </Sider>
        
        
           <Layout >
-           <Header toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
+           <Header setMenuSelectedKeys={this.props.setMenuSelectedKeys} toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
       
            
          
@@ -116,12 +116,13 @@ function mapStateToProps(state) {
     user: getUser(state),
     collapsed: getCollapsed(state),
     headerInfo: getHeaderInfo(state),
-    info: getInfo(state)
+    info: getInfo(state),
+    menuSelectedKeys: getMenuSelectedKeys(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure}, dispatch);
+  return bindActionCreators({signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure, setMenuSelectedKeys}, dispatch);
 }
 
 

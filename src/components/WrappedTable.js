@@ -23,7 +23,7 @@ componentDidMount()
   	lastRowClicked = this.props.highlightedRowKey; //Ma quando arriva me la prendo...
 	   if (this.props.tableScroll)
 			{
-	        this.node.scrollTop = this.node.scrollHeight;
+			this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
  }

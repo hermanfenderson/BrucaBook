@@ -1,10 +1,11 @@
-import { LOAD_README, README_LOADED } from '../actions/readmeViewer';
+import { LOAD_README, README_LOADED, SET_SHOW_MODAL } from '../actions/readmeViewer';
 import {STORE_MEASURE} from '../actions';
 
 
 const initialState =  {
  readme: null, 
- readmeHeight: 0
+ readmeHeight: 0,
+ showModal: true,
 };
 
 export default function readmeViewer(state = initialState, action) {
@@ -20,10 +21,14 @@ export default function readmeViewer(state = initialState, action) {
     case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = (measures['viewPortHeight'] > 0 && measures['headerHeight'] > 0) ? measures['viewPortHeight'] - measures['headerHeight'] - 82 :100;
+   	    let height = (measures['viewPortHeight'] > 0 && measures['headerHeight'] > 0) ? measures['viewPortHeight'] - measures['headerHeight'] - 48 :100;
    	    let newState = {...state, readmeHeight: height};
         return newState; 
-        
+    
+    case SET_SHOW_MODAL: 
+    	return {
+        ...state, showModal: action.showModal
+    	}
     default:
       return state;
   }
@@ -31,3 +36,4 @@ export default function readmeViewer(state = initialState, action) {
 
 export const getReadme = (state) => { return state.readme};
 export const getReadmeHeight = (state) => { return state.readmeHeight};
+export const getShowModal = (state) => {return state.showModal};

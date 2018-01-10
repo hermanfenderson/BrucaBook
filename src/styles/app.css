@@ -13,6 +13,8 @@ html, body {
     overflow: auto;
 }
 
+
+
 /*footer*/
 .ant-layout-footer {
 	padding-top: 0px;
@@ -137,5 +139,9 @@ width: 75px;
     cursor: not-allowed;
     color: rgba(0, 0, 0, 0.65);
 }
+
+
+
+
 
 

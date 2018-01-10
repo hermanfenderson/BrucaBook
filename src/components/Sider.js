@@ -7,9 +7,7 @@ import moment from 'moment';
 const SubMenu = Menu.SubMenu;
 
 class Sider extends React.Component {
-  state = {
-    selectedKeys : [],
-  }
+  
 
 	onClick = (selection) => {
 	let link = '';
@@ -28,16 +26,16 @@ class Sider extends React.Component {
 			
 			default: break;
 		}
-		this.setState({selectedKeys : [selection.key]});
+        this.props.setMenuSelectedKeys([selection.key]);
 		this.props.history.push(link);
 	}
   
     render() {
     	return (
     	 <div>
-    	 <div onClick= {() => {this.setState({selectedKeys : []}); this.props.history.push('/')}} className="logo"/>
+    	 <div onClick= {() => {this.props.setMenuSelectedKeys([]); this.props.history.push('/')}} className="logo"/>
         
-    	<Menu onClick={this.onClick} theme="dark" mode="inline" selectedKeys={this.state.selectedKeys}>
+    	<Menu onClick={this.onClick} theme="dark" mode="inline" selectedKeys={this.props.menuSelectedKeys}>
             <Menu.Item key="1">
               <Icon type="shopping-cart" />
               <span>Acquisti</span>

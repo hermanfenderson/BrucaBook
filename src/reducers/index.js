@@ -39,6 +39,7 @@ export default rootReducer;
 //Dalla App
 export const getCollapsed = (state) => {return fromApp.getCollapsed(state.app)};
 export const getHeaderInfo = (state) => {return fromApp.getHeaderInfo(state.app)};
+export const getMenuSelectedKeys = (state) => {return fromApp.getMenuSelectedKeys(state.app)};
 
 //Scene Bolla
 export const getRigheBolla = (state) => {return fromBolla.getItems(state.bolla)};
@@ -156,5 +157,7 @@ export const getMeasures = (state) => {return fromMeasures.getMeasures(state.mea
 //da readmeViewer
 export const getReadme = (state) => {return fromReadmeViewer.getReadme(state.readmeViewer)};
 export const getReadmeHeight = (state) => {return fromReadmeViewer.getReadmeHeight(state.readmeViewer)};
+export const getShowModal = (state) => {return fromReadmeViewer.getShowModal(state.readmeViewer)};
+
 
  

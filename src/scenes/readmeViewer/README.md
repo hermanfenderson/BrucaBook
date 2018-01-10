@@ -1,11 +1,11 @@
-BrucaBook v.0.5.0
+BrucaBook V.0.5.0
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
 ### Versione 0.5.0  
-* Feature... Rendo visibile README.md in public (piccola modifica al processo di build)
+* Feature... Rendo visibile README.md  (piccola modifica al processo di build) in una voce di menu
 * README.md in formato markdown
   
 ### Versione 0.4.7  

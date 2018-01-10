@@ -48,7 +48,7 @@ resetForm = () => {
         <WrappedForm.Group formGroupLayout={{gutter:16}}>
         <WrappedForm.Input field='stock' label='Stock' formColumnLayout={{span:4}} disabled/>
        
-        <WrappedForm.Input field='pezzi' label='Variazione' formColumnLayout={{span:6}}/>
+        <WrappedForm.InputNumber field='pezzi' label='Variazione' formColumnLayout={{span:6}}/>
        <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
         <WrappedForm.Button  itemStyle={{paddingTop: '30px'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>

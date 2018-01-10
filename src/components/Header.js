@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Layout, Affix, Row, Icon, Col, Avatar, Dropdown, Button} from 'antd';
-import UserMenu from '../components/UserMenu';
+import {Layout, Affix, Row, Icon, Col, Avatar, Dropdown, Button, Menu} from 'antd';
 import { withRouter } from 'react-router-dom';
 
 
@@ -11,10 +10,30 @@ class Header extends React.Component {
 toggle = () => {
     this.props.toggleCollapsed();
   }
+  
+menuSet = (destination) => 
+{
+	let selected = [];
+	switch (destination)
+		{
+			case 'acquisti': selected = ['1'];  break;
+			case 'vendite': selected = ['2'];  break;
+			case 'inventari': selected = ['3'];  break;
+			case 'itemCatalogo': selected = ['4'];  break;
+			case 'userMgmt?mode=changePassword': selected = ['5'];  break;
+			case 'userMgmt?mode=configuration': selected = ['6'];  break;
+			case '#signout': selected = ['7'];  break;
+			case 'version': selected = ['8'];  break;
+		    default: selected = []; break;
+		}
+	this.props.setMenuSelectedKeys(selected);	
+}
 
 back = () => {
-	
 	this.props.history.goBack();
+	setTimeout(() => {this.menuSet(document.location.href.split('/')[3]);},0); //Il pezzo del path che mi interessa...
+	
+	
 }
 
 
@@ -22,8 +41,35 @@ back = () => {
  	
  	this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
      }
-  
-menu = (<UserMenu signOutUser={this.props.signOutUser}/>);  
+
+onClick = (selection) => {
+	let link = '';
+	switch(selection.key)
+		{
+			case '4': link='/userMgmt?mode=changePassword'; break;
+			case '5': link='/userMgmt?mode=configuration'; break;
+			case '6': link='/#signout'; this.props.signOutUser();break;
+			default: break;
+		}
+		this.props.history.push(link);
+	}
+
+menu = (<Menu onClick={this.onClick} theme="light" >
+            
+	            <Menu.Item key="4">
+	              <Icon type="retweet" />
+	              <span> Password</span>
+	            </Menu.Item>
+	            <Menu.Item key="5">
+	              <Icon type="setting" />
+	              <span> Configurazione</span>
+	            </Menu.Item>
+	            <Menu.Item key="6">
+	              <Icon type="logout" />
+	              <span> Esci</span>
+	            </Menu.Item>
+	      </Menu>  
+       )
 
   render()
   {

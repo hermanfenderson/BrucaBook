@@ -1,5 +1,6 @@
 export const LOAD_README = 'LOAD_README';
 export const README_LOADED = 'README_LOADED';
+export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
 
 export const loadReadme = () =>
 
@@ -20,3 +21,7 @@ export const loadReadme = () =>
 	   }
 	
 }
+
+export const setShowModal = (showModal) =>
+  { return({type: SET_SHOW_MODAL, showModal: showModal});
+  }  

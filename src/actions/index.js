@@ -17,6 +17,7 @@ export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
 export const  STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
 export const SET_HEADER_INFO = 'SET_HEADER_INFO';
+export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
 
 
 
@@ -102,7 +103,13 @@ export function setHeaderInfo(headerInfo) {
 		type: SET_HEADER_INFO,
 		headerInfo: headerInfo
 	}
-	
+}	
+
+export function setMenuSelectedKeys(menuSelectedKeys) {
+	return {
+		type: SET_MENU_SELECTED_KEYS,
+		menuSelectedKeys: menuSelectedKeys
+	}	
 }
 
  
