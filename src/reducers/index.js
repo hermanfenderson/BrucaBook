@@ -127,6 +127,7 @@ export const getMessageBufferScontrino = (state) => {return fromBolla.getMessage
 
 //Scene Catalogo
 export const getEditedCatalogItem = (state) => {return fromCatalog.getEditedCatalogItem(state.catalogo)};
+export const getSaveGeneral = (state) => {return fromCatalog.getSaveGeneral(state.catalogo)};
 
 
 //Scene Magazzino

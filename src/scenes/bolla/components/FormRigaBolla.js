@@ -38,31 +38,31 @@ resetForm = () => {
   	const readOnlyEAN = ((this.props.editedRigaBolla.selectedItem !== null) || (this.props.editedRigaBolla.eanState === 'PARTIAL'))
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:5}}  disabled={readOnlyEAN}/>
-        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:10}}  disabled/>
-        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:6}} disabled/>
+         <WrappedForm.Group formGroupLayout={{gutter:0}}>
+        <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:5}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:10}} itemStyle={{marginRight: 10}} disabled/>
+        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:6}} itemStyle={{marginRight: 10}} disabled/>
         <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{span:3}}  disabled/>
      
        </WrappedForm.Group>
         
-        <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Checkbox formColumnLayout={{span:1}} field='manSconto' label='Man.'/>
+        <WrappedForm.Group formGroupLayout={{gutter:0}}>
+        <WrappedForm.Checkbox formColumnLayout={{span:1}}  itemStyle={{marginRight: 10}}field='manSconto' label='Man.'/>
        
-        <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} formColumnLayout={{span:2}}  />
-        <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} formColumnLayout={{span:2}} />
-        <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} formColumnLayout={{span:2}} />
+        <WrappedForm.Input field='sconto1' label='Sc.1' disabled={prezzoMan} formColumnLayout={{span:2}} itemStyle={{marginRight: 10}} />
+        <WrappedForm.Input field='sconto2' label='Sc.2' disabled={prezzoMan} formColumnLayout={{span:2}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.Input field='sconto3' label='Sc.3' disabled={prezzoMan} formColumnLayout={{span:2}} itemStyle={{marginRight: 10}}/>
         
-        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:3}} />
-        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:2}}/>
-        <WrappedForm.Input field='gratis' label='Gratis' formColumnLayout={{span:2}}/>
-        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:4}} formItemLayout={{wrapperCol: { offset: 2, span: 22 }}}/>
-       <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:3}} itemStyle={{marginRight: 10}} />
+        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:2}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.Input field='gratis' label='Gratis' formColumnLayout={{span:2}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:4}} itemStyle={{marginRight: 20}}/>
+       <WrappedForm.Button itemStyle={{width: '90%',  marginTop: 40}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  itemStyle={{paddingTop: '30px'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  itemStyle={{width: '90%', marginTop: 40}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
      
       </WrappedForm.Group>
-       <WrappedForm.Group formGroupLayout={{gutter:16}} >
+       <WrappedForm.Group formGroupLayout={{gutter:0}} >
          <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
        
         

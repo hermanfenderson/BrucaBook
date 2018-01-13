@@ -17,11 +17,17 @@ export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl, stock
 //Azioni legate ad azioni di ricerca
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
+this.UPDATE_GENERAL_CATALOG_ITEM = 'UPDATE_GENERAL_CATALOG_ITEM_'+scene;
+this.SEARCH_GENERAL_CATALOG_ITEM = 'SEARCH_GENERAL_CATALOG_ITEM_'+scene;
+
 this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+scene;
 this.FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_'+scene;
 this.FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_'+scene;
+this.FOUND_GENERAL_CATALOG_ITEM = 'FOUND_GENERAL_CATALOG_ITEM_'+scene;
+
 this.NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_'+scene;
 this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+scene;
+this.NOT_FOUND_GENERAL_CATALOG_ITEM = 'NOT_FOUND_GENERAL_CATALOG_ITEM_'+scene;
 
 this.SET_FILTER = 'SET_FILTER_'+scene;
 this.RESET_FILTER = 'RESET_FILTER_'+scene;
@@ -192,7 +198,6 @@ this.setTableWindowHeight = (tableWindowHeight) =>
 };	
 
 
-//Funzioni da MIGRARE... che vuol dire?
 
 this.foundCatalogItem = (ean,item) =>
 {
@@ -203,7 +208,7 @@ if (getStock)
 	return function(dispatch, getState) {
        	const url = urlFactory(getState,'magazzino',null,ean);
 		Firebase.database().ref(url).once('value', snapshot => {
-		 let itemCpy = {...item, stock: snapshot.val() ? snapshot.val().pezzi : 0}
+		 let itemCpy = {...item, ean: ean, stock: snapshot.val() ? snapshot.val().pezzi : 0}
 	      dispatch({
 	        type: type,
 	        item: itemCpy
@@ -213,22 +218,38 @@ if (getStock)
 }
 else return({
   type: this.FOUND_CATALOG_ITEM,
-  item: item
+  item: {...item, ean: ean}
    }
   );
 };
 
+
 this.foundCloudItem = (ean,item) =>
 { const type = this.FOUND_CLOUD_ITEM;
   const updateCatalogItem = this.updateCatalogItem;
+  const updateGeneralCatalogItem = this.updateGeneralCatalogItem;
+  
 	return function(dispatch) {
   	     item['ean'] = ean; //La ricerca non lo contiene...
 	   dispatch({type: type,item});	
-	   dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...
+	   dispatch(updateGeneralCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
+	   dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
+	   
 		
 	}
 }
 
+this.foundGeneralCatalogItem = (ean,item) =>
+{ const type = this.FOUND_CLOUD_ITEM;
+  const updateCatalogItem = this.updateCatalogItem;
+  
+	return function(dispatch) {
+  	     item['ean'] = ean; //La ricerca non lo contiene...
+	   dispatch({type: type,item});	
+	   dispatch(updateCatalogItem(item)); //Persisto il risultato del catalogo generale...in locale
+	   
+	}
+}
 
 //Copro anche il caso dei ritorni parziali... 
 this.notFoundCloudItem = (ean,item) =>
@@ -236,13 +257,21 @@ this.notFoundCloudItem = (ean,item) =>
 	return function(dispatch) {
        item['ean'] = ean;
   	   dispatch({type: type, item:item});
-  	   dispatch({type: 'NOT_FOUND_CLOUD_ITEM', item:item})
+  	   dispatch({type: 'NOT_FOUND_CLOUD_ITEM_CATALOGO', item:item})
 	}
 }
+
 
 this.notFoundCatalogItem = () => 
 {return({
   type: this.NOT_FOUND_CATALOG_ITEM,
+   }
+  )
+}
+
+this.notFoundGeneralCatalogItem = () => 
+{return({
+  type: this.NOT_FOUND_GENERAL_CATALOG_ITEM,
    }
   )
 }
@@ -277,12 +306,12 @@ const foundCloudItem = this.foundCloudItem;
 }
 
 
-this.searchCatalogItem = (ean) =>
+this.searchGeneralCatalogItem = (ean) =>
   { 
   //Problemi di casting...
   const type=this.SEARCH_CATALOG_ITEM;
-  const foundCatalogItem = this.foundCatalogItem;
-  const notFoundCatalogItem = this.notFoundCatalogItem;
+  const foundGeneralCatalogItem = this.foundGeneralCatalogItem;
+  const notFoundGeneralCatalogItem = this.notFoundGeneralCatalogItem;
   const searchCloudItem = this.searchCloudItem;
   
    return function(dispatch) {
@@ -290,10 +319,53 @@ this.searchCatalogItem = (ean) =>
       var promise = new Promise( function (resolve, reject) {
           Firebase.database().ref('catalogo/'+ean).once('value').then(
                  (payload) => {
+                       if (payload.val()) dispatch(foundGeneralCatalogItem(ean,payload.val()));
+                       else {
+                       		dispatch(notFoundGeneralCatalogItem());
+                       		dispatch(searchCloudItem(ean));
+                    		}
+                       resolve(payload);}                
+                 )})        
+          return promise;
+  }       
+}
+
+
+//Item è un oggetto con una chiave ean dentro... la trasformo nella chiave del catalogo
+this.updateGeneralCatalogItem = (item) =>
+{
+  const type = 	this.UPDATE_GENERAL_CATALOG_ITEM;
+  const ean = item.ean;
+  const slicedItem = {...item};
+  delete slicedItem.ean;
+  return function(dispatch) {
+    Firebase.database().ref('catalogo/'+ean).update(slicedItem).then(response => {
+      dispatch({
+        type: type,
+        item: item
+      });
+    });
+  }
+}
+
+
+this.searchCatalogItem = (ean) =>
+  { 
+  //Problemi di casting...
+  const type=this.SEARCH_CATALOG_ITEM;
+  const foundCatalogItem = this.foundCatalogItem;
+  const notFoundCatalogItem = this.notFoundCatalogItem;
+   const searchGeneralCatalogItem = this.searchGeneralCatalogItem;
+ 
+   return function(dispatch, getState) {
+   dispatch({type: type});
+      var promise = new Promise( function (resolve, reject) {
+          Firebase.database().ref(urlFactory(getState, 'catalogoLocale',null,ean)).once('value').then(
+                 (payload) => {
                        if (payload.val()) dispatch(foundCatalogItem(ean,payload.val()));
                        else {
                        		dispatch(notFoundCatalogItem());
-                       		dispatch(searchCloudItem(ean));
+                       		dispatch(searchGeneralCatalogItem(ean));
                     		}
                        resolve(payload);}                
                  )})        
@@ -309,8 +381,8 @@ this.updateCatalogItem = (item) =>
   const ean = item.ean;
   const slicedItem = {...item};
   delete slicedItem.ean;
-  return function(dispatch) {
-    Firebase.database().ref('catalogo/'+ean).update(slicedItem).then(response => {
+  return function(dispatch, getState) {
+    Firebase.database().ref(urlFactory(getState,'catalogoLocale',null,ean)).update(slicedItem).then(response => {
       dispatch({
         type: type,
         item: item
@@ -318,6 +390,7 @@ this.updateCatalogItem = (item) =>
     });
   }
 }
+
 
 
 

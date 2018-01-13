@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import WrappedForm from '../../../components/WrappedForm'
 import {period2month, moment2period} from '../../../helpers/form'
+import {Col} from 'antd'
 
 class FormCassa extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -36,19 +37,20 @@ componentWillMount = () =>
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
     return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Input field='cassa' label='Cassa'  required={true} formColumnLayout={{span: 8}} />
-        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedCassa.selectedItem!==null)}/>
+         <WrappedForm.Group formGroupLayout={{gutter:0}}>
+        <WrappedForm.Input field='cassa' label='Cassa'  required={true} formColumnLayout={{span: 3}} itemStyle={{marginRight: 10}} />
+        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 20}} disabled={(this.props.editedCassa.selectedItem!==null)}/>
+          <WrappedForm.Button type={'button'} formColumnLayout={{span:3, offset:10}} itemStyle={{width: '80%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       	
+        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:3}} itemStyle={{width: '80%'}}>{submitLabel}</WrappedForm.Button>
+        <Col span={10} />
          </WrappedForm.Group>
         
      
-       <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.GeneralError  formColumnLayout={{span:18}}/>
+       <WrappedForm.Group formGroupLayout={{gutter:0}}>
+        <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
        
-        <WrappedForm.Button type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
-       	
-        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
-       
+         
         </WrappedForm.Group >
        </WrappedForm>
     )

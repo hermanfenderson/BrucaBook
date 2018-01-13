@@ -79,7 +79,8 @@ render()
     	   </Col>
       </Row>
     
-     <Row>
+      <Row type="flex" align="bottom" className='bottom-form'>
+   
      <Col span={4}>
      <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} />
 

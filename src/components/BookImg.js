@@ -10,7 +10,6 @@ const BookImg = (props) =>
     cover={<img alt="notAvailable" src="/image.png" />}
   >
    <Meta
-      title={props.ean}
       description={props.eanState}
     />
   </Card>

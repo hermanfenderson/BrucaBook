@@ -36,19 +36,19 @@ componentWillMount = () =>
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
     return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 5}} />
-        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 5}} />
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} />
-       <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+         <WrappedForm.Group >
+        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 6}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 20}}/>
+       <WrappedForm.Button   type={'button'} formColumnLayout={{span:3}} itemStyle={{width:'90%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" htmlType="submit" itemStyle={{width:'90%'}} formColumnLayout={{span:2}}>{submitLabel}</WrappedForm.Button>
      
        </WrappedForm.Group>
         
      
-       <WrappedForm.Group formGroupLayout={{gutter:16}}>
+       <WrappedForm.Group formGroupLayout={{gutter:0}}>
         <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
        
          

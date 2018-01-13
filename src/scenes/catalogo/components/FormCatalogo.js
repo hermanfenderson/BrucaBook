@@ -8,7 +8,7 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, this.props.scene); //Per sapere cosa fare... dopo
+	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, this.props.scene, this.props.saveGeneral); //Per sapere cosa fare... dopo
   }
   
 resetForm = () => {

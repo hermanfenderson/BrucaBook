@@ -63,7 +63,7 @@ const GeneralError = (props) => {
 const FormButton =  (props) => 
 				{ 
 				   const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
-                   return <FormItem style={itemStyle}  {...buttonItemLayout}> <Button  {...otherProps} /> </FormItem>
+                   return <FormItem   {...buttonItemLayout}> <Button  style={itemStyle} {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>
@@ -103,7 +103,7 @@ const WrapGeneric = (props) =>
 const FormGroup = (props) => {
   const hasColumns = true;
     const {formGroupLayout, ...otherProps} = props
-    return  <Row {...formGroupLayout}>{renderChildren(otherProps, hasColumns)}</Row>
+    return  <Row type="flex" justify="space-between" align="bottom" {...formGroupLayout}>{renderChildren(otherProps, hasColumns)}</Row>
 }
 
 

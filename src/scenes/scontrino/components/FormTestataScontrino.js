@@ -45,9 +45,9 @@ onSubmit = (e) => {
   	    
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-        <WrappedForm.Group formGroupLayout={{gutter:8}}>
-        <WrappedForm.InputNumber className='input-numero-scontrino' formColumnLayout={{span:7}} field='numero'  />
-        <WrappedForm.TimePicker className='input-ora-scontrino' formColumnLayout={{span:10}} field='oraScontrino'  format="HH:mm" allowEmpty={false}/>
+        <WrappedForm.Group formGroupLayout={{gutter:0}}>
+        <WrappedForm.InputNumber className='input-numero-scontrino' formColumnLayout={{span:7}} itemStyle={{marginRight: 10}} field='numero'  />
+        <WrappedForm.TimePicker className='input-ora-scontrino' formColumnLayout={{span:10}} itemStyle={{marginRight: 10}} field='oraScontrino'  format="HH:mm" allowEmpty={false}/>
         
         <WrappedForm.Button  icon='edit' formColumnLayout={{span:7}} type="primary" htmlType="submit" />
         </WrappedForm.Group>

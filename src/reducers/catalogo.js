@@ -1,12 +1,20 @@
 
 //In prima istanza deve "solo" gestire un form libero
-import {CHANGE_EDITED_CATALOG_ITEM, SUBMIT_EDITED_CATALOG_ITEM, SEARCH_CATALOG_ITEM, RESET_EDITED_CATALOG_ITEM,
-FOUND_CATALOG_ITEM, NOT_FOUND_CATALOG_ITEM, NOT_FOUND_CLOUD_ITEM } from '../actions/catalogo';
+import FormReducer from '../helpers/formReducer'
+
+import {SUBMIT_EDITED_CATALOG_ITEM,  RESET_EDITED_CATALOG_ITEM} from '../actions/catalogo';
+
+
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode, isAmount} from '../helpers/validators';
-import {errMgmt, editedItemInitialState, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors} from '../helpers/form';
+const FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_CATALOGO';
+const NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_CATALOGO';
+const FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_CATALOGO';
 
-const editedCatalogItemValuesInitialState = 
+
+
+const editedCatalogValuesInitialState = 
 	  {			ean: '',
 				titolo: '',
 				autore: '',
@@ -14,22 +22,50 @@ const editedCatalogItemValuesInitialState =
 				prezzoListino: '',
 				imgUrl: ''	
 	};
+	
+	
 
-
-const editedCatalogItemInitialState = () => {
-	return({...editedItemInitialState(editedCatalogItemValuesInitialState)}); 
+const editedItemInitialState = () => {
+	return(editedItemInitialStateHelper(editedCatalogValuesInitialState, {} ));
 }
 
 
-
-
 const initialState = () => {
-
-	return {
-		    selectedCatalogItem: null,
-			editedCatalogItem: {...editedCatalogItemInitialState()}
-	    	}
+    const eiis = editedItemInitialState();
+	return initialStateHelper(eiis,{ selectedCatalogItem: null, saveGeneral: false});
     }
+    
+
+
+    
+    
+    
+
+//Metodi reducer per le Form
+const catalogoR = new FormReducer('CATALOGO', foundCompleteItem, null, null, initialState); 
+
+function foundCompleteItem(editedItem, action) 
+	{   
+		console.log(editedItem);
+		let cei = editedItemCopy(editedItem);
+	
+       	//Copio l'esito della ricerca...
+    	cei.values.titolo = action.item.titolo;
+    	cei.values.autore = action.item.autore;
+    	cei.values.prezzoListino = action.item.prezzoListino;
+    	if ('editore' in cei.values) cei.values.editore = action.item.editore;
+    	
+    	
+    	//Il form e' potenzialmente valido... sgancio gli errori...
+    	//Se sono qui... EAN è sicuramente valido...
+        noErrors(cei,'ean');
+        noErrors(cei,'form');
+        noErrors(cei,'prezzoUnitario');
+      	 cei.isValid = isValidEditedItem(cei);
+      	 console.log(cei);
+     	 
+       return(cei);
+	}  
     
 function transformAndValidateEditedCatalogItem(changedEditedCatalogItem, name, value)
 {  	
@@ -80,24 +116,26 @@ export default function catalog(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
-      
+  /*    
    case CHANGE_EDITED_CATALOG_ITEM:
       	newState =  {...state, editedCatalogItem: transformAndValidateEditedCatalogItem(editedItemCopy(state.editedCatalogItem), action.name, action.value)};
 		break;
   
+  */
   
    case SUBMIT_EDITED_CATALOG_ITEM:
 	    //Posso sottomettere il form se lo stato della riga è valido
 			
-		if (state.editedCatalogItem.isValid)
+		if (state.editedItem.isValid)
 	    	{
-	    	newState = {...state, editedCatalogItem: {...editedCatalogItemInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
+	        
+	    	newState = {...state, saveGeneral: false, editedItem: {...editedItemInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
 	    	}
 	    else //Altrimenti
-	    	{   let tbcEditedCatalogItem = {...state.editedCatalogItem};
+	    	{   let tbcEditedCatalogItem = {...state.editedItem};
                 let ceci = tbcEditedCatalogItem ;
 	    		//Se il form è invalid... e EAN non è valido... correggo EAN...
-	    		if (isValidEAN(state.editedCatalogItem.values.ean)) 
+	    		if (isValidEAN(state.editedItem.values.ean)) 
 	    		     {
 	    		     	//Mostro gli errori del form...a partire dai non presenti...
 	    		     	 errMgmt(ceci, 'titolo','emptyField','Campo obbligatorio', ceci.values.titolo.length===0);
@@ -110,7 +148,7 @@ export default function catalog(state = initialState(), action) {
 	    			
 	    	     
 	    	    else {
-	    			if (isValidBookCode(state.editedCatalogItem.values.ean)) //Altrimenti parto alla ricerca di un codice breve
+	    			if (isValidBookCode(state.editedItem.values.ean)) //Altrimenti parto alla ricerca di un codice breve
 	    				{
 	    				ceci.values.ean = generateEAN(ceci.values.ean);
 	    				ceci.eanState = 'VALID'; //Valido per definizione...appena generato
@@ -127,29 +165,16 @@ export default function catalog(state = initialState(), action) {
 	    			}
 	    	         
 	    	         //
-	    			newState = {...state, editedCatalogItem: tbcEditedCatalogItem};	
+	    			newState = {...state, editedItem: tbcEditedCatalogItem};	
 	    	}
         break;
-    	 
-    case SEARCH_CATALOG_ITEM:
-    	let tbc2EditedCatalogItem = editedItemCopy(state.editedCatalogItem);
-    	tbc2EditedCatalogItem.loading = true;
-    	newState = {...state, editedCatalogItem: tbc2EditedCatalogItem};
-    	break;
-    
-    
-    case NOT_FOUND_CATALOG_ITEM:
-    	let tbc4EditedCatalogItem = editedItemCopy(state.editedCatalogItem);
-    	tbc4EditedCatalogItem.loading = false;
-    	newState = {...state, editedCatalogItem: tbc4EditedCatalogItem};
-    	break;
-    
   
      case FOUND_CATALOG_ITEM:
      case NOT_FOUND_CLOUD_ITEM:	
-        let tbc3EditedCatalogItem = editedItemCopy(state.editedCatalogItem);
+     case FOUND_CLOUD_ITEM:
+        let tbc3EditedCatalogItem = editedItemCopy(state.editedItem);
     	tbc3EditedCatalogItem.loading = false;
-    	newState = {...state, editedCatalogItem: tbc3EditedCatalogItem};
+    	let saveGeneral =  (action.type === NOT_FOUND_CLOUD_ITEM) ? true : false;
     	
     	//Copio l'esito della ricerca...
     	tbc3EditedCatalogItem.values.ean = action.item.ean;
@@ -180,21 +205,24 @@ export default function catalog(state = initialState(), action) {
     	 tbc3EditedCatalogItem.isValid = isValidEditedItem(tbc3EditedCatalogItem);
     
     		//Salvo il nuovo stato...
-        newState = {...state, editedCatalogItem: tbc3EditedCatalogItem};
+        newState = {...state, editedItem: tbc3EditedCatalogItem, saveGeneral: saveGeneral};
         break;
     
+    
     case RESET_EDITED_CATALOG_ITEM:
-   	    newState = {...state, editedCatalogItem: {...editedCatalogItemInitialState()}}; 
+   	    newState = {...state, editedItem: {...editedItemInitialState()}}; 
    	    break;
    	    
     default:
-        newState =  state;
+        newState = catalogoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCatalogItem);
+        //newState =  state;
     	break;
    
   }
  return newState;
 }
 
- export const getEditedCatalogItem = (state) => {return state.editedCatalogItem};  
-
+ export const getEditedCatalogItem = (state) => {return state.editedItem};  
+ export const getSaveGeneral = (state) => {return state.saveGeneral};  
+ 
 

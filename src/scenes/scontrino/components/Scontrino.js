@@ -186,7 +186,8 @@ return (
 	   
 	</Row>  
 	
-       <Row style={{'backgroundColor': 'White'}}>
+       <Row type="flex" align="bottom" className='bottom-form'
+   style={{'backgroundColor': 'White'}}>
     		<Col span={5}>
 
 				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} />

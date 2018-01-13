@@ -57,8 +57,8 @@ return (
    
    	 	 </Col>
     </Row>
-     <Row>
-     <Col span={4} />
+  <Row className='bottom-form'>
+       <Col span={4} />
      
       <Col span={20}>
      

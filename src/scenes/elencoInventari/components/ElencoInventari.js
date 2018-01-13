@@ -36,8 +36,8 @@ return (
    
    	 	 </Col>
     </Row>
-     <Row>
-     <Col span={4} />
+    <Row type="flex" align="bottom" className='bottom-form'>
+    <Col span={4} />
      
       <Col span={20}>
      

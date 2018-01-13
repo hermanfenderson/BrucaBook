@@ -1,9 +1,19 @@
-BrucaBook V.0.5.1
+BrucaBook V.0.5.2
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.5.2
+* Inserite note nella tabella elencoInventari
+* Inseriti totali nella tabella elencoInventari
+* Feature: fare click su una riga di elenco ti porta direttamente nel dettaglio. Questo risolve anche il quesito se avesse senso una diversa visualizzazione tra select e edit (#150)
+* Invertito manuale e sconti in acquisti e vendite (#127)
+* Premere su una riga in elenco magazzino ti porta al dettaglio anche senza premere sulla lente
+* Bug fixing: il tasto "nuovo scontrino" non portava più al nuovo scontrino
+* Bug fixing: cancellare uno scontrino non cancellava più il numero in scontrino nei dettagli
+* Refactoring: ripensato il modo in cui cambia la URL degli scontrini
+
 ### Versione 0.5.1
 * Ripristinata la gestione inputNumber sostituita in 0.4.6 (correzione suggerita in antd #8846)
 * Sistemata la visibilità di README.md (messa in una modal)

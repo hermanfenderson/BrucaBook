@@ -35,18 +35,18 @@ componentWillMount = () =>
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
     return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter:16}}>
-         <WrappedForm.DatePicker field='dataInventario' label='Data Inventario'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} disabled={(this.props.editedInventario.selectedItem!==null)} />
-         <WrappedForm.Input field='note' label='Note'   formColumnLayout={{span: 14}} />
+         <WrappedForm.Group formGroupLayout={{gutter:0}}>
+         <WrappedForm.DatePicker field='dataInventario' label='Data Inventario'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}} disabled={(this.props.editedInventario.selectedItem!==null)} />
+         <WrappedForm.Input field='note' label='Note'   formColumnLayout={{span: 14}} itemStyle={{marginRight: 10}} />
      
-       <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Button itemStyle={{width: '90%',  marginTop: 40}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button itemStyle={{paddingTop: '30px'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button itemStyle={{width: '90%',  marginTop: 40}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
      
        </WrappedForm.Group>
         
      
-       <WrappedForm.Group formGroupLayout={{gutter:16}}>
+       <WrappedForm.Group formGroupLayout={{gutter:0}}>
         <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
        
          

@@ -54,7 +54,8 @@ return (
    <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
   	 </Col>
     </Row>
-     <Row>
+    <Row type="flex" align="bottom" className='bottom-form'>
+   
      <Col span={4} />
          <Col span={20}>
     

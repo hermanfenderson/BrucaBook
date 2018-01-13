@@ -13,7 +13,7 @@ render()
 { return (
 	<Row>
 		<Col offset={6} span={12}>
-		<FormCatalogo />
+		<FormCatalogo scene='CATALOGO'/>
 		</Col>
 	</Row>
 	 )
