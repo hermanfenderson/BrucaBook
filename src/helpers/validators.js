@@ -7,12 +7,12 @@ export function isInteger(x) {
 export function isValidBookCode(code)
 {   
 	
-	return(isInteger(code) && code >0 & code.length <= 8);
+	return((isInteger(code)) && (code >0) && (code.length <= 8));
 }
 
 export function isPercentage(code)
 {  
-	return((code === '') || (isInteger(code) && code >=0 & code < 100));
+	return((code === '') || ((isInteger(code)) && (code >=0) && (code < 100)));
 }
 
 export function isNotNegativeInteger(number)

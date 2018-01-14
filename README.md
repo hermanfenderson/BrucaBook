@@ -4,6 +4,9 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.5.5
+* Refactoring: pulitura del codice utilizzando il tool deepscan 
+
 ### Versione 0.5.4
 * Feature: Salvataggio codice IVA in catalogo articoli e sua propagazione nelle righe
 * Gestione delle anagrafiche generali e locali con persistenza nello stato utente
