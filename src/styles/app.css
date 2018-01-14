@@ -140,6 +140,11 @@ width: 75px;
     color: rgba(0, 0, 0, 0.65);
 }
 
+.bottom-form {
+	padding-top: 30px;
+	border: 2px solid #003a8c;
+
+}
 
 
 
