@@ -1,6 +1,6 @@
 import FormBollaComponent from '../components/FormBolla'
 import {bollaFA} from '../../../actions/elencoBolle'
-import {getEditedBolla, getReadOnlyFormBolla} from '../../../reducers'
+import {getEditedBolla, getReadOnlyFormBolla, getAnagrafiche} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -11,7 +11,10 @@ const resetEditedBolla = bollaFA.resetEditedItem;
 
 
 const mapStateToProps = (state) => { 
-	return ({editedBolla: getEditedBolla(state), readOnlyForm: getReadOnlyFormBolla(state)})
+	return ({editedBolla: getEditedBolla(state), 
+	readOnlyForm: getReadOnlyFormBolla(state), 
+	tipiBolla: getAnagrafiche(state).tipiBolla	
+	})
 }
  
 

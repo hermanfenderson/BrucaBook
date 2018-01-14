@@ -19,7 +19,9 @@ const editedBollaValuesInitialState =
 	  {			riferimento: '',
 				fornitore: '',
 				dataDocumento: moment(),
-				dataCarico: moment()	
+				dataCarico: moment(),
+				dataRendiconto: null,
+				tipoBolla: 'A'
 	};
 
 const editedItemInitialState = () => {
@@ -42,12 +44,16 @@ const initialState = () => {
 const transformEditedBolla = (row) =>
 {   row.dataDocumento = moment(row.dataDocumento).format("L");
 	row.dataCarico = moment(row.dataCarico).format("L");
+	if (row.dataRendiconto) row.dataRendiconto = moment(row.dataRendiconto).format("L");
+	if (row.tipoBolla === 'A') row.tipoBolla = '';
 }	
 
 const transformSelectedItem = (cei) =>
 {
 	cei.dataDocumento = moment(cei.dataDocumento,"DD/MM/YYYY");
 	cei.dataCarico = moment(cei.dataCarico,"DD/MM/YYYY");
+	if (cei.dataRendiconto) cei.dataRendiconto = moment(cei.dataRendiconto,"DD/MM/YYYY");
+	if (cei.tipoBolla === '') cei.tipoBolla = 'A';
 }
 
 const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem, false); 
@@ -61,7 +67,7 @@ const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transfo
 function transformAndValidateEditedBolla(cei, name, value)
 {  	
 	cei.values[name] = value;
-
+    if ((name === 'tipoBolla') && value === 'R') cei.values.dataRendiconto = moment();
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
    
@@ -69,7 +75,7 @@ function transformAndValidateEditedBolla(cei, name, value)
    errMgmt(cei, 'fornitore','required','Campo obbligatorio',  (cei.values.fornitore.length === 0), false);
    errMgmt(cei, 'dataDocumento','invalidDate','Data non valida',  (!cei.values.dataDocumento.isValid()));
     errMgmt(cei, 'dataCarico','invalidDate','Data non valida',  (!cei.values.dataCarico.isValid()));
-   
+    errMgmt(cei, 'dataRendiconto','invalidDate','Data non valida',  ((cei.values.tipoBolla === 'R') && (!cei.values.dataRendiconto.isValid())));
    	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);

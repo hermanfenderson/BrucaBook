@@ -38,12 +38,18 @@ componentWillMount = () =>
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
          <WrappedForm.Group >
         <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}}/>
-        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 6}} itemStyle={{marginRight: 10}}/>
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 20}}/>
-       <WrappedForm.Button   type={'button'} formColumnLayout={{span:3}} itemStyle={{width:'90%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 6, offset: 2}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 20}}/>
+      </WrappedForm.Group>
+       <WrappedForm.Group>
+      
+       <WrappedForm.SelectList formColumnLayout={{span: 4}} field='tipoBolla' label='Tipo' list={this.props.tipiBolla} defaultValue = 'A' />
+        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
+       
+       <WrappedForm.Button   type={'button'} formColumnLayout={{offset: 6, span:4}} itemStyle={{width:'90%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit" itemStyle={{width:'90%'}} formColumnLayout={{span:2}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" htmlType="submit" itemStyle={{width:'90%'}} formColumnLayout={{span:4}}>{submitLabel}</WrappedForm.Button>
      
        </WrappedForm.Group>
         

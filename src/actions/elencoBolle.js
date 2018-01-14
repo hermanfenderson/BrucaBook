@@ -11,6 +11,7 @@ function preparaItem(riga)
    {
    	riga['dataDocumento'] = riga['dataDocumento'].valueOf();
    	riga['dataCarico'] = riga['dataCarico'].valueOf();
+   	if (riga['dataRendiconto']) riga['dataRendiconto'] = riga['dataRendiconto'].valueOf();
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
    	if ('totali' in riga) {delete riga.totali}
    	

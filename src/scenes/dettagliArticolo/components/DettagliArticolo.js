@@ -6,6 +6,7 @@ import { Row} from 'antd'
 
 
 var listening = null;
+
 class DettagliArticolo extends Component {
 componentWillMount() {
 	    if (listening !== this.props.match.params.ean)

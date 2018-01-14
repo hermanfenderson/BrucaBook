@@ -1,11 +1,13 @@
-BrucaBook V.0.5.4
+BrucaBook V.0.5.5
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
 ### Versione 0.5.5
-* Refactoring: pulitura del codice utilizzando il tool deepscan 
+* Refactoring: pulitura del codice utilizzando il tool deepscan. Si conferma la necessità di ripulire wrappedForm.
+* Refactoring: miglioramento del codice utilizzando il tool better code hub.
+* Inserito il concetto di tipo bolla (Assoluto, Deposito e Rendiconto che è un deposito che si trasforma in assoluto a una data)
 
 ### Versione 0.5.4
 * Feature: Salvataggio codice IVA in catalogo articoli e sua propagazione nelle righe
