@@ -75,7 +75,7 @@ const redoLogin = () =>{
 const redirectHome = () => {
 this.props.resetState();
 this.props.history.push(nextUrl);	
-return();
+return(0);
 }
 
 if (this.props.editedItem.userMgmtState === 'passwordChangeOK') {this.props.resetState(); message.info("Cambio password effettuato",2,redirectHome());}
