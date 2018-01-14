@@ -77,7 +77,7 @@ exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scon
 			if (!idItem)
 				{
 				var oldRighe=righeSnapshot.previous.val();
-				for (var propt in oldRighe) 
+				for (let propt in oldRighe) 
 							{
 							if (righe) 
 								{if (!righe[propt]) 
@@ -128,7 +128,7 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
         	var totalePezzi = 0.0;
 			var totaleGratis = 0.0;
 			var totaleImporto = 0.0;
-		  	for(var propt in righe)
+		  	for(let propt in righe)
 		  		{
 		  		if (righeSnapshot.child(propt).changed()) idItem = propt; //Prendo la riga cambiata...	
 			    totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
@@ -139,7 +139,7 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
 			if (!idItem)
 				{
 				var oldRighe=righeSnapshot.previous.val();
-				for (var propt in oldRighe) 
+				for (let propt in oldRighe) 
 							{
 							if (righe) 
 								{if (!righe[propt]) 
@@ -182,7 +182,7 @@ exports.calcolaTotaleInventario = functions.database.ref('{catena}/{negozio}/inv
             const righe = event.data.val();
             
         	var totale = 0;
-			for(var propt in righe)
+			for(let propt in righe)
 		  		{
 		  		if (righeSnapshot.child(propt).changed()) idItem = propt; //Prendo la riga cambiata...	
 			    totale++;
@@ -191,7 +191,7 @@ exports.calcolaTotaleInventario = functions.database.ref('{catena}/{negozio}/inv
 			if (!idItem)
 				{
 				var oldRighe=righeSnapshot.previous.val();
-				for (var propt in oldRighe) 
+				for (let propt in oldRighe) 
 							{
 							if (righe) 
 								{if (!righe[propt]) 
@@ -500,9 +500,7 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
             else 
             	  {
             	  var totalePezzi = 0;
-        		  var titolo;
-                  var autore;
-          	      var righe;
+        		  var righe;
             	  date = event.data.val();	
             	  for(var propt2 in date)
 		  			{righe = date[propt2];
