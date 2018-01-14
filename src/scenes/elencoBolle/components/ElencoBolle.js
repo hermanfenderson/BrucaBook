@@ -34,13 +34,13 @@ render()
 if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese])) 
 	{
 		
-    const url = this.props.period ? '/acquisti/'+period2month(this.props.period) : '/acquisti/'+period2month([this.props.match.params.anno, this.props.match.params.mese]);	
+   // const url = this.props.period ? '/acquisti/'+period2month(this.props.period) : '/acquisti/'+period2month([this.props.match.params.anno, this.props.match.params.mese]);	
+      const url = '/acquisti/'+period2month(this.props.period);
      return(<Redirect to={url} />)
    }
 else  
 {
-////Era...       <Col style={{'marginTop': '100px'}} span={4}>
-	
+
 return (
  <div>	
   <Row>

@@ -33,7 +33,9 @@ render()
 if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese])) 
 	{
 		
-    const url = this.props.period ? '/vendite/'+period2month(this.props.period) : '/vendite/'+period2month([this.props.match.params.anno, this.props.match.params.mese]);	
+   // const url = this.props.period ? '/vendite/'+period2month(this.props.period) : '/vendite/'+period2month([this.props.match.params.anno, this.props.match.params.mese]);	
+      const url = '/vendite/'+period2month(this.props.period);
+      
      return(<Redirect to={url} />)
    }
 else  
