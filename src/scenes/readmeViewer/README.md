@@ -1,9 +1,17 @@
-BrucaBook V.0.5.2
+BrucaBook V.0.5.3
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.5.3
+* Fatto spazio tra form e tabelle
+* Ridisegnato il posizionamento dei form e dei bottoni (#162, #163). Dovrò, probabilmente, fare un refactoring
+* Refactoring: riscritto catalog per non usare un proprio action e un proprio reducer.
+* Refactoring: inserito un catalogo locale alla libreria. Adesso ogni libreria ha un proprio catalogo libri 
+con un catalogo condiviso che fa da memoria comune da cui pescare libri "noti". Così posso gestire codici privati. Ed evitare di sporcare le anagrafiche altrui.
+Il primo che censisce un libro con codice 9... comunque lo fa per tutti. (#161)
+
 ### Versione 0.5.2
 * Inserite note nella tabella elencoInventari
 * Inseriti totali nella tabella elencoInventari

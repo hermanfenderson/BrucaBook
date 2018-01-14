@@ -57,7 +57,8 @@ export function urlFactory(getState, destination, params, itemId)
 				//Sono piatti... ne avrò uno l'anno... per 50 anni sono a posto...
 				case "righeInventario": url = prefissoNegozio(getState)+'inventari/'  +params[0] ; break;
 				case "righeElencoInventari": url = prefissoNegozio(getState)+'elencoInventari'; break;
-				
+				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
+			
 				
 				default: return null;
 			}

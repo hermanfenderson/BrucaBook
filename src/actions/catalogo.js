@@ -1,9 +1,4 @@
-/*
-import Firebase from 'firebase';
-import request from 'superagent';
-import {isComplete} from '../helpers/catalog'
-import {isInternalEAN} from '../helpers/ean'
-*/
+
 import {FormActions} from '../helpers/formActions';
 
 export const SCENE = 'CATALOGO';

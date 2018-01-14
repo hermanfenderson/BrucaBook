@@ -1,13 +1,15 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
-import {USER_INFO_CHANGED } from '../actions';
+import {USER_INFO_CHANGED, MASTER_DATA_LOADED, LOCAL_MASTER_DATA_LOADED } from '../actions';
 import {USER_CONFIGURATION_CHANGED} from '../actions/userMgmt'
-
+import moment from 'moment';
 
 const initialState =  {
   catena: null,
   libreria: null,
   nomeLibreria: '',
-  nick: ''
+  nick: '', 
+  masterData: null,
+  localMasterData: null
 };
 
 export default function status(state = initialState, action) {
@@ -33,6 +35,13 @@ export default function status(state = initialState, action) {
      	return {
      		...state, ...info
      	}
+     case MASTER_DATA_LOADED:
+     	return {...state, masterData: action.payload}
+     
+     case LOCAL_MASTER_DATA_LOADED:
+     	return {...state, localMasterData: action.payload}
+     
+     
     default:
       return state;
   }
@@ -41,4 +50,24 @@ export default function status(state = initialState, action) {
 export const getCatena = (state) => {return state.catena}; 
 export const getLibreria = (state) => {return state.libreria};
 export const getInfo = (state) => {return state};
+export const getAnagrafiche = (state) => {return state.masterData};
+export const getAnagraficheLocali = (state) => {return state.localMasterData};
+//Funzione derivata dallo stato
+export const getSelettoreIVA = (state) => {
+	const IVA = state.masterData.IVA;
+	const aliquote = state.masterData.AliquoteIVA;
+	const now = moment().valueOf();
+	let aliquoteNow = {};
+	let aliquoteOut = {};
+	for (var propt in aliquote) 
+		{aliquoteNow[propt] = 0;
+		for (var propt2 in aliquote[propt])
+			{
+				if (propt2 < now) aliquoteNow[propt] = aliquote[propt][propt2];
+			}
+		
+		aliquoteOut[propt] = aliquoteNow[propt]*100 + '% (' + IVA[propt] +')';
+		}
+     return(aliquoteOut);		
+}
 

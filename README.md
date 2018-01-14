@@ -1,9 +1,13 @@
-BrucaBook V.0.5.3
+BrucaBook V.0.5.4
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.5.4
+* Feature: Salvataggio codice IVA in catalogo articoli e sua propagazione nelle righe
+* Gestione delle anagrafiche generali e locali con persistenza nello stato utente
+
 ### Versione 0.5.3
 * Fatto spazio tra form e tabelle
 * Ridisegnato il posizionamento dei form e dei bottoni (#162, #163). Dovrò, probabilmente, fare un refactoring

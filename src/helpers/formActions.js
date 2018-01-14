@@ -231,6 +231,7 @@ this.foundCloudItem = (ean,item) =>
   
 	return function(dispatch) {
   	     item['ean'] = ean; //La ricerca non lo contiene...
+  	     if (!item['iva']) item['iva'] = 'a0'; //Default
 	   dispatch({type: type,item});	
 	   dispatch(updateGeneralCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
 	   dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale

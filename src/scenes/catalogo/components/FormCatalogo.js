@@ -14,7 +14,7 @@ onSubmit = (e) => {
 resetForm = () => {
 	this.props.resetEditedCatalogItem(this.props.scene);
 }
-
+    
 
   render() {
   	const formValues = this.props.editedCatalogItem.values;
@@ -27,11 +27,13 @@ resetForm = () => {
         <WrappedForm.Input field='autore' label='Autore'  />
         <WrappedForm.Input field='editore' label='Editore'/>
         <WrappedForm.Input field='prezzoListino' label='Listino'/>
+        <WrappedForm.SelectList field='iva' label='IVA' list={this.props.aliquoteIVA} defaultValue="a0"/>
+        
         {this.props.isModal ? <WrappedForm.Group></WrappedForm.Group> :
-        <WrappedForm.Group formGroupLayout={{gutter:32}}>
+        <WrappedForm.Group formGroupLayout={{gutter:0}}>
          <WrappedForm.GeneralError  formColumnLayout={{span:14}}/>
-         <WrappedForm.Button type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
-       	 <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:5}}>OK</WrappedForm.Button>
+         <WrappedForm.Button itemStyle={{width: '90%'}} type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       	 <WrappedForm.Button itemStyle={{width: '90%'}} type="primary" htmlType="submit" formColumnLayout={{span:5}}>OK</WrappedForm.Button>
         </WrappedForm.Group>
         }
        

@@ -84,12 +84,14 @@ function foundCompleteItem(editedItem, action)
 	{   
 		let cei = editedItemCopy(editedItem);
 		//Copio l'esito della ricerca...
+			cei.values = {...cei.values, ...action.item}
+        /*
     	cei.values.titolo = action.item.titolo;
     	cei.values.autore = action.item.autore;
     	cei.values.prezzoListino = action.item.prezzoListino;
     	if (action.item.stock) cei.values.stock = action.item.stock; 
     	if ('editore' in cei.values) cei.values.editore = action.item.editore;
-    	
+    	*/
      	
     	//Il form e' potenzialmente valido... sgancio gli errori...
     	//Se sono qui... EAN è sicuramente valido...

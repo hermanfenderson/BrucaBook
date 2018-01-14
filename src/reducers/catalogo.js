@@ -20,6 +20,7 @@ const editedCatalogValuesInitialState =
 				autore: '',
 				editore: '',
 				prezzoListino: '',
+				iva: '',
 				imgUrl: ''	
 	};
 	
@@ -46,15 +47,15 @@ const catalogoR = new FormReducer('CATALOGO', foundCompleteItem, null, null, ini
 
 function foundCompleteItem(editedItem, action) 
 	{   
-		console.log(editedItem);
 		let cei = editedItemCopy(editedItem);
-	
+	    cei.values = {...cei.values, ...action.item}
+        /*
        	//Copio l'esito della ricerca...
     	cei.values.titolo = action.item.titolo;
     	cei.values.autore = action.item.autore;
     	cei.values.prezzoListino = action.item.prezzoListino;
     	if ('editore' in cei.values) cei.values.editore = action.item.editore;
-    	
+    	*/
     	
     	//Il form e' potenzialmente valido... sgancio gli errori...
     	//Se sono qui... EAN è sicuramente valido...
@@ -62,8 +63,7 @@ function foundCompleteItem(editedItem, action)
         noErrors(cei,'form');
         noErrors(cei,'prezzoUnitario');
       	 cei.isValid = isValidEditedItem(cei);
-      	 console.log(cei);
-     	 
+      	 
        return(cei);
 	}  
     
@@ -186,7 +186,7 @@ export default function catalog(state = initialState(), action) {
     	else  tbc3EditedCatalogItem.values.editore = '';
     	if (action.item.prezzoListino) tbc3EditedCatalogItem.values.prezzoListino = action.item.prezzoListino;
     	else  tbc3EditedCatalogItem.values.prezzoListino = '';
-    	
+    	tbc3EditedCatalogItem.values.iva = 'a0'; //Eventualmente la cambi in anagrafica...
     	
      	
     	//Il form e' potenzialmente valido... valuto gli errori...

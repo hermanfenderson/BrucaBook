@@ -10,6 +10,7 @@ Se user è null chiamo anche in questo caso userInfoChanged con type USER_INFO_C
 
 */
 import Firebase from 'firebase';
+import {urlFactory} from '../helpers/firebase';
 
 
 export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
@@ -18,7 +19,8 @@ export const  STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
 export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
-
+export const MASTER_DATA_LOADED = 'MASTER_DATA_LOADED';
+export const LOCAL_MASTER_DATA_LOADED = 'LOCAL_MASTER_DATA_LOADED';
 
 
 export function listenAuthStateChanged() {
@@ -35,6 +37,7 @@ export function listenAuthStateChanged() {
         user: user,
         info: snapshot.val(),
       })
+      dispatch(caricaAnagrafiche());
     });
         } 
       //Utente sloggato
@@ -112,8 +115,20 @@ export function setMenuSelectedKeys(menuSelectedKeys) {
 	}	
 }
 
- 
-
+export function caricaAnagrafiche() {
+	 return function(dispatch, getState) {
+	 		Firebase.database().ref('/anagrafiche').once('value', snapshot => {
+	 		
+	 		dispatch ({type: MASTER_DATA_LOADED, payload: snapshot.val()})	
+	 		})
+	 		
+	 		Firebase.database().ref(urlFactory(getState, 'anagraficheLocali')).once('value', snapshot => {
+	 		
+	 		dispatch ({type: LOCAL_MASTER_DATA_LOADED, payload: snapshot.val()})	
+	 		})
+	 		
+	  }	
+}
 
 
 

@@ -57,9 +57,9 @@ resetForm = () => {
         <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:2}} itemStyle={{marginRight: 10}}/>
         <WrappedForm.Input field='gratis' label='Gratis' formColumnLayout={{span:2}} itemStyle={{marginRight: 10}}/>
         <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:4}} itemStyle={{marginRight: 20}}/>
-       <WrappedForm.Button itemStyle={{width: '90%',  marginTop: 40}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Button itemStyle={{width: '90%'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  itemStyle={{width: '90%', marginTop: 40}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  itemStyle={{width: '90%'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
      
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:0}} >

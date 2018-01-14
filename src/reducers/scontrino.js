@@ -131,10 +131,13 @@ function foundCompleteItem(editedItem, action)
 		 cei.willFocus = 'pezzi';
      
        	//Copio l'esito della ricerca...
+       		cei.values = {...cei.values, ...action.item}
+        /*
     	cei.values.titolo = action.item.titolo;
     	cei.values.autore = action.item.autore;
     	cei.values.prezzoListino = action.item.prezzoListino;
     	if ('editore' in cei.values) cei.values.editore = action.item.editore;
+    	*/
     	
     	//Aggiorno i prezi e i totali
     	if (cei.values['prezzoListino'] > 0) pricesMgmt(cei,'prezzoListino');

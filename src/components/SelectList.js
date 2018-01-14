@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { Select } from 'antd';
-const { Option, OptGroup } = Select;
+const { Option } = Select;
  
 
 class SelectList extends React.Component 
@@ -13,10 +13,10 @@ class SelectList extends React.Component
 	
 options = ((list)	=> {
 	let phrase2 = [];
-		 for (var propt2 in list[propt].librerie) phrase2.push(<Option key={propt2} value={propt+'/'+propt2}>{list[propt].librerie[propt2]}</Option>)
-		}
+	let key = 0;
+    for (var propt2 in list) phrase2.push(<Option key={key++} value={propt2}>{list[propt2]}</Option>)
 	return(phrase2);	
-})(this.props.bookstoresList);
+})(this.props.list);
 
 
 
