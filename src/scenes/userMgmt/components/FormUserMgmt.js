@@ -75,6 +75,7 @@ const redoLogin = () =>{
 const redirectHome = () => {
 this.props.resetState();
 this.props.history.push(nextUrl);	
+this.props.setMenuSelectedKeys([]);
 return(0);
 }
 

@@ -63,7 +63,7 @@ resetForm = () => {
         <WrappedForm.Button  type="primary" htmlType="submit"  formColumnLayout={{span:4}} itemStyle={{width: '90%'}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
         
       </WrappedForm.Group>
-       <WrappedForm.Group formGroupLayout={{gutter:16}} >
+       <WrappedForm.Group formGroupLayout={{gutter:0}} >
          <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
        
         

@@ -46,25 +46,26 @@ onClick = (selection) => {
 	let link = '';
 	switch(selection.key)
 		{
-			case '4': link='/userMgmt?mode=changePassword'; break;
-			case '5': link='/userMgmt?mode=configuration'; break;
-			case '6': link='/#signout'; this.props.signOutUser();break;
+			case '5': link='/userMgmt?mode=changePassword'; break;
+			case '6': link='/userMgmt?mode=configuration'; break;
+			case '7': link='/#signout'; this.props.signOutUser();break;
 			default: break;
 		}
+		this.props.setMenuSelectedKeys([selection.key]);
 		this.props.history.push(link);
 	}
 
 menu = (<Menu onClick={this.onClick} theme="light" >
             
-	            <Menu.Item key="4">
+	            <Menu.Item key="5">
 	              <Icon type="retweet" />
 	              <span> Password</span>
 	            </Menu.Item>
-	            <Menu.Item key="5">
+	            <Menu.Item key="6">
 	              <Icon type="setting" />
 	              <span> Configurazione</span>
 	            </Menu.Item>
-	            <Menu.Item key="6">
+	            <Menu.Item key="7">
 	              <Icon type="logout" />
 	              <span> Esci</span>
 	            </Menu.Item>

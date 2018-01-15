@@ -6,7 +6,7 @@ export function isInteger(x) {
 
 export function isValidBookCode(code)
 {   
-	
+	if (typeof code !== 'string') code = code.toString(); 
 	return((isInteger(code)) && (code >0) && (code.length <= 8));
 }
 

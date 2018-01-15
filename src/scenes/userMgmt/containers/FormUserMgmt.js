@@ -1,6 +1,6 @@
 import FormUserMgmtComponent from '../components/FormUserMgmt'
 import {loginFA, setMode, resetState, verifyCode} from '../../../actions/userMgmt'
-import {signOutUser, setHeaderInfo} from '../../../actions'
+import {signOutUser, setHeaderInfo, setMenuSelectedKeys} from '../../../actions'
 import {getEditedItemUserMgmt, isAuthenticated, getInfo} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ verifyCode, resetState,setHeaderInfo, signOutUser, changeEditedSignup, submitEditedSignup, resetEditedSignup, setMode }, dispatch);
+  return bindActionCreators({ verifyCode, resetState,setHeaderInfo, signOutUser, changeEditedSignup, submitEditedSignup, resetEditedSignup, setMode, setMenuSelectedKeys }, dispatch);
 }
 
 

@@ -93,7 +93,7 @@ export default function elencoBolle(state = initialState(), action) {
     case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -100;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -130;
    	    newState = {...state, tableHeight: height};
         break;  
      case SET_PERIOD_ELENCOBOLLE:
