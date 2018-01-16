@@ -186,18 +186,17 @@ return (
 	   
 	</Row>  
 	
-       <Row type="flex" align="bottom" className='bottom-form'
-   style={{'backgroundColor': 'White'}}>
+       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '250px'}}>
     		<Col span={5}>
 
-				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} />
+				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean}  />
 
 	
 		  </Col>
 		  <Col span={19}>
 
 
-    		<FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} ref='formRigaScontrino'/>
+    		<FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />
     	  </Col>
 
      </Row>

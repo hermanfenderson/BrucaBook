@@ -82,14 +82,14 @@ render()
     	   </Col>
       </Row>
     
-    <Row type="flex" align="bottom" className='bottom-form'>
+    <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '250px'}}>
     <Col span={4}>
      <BookImg eanState={this.props.editedRigaInventario.eanState} ean={this.props.editedRigaInventario.values.ean} />
 
       </Col>
        <Col span={20}>
     
-      <FormRigaInventario idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} ref='formRigaInventario'/>
+      <FormRigaInventario idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} />
       </Col>
         
     </Row>

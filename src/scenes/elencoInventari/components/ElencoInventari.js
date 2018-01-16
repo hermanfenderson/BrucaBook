@@ -36,12 +36,12 @@ return (
    
    	 	 </Col>
     </Row>
-    <Row type="flex" align="bottom" className='bottom-form'>
+    <Row type="flex" align="bottom" className='bottom-form' ref='formInventario' style={{height: '100px'}}>
     <Col span={4} />
      
       <Col span={20}>
      
-     <FormInventario ref='formInventario' />
+     <FormInventario  />
      </Col>
           </Row>
    

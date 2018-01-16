@@ -57,12 +57,12 @@ return (
    
    	 	 </Col>
     </Row>
-  <Row className='bottom-form'>
+  <Row className='bottom-form' style={{height: '200px'}} ref='formBolla'>
        <Col span={4} />
      
       <Col span={20}>
      
-     <FormBolla ref='formBolla' period={this.props.period}/>
+     <FormBolla period={this.props.period}/>
      </Col>
           </Row>
    

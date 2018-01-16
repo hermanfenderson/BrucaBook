@@ -1,4 +1,4 @@
-BrucaBook V.0.5.6
+BrucaBook V.0.5.7
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
@@ -6,8 +6,9 @@ Storia delle versioni
 ---------------------
 
 ### Versione 0.5.7
-* Un'ultima sistemata agli spazi
-* Regolato lo scroll nelle tabelle
+* Bug fixing: il menu utente lasciava in disordine il menu principale (#170)
+* Bug fixing: ancora qualche scostamento nei form (scontrini)
+* Avviato il test applicativo con Jest (per ora, solo unit)
 
 ### Versione 0.5.6
 * Fatto spazio tra form e tabelle (in modo migliore)

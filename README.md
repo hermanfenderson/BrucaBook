@@ -4,7 +4,8 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
-
+### Versione 0.6.0
+* Risolto un baco di visualizzazione (ridimensionamento form con immagine dentro) (#173)
 ### Versione 0.5.7
 * Bug fixing: il menu utente lasciava in disordine il menu principale (#170)
 * Bug fixing: ancora qualche scostamento nei form (scontrini)

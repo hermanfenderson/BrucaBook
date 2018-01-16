@@ -56,12 +56,12 @@ return (
    <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
   	 </Col>
     </Row>
-    <Row type="flex" align="bottom" className='bottom-form'>
+    <Row type="flex" align="bottom" className='bottom-form'  ref='formCassa' style={{height: '100px'}} >
    
      <Col span={4} />
          <Col span={20}>
     
-   	 <FormCassa ref='formCassa' period={this.props.period}/>
+   	 <FormCassa period={this.props.period}/>
    	 </Col>
  
              </Row>

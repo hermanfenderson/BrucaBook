@@ -17,10 +17,13 @@ var riga = null;
 
 class Bolla extends Component {
 
+
+ 
  componentDidMount() {
-    	if(ReactDOM.findDOMNode(this.refs.formRigaBolla)) this.props.storeMeasure('formRigaBollaHeight', ReactDOM.findDOMNode(this.refs.formRigaBolla).clientHeight);
-    
-    	
+   	if(ReactDOM.findDOMNode(this.refs.formRigaBolla)) 
+   		{var node = ReactDOM.findDOMNode(this.refs.formRigaBolla);
+   		this.props.storeMeasure('formRigaBollaHeight', node.clientHeight);
+   		}
  }
  
  componentWillMount() {
@@ -79,7 +82,7 @@ render()
     	   </Col>
       </Row>
     
-      <Row type="flex" align="bottom" className='bottom-form'>
+      <Row type="flex" align="bottom" className='bottom-form' style={{height: '250px'}} ref='formRigaBolla'>
    
      <Col span={4}>
      <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} />
@@ -87,7 +90,7 @@ render()
       </Col>
        <Col span={20}>
     
-      <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} ref='formRigaBolla'/>
+      <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} />
       </Col>
         
     </Row>

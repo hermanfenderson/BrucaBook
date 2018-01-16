@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import WrappedForm from '../../../components/WrappedForm'
 import {period2month, moment2period} from '../../../helpers/form'
-import {Col} from 'antd'
 
 class FormCassa extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -43,8 +42,7 @@ componentWillMount = () =>
           <WrappedForm.Button type={'button'} formColumnLayout={{span:3, offset:10}} itemStyle={{width: '80%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
         <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:3}} itemStyle={{width: '80%'}}>{submitLabel}</WrappedForm.Button>
-        <Col span={10} />
-         </WrappedForm.Group>
+          </WrappedForm.Group>
         
      
        <WrappedForm.Group formGroupLayout={{gutter:0}}>
