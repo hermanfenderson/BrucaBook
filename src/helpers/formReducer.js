@@ -196,7 +196,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   	    break;
 	   	    
 	   case this.CHANGE_EDITED_ITEM:
-	      	newState =  {...state, editedItem: transformAndValidateEditedItem(editedItemCopy(state.editedItem), action.name, action.value)};
+	      	newState =  {...state, editedItem: transformAndValidateEditedItem(editedItemCopy(state.editedItem), action.name, action.value, state.itemsArray)};
 			break;
 		
 	   case this.SET_SELECTED_ITEM:

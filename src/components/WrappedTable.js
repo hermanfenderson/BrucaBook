@@ -4,6 +4,8 @@ forma: filters={{titolo: 'arte', autore: 'paola'}}
 
 Aggiungo il concetto di pinned...funziona con un campo boolean che passo come parametro e con un metodo da chiamare
 quando viene premuto...
+
+Aggiunto il cocnetto di custom renderer... passo un oggetto customRowRender con il nome del campo per cui voglio cambiare il comportamento...
 */
 
 import React from 'react';
@@ -73,7 +75,10 @@ render ()
   	             	'title':  header.label,
   	             	'dataIndex': header.dataField,
   	             	 'width': header.width,
-  	             	'render': (text, record) => {return this.ordinaryRowRender(text,record)}
+  	             	'render': (text, record) => 
+  	             	
+  	            			    {return (this.props.customRowRender && this.props.customRowRender[header.dataField]) ? (this.props.customRowRender[header.dataField])(text,record) : this.ordinaryRowRender(text,record)}
+  	            	
   	            		})
   	            	}
   				);
@@ -104,7 +109,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(
-        	 <Table size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data}/>
+        	 <Table  expandedRowRender={this.props.expandedRowRender} size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data}/>
        		);	
      }	
 } 

@@ -11,12 +11,13 @@ toggle = () => {
     this.props.toggleCollapsed();
   }
   
+/*
 menuSet = (destination) => 
 {
 	let selected = [];
 	switch (destination)
 		{
-			case 'acquisti': selected = ['1'];  break;
+			case 'acquisti': selected = ['acquisti'];  break;
 			case 'vendite': selected = ['2'];  break;
 			case 'inventari': selected = ['3'];  break;
 			case 'itemCatalogo': selected = ['4'];  break;
@@ -28,10 +29,13 @@ menuSet = (destination) =>
 		}
 	this.props.setMenuSelectedKeys(selected);	
 }
+*/
+
 
 back = () => {
 	this.props.history.goBack();
-	setTimeout(() => {this.menuSet(document.location.href.split('/')[3]);},0); //Il pezzo del path che mi interessa...
+//	setTimeout(() => {this.menuSet(document.location.href.split('/')[3]);},0); //Il pezzo del path che mi interessa...
+	setTimeout(() => {this.props.setMenuSelectedKeys(document.location.href.split('/')[3]);},0); //Il pezzo del path che mi interessa...
 	
 	
 }

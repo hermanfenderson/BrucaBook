@@ -24,12 +24,7 @@ componentDidMount()
 	        this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
-		if ((this.props.scontrino && !this.props.selectedItem) || (this.props.scontrino && this.props.selectedItem && (this.props.scontrino !== this.props.selectedItem.key))) {
-     	 	if (this.props.index.chiavi && (this.props.index.chiavi[this.props.scontrino]>=0) && this.props.data[this.props.index.chiavi[this.props.scontrino]]) 
-    			{this.props.selectRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
-    			}
-     	
-     }	
+		
  }
 	
 selectRow = (row) => {
@@ -57,7 +52,7 @@ ordinaryRowRender = (cell,row) => {
 } 
 
 onRow=(record, other) => ({
-  onClick: () => {if (lastRowClicked!== record.key) {console.log("sono qui"); lastRowClicked = record.key; this.selectRow(record);}}
+  onClick: () => {if (lastRowClicked!== record.key) { lastRowClicked = record.key; this.selectRow(record);}}
 })
 
   
@@ -146,7 +141,12 @@ class TableCassa extends Component
     	   	params.push(this.props.cassa);
     	   	this.props.listenRigaCassa(params); 
     	   	}
-    	   	
+       if ((this.props.scontrino && !this.props.selectedItem) || (this.props.scontrino && this.props.selectedItem && (this.props.scontrino !== this.props.selectedItem.key))) {
+     	 	if (this.props.index.chiavi && (this.props.index.chiavi[this.props.scontrino]>=0) && this.props.data[this.props.index.chiavi[this.props.scontrino]]) 
+    			{this.editRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
+    			}
+     	
+     }		   	
 	}
 	
 	

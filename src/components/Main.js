@@ -14,6 +14,7 @@ import Inventario from '../scenes/inventario';
 import ElencoInventari from '../scenes/elencoInventari';
 import DettagliArticolo from '../scenes/dettagliArticolo';
 import ReadmeViewer from '../scenes/readmeViewer';
+import Fornitori from '../scenes/fornitori';
 //import GestioneScontrino from '../containers/GestioneScontrino';
 //        		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
 //      		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
@@ -45,8 +46,9 @@ const Main= (props) =>
 		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
 		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props}/>} />
-    					      		                   
-		        						<Route path="/itemCatalogo" component={RequireAuth(GestioneItemCatalog)} />
+    					      		     <Route path="/fornitori" component={RequireAuth(Fornitori)} />
+    					      			              
+		        						<Route path="/catalogo" component={RequireAuth(GestioneItemCatalog)} />
     					      			<Route exact path='/version' component={RequireAuth(ReadmeViewer)}/>
 		        					   
 						    		

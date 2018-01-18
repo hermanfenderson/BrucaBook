@@ -242,3 +242,11 @@ export function isEqual(value, other) {
     return true;
 
 };
+
+//Serve a generare una lista per selettori
+export const objSelector = (obj, field) =>
+{   let selector = {};
+	for (var propt in obj) selector[propt] = obj[propt][field];
+	return(selector);
+}
+

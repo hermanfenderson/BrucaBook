@@ -68,6 +68,8 @@ export const getSelettoreIVA = (state) => {
 		
 		aliquoteOut[propt] = aliquoteNow[propt]*100 + '% (' + IVA[propt] +')';
 		}
-     return(aliquoteOut);		
+     return(aliquoteOut);	
 }
+
+
 

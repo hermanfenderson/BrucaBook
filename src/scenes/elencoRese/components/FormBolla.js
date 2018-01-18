@@ -2,8 +2,6 @@ import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import WrappedForm from '../../../components/WrappedForm'
 import {period2month, moment2period} from '../../../helpers/form'
-import {objSelector} from '../../../helpers/form'
-
 
 class FormBolla extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -40,7 +38,7 @@ componentWillMount = () =>
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
          <WrappedForm.Group >
         <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}}/>
-        <WrappedForm.AutoCompleteList field='fornitore' label='Fornitore' list={objSelector(this.props.fornitori,'nome')}  required={true} formColumnLayout={{span: 6, offset: 2}} itemStyle={{marginRight: 10}}/>
+        <WrappedForm.Input field='fornitore' label='Fornitore'  required={true} formColumnLayout={{span: 6, offset: 2}} itemStyle={{marginRight: 10}}/>
         <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
         <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 20}}/>
       </WrappedForm.Group>

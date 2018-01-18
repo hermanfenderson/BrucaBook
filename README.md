@@ -10,6 +10,8 @@ Storia delle versioni
 * Bug fixing: il menu utente lasciava in disordine il menu principale (#170)
 * Bug fixing: ancora qualche scostamento nei form (scontrini)
 * Avviato il test applicativo con Jest (per ora, solo unit)
+* Prima gestione anagrafica fornitori
+* Primissimo rilascio di una funzione rese... per ora è un clone o quasi di bolla. 
 
 ### Versione 0.5.6
 * Fatto spazio tra form e tabelle (in modo migliore)

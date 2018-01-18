@@ -7,6 +7,7 @@ import CassaReducer, * as fromCassa from './cassa';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
 import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
+import FornitoriReducer, * as fromFornitori from './fornitori';
 import InventarioReducer, * as fromInventario from './inventario';
 import DettagliArticoloReducer, * as fromDettagliArticolo from './dettagliArticolo';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
   elencoInventari: ElencoInventariReducer,
+  fornitori: FornitoriReducer,
   inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
@@ -96,6 +98,13 @@ export const getTableElencoCasseScroll = (state)  => {return fromElencoCasse.get
 export const getReadOnlyFormCassa = (state)  => {return fromElencoCasse.getReadOnlyForm(state.elencoCasse)};
 export const getPeriodElencoCasse = (state) => {return fromElencoCasse.getPeriod(state.elencoCasse)};
 export const getListeningItemElencoCasse = (state) => {return fromElencoCasse.getListeningItem(state.elencoCasse)};
+
+//Scene Fornitori
+export const getFornitori = (state) => {return fromFornitori.getItems(state.fornitori)};
+export const getEditedFornitore = (state) => {return fromFornitori.getEditedItem(state.fornitori)};
+export const getTableFornitoriHeight = (state) => {return fromFornitori.getTableHeight(state.fornitori)};
+export const getTableFornitoriScroll = (state)  => {return fromFornitori.getTableScroll(state.fornitori)};
+export const getListeningItemFornitori = (state) => {return fromFornitori.getListeningItem(state.fornitori)};
 
 //Scene Cassa
 export const getRigheCassa = (state) => {return fromCassa.getItems(state.cassa)};

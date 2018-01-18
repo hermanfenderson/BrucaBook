@@ -122,7 +122,7 @@ export function caricaAnagrafiche() {
 	 		dispatch ({type: MASTER_DATA_LOADED, payload: snapshot.val()})	
 	 		})
 	 		
-	 		Firebase.database().ref(urlFactory(getState, 'anagraficheLocali')).once('value', snapshot => {
+	 		Firebase.database().ref(urlFactory(getState, 'anagraficheLocali')).on('value', snapshot => {
 	 		
 	 		dispatch ({type: LOCAL_MASTER_DATA_LOADED, payload: snapshot.val()})	
 	 		})

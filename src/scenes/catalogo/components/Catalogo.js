@@ -6,7 +6,7 @@ import FormCatalogo from '../containers/FormCatalogo';
 
 class Catalogo extends React.Component 
 {
-componentDidMount = () => {this.props.setHeaderInfo("Catalogo")}
+componentDidMount = () => {this.props.setHeaderInfo("Anagrafica - Catalogo")}
 
 
 render()

@@ -58,7 +58,8 @@ export function urlFactory(getState, destination, params, itemId)
 				case "righeInventario": url = prefissoNegozio(getState)+'inventari/'  +params[0] ; break;
 				case "righeElencoInventari": url = prefissoNegozio(getState)+'elencoInventari'; break;
 				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
-			
+			     case "fornitori": url = prefissoNegozio(getState)+'anagrafiche/fornitori'; break;
+			     
 				
 				default: return null;
 			}
