@@ -6,7 +6,7 @@ import {isPositiveInteger, isValidBookCode} from './validators';
 import {isValidEAN} from './ean';
 import {isComplete} from './catalog';
 import moment from 'moment';
-
+import {store} from '../';
 
 
 export const editedItemInitialState = (editedItemValuesInitialState, initOverrides) =>
@@ -248,5 +248,11 @@ export const objSelector = (obj, field) =>
 {   let selector = {};
 	for (var propt in obj) selector[propt] = obj[propt][field];
 	return(selector);
+}
+
+export const nomeFornitoreById = (id) =>
+{
+	return(store.getState().status.localMasterData.fornitori[id].nome); //Sporchissima ma me ne fotto!
+
 }
 

@@ -4,7 +4,7 @@ import moment from 'moment';
 import 'moment/locale/it';
 
 //import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, moment2period} from '../helpers/form';
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem, nomeFornitoreById} from '../helpers/form';
 
 
 import {SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
@@ -17,7 +17,8 @@ moment.locale("it");
 
 const editedBollaValuesInitialState = 
 	  {			riferimento: '',
-				fornitore: '',
+				fornitore: null,
+				nomeFornitore: '',
 				dataDocumento: moment(),
 				dataCarico: moment(),
 				dataRendiconto: null,
@@ -68,16 +69,16 @@ function transformAndValidateEditedBolla(cei, name, value)
 {  	
 	cei.values[name] = value;
     if ((name === 'tipoBolla') && value === 'R') cei.values.dataRendiconto = moment();
+    if (name === 'fornitore') cei.values.nomeFornitore = nomeFornitoreById(cei.values.fornitore);
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
    
    errMgmt(cei, 'riferimento','required','Campo obbligatorio',  (cei.values.riferimento.length === 0), false);
-   errMgmt(cei, 'fornitore','required','Campo obbligatorio',  (cei.values.fornitore.length === 0), false);
+   errMgmt(cei, 'fornitore','required','Campo obbligatorio',  (cei.values.fornitore === null), false);
    errMgmt(cei, 'dataDocumento','invalidDate','Data non valida',  (!cei.values.dataDocumento.isValid()));
     errMgmt(cei, 'dataCarico','invalidDate','Data non valida',  (!cei.values.dataCarico.isValid()));
     errMgmt(cei, 'dataRendiconto','invalidDate','Data non valida',  ((cei.values.tipoBolla === 'R') && (!cei.values.dataRendiconto.isValid())));
-   	
-    //Se ho anche solo un errore... sono svalido.
+     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
     return cei;
 }

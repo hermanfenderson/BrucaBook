@@ -1,6 +1,4 @@
 import {FormActions} from '../helpers/formActions';
-import Firebase from 'firebase';
-import {urlFactory, addCreatedStamp} from '../helpers/firebase'
 
 export const SCENE = 'FORNITORI';
 

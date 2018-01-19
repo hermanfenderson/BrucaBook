@@ -2,17 +2,22 @@
 //RIceve una key e un valore da visualizzare (eventualmente filtrato con objSelector). Filtra per inizio parola
 
 import React from 'react';
-import { Select, AutoComplete } from 'antd';
-const { Option } = Select;
- 
+import { AutoComplete } from 'antd';
+const { Option } = AutoComplete;
+var lastValue = null;
+
+
 
 class AutoCompleteList extends React.Component 
 {
  state = {
     options: [],
+    value: null,
+ 
   }
 	
-
+ 
+ 
  handleSearch = (value) => {
  	let options = ((list)	=> {
 	let phrase2 = [];
@@ -23,18 +28,32 @@ class AutoCompleteList extends React.Component
 })(this.props.list);
 
     this.setState({
-      options: options
+      options: options,
+      value: value
        });
   }
 
-
+handleSelect = (value, option) => {
+ this.props.onChange(value);
+ let label = option.props.children;
+ this.setState({value: label, options: []})
+}
   
   render()
-  {	
-  const {options} = this.state;	
-  return (<AutoComplete
-     onSelect={this.props.onChange}
+  {
+   var {options, value} = this.state;
+  
+   if (this.props.value !== lastValue)
+   		{
+		lastValue = this.props.value;
+	    value = this.props.list[lastValue];
+		}
+   
+   
+    return (<AutoComplete 
+     onSelect={this.handleSelect}
      onSearch={this.handleSearch}
+     value={value}
   >
   {options}
   </AutoComplete>

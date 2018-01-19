@@ -9,7 +9,7 @@ import { Row, Col} from 'antd'
 
 class Fornitori extends Component {
 componentDidMount() {
-    	if (ReactDOM.findDOMNode(this.refs.formInventario)) this.props.storeMeasure('formFornitoreHeight', ReactDOM.findDOMNode(this.refs.formInventario).clientHeight);
+    	if (ReactDOM.findDOMNode(this.refs.formFornitore)) this.props.storeMeasure('formFornitoreHeight', ReactDOM.findDOMNode(this.refs.formFornitore).clientHeight);
     	this.props.setHeaderInfo('Anagrafica - Fornitori');
     	
  }
@@ -23,8 +23,7 @@ componentDidMount() {
 render()
 {
 
-////Era...       <Col style={{'marginTop': '100px'}} span={4}>
-	
+
 return (
  <div>	
   <Row>

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import WrappedTable from '../../../components/WrappedTable';
-import {Modal} from 'antd';
 
 
 //E' un dato.... che passo come costante...
@@ -25,7 +24,7 @@ class TableFornitori extends Component
 	
 	
 	deleteRow = (row) => {
-	  this.props.deleteFornitori(null, row.key);
+	  this.props.deleteFornitore(null, row.key);
 	}
 	
 	editRow = (row) => {

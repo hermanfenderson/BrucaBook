@@ -26,6 +26,7 @@ defaultValue = this.props.defaultValue
   return (<Select
     defaultValue={this.defaultValue}
     onChange={this.props.onChange}
+    value={this.props.value}
   >
   {this.options}
   </Select>

@@ -9,7 +9,7 @@ import {period2month} from '../../../helpers/form'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
-			    {dataField: 'fornitore', label: 'Fornitore', width: '300px'},
+			    {dataField: 'nomeFornitore', label: 'Fornitore', width: '300px'},
 			    {dataField: 'tipoBolla', label: 'Tipo', width: '70px'},
 			    
 			    {dataField: 'dataDocumento', label: 'Data Doc', width: '200px'},

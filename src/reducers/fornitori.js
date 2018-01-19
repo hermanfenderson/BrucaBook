@@ -51,8 +51,7 @@ const fornitoriR = new FormReducer('FORNITORI',null, transformEditedFornitori, t
 function transformAndValidateEditedFornitori(cei, name, value, listaFornitori)
 {  	
 	cei.values[name] = value;
-
-  //I messaggi vengono ricalcolati a ogni iterazione...
+     //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
    
    if (name==='nome') 
@@ -76,7 +75,7 @@ export default function fornitori(state = initialState(), action) {
     case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formFornitoriHeight'] -130;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formFornitoreHeight'] -130;
    	    newState = {...state, tableHeight: height};
         break;  
      default:
