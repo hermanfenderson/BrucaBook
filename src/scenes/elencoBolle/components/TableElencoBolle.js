@@ -59,7 +59,7 @@ class TableElencoBolle extends Component
 	
 	
 	deleteRow = (row) => {
-	   const deleteBolla = () => {this.props.deleteBolla(this.props.period, row.key);};
+	   const deleteBolla = () => {this.props.deleteBolla(this.props.period, row.key, row);};
 	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
     		title: 'La bolla non è vuota. Vuoi elminarla?',
     		content: 'La bolla non è vuota: se premi OK cancelli anche tutti i libri che contiene.',

@@ -11,29 +11,29 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
 
-var currentListenedIdBolla = null;
+var currentListenedIdResa = null;
 
 //Per gestire in modo smmooth il ricaricamento!
 
-class TableBolla extends Component 
+class TableResa extends Component 
     {
     componentDidMount() {
-    	if (this.props.listeningItemBolla) currentListenedIdBolla = this.props.listeningItemBolla[2];   
-    		//Ascolto modifiche sulle righe della bolla
-    	if (currentListenedIdBolla !== this.props.idBolla)
+    	if (this.props.listeningItemResa) currentListenedIdResa = this.props.listeningItemResa[2];   
+    		//Ascolto modifiche sulle righe della Resa
+    	if (currentListenedIdResa !== this.props.idResa)
     	   {
-    	   	if (currentListenedIdBolla) 
+    	   	if (currentListenedIdResa) 
     	   		{
     	   			let params = [...this.props.period];
-    	   			params.push(currentListenedIdBolla);
+    	   			params.push(currentListenedIdResa);
     
-    	   			this.props.offListenRigaBolla(params); 
-    	   			this.props.resetTableBolla();
+    	   			this.props.offListenRigaResa(params); 
+    	   			this.props.resetTableResa();
     	   		}
     	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
     	   	let params = [...this.props.period];
-    	   	params.push(this.props.idBolla);
-    	   	this.props.listenRigaBolla(params); 
+    	   	params.push(this.props.idResa);
+    	   	this.props.listenRigaResa(params); 
     	   	}
     	   	
 	}
@@ -43,14 +43,14 @@ class TableBolla extends Component
 	
 	deleteRow = (row) => {
 		let params = [...this.props.period];
-    	params.push(this.props.idBolla);
-		this.props.deleteRigaBolla(params,row.key,row);
+    	params.push(this.props.idResa);
+		this.props.deleteRigaResa(params,row.key,row);
 	}
 	
 	editRow = (row) => {
 		let params = [...this.props.period];
-    	params.push(this.props.idBolla);
-		this.props.setSelectedRigaBolla(row);
+    	params.push(this.props.idResa);
+		this.props.setSelectedRigaResa(row);
 	}
 	
 
@@ -71,12 +71,12 @@ class TableBolla extends Component
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
-    	delete props['deleteRigaBolla']; //Non la passo liscia...
-    	delete props['setSelectedRigaBolla']; //Idem
+    	delete props['deleteRigaResa']; //Non la passo liscia...
+    	delete props['setSelectedRigaResa']; //Idem
     	  return(
 			<WrappedTable {...props}  customRowRender={this.customRowRender} expandedRowRender={this.expandedRowRender} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	
-export default TableBolla;
+export default TableResa;
 

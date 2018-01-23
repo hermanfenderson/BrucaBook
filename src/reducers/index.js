@@ -4,8 +4,12 @@ import AuthReducer, * as fromAuth from './auth';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import CassaReducer, * as fromCassa from './cassa';
+import ResaReducer, * as fromResa from './resa';
+
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
+import ElencoReseReducer, * as fromElencoRese from './elencoRese';
+
 import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
 import FornitoriReducer, * as fromFornitori from './fornitori';
 import InventarioReducer, * as fromInventario from './inventario';
@@ -22,10 +26,13 @@ const rootReducer = combineReducers({
   auth: AuthReducer,
   bolla: BollaReducer,
   cassa: CassaReducer,
+  resa: ResaReducer,
+ 
   dettagliArticolo: DettagliArticoloReducer,
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
   elencoInventari: ElencoInventariReducer,
+  elencoRese: ElencoReseReducer,
   fornitori: FornitoriReducer,
   inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
@@ -68,6 +75,26 @@ export const getTableElencoBolleScroll = (state)  => {return fromElencoBolle.get
 export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
 export const getPeriod = (state) => {return fromElencoBolle.getPeriod(state.elencoBolle)};
 export const getListeningItem = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
+
+//Scene ElencoRese
+export const getElencoRese = (state) => {return fromElencoRese.getItems(state.elencoRese)};
+export const getEditedResa = (state) => {return fromElencoRese.getEditedItem(state.elencoRese)};
+export const getTableElencoReseHeight = (state) => {return fromElencoRese.getTableHeight(state.elencoRese)};
+export const getTableElencoReseScroll = (state)  => {return fromElencoRese.getTableScroll(state.elencoRese)};
+export const getReadOnlyFormResa = (state)  => {return fromElencoRese.getReadOnlyForm(state.elencoRese)};
+export const getPeriodElencoRese = (state) => {return fromElencoRese.getPeriod(state.elencoRese)};
+export const getListeningItemElencoRese = (state) => {return fromElencoRese.getListeningItem(state.elencoRese)};
+
+//Scene Resa
+export const getRigheResa = (state) => {return fromResa.getItems(state.resa)};
+export const getEditedRigaResa = (state) => {return fromResa.getEditedItem(state.resa)};
+export const getTestataResa = (state) => {return fromResa.getTestataResa(state.resa)};
+export const getTableResaHeight = (state) => {return fromResa.getTableHeight(state.resa)};
+export const getTableResaScroll = (state)  => {return fromResa.getTableScroll(state.resa)};
+export const getListeningTestataResa = (state) => {return fromResa.getListeningTestataResa(state.resa)};
+export const getListeningItemResa = (state) => {return fromResa.getListeningItemResa(state.resa)};
+export const isStaleTotaliResa = (state) => {return fromResa.isStaleTotali(state.resa)};
+export const getMessageBufferResa = (state) => {return fromResa.getMessageBuffer(state.resa)};
 
 //Scene Inventario
 export const getRigheInventario = (state) => {return fromInventario.getItems(state.inventario)};

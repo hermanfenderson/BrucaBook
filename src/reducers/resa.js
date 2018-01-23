@@ -1,3 +1,5 @@
+//Il reducer RESA considera che i dati sono quelli della bolla originaria. E non dovrebbe farli modificare... ma lascio vivi i controlli se voglio gestire eccezioni...
+
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 
@@ -38,7 +40,7 @@ const initialState = () => {
  
     
 //Metodi reducer per le Form
-const rigaBollaR = new FormReducer('BOLLA', foundCompleteItem, null, null, initialState); 
+const rigaResaR = new FormReducer('RESA', foundCompleteItem, null, null, initialState); 
 
 
 function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
@@ -47,27 +49,27 @@ function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
 }  
 
 //Si comporta diversamente nei vari casi...
-function pricesMgmt(changedEditedRigaBolla, name)
+function pricesMgmt(changedEditedRigaResa, name)
 {
-	const prezzoListino = changedEditedRigaBolla.values['prezzoListino'];	
-	const sconto1 = changedEditedRigaBolla.values['sconto1'];
-	const sconto2 = changedEditedRigaBolla.values['sconto2'];
-	const sconto3 = changedEditedRigaBolla.values['sconto3'];
-	const pezzi = changedEditedRigaBolla.values['pezzi'];
-	const manSconto = changedEditedRigaBolla.values['manSconto'];
+	const prezzoListino = changedEditedRigaResa.values['prezzoListino'];	
+	const sconto1 = changedEditedRigaResa.values['sconto1'];
+	const sconto2 = changedEditedRigaResa.values['sconto2'];
+	const sconto3 = changedEditedRigaResa.values['sconto3'];
+	const pezzi = changedEditedRigaResa.values['pezzi'];
+	const manSconto = changedEditedRigaResa.values['manSconto'];
 	if (name !== 'prezzoUnitario' && sconto1>=0 && sconto2>=0 && sconto3>=0)
 		{
-		if (manSconto) changedEditedRigaBolla.values['prezzoUnitario'] = prezzoListino;
-		else changedEditedRigaBolla.values['prezzoUnitario'] = discountPrice(prezzoListino, sconto1, sconto2, sconto3);
+		if (manSconto) changedEditedRigaResa.values['prezzoUnitario'] = prezzoListino;
+		else changedEditedRigaResa.values['prezzoUnitario'] = discountPrice(prezzoListino, sconto1, sconto2, sconto3);
 		}
-	const prezzoUnitario = changedEditedRigaBolla.values['prezzoUnitario'];
-	if (prezzoUnitario >=0 && pezzi>=0) changedEditedRigaBolla.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);	
+	const prezzoUnitario = changedEditedRigaResa.values['prezzoUnitario'];
+	if (prezzoUnitario >=0 && pezzi>=0) changedEditedRigaResa.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);	
 }
 
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformAndValidateEditedRigaBolla(cei, name, value)
+function transformAndValidateEditedRigaResa(cei, name, value)
 {  	
 	cei.values[name] = value;
 	//Gestione cambiamenti
@@ -169,19 +171,19 @@ function foundCompleteItem(editedItem, action)
        return(cei);
 	}
 
-export default function bolla(state = initialState(), action) {
+export default function resa(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -130;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaResaHeight'] -130;
    	    newState = {...state, tableHeight: height};
         break;
   	
     default:
-        newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla);
+        newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;
     	break;
    
@@ -193,12 +195,13 @@ export default function bolla(state = initialState(), action) {
 //Questi rimarranno identici in tutti i casi... Posso migliorare queste ripetizioni inutili?
  export const getItems = (state) => {return state.itemsArray};  
  export const getEditedItem = (state) => {return state.editedItem};  
- export const getTestataBolla = (state) => {return state.testata};
- export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
+ export const getTestataResa = (state) => {return state.testata};
+ //Per certo non consento di inserire un item che non ho censito!!!
+ //export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
- export const getListeningTestataBolla = (state) => {return state.listeningTestata};
- export const getListeningItemBolla = (state) => {return state.listeningItem};
+ export const getListeningTestataResa = (state) => {return state.listeningTestata};
+ export const getListeningItemResa = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  

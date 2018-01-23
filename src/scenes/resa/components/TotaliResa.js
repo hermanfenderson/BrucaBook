@@ -2,9 +2,9 @@ import React from 'react'
 import {Row,Spin} from 'antd'
 
 
-const TotaliBolla = (props) => 
+const TotaliResa = (props) => 
     {
-    	const totali = props.testataBolla ? props.testataBolla.totali : null;
+    	const totali = props.testataResa ? props.testataResa.totali : null;
     	 if (totali) return(
 		  <Spin spinning={props.staleTotali}>	
 
@@ -19,5 +19,5 @@ const TotaliBolla = (props) =>
     	 else return   <Spin spinning={props.staleTotali} />		
     }		
 	
-export default TotaliBolla;
+export default TotaliResa;
 

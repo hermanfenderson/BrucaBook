@@ -10,5 +10,5 @@ Contiene una tabella di righe...
 
 */
 
-import Bolla from './containers/Bolla';
-export default Bolla;
+import Resa from './containers/Resa';
+export default Resa;

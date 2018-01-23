@@ -1,6 +1,6 @@
 import {FormActions} from '../helpers/formActions';
 
-export const SCENE = 'BOLLA';
+export const SCENE = 'RESA';
 
 
 //FUNZIONI DA VERIFICARE
@@ -22,7 +22,7 @@ function preparaItem(riga)
 
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
-export const rigaBollaFA = new FormActions(SCENE, preparaItem, 'righeBolla','righeElencoBolle', true);
+export const rigaResaFA = new FormActions(SCENE, preparaItem, 'righeResa','righeElencoRese', true);
 
 //Se devo fare override.... definisco metodi alternativi qui...
 

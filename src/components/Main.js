@@ -8,8 +8,11 @@ import UserMgmt from '../scenes/userMgmt';
 import ElencoBolle from '../scenes/elencoBolle';
 import ElencoCasse from '../scenes/elencoCasse';
 import Scontrino from '../scenes/scontrino';
+import ElencoRese from '../scenes/elencoRese';
 
 import GestioneBolla from '../scenes/bolla';
+import Resa from '../scenes/resa';
+
 import Inventario from '../scenes/inventario';
 import ElencoInventari from '../scenes/elencoInventari';
 import DettagliArticolo from '../scenes/dettagliArticolo';
@@ -43,6 +46,9 @@ const Main= (props) =>
     									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
     									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
+    										<Route exact path='/rese/:anno/:mese' component={RequireAuth(ElencoRese)}/>
+    								     <Route path='/resa/:anno/:mese/:id' component={RequireAuth(Resa)}/>
+    									
 		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
 		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props}/>} />

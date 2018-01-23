@@ -1,8 +1,8 @@
 import {FormActions} from '../helpers/formActions';
 import {moment2period} from '../helpers/form';
 
-export const SCENE = 'ELENCOBOLLE';
-export const SET_PERIOD_ELENCOBOLLE = 'SET_PERIOD_ELENCOBOLLE'
+export const SCENE = 'ELENCORESE';
+export const SET_PERIOD_ELENCORESE = 'SET_PERIOD_ELENCORESE'
 
 
 //FUNZIONI DA VERIFICARE
@@ -10,8 +10,7 @@ export const SET_PERIOD_ELENCOBOLLE = 'SET_PERIOD_ELENCOBOLLE'
 function preparaItem(riga)
    {
    	riga['dataDocumento'] = riga['dataDocumento'].valueOf();
-   	riga['dataCarico'] = riga['dataCarico'].valueOf();
-   	if (riga['dataRendiconto']) riga['dataRendiconto'] = riga['dataRendiconto'].valueOf();
+   	riga['dataScarico'] = riga['dataScarico'].valueOf();
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
    	if ('totali' in riga) {delete riga.totali}
    	
@@ -21,12 +20,12 @@ function preparaItem(riga)
 
 
 
-export const setPeriodElencoBolle = (moment) =>
+export const setPeriodElencoRese = (moment) =>
 {
 	const period = moment2period(moment);
 	return(
 		 {
-		 	'type': SET_PERIOD_ELENCOBOLLE,
+		 	'type': SET_PERIOD_ELENCORESE,
 		 	period: period
 		 }
 		)
@@ -36,7 +35,7 @@ export const setPeriodElencoBolle = (moment) =>
 
 
 //METODI DEL FORM
-export const bollaFA = new FormActions(SCENE, preparaItem, 'righeElencoBolle');
+export const resaFA = new FormActions(SCENE, preparaItem, 'righeElencoRese');
 
 //Se devo fare override.... definisco metodi alternativi qui...
 //Override di submit.... devo gestire il salvataggio in gerarchia....

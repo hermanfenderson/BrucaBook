@@ -1,4 +1,4 @@
 //E' solo per comodità futura di lettura...
 
-import ElencoBolle from './containers/ElencoBolle';
-export default ElencoBolle;
+import ElencoRese from './containers/ElencoRese';
+export default ElencoRese;

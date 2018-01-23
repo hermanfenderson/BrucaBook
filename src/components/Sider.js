@@ -16,6 +16,7 @@ class Sider extends React.Component {
 			case 'acquisti': link='/acquisti/'+moment().format('YYYY/MM'); break;
 			case 'vendite': link='/vendite/'+moment().format('YYYY/MM'); break;
 			case 'inventari': link='/inventari'; break;
+			case 'rese': link='/rese/'+moment().format('YYYY/MM'); break;
 			
 			case 'catalogo': link='/catalogo'; break;
 				case 'fornitori': link='/fornitori'; break;
@@ -48,6 +49,10 @@ class Sider extends React.Component {
             <Menu.Item key="inventari">
               <Icon type="tag" />
               <span>Inventario</span>
+            </Menu.Item>
+             <Menu.Item key="rese">
+              <Icon type="rocket" />
+              <span>Rese</span>
             </Menu.Item>
             <SubMenu key="sub2" title={<span><Icon type="database" /><span>Anagrafiche</span></span>}>
 	        

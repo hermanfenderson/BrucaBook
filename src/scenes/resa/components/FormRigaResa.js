@@ -1,14 +1,14 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
 
-class FormRigaBolla extends Component {
+class FormRigaResa extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
 onChange = (name, value) => {
-	   	this.props.changeEditedRigaBolla(name, value)};
+	   	this.props.changeEditedRigaResa(name, value)};
 		
 onSubmit = (e) => {
 	e.preventDefault();
-	var valuesTestata = {...this.props.testataBolla};
+	var valuesTestata = {...this.props.testataResa};
 	delete valuesTestata.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
     delete valuesTestata.createdBy;
     delete valuesTestata.createdAt;
@@ -16,26 +16,26 @@ onSubmit = (e) => {
     delete valuesTestata.changedAt;
     delete valuesTestata.key;
 	valuesTestata.data = valuesTestata.dataCarico;
-    const values =  {...this.props.editedRigaBolla.values, ...valuesTestata};
+    const values =  {...this.props.editedRigaResa.values, ...valuesTestata};
     let params = [...this.props.period];
-    params.push(this.props.idBolla);
+    params.push(this.props.idResa);
     	   
-	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values); //Per sapere cosa fare... dopo
+	this.props.submitEditedRigaResa(this.props.editedRigaResa.isValid, this.props.editedRigaResa.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {
-	this.props.resetEditedRigaBolla();
+	this.props.resetEditedRigaResa();
 }
 
 
 
   render() {
-  	const formValues = this.props.editedRigaBolla.values;
-  	const errorMessages = this.props.editedRigaBolla.errorMessages;
-  	const willFocus = this.props.editedRigaBolla.willFocus;
+  	const formValues = this.props.editedRigaResa.values;
+  	const errorMessages = this.props.editedRigaResa.errorMessages;
+  	const willFocus = this.props.editedRigaResa.willFocus;
   	const prezzoMan = formValues['manSconto'];
-  	const loading = this.props.editedRigaBolla.loading;
-  	const readOnlyEAN = ((this.props.editedRigaBolla.selectedItem !== null) || (this.props.editedRigaBolla.eanState === 'PARTIAL'))
+  	const loading = this.props.editedRigaResa.loading;
+  	const readOnlyEAN = ((this.props.editedRigaResa.selectedItem !== null) || (this.props.editedRigaResa.eanState === 'PARTIAL'))
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:0}}>
@@ -59,7 +59,7 @@ resetForm = () => {
         <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:4}} itemStyle={{marginRight: 20}}/>
        <WrappedForm.Button itemStyle={{width: '90%'}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  itemStyle={{width: '90%'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaBolla.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  itemStyle={{width: '90%'}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{(this.props.editedRigaResa.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
      
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:0}} >
@@ -73,4 +73,4 @@ resetForm = () => {
     )
   }
 }
-export default FormRigaBolla;
+export default FormRigaResa;

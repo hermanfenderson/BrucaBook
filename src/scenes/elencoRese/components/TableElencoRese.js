@@ -9,12 +9,10 @@ import {period2month} from '../../../helpers/form'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
-			    {dataField: 'fornitore', label: 'Fornitore', width: '300px'},
-			    {dataField: 'tipoBolla', label: 'Tipo', width: '70px'},
-			    
+			    {dataField: 'nomeFornitore', label: 'Fornitore', width: '300px'},
 			    {dataField: 'dataDocumento', label: 'Data Doc', width: '200px'},
-			    {dataField: 'dataCarico', label: 'Data Carico', width: '200px'},
-			    {dataField: 'dataRendiconto', label: 'Data Rend.', width: '200px'},
+			    {dataField: 'dataScarico', label: 'Data Scarico', width: '200px'},
+			    {dataField: 'stato', label: 'Stato', width: '200px'},
 			    
 			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '200px'},
 			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '100px'},
@@ -24,7 +22,7 @@ const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
 
 
 
-class TableElencoBolle extends Component 
+class TableElencoRese extends Component 
     {
     periodMount = () => {
   if (this.props.period)
@@ -33,7 +31,7 @@ class TableElencoBolle extends Component
     		//Ascolto modifiche sulle bolle... devo passare anno (voglio sentire un anno intero per ora. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
     	if (!currentListened) 
     		{   	
-    			this.props.listenBolla(this.props.period);
+    			this.props.listenResa(this.props.period);
     		}
     	else 
     		{
@@ -41,7 +39,7 @@ class TableElencoBolle extends Component
     				{
     				    this.props.offListenBolla(currentListened);
     				    this.props.resetTable();
-    					this.props.listenBolla(this.props.period);
+    					this.props.listenResa(this.props.period);
  
     				}
     		}
@@ -59,31 +57,31 @@ class TableElencoBolle extends Component
 	
 	
 	deleteRow = (row) => {
-	   const deleteBolla = () => {this.props.deleteBolla(this.props.period, row.key);};
+	   const deleteResa = () => {this.props.deleteResa(this.props.period, row.key);};
 	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
-    		title: 'La bolla non è vuota. Vuoi elminarla?',
-    		content: 'La bolla non è vuota: se premi OK cancelli anche tutti i libri che contiene.',
+    		title: 'La resa non è vuota. Vuoi elminarla?',
+    		content: 'La resa non è vuota: se premi OK cancelli anche tutti i libri che contiene.',
     		okText: 'Si',
     		okType: 'danger',
     		cancelText: 'No',
-    		onOk() {deleteBolla()
+    		onOk() {deleteResa()
     			
     		},
     		onCancel() {
     		},});
     		
 		//Gestisco la situazione che non sia vuota la bolla...
-		else deleteBolla();
+		else deleteResa();
 	}
 	
 	editRow = (row) => {
-		this.props.setSelectedBolla(row);
+		this.props.setSelectedResa(row);
 	}
 	
 	selectRow = (row) => {
-		this.props.setSelectedBolla(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
+		this.props.setSelectedResa(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
-		this.props.history.push('/bolla/' + period2month(this.props.period) + '/' + row.key);
+		this.props.history.push('/resa/' + period2month(this.props.period) + '/' + row.key);
 	}
 
     
@@ -91,12 +89,12 @@ class TableElencoBolle extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
-    	delete props['deleteBolla']; //Non la passo liscia...
-    	delete props['setSelectedBolla']; //Idem
+    	delete props['deleteResa']; //Non la passo liscia...
+    	delete props['setSelectedResa']; //Idem
     	  return(
 			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	
-export default withRouter(TableElencoBolle);
+export default withRouter(TableElencoRese);
 

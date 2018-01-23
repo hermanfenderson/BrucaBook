@@ -39,8 +39,13 @@ export function urlFactory(getState, destination, params, itemId)
 				//RigheBolla sta sotto anno, mese e idBolla
 				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  +params[0]+'/'+params[1] + '/'+params[2] ; break;
 				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params[0]+'/'+params[1]; break;
-				case "righeElencoCasse": url = prefissoNegozio(getState)+'elencoCasse/'+params[0]+'/'+params[1]; break;
+				//Persisto una chiave di accesso per ogni bolla ordinata secondo il fornitore
+				case "bollePerFornitore": url = prefissoNegozio(getState)+'bollePerFornitore/'+params[0]; break;
 				
+				case "righeElencoCasse": url = prefissoNegozio(getState)+'elencoCasse/'+params[0]+'/'+params[1]; break;
+				case "righeElencoRese": url = prefissoNegozio(getState)+'elencoRese/'+params[0]+'/'+params[1]; break;
+				case "righeResa": url = prefissoNegozio(getState)+'rese/'  +params[0]+'/'+params[1] + '/'+params[2] ; break;
+			
 				case "righeElencoScontrini": url = prefissoNegozio(getState)+'elencoScontrini/'+params[0]+'/'+params[1] + '/'+params[2]; break;
 				
 				//Elenco di tutte le info di una cassa...

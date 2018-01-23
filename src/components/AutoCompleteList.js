@@ -16,7 +16,20 @@ class AutoCompleteList extends React.Component
  
   }
 	
- 
+ componentDidUpdate = () => {
+  var {options, value} = this.state;
+   
+ 	
+ if (this.props.value !== lastValue)
+   		{
+		lastValue = this.props.value;
+	    value = this.props.list[lastValue];
+	    this.setState({
+    		 options: options,
+    		value: value
+    	});
+		}	
+ }
  
  handleSearch = (value) => {
  	let options = ((list)	=> {
@@ -42,12 +55,6 @@ handleSelect = (value, option) => {
   render()
   {
    var {options, value} = this.state;
-  
-   if (this.props.value !== lastValue)
-   		{
-		lastValue = this.props.value;
-	    value = this.props.list[lastValue];
-		}
    
    
     return (<AutoComplete 

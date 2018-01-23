@@ -76,7 +76,7 @@ this.stockMessageQueue = stockMessageQueue;
 
 this.pushMessage = (element) => {return {type: this.PUSH_MESSAGE, element: element}}
 this.shiftMessage = () => {return {type: this.SHIFT_MESSAGE}}
-
+this.onEAN = onEAN;
 
 
 
