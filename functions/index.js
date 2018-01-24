@@ -171,6 +171,65 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
         	   
            );
            
+exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}')
+    .onWrite(event => 
+            {
+             const key = event.params.idResa;	
+             const anno = event.params.anno;
+             const mese = event.params.mese;
+			
+            var righeSnapshot = event.data;
+            var idItem = null;	
+           	
+            const righe = event.data.val();
+            
+        	var totalePezzi = 0.0;
+			var totaleGratis = 0.0;
+			var totaleImporto = 0.0;
+		  	for(let propt in righe)
+		  		{
+		  		if (righeSnapshot.child(propt).changed()) idItem = propt; //Prendo la riga cambiata...	
+			    totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
+			    totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
+			    totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+				}
+			//Se non la ho....  è una riga cancellata...
+			if (!idItem)
+				{
+				var oldRighe=righeSnapshot.previous.val();
+				for (let propt in oldRighe) 
+							{
+							if (righe) 
+								{if (!righe[propt]) 
+									{idItem = propt; //prendo la riga cancellata
+									break;
+									}
+								}	
+							else	
+								{
+									idItem = propt; //prendo l'ultima rimasta nel passato
+									break;
+								}
+							}		
+				}
+			const totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis, 
+			'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem}; 
+			const ref = event.data.ref.parent.parent.parent.parent.child('elencoRese').child(anno).child(mese).child(key);
+			if (totalePezzi + totaleGratis > 0) ref.child('totali').set(totali); //Per non perdere tempo...
+			//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoRese...
+			else 
+				{
+					ref.once("value")
+						.then(function(snapshot) {
+							var notEmpty = snapshot.hasChildren(); 
+		    				if (notEmpty) ref.child('totali').set(totali);
+							 });
+		    		}
+                }	
+        	   
+           );
+                      
+           
 exports.calcolaTotaleInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}')
     .onWrite(event => 
             {
@@ -236,7 +295,20 @@ exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{an
 			return event.data.ref.parent.parent.parent.parent.child('bolle').child(anno).child(mese).child(key).remove();
     		}
            );
-         
+           
+exports.purgeResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{anno}/{mese}/{idResa}')
+    .onDelete(event => 
+            {
+            const key = event.params.idResa;
+                const anno = event.params.anno;
+             const mese = event.params.mese;
+		
+            
+			console.info("Cancello resa "+key);
+			return event.data.ref.parent.parent.parent.parent.child('rese').child(anno).child(mese).child(key).remove();
+    		}
+           );      
+           
 //Idem per gli scontrini...
 
 exports.purgeScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
@@ -306,6 +378,34 @@ exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{a
 				}
 			  }	
     		);
+ //Salvo la nuova data nelle righe già presenti...
+exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{anno}/{mese}/{idResa}')
+    .onUpdate(event => 
+            {
+            if (!event.data.child('totali').changed()) //Per discernere cambiamenti genuini in testata
+              {
+	            const key = event.params.idResa;	
+	            const anno = event.params.anno;
+	            const mese = event.params.mese;
+	            var values = Object.assign({}, event.data.val());
+			    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
+			    delete values.createdBy;
+			    delete values.createdAt;
+			    delete values.changedBy;
+			    delete values.changedAt;
+			    delete values.key;
+			    values.data = values.dataCarico;
+				console.info("Aggiorno bolla "+key);
+				const ref = event.data.ref.parent.parent.parent.parent.child('rese').child(anno).child(mese).child(key);
+				ref.once('value', function(snapshot) {
+					snapshot.forEach(function(childSnapshot) 
+						{
+				    	childSnapshot.ref.update(values);
+	    				})
+					})
+				}
+			  }	
+    		);   		
            
  exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
     .onUpdate(event => 
@@ -384,6 +484,52 @@ exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bol
           ); 
 
 exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/{keyRiga}')
+    .onDelete(event =>
+    		{
+    			const key = event.params.keyRiga;
+    			const ean = event.data.previous.val().ean;	
+    			const data = event.data.previous.val().data;
+    			event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
+                event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
+    		}
+          ); 
+
+//Nel caso delle rese...  
+
+exports.inserisciRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}/{keyRiga}')
+    .onCreate(event =>
+    		{
+    			const key =  event.params.keyRiga;
+    			const ean = event.data.val().ean;	
+    			const data = event.data.val().data;
+            	const newVal = Object.assign(event.data.val(), {tipo: 'resa', id: event.params.anno + '/'+ event.params.mese + '/'+event.params.idResa});
+                event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
+                 event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+    		}
+          ); 
+
+exports.modificaRegistroDaResa = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idResa}/{keyRiga}')
+    .onUpdate(event =>
+    		{
+    			const key =event.params.keyRiga;
+    			const ean = event.data.val().ean;	
+    			const oldData = event.data.previous.val().data;
+    			const data = event.data.val().data;
+            	const newVal = Object.assign(event.data.val(), {tipo: 'resa', id:  event.params.anno + '/'+ event.params.mese + '/'+ event.params.idResa});
+//Se è cambiata la data devo cancellare la vecchia riga...
+                if (oldData !== data) 
+                	{
+                	event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
+                	event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
+                		
+                	}
+                event.data.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
+      
+                event.data.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
+    		}
+          ); 
+
+exports.eliminaRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}/{keyRiga}')
     .onDelete(event =>
     		{
     			const key = event.params.keyRiga;
@@ -511,6 +657,11 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
 			    			totalePezzi = parseInt(righe[propt].pezzi) + parseInt(righe[propt].gratis)+ totalePezzi;
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}
+					    if (righe[propt].tipo == "resa")
+		  					{
+			    			totalePezzi = totalePezzi - (parseInt(righe[propt].pezzi) + parseInt(righe[propt].gratis));
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}	
 						if (righe[propt].tipo == "scontrino")
 		  					{
 		  					totalePezzi = totalePezzi - parseInt(righe[propt].pezzi);

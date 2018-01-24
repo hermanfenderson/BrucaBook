@@ -43,7 +43,7 @@ componentDidUpdate() {
    if (riga !== this.props.testataBolla) 
 	{riga = this.props.testataBolla;
 	if (riga) this.props.setHeaderInfo("Acquisti - Doc. " + riga.riferimento + ' ' 
-				          						+ riga.fornitore + ' del ' + moment(riga.dataDocumento).format("L"));
+				          						+ riga.nomeFornitore + ' del ' + moment(riga.dataDocumento).format("L"));
 
 	}	
 }

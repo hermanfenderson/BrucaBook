@@ -12,14 +12,16 @@ import 'moment/locale/it';
 import { Row, Col, Spin} from 'antd'
 
 var currentIdResa = null; 
+var currentFornitore = null;
 var riga = null; 
+
 
 class Resa extends Component {
 
 
  
  componentDidMount() {
-   	if(ReactDOM.findDOMNode(this.refs.formRigaResa)) 
+ 	if(ReactDOM.findDOMNode(this.refs.formRigaResa)) 
    		{var node = ReactDOM.findDOMNode(this.refs.formRigaResa);
    		this.props.storeMeasure('formRigaResaHeight', node.clientHeight);
    		}
@@ -33,17 +35,26 @@ class Resa extends Component {
 			{this.props.resetResa(this.props.match.params.id);
 			 this.props.unlistenTestataResa([this.props.match.params.anno, this.props.match.params.mese], currentIdResa);
 			} 
+		if (currentFornitore) {this.props.unlistenBollePerFornitore(currentFornitore); currentFornitore = null}
 		this.props.listenTestataResa([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...
 	}
 		
  }
  
 componentDidUpdate() {
+   if (this.props.testataResa.fornitore !== currentFornitore)
+		{
+			currentFornitore = this.props.testataResa.fornitore;
+			this.props.listenBollePerFornitore(currentFornitore);
+		}
+	
    if (riga !== this.props.testataResa) 
 	{riga = this.props.testataResa;
-	if (riga) this.props.setHeaderInfo("Rese - Doc. " + riga.riferimento + ' ' 
-				          						+ riga.fornitore + ' del ' + moment(riga.dataDocumento).format("L"));
-
+		if (riga) {this.props.setHeaderInfo("Rese - Doc. " + riga.riferimento + ' ' 
+				          						+ riga.nomeFornitore + ' del ' + moment(riga.dataDocumento).format("L"));
+			  
+		     
+			  }
 	}	
 }
 

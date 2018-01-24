@@ -1,5 +1,5 @@
 import ResaComponent from '../components/Resa'
-import {rigaResaFA} from '../../../actions/resa'
+import {rigaResaFA, listenBollePerFornitore, unlistenBollePerFornitore} from '../../../actions/resa'
 
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
@@ -27,7 +27,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ shiftMessage, resetResa, 
+  return bindActionCreators({ shiftMessage, resetResa, listenBollePerFornitore, unlistenBollePerFornitore,
   listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo}, dispatch);
 }
 

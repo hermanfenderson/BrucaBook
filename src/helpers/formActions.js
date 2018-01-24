@@ -557,25 +557,6 @@ this.aggiornaItem = (params,itemId, valori) => {
  
 }
 
-//Pinnare una riga
-this.togglePin = (params, itemId, valori, pinnedField) =>
-{
-	  const typeTogglePin = this.TOGGLE_PIN_ITEM;
-	   var nuovoItem = {...valori, [pinnedField]: !valori[pinnedField]};
-      const itemsUrl = this.itemsUrl;
-      return function(dispatch,getState) {
-
-    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
-    ref.update(nuovoItem);
-    dispatch(
-   	{
-   		type: typeTogglePin,
-   		key: ref.key
-   	}
-   	)   
- 
-	}
-}
 
 
 
@@ -599,6 +580,25 @@ const stockMessageQueue = this.stockMessageQueue;
     };
   }
 	
+//Pinnare una riga
+this.togglePin = (params, itemId, valori, pinnedField) =>
+{
+	  const typeTogglePin = this.TOGGLE_PIN_ITEM;
+	   var nuovoItem = {...valori, [pinnedField]: !valori[pinnedField]};
+      const itemsUrl = this.itemsUrl;
+      return function(dispatch,getState) {
+
+    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
+    ref.update(nuovoItem);
+    dispatch(
+   	{
+   		type: typeTogglePin,
+   		key: ref.key
+   	}
+   	)   
+ 
+	}
+}
 
 
 

@@ -2,6 +2,8 @@
 
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
+import {LISTEN_BOLLE_PER_FORNITORE, ADDED_BOLLE_PER_FORNITORE, CHANGED_BOLLE_PER_FORNITORE , DELETED_BOLLE_PER_FORNITORE,  UNLISTEN_BOLLE_PER_FORNITORE} from '../actions/resa';
+
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -9,6 +11,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 const editedRigaBollaValuesInitialState = 
 	  {			ean: '',
+				idRigaBolla: null, //Puntatore anno/mese/idBolla/rigaBolla
 				titolo: '',
 				autore: '',
 				prezzoListino: '',
@@ -29,10 +32,15 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} ));
 }
 
+//Oggetto che contiene l'elenco dinamico delle bolle afferenti a un fornitore con il listener corrispondente.
+//Formato dell'oggetto chiave = idBolla, destination = path della bolla
+//Quando cambia qualcosa o quando svuoto l'oggetto devo anche smettere di ascoltare....
+
+
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{});
+	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}});
     }
     
 
@@ -181,7 +189,33 @@ export default function resa(state = initialState(), action) {
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaResaHeight'] -130;
    	    newState = {...state, tableHeight: height};
         break;
-  	
+   
+   case LISTEN_BOLLE_PER_FORNITORE:
+   	    newState = {...state, listeningFornitore : action.params};
+   	    break;
+  
+   case UNLISTEN_BOLLE_PER_FORNITORE:
+   	    newState = {...state, listeningFornitore : null};
+   	    break;
+   
+   	case ADDED_BOLLE_PER_FORNITORE: 
+   	case CHANGED_BOLLE_PER_FORNITORE:
+   		{
+   		let key = action.payload.key;
+   		let val = action.payload.val();
+   		let bolleOsservate = {...state.bolleOsservate};
+   		bolleOsservate[key] = {...val};
+   		newState = {...state, bolleOsservate : bolleOsservate};
+   		}
+        break;
+   case DELETED_BOLLE_PER_FORNITORE:
+  	    {
+  	    let key = action.payload.key;
+   		let bolleOsservate = {...state.bolleOsservate};
+   		delete bolleOsservate[key];
+   		newState = {...state, bolleOsservate : bolleOsservate};	
+  	    }
+  	    break;
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;

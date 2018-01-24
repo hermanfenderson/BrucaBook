@@ -38,10 +38,12 @@ resetForm = () => {
   	const readOnlyEAN = ((this.props.editedRigaResa.selectedItem !== null) || (this.props.editedRigaResa.eanState === 'PARTIAL'))
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-         <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:5}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
-        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:10}} itemStyle={{marginRight: 10}} disabled/>
-        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:6}} itemStyle={{marginRight: 10}} disabled/>
+         <WrappedForm.Group formGroupLayout={{gutter:0}}> 
+         <WrappedForm.Input field='idRigaBolla' required={true} label='id' formColumnLayout={{span:4}} itemStyle={{marginRight: 10}} />
+       
+        <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:4}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:8}} itemStyle={{marginRight: 10}} disabled/>
+        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:5}} itemStyle={{marginRight: 10}} disabled/>
         <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{span:3}}  disabled/>
      
        </WrappedForm.Group>
