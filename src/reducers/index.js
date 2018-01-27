@@ -98,6 +98,8 @@ export const getMessageBufferResa = (state) => {return fromResa.getMessageBuffer
 export const getBolleOsservate = (state) => {return fromResa.getBolleOsservate(state.resa)};
 export const getIndiceEAN = (state) => {return fromResa.getIndiceEAN(state.resa)};
 export const getTabellaEAN = (state) => {return fromResa.getTabellaEAN(state.resa)};
+export const getDettagliEANResa = (state) => {return fromResa.getDettagliEAN(state.resa)};
+export const getTabelleRigheEAN = (state) => {return fromResa.getTabelleRigheEAN(state.resa)};
 
 
 //Scene Inventario

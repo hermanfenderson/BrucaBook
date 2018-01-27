@@ -13,11 +13,14 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 		CHANGED_RIGABOLLA_IN_RESA , 
 		DELETED_RIGABOLLA_IN_RESA,  
 		UNLISTEN_BOLLA_IN_RESA, 
+		LISTEN_DETTAGLI_EAN,
+		UNLISTEN_DETTAGLI_EAN,
+		GET_DETTAGLI_EAN
 } from '../actions/resa';
 
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, insertRow, removeRow} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, insertRow, removeRow, getStock} from '../helpers/form';
 
 
 const editedRigaBollaValuesInitialState = 
@@ -53,7 +56,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceEAN: {}, tabellaEAN: []});
+	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}});
     }
     
 
@@ -206,6 +209,32 @@ export default function resa(state = initialState(), action) {
    case LISTEN_BOLLE_PER_FORNITORE:
    	    newState = {...state, listeningFornitore : action.params};
    	    break;
+   case LISTEN_DETTAGLI_EAN:
+   	    newState = state;
+   	    break;
+   case UNLISTEN_DETTAGLI_EAN:
+        {let dettagliEAN = {...state.dettagliEAN};
+   	    delete dettagliEAN[action.params]; //Elimino la riga dai dettagli
+   	    newState = {...state, dettagliEAN: dettagliEAN};
+   	    }
+   	    break;	    
+   //Anche qui aggiorno il valore dello stock	    
+   case GET_DETTAGLI_EAN:
+   	    {let dettagliEAN = {...state.dettagliEAN};
+   	    let indiceEAN = {...state.indiceEAN};
+   	    let ean = action.payload.key;
+   	    let details = action.payload.val();
+   	    dettagliEAN[ean] = details;
+     
+   	    if (indiceEAN[ean] && indiceEAN[ean].pos >= 0) //Se serve ricalcolo lo stock
+   	    	{
+   	    	 let tabellaEAN = [...state.tabellaEAN];
+   	    	 tabellaEAN[indiceEAN[ean].pos].stock = getStock(details); 
+   	    	 newState = {...state, dettagliEAN: dettagliEAN, tabellaEAN: tabellaEAN};
+   	    	}
+   	    else newState = {...state, dettagliEAN: dettagliEAN}	
+   	    }
+   	    break;
    
    case LISTEN_BOLLA_IN_RESA:
    		{
@@ -232,23 +261,25 @@ export default function resa(state = initialState(), action) {
    	    
    		let bolla = action.payload.ref.path.pieces_[5];
    		let riga = action.payload.ref.path.pieces_[6];
+   		let idRigaBolla = anno + '/' + mese + '/' + bolla + '/' + riga;
    	    let bolleOsservate = {...state.bolleOsservate};
    	    let row = action.payload.val();
    	    bolleOsservate[bolla].righe[riga] = row;
    	    let ean =  action.payload.val().ean;
    	    let indiceEAN = {...state.indiceEAN};
    	    let tabellaEAN = [...state.tabellaEAN];
+   	    let tabelleRigheEAN = {...state.tabelleRigheEAN};
    	    if (!indiceEAN[ean]) 
    	    	{indiceEAN[ean] = {};
-   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino}, ean, 'pos', 'ean');
+   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, stock: getStock(ean)}, ean, 'pos', 'ean');
    	    	}
-   	    if (!indiceEAN[ean].bolle) indiceEAN[ean].bolle = {};
-   	    if (!indiceEAN[ean].bolle[bolla]) indiceEAN[ean].bolle[bolla] = {};
+   	    if (!indiceEAN[ean].righe) indiceEAN[ean].righe = {};
+   	    let rigaBollaKey = bolla+'/'+riga;
+   	    indiceEAN[ean].righe[rigaBollaKey] = {'pos': -1}; //Non è in mostra...
    	   	 
-   	    	 
-   	    indiceEAN[ean].bolle[bolla][riga] = anno + '/' +  mese + '/'+ bolla + '/'+ riga;
-   	    
-   	    newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN};
+   	     if (!tabelleRigheEAN[ean]) tabelleRigheEAN[ean] = [];
+   	     if (action.type === ADDED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], {'rigaBolla': rigaBollaKey, 'idRigaBolla': idRigaBolla, 'riferimento': row.riferimento, 'dataDocumento': row.dataDocumento, 'prezzoUnitario': row.prezzoUnitario}, rigaBollaKey, 'pos', 'rigaBolla' );
+   	    newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN, tabelleRigheEAN: tabelleRigheEAN};
    		}
         break;
    case DELETED_RIGABOLLA_IN_RESA:
@@ -262,7 +293,7 @@ export default function resa(state = initialState(), action) {
    	  
    	    delete bolleOsservate[bolla].righe[riga];
    	    delete indiceEAN[ean].bolle[bolla][riga];
-   	    if (Object.keys(indiceEAN[ean].bolle[bolla]).length === 0) delete indiceEAN[ean].bolle[bolla];
+   	    if (Object.keys(indiceEAN[ean].bolle[bolla].righe).length === 0) delete indiceEAN[ean].bolle[bolla];
    	    if (Object.keys(indiceEAN[ean].bolle).length === 0) 
    	    	{   removeRow(indiceEAN, tabellaEAN, ean, 'pos','ean');
    	    		delete indiceEAN[ean];
@@ -317,7 +348,11 @@ export default function resa(state = initialState(), action) {
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  export const getBolleOsservate = (state) => {return state.bolleOsservate};
  export const getIndiceEAN = (state) => {return state.indiceEAN};
+ export const getDettagliEAN = (state) => {return state.dettagliEAN};
+
  export const getTabellaEAN = (state) => {return state.tabellaEAN};
+ export const getTabelleRigheEAN = (state) => {return state.tabelleRigheEAN};
+ 
 
  
  

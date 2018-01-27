@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
-import SubInput from '../../../components/SubInput'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'ean', label: 'EAN', width: '160px'},

@@ -281,5 +281,44 @@ export const removeRow = (index, array, key, posField,keyField) =>
 	for (let i = pos; i < array.length; i++) index[array[i][keyField]][posField] = i;	
 }
 
+//data una lista di dettagli di un EAN calcola i pezzi a stock... saltando se necessario il documento corrente, eventualmente fino a una data
+export const getStock = (details, excludedDoc=null, fromDate=null, toDate=null) =>
+{      			 
+				  var totalePezzi = 0;
+        		  var righe;
+            	  let date = details;	
+            	  for(var propt2 in date)
+		  			{righe = date[propt2];
+		  				for (var propt in righe)	
+		  				{
+		  				 if (righe[propt].tipo === "bolla")
+		  					{
+			    			totalePezzi = parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10)+ totalePezzi;
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}
+					    if (righe[propt].tipo === "resa")
+		  					{
+			    			totalePezzi = totalePezzi - (parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10));
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}	
+						if (righe[propt].tipo === "scontrino")
+		  					{
+		  					totalePezzi = totalePezzi - parseInt(righe[propt].pezzi,10);
+			    		
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}
+							
+						if (righe[propt].tipo === "inventario")
+		  					{
+		  					totalePezzi = totalePezzi + parseInt(righe[propt].pezzi,10);
+			    		
+			    			}		
+		  				}
+		  			}	
+		  		   return totalePezzi;  
+}
+
+
+
 
 

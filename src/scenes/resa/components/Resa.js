@@ -2,7 +2,6 @@ import TableResa from '../containers/TableResa';
 import TableOpenResa from '../containers/TableOpenResa';
 
 import TotaliResa from '../components/TotaliResa';
-import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
@@ -58,7 +57,6 @@ componentDidUpdate() {
 			  }
 	}	
 }
-
 
 
 

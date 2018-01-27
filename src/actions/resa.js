@@ -1,7 +1,7 @@
 import {FormActions} from '../helpers/formActions';
 import {addCreatedStamp,addChangedStamp, urlFactory} from '../helpers/firebase';
 import Firebase from 'firebase';
-import {getBolleOsservate} from '../reducers';
+import {getBolleOsservate, getIndiceEAN, getDettagliEANResa} from '../reducers';
 
 export const SCENE = 'RESA';
 export const LISTEN_BOLLE_PER_FORNITORE = 'LISTEN_BOLLE_PER_FORNITORE';
@@ -10,6 +10,10 @@ export const CHANGED_BOLLE_PER_FORNITORE = 'CHANGED_BOLLE_PER_FORNITORE';
 export const DELETED_BOLLE_PER_FORNITORE = 'DELETED_BOLLE_PER_FORNITORE';
 
 export const UNLISTEN_BOLLE_PER_FORNITORE = 'UNLISTEN_BOLLE_PER_FORNITORE';
+
+export const LISTEN_DETTAGLI_EAN = 'LISTEN_DETTAGLI_EAN';
+export const UNLISTEN_DETTAGLI_EAN = 'UNLISTEN_DETTAGLI_EAN';
+export const GET_DETTAGLI_EAN = 'GET_DETTAGLI_EAN';
 
 
 export const LISTEN_BOLLA_IN_RESA = 'LISTEN_BOLLA_IN_RESA';
@@ -90,6 +94,9 @@ return function(dispatch, getState) {
 		   	type: UNLISTEN_BOLLE_PER_FORNITORE,
 		   	params: idFornitore
 		   })
+     //Mi sgancio anche da tutti i dettagli di libri che ho ascoltato finora...
+     let dettagliEAN = getDettagliEANResa(getState());
+	 for (var ean in dettagliEAN) dispatch(unlistenDettagliEAN(ean));
 
 	}
 }	   
@@ -107,11 +114,14 @@ export function listenBolla(idBolla)
   	if (url)
     {  
        const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
+       	let indiceEAN = getIndiceEAN(getState());
+	      if (!indiceEAN[snapshot.val().ean]) {dispatch(listenDettagliEAN(snapshot.val().ean))} //Ascolto i dettagli...
+	    
 	      dispatch({
 	        type: ADDED_RIGABOLLA_IN_RESA,
 	        payload: snapshot
 	      })
-	    });
+	      });
 	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
 	      dispatch({
 	        type: CHANGED_RIGABOLLA_IN_RESA,
@@ -149,7 +159,55 @@ return function(dispatch, getState) {
 		   })
 
 	}
+}
+
+
+export function listenDettagliEAN(ean)
+{
+	
+//Genero tre listener... come un'unica funzione...
+
+   
+   return function(dispatch, getState) {
+  	const url = urlFactory(getState,'registroEAN', null, ean);
+  	if (url)
+    {  
+       const listener_value = Firebase.database().ref(url).on('value', snapshot => {
+	      dispatch({
+	        type: GET_DETTAGLI_EAN,
+	        payload: snapshot
+	      })
+	    });
+	   
+	   dispatch({
+	   	type: LISTEN_DETTAGLI_EAN,
+	   	params: ean,
+	   	listener_value: listener_value 
+	   })
+	}   
+	else dispatch({
+	   	type: LISTEN_DETTAGLI_EAN,
+	   	params: null,
+	   })   
+  }
+  
+}
+
+//Uso il fatto che id ha già il path giusto... trucchismo...
+export function unlistenDettagliEAN(ean)
+{
+return function(dispatch, getState) {	
+	Firebase.database().ref(urlFactory(getState,'registroEAN', null, ean)).off();
+		dispatch({
+		   	type: UNLISTEN_DETTAGLI_EAN,
+		   	params: ean
+		   })
+
+	}
 }	   
+
+
+
 
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
@@ -175,10 +233,7 @@ rigaResaFA.aggiungiItem = (params, valori) => {
    var ref; 
     ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
     ref.set(nuovoItem);
-   /* 
-   var ref2;
-    ref2  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
-   */
+   
     
    dispatch(
    	{

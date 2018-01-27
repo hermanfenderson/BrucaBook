@@ -110,7 +110,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(
-        	 <Table  expandedRowRender={this.props.expandedRowRender} size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data}/>
+        	 <Table  expandedRowRender={this.props.expandedRowRender} size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data} rowKey={this.props.rowKey}/>
        		);	
      }	
 } 

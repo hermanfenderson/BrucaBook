@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import SubInput from '../../../components/SubInput'
+import moment from 'moment';
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'riferimento', label: 'Rif.', width: '160px'},
@@ -14,7 +15,6 @@ const header = [{dataField: 'riferimento', label: 'Rif.', width: '160px'},
 			   
 			   ];
 
-var currentListenedIdResa = null;
 
 //Per gestire in modo smmooth il ricaricamento!
 
@@ -25,16 +25,16 @@ class TableDettagliResa extends Component
 	
 	
 
-	expandedRowRender = (record) => {return(<div>Ciao</div>)}
 	onChangeCustom = (e) => {console.log(e)};
 	
 
-  onSubmit = () => {console.log('do validate')}
+  onSubmit = (record) => {console.log(record)}
   
- 	pezziRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} onSubmit={this.onSubmit}  />)}
-   gratisRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} onSubmit={this.onSubmit}  />)}
+ 	pezziRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} record={record} onSubmit={this.onSubmit}  />)}
+   gratisRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} record={record} onSubmit={this.onSubmit}  />)}
+    dataRowRender = (text, record) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
    
-    customRowRender = {'pezzi' : this.pezziRowRender , 'gratis' : this.gratisRowRender}
+    customRowRender = {'pezzi' : this.pezziRowRender , 'gratis' : this.gratisRowRender, 'dataDocumento': this.dataRowRender}
 
     
     	render() { 
@@ -51,6 +51,8 @@ class TableDettagliResa extends Component
 			customRowRender={this.customRowRender} 
 			highlightedRowKey={selectedItemKey} 
 			saveRow={this.onSubmit}
+			size={'small'}
+			rowKey={'rigaBolla'}
 			header={header}/>
 			)}
     }		

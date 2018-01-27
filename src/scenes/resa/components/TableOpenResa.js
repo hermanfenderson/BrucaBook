@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import TableDettagliResa from './TableDettagliResa'
-import SubInput from '../../../components/SubInput'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
@@ -14,7 +13,6 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    
 			   ];
 			   
-const mock = {'2000000000015': [{riferimento: 1}, {riferimento: 2}], '2000000000039': [{riferimento: 3}, {riferimento: 4}]}			   
 
 var currentListenedIdResa = null;
 
@@ -47,18 +45,8 @@ class TableOpenResa extends Component
 	
 	
 
-//	expandedRowRender = (record) => {return(<div>{record.ean}</div>)}
+	expandedRowRender = (record) => {return(<TableDettagliResa righeDettagli={this.props.tabelleRigheEAN[record.ean]}/>)}
 
-	expandedRowRender = (record) => {return(<TableDettagliResa righeDettagli={mock[record.ean]}/>)}
-
-	onChangeCustom = (e) => {console.log(e)};
-	
-
-  onSubmit = () => {console.log('do validate')}
-  
- 	titoloRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} onSubmit={this.onSubmit}  />)}
-   
-    customRowRender = {'titolo' : this.titoloRowRender }
 
     
     	render() { 
@@ -72,7 +60,7 @@ class TableOpenResa extends Component
     	  return(
 			<WrappedTable {...props} 
 			data={this.props.tabellaEAN}
-			customRowRender={this.customRowRender} 
+			rowKey={'ean'}
 			expandedRowRender={this.expandedRowRender} 
 			highlightedRowKey={selectedItemKey} 
 			header={header}/>

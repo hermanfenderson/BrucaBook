@@ -6,9 +6,10 @@ const SubInput = (props) =>
 		    {
 		     const {onSubmit, ...otherProps} = props;
 	   	     const onBlur = () => {onSubmit()};
+	   	     var record = props.record;
 			 const onKeyPress = (e) => {
     			if (e.key === 'Enter') {
-    				onSubmit();
+    				onSubmit(record);
     				}
 				}
 			return(<Input onBlur={onBlur} onKeyPress={onKeyPress} {...otherProps} />)
