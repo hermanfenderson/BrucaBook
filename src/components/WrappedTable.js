@@ -42,6 +42,7 @@ actionRowRender = (cell, row) => {
 		{(this.props.editRow) && <Icon type="edit" onClick={() => { lastRowClicked = row.key;  this.props.editRow(row)}}/>}  
        	{(this.props.pinRow) && <Icon type={(row[this.props.pinField]) ? "pushpin" : "pushpin-o" } onClick={() => { lastRowClicked = row.key;  this.props.pinRow(row)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => { lastRowClicked = row.key;  this.props.detailRow(row)}}/>}  
+       {(this.props.saveRow) && <Icon type={"save"} onClick={() => { lastRowClicked = row.key;  this.props.saveRow(row)}}/>}  
        
         </div>
         );
@@ -103,7 +104,7 @@ render ()
   			}).filter((record => !!record)) :
   			this.props.data;
   			
-  	if (this.props.deleteRow || this.props.editRow || this.props.detailRow || this.props.pinRow) 
+  	if (this.props.deleteRow || this.props.editRow || this.props.detailRow || this.props.pinRow || this.props.saveRow) 
   		{if (this.props.actionFirst)
   		    columns.unshift(actionColumn);
 			else columns.push(actionColumn);

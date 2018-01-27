@@ -2,11 +2,22 @@
 
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-import {LISTEN_BOLLE_PER_FORNITORE, ADDED_BOLLE_PER_FORNITORE, CHANGED_BOLLE_PER_FORNITORE , DELETED_BOLLE_PER_FORNITORE,  UNLISTEN_BOLLE_PER_FORNITORE} from '../actions/resa';
+import {LISTEN_BOLLE_PER_FORNITORE, 
+		ADDED_BOLLE_PER_FORNITORE, 
+		CHANGED_BOLLE_PER_FORNITORE , 
+		DELETED_BOLLE_PER_FORNITORE,  
+		UNLISTEN_BOLLE_PER_FORNITORE, 
+	
+		LISTEN_BOLLA_IN_RESA, 
+		ADDED_RIGABOLLA_IN_RESA, 
+		CHANGED_RIGABOLLA_IN_RESA , 
+		DELETED_RIGABOLLA_IN_RESA,  
+		UNLISTEN_BOLLA_IN_RESA, 
+} from '../actions/resa';
 
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, insertRow, removeRow} from '../helpers/form';
 
 
 const editedRigaBollaValuesInitialState = 
@@ -36,11 +47,13 @@ const editedItemInitialState = () => {
 //Formato dell'oggetto chiave = idBolla, destination = path della bolla
 //Quando cambia qualcosa o quando svuoto l'oggetto devo anche smettere di ascoltare....
 
+//bolleOsservate contiene tutte le bolle di quel fornitore
+//Indice EAN contiene elenco di tutte le occorrenze di un EAN nelle varie bolle... formato {riga: bolla}
 
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}});
+	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceEAN: {}, tabellaEAN: []});
     }
     
 
@@ -193,7 +206,71 @@ export default function resa(state = initialState(), action) {
    case LISTEN_BOLLE_PER_FORNITORE:
    	    newState = {...state, listeningFornitore : action.params};
    	    break;
-  
+   
+   case LISTEN_BOLLA_IN_RESA:
+   		{
+   		let bolleOsservate = {...state.bolleOsservate};
+   		bolleOsservate[action.params.split('/')[2]].righe = {};
+   		newState = {...state, bolleOsservate : bolleOsservate};
+   			
+   		}
+   		break;
+   	case UNLISTEN_BOLLA_IN_RESA:
+   		{
+   		let bolleOsservate = {...state.bolleOsservate};
+   		delete bolleOsservate[action.params.split('/')[2]];
+   		newState = {...state, bolleOsservate : bolleOsservate};
+   			
+   		}
+   		break;	
+
+   	case ADDED_RIGABOLLA_IN_RESA: 
+   	case CHANGED_RIGABOLLA_IN_RESA:
+   		{
+   		let anno = action.payload.ref.path.pieces_[3];
+   		let mese = action.payload.ref.path.pieces_[4];
+   	    
+   		let bolla = action.payload.ref.path.pieces_[5];
+   		let riga = action.payload.ref.path.pieces_[6];
+   	    let bolleOsservate = {...state.bolleOsservate};
+   	    let row = action.payload.val();
+   	    bolleOsservate[bolla].righe[riga] = row;
+   	    let ean =  action.payload.val().ean;
+   	    let indiceEAN = {...state.indiceEAN};
+   	    let tabellaEAN = [...state.tabellaEAN];
+   	    if (!indiceEAN[ean]) 
+   	    	{indiceEAN[ean] = {};
+   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino}, ean, 'pos', 'ean');
+   	    	}
+   	    if (!indiceEAN[ean].bolle) indiceEAN[ean].bolle = {};
+   	    if (!indiceEAN[ean].bolle[bolla]) indiceEAN[ean].bolle[bolla] = {};
+   	   	 
+   	    	 
+   	    indiceEAN[ean].bolle[bolla][riga] = anno + '/' +  mese + '/'+ bolla + '/'+ riga;
+   	    
+   	    newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN};
+   		}
+        break;
+   case DELETED_RIGABOLLA_IN_RESA:
+  	    {
+  	    let bolla = action.payload.ref.path.pieces_[5];
+   		let riga = action.payload.ref.path.pieces_[6];
+   	    let bolleOsservate = {...state.bolleOsservate};
+   	    let indiceEAN = {...state.indiceEAN};
+   	    let ean = bolleOsservate[bolla].righe[riga].ean;
+   	    let tabellaEAN = [...state.tabellaEAN];
+   	  
+   	    delete bolleOsservate[bolla].righe[riga];
+   	    delete indiceEAN[ean].bolle[bolla][riga];
+   	    if (Object.keys(indiceEAN[ean].bolle[bolla]).length === 0) delete indiceEAN[ean].bolle[bolla];
+   	    if (Object.keys(indiceEAN[ean].bolle).length === 0) 
+   	    	{   removeRow(indiceEAN, tabellaEAN, ean, 'pos','ean');
+   	    		delete indiceEAN[ean];
+   	    	}
+   	    newState = {...state, tabellaEAN: tabellaEAN};	
+  	    }
+  	    break;  
+  	    
    case UNLISTEN_BOLLE_PER_FORNITORE:
    	    newState = {...state, listeningFornitore : null};
    	    break;
@@ -238,6 +315,10 @@ export default function resa(state = initialState(), action) {
  export const getListeningItemResa = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
+ export const getBolleOsservate = (state) => {return state.bolleOsservate};
+ export const getIndiceEAN = (state) => {return state.indiceEAN};
+ export const getTabellaEAN = (state) => {return state.tabellaEAN};
+
  
  
  

@@ -5,13 +5,13 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
 Storia delle versioni
 ---------------------
 ### Versione 0.6.0
+* Primo rilascio di una funzione rese!
 * Risolto un baco di visualizzazione (ridimensionamento form con immagine dentro) (#173)
 ### Versione 0.5.7
 * Bug fixing: il menu utente lasciava in disordine il menu principale (#170)
 * Bug fixing: ancora qualche scostamento nei form (scontrini)
 * Avviato il test applicativo con Jest (per ora, solo unit)
 * Prima gestione anagrafica fornitori
-* Primissimo rilascio di una funzione rese... per ora è un clone o quasi di bolla. 
 
 ### Versione 0.5.6
 * Fatto spazio tra form e tabelle (in modo migliore)

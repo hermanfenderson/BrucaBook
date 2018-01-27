@@ -1,6 +1,6 @@
 import {FormActions} from '../helpers/formActions';
 import {moment2period} from '../helpers/form';
-import {addCreatedStamp, urlFactory} from '../helpers/firebase';
+import {addCreatedStamp, addChangedStamp, urlFactory} from '../helpers/firebase';
 import Firebase from 'firebase';
 
 //import {isInternalEAN} from './ean';
@@ -75,6 +75,41 @@ bollaFA.aggiungiItem = (params, valori) => {
   }
   
 }
+
+bollaFA.aggiornaItem = (params,itemId, valori) => {
+    const typeChange = bollaFA.CHANGE_ITEM;
+ 	 const stockMessageQueue = bollaFA.stockMessageQueue;
+ const stockMessageQueueListener = bollaFA.stockMessageQueueListener;
+  
+    var nuovoItem = {...valori};
+      addChangedStamp(nuovoItem);
+   bollaFA.preparaItem(nuovoItem);
+    const itemsUrl = bollaFA.itemsUrl;
+      return function(dispatch,getState) 
+    		{
+		    if (nuovoItem.oldFornitore !== nuovoItem.fornitore)
+		    		{
+		    		Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.oldFornitore, itemId)).remove(); 
+		    	     var bollaKey = params[0] + '/' + params[1] + '/' + itemId; //Dato da persistere come bolla per fornitore
+					 var ref2 = Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.fornitore, itemId)); //Persisto per fornitore... il riferimentoa alla bolla (che è chiave unica)
+					ref2.set({'id': bollaKey}); //Persisto il percorso a cui trovarla
+		  
+		    		}
+		    delete nuovoItem.oldFornitore;		
+		    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
+		    ref.update(nuovoItem);
+		    dispatch(
+		   	{
+		   		type: typeChange,
+		   		key: ref.key
+		   	}
+		   	)  	 
+		   	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));
+		   	 return(itemId); 
+		  }
+ 
+}
+
 
 
 

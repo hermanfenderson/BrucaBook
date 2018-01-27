@@ -77,6 +77,7 @@ class TableElencoBolle extends Component
 	}
 	
 	editRow = (row) => {
+		row.oldFornitore = row.fornitore; //Per gestire un eventuale cambiamento...
 		this.props.setSelectedBolla(row);
 	}
 	

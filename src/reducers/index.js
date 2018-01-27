@@ -95,6 +95,10 @@ export const getListeningTestataResa = (state) => {return fromResa.getListeningT
 export const getListeningItemResa = (state) => {return fromResa.getListeningItemResa(state.resa)};
 export const isStaleTotaliResa = (state) => {return fromResa.isStaleTotali(state.resa)};
 export const getMessageBufferResa = (state) => {return fromResa.getMessageBuffer(state.resa)};
+export const getBolleOsservate = (state) => {return fromResa.getBolleOsservate(state.resa)};
+export const getIndiceEAN = (state) => {return fromResa.getIndiceEAN(state.resa)};
+export const getTabellaEAN = (state) => {return fromResa.getTabellaEAN(state.resa)};
+
 
 //Scene Inventario
 export const getRigheInventario = (state) => {return fromInventario.getItems(state.inventario)};

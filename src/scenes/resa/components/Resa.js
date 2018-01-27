@@ -1,5 +1,6 @@
 import TableResa from '../containers/TableResa';
-import FormRigaResa from '../containers/FormRigaResa';
+import TableOpenResa from '../containers/TableOpenResa';
+
 import TotaliResa from '../components/TotaliResa';
 import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
@@ -42,7 +43,7 @@ class Resa extends Component {
  }
  
 componentDidUpdate() {
-   if (this.props.testataResa.fornitore !== currentFornitore)
+   if (this.props.testataResa && (this.props.testataResa.fornitore !== currentFornitore))
 		{
 			currentFornitore = this.props.testataResa.fornitore;
 			this.props.listenBollePerFornitore(currentFornitore);
@@ -62,7 +63,8 @@ componentDidUpdate() {
 
 
 render()
-{
+{ 
+  const isOpen = (this.props.testataResa && (this.props.testataResa.stato === 'aperta')) ? true : false;   
   const period = [this.props.match.params.anno, this.props.match.params.mese];
  return (
  
@@ -76,23 +78,12 @@ render()
       </Col>
  
        <Col span={20}>
-     <TableResa  period={period} idResa={this.props.match.params.id}/>
+    {isOpen ? <TableOpenResa  period={period} idResa={this.props.match.params.id}/> :  <TableResa  period={period} idResa={this.props.match.params.id}/> }
       
     	   </Col>
       </Row>
     
-      <Row type="flex" align="bottom" className='bottom-form' style={{height: '250px'}} ref='formRigaResa'>
-   
-     <Col span={4}>
-     <BookImg eanState={this.props.editedRigaResa.eanState} ean={this.props.editedRigaResa.values.ean} />
-
-      </Col>
-       <Col span={20}>
-    
-      <FormRigaResa idResa={this.props.match.params.id} period={period} testataResa={this.props.testataResa} />
-      </Col>
-        
-    </Row>
+     
    
   </div>
   </Spin>

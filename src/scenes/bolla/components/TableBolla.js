@@ -54,15 +54,6 @@ class TableBolla extends Component
 	}
 	
 
-	expandedRowRender = (record) => {return(<div>Ciao</div>)}
-	onChangeCustom = (e) => {console.log(e)};
-	
-
-  onSubmit = () => {console.log('do validate')}
-  
- 	titoloRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} onSubmit={this.onSubmit}  />)}
-   
-    customRowRender = {'titolo' : this.titoloRowRender }
 
     
     	render() { 
@@ -74,7 +65,7 @@ class TableBolla extends Component
     	delete props['deleteRigaBolla']; //Non la passo liscia...
     	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props}  customRowRender={this.customRowRender} expandedRowRender={this.expandedRowRender} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	
