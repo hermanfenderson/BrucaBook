@@ -11,7 +11,6 @@ const unlistenTestataResa = rigaResaFA.unlistenTestata;
 const resetResa = rigaResaFA.reset;
 const shiftMessage = rigaResaFA.shiftMessage;
 
-
 const mapStateToProps = (state) => {
 	return ({
 	         editedCatalogItem: getEditedCatalogItem(state),

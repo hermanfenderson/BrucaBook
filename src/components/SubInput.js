@@ -4,15 +4,15 @@ import {Input} from 'antd';
 
 const SubInput = (props) => 
 		    {
-		     const {onSubmit, ...otherProps} = props;
+		     const {onSubmit, onChange, ...otherProps} = props;
 	   	     const onBlur = () => {onSubmit()};
-	   	     var record = props.record;
-			 const onKeyPress = (e) => {
+	   	     const onChangeInput = (e) => {onChange(e.target.value)}
+	   	     const onKeyPress = (e) => {
     			if (e.key === 'Enter') {
-    				onSubmit(record);
+    				onSubmit();
     				}
 				}
-			return(<Input onBlur={onBlur} onKeyPress={onKeyPress} {...otherProps} />)
+			return(<Input onChange={onChangeInput} onBlur={onBlur} onKeyPress={onKeyPress} {...otherProps} />)
 		    }
 
 export default SubInput;

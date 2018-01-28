@@ -4,9 +4,13 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.6.1
+* Nella modalità "aperta" si possono salvare le righe della resa...(per il momento senza controlli)
+
 ### Versione 0.6.0
 * Primo rilascio per una funzione rese (per ora NON funziona... ma si può avere un'idea di come sarà).
 * Risolto un baco di visualizzazione (ridimensionamento form con immagine dentro) (#173)
+
 ### Versione 0.5.7
 * Bug fixing: il menu utente lasciava in disordine il menu principale (#170)
 * Bug fixing: ancora qualche scostamento nei form (scontrini)

@@ -45,7 +45,7 @@ class TableOpenResa extends Component
 	
 	
 
-	expandedRowRender = (record) => {return(<TableDettagliResa righeDettagli={this.props.tabelleRigheEAN[record.ean]}/>)}
+	expandedRowRender = (record) => {return(<TableDettagliResa changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.ean]}/>)}
 
 
     

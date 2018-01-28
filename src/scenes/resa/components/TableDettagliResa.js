@@ -25,14 +25,15 @@ class TableDettagliResa extends Component
 	
 	
 
-	onChangeCustom = (e) => {console.log(e)};
+//	onChangeField = (field, value, record, index) => {this.props.(index)};
 	
 
-  onSubmit = (record) => {console.log(record)}
+  onSubmit = (record,index) => {return(() => {console.log(record); console.log(index);})};
+  onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, record.ean))}
   
- 	pezziRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} record={record} onSubmit={this.onSubmit}  />)}
-   gratisRowRender = (text, record) => {return(<SubInput onChange={this.onChangeCustom} value={text} record={record} onSubmit={this.onSubmit}  />)}
-    dataRowRender = (text, record) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
+ 	pezziRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
+   gratisRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit}  />)}
+    dataRowRender = (text, record, index) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
    
     customRowRender = {'pezzi' : this.pezziRowRender , 'gratis' : this.gratisRowRender, 'dataDocumento': this.dataRowRender}
 

@@ -35,14 +35,14 @@ selectRow = (row) => {
  }
  
  
-actionRowRender = (cell, row) => {
+actionRowRender = (cell, row, index) => {
  return (
         <div>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { lastRowClicked = row.key; this.props.deleteRow(row)}}/>} 
 		{(this.props.editRow) && <Icon type="edit" onClick={() => { lastRowClicked = row.key;  this.props.editRow(row)}}/>}  
        	{(this.props.pinRow) && <Icon type={(row[this.props.pinField]) ? "pushpin" : "pushpin-o" } onClick={() => { lastRowClicked = row.key;  this.props.pinRow(row)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => { lastRowClicked = row.key;  this.props.detailRow(row)}}/>}  
-       {(this.props.saveRow) && <Icon type={"save"} onClick={() => { lastRowClicked = row.key;  this.props.saveRow(row)}}/>}  
+       {(this.props.saveRow) && <Icon type={"save"} onClick={() => { lastRowClicked = row.key;  this.props.saveRow(row, index)}}/>}  
        
         </div>
         );
@@ -76,16 +76,16 @@ render ()
   	             	'title':  header.label,
   	             	'dataIndex': header.dataField,
   	             	 'width': header.width,
-  	             	'render': (text, record) => 
+  	             	'render': (text, record, index) => 
   	             	
-  	            			    {return (this.props.customRowRender && this.props.customRowRender[header.dataField]) ? (this.props.customRowRender[header.dataField])(text,record) : this.ordinaryRowRender(text,record)}
+  	            			    {return (this.props.customRowRender && this.props.customRowRender[header.dataField]) ? (this.props.customRowRender[header.dataField])(text,record, index) : this.ordinaryRowRender(text,record, index)}
   	            	
   	            		})
   	            	}
   				);
   	let actionColumn = {
   		            'key': 'Selezione',
-  					'render': (text, record) => {return this.actionRowRender(text,record)},
+  					'render': (text, record, index) => {return this.actionRowRender(text,record, index)},
   					'width': this.props.actionWidth || '60px',
   					'title': 'Sel.'
   	            	};

@@ -21,7 +21,7 @@ export const ADDED_RIGABOLLA_IN_RESA = 'ADDED_RIGABOLLA_IN_RESA';
 export const CHANGED_RIGABOLLA_IN_RESA = 'CHANGED_RIGABOLLA_IN_RESA';
 export const DELETED_RIGABOLLA_IN_RESA = 'DELETED_RIGABOLLA_IN_RESA';
 
-export const UNLISTEN_BOLLA_IN_RESA = 'UNLISTEN_BOLLE_PER_FORNITORE';
+export const UNLISTEN_BOLLA_IN_RESA = 'UNLISTEN_BOLLA_IN_RESA';
 
 
 //FUNZIONI DA VERIFICARE
@@ -215,9 +215,18 @@ export const rigaResaFA = new FormActions(SCENE, preparaItem, 'righeResa','righe
 
 //Se devo fare override.... definisco metodi alternativi qui...
 
+rigaResaFA.changeEditedItem = (name, value, row, index, ean) => {
+	   	return {
+			type: rigaResaFA.CHANGE_EDITED_ITEM,
+	    	field: name,
+	    	value: value,
+	    	row: row,
+	    	index: index,
+	    	ean: ean
+			}
+	}
 
-
-
+/*
 rigaResaFA.aggiungiItem = (params, valori) => {
   const typeAdd =  rigaResaFA.ADD_ITEM;
   var nuovoItem = {...valori};
@@ -294,4 +303,4 @@ const stockMessageQueue = rigaResaFA.stockMessageQueue;
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));				
     };
   }
-	
+*/
