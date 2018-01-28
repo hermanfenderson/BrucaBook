@@ -14,6 +14,7 @@ const deleteRigaResa = rigaResaFA.deleteItem;
 const toggleTableScroll = rigaResaFA.toggleTableScroll;
 const resetTableResa = rigaResaFA.resetTable;
 const changeEditedItem = rigaResaFA.changeEditedItem;
+const submitEditedItem = rigaResaFA.submitEditedItem;
 
 
 const mapStateToProps = (state) => {
@@ -28,7 +29,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight }, dispatch);
+  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight }, dispatch);
 }
 
 

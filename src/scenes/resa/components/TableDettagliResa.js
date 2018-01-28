@@ -28,7 +28,7 @@ class TableDettagliResa extends Component
 //	onChangeField = (field, value, record, index) => {this.props.(index)};
 	
 
-  onSubmit = (record,index) => {return(() => {console.log(record); console.log(index);})};
+  onSubmit = (record,index) => {return(() => {this.props.submitEditedItem(true,null, this.props.listeningItemResa, record)})};
   onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, record.ean))}
   
  	pezziRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
