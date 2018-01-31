@@ -21,6 +21,7 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, insertRow, removeRow, getStock} from '../helpers/form';
+import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 
 
 const editedRigaResaValuesInitialState = 
@@ -56,7 +57,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}});
+	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}});
     }
     
 
@@ -258,6 +259,17 @@ export default function resa(state = initialState(), action) {
    	     	               'manSconto': row.manSconto,
    	     	               'imgUrl': row.imgUrl
    	    					}
+   	     let itemsArrayIndex = state.itemsArrayIndex; //Non devo modificarle!
+   	     let itemsArray = state.itemsArray;
+   	     let indiceBolleRese = state.indiceBolleRese;
+   	     if (indiceBolleRese[rigaBollaKey]) 
+   	    	{
+   	    		let rigaResa = itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]]];
+   	    		rigaBolla.pezzi = parseInt(rigaResa.pezzi) || 0;
+   	    		rigaBolla.gratis = parseInt(rigaResa.gratis) || 0;
+   	    	}
+   	     
+   	     
    	     if (action.type === ADDED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], rigaBolla, rigaBollaKey, 'pos', 'rigaBolla' );
    	     else 
    	    	{   let pos = indiceEAN[ean].righe[rigaBollaKey].pos;
@@ -315,6 +327,7 @@ export default function resa(state = initialState(), action) {
    	    if (action.ean) 
    	    	{
    	    		 let tabelleRigheEAN = {...state.tabelleRigheEAN};
+   	    		 
    	    		 tabelleRigheEAN[action.ean][action.index][action.field] = action.value;
    	    		 newState = {...state, tabelleRigheEAN: tabelleRigheEAN};
    	    	}
@@ -325,6 +338,33 @@ export default function resa(state = initialState(), action) {
    	    	}
 
    	    break;
+   case rigaResaR.ADDED_ITEM:
+   	        let tabelleRigheEAN = {...state.tabelleRigheEAN};
+   	        let indiceEAN = state.indiceEAN;
+   	        let indiceBolleRese = {...state.indiceBolleRese};
+   	    		 
+		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", rigaResaR.transformItem); 
+		 	let ean = action.payload.val().ean;
+		 	let idRiga = action.payload.key;
+		 	let key = action.payload.val().rigaBolla;
+		 	indiceBolleRese[key] = idRiga;
+		 	let pezzi = parseInt(action.payload.val().pezzi) || 0;
+   	    	let gratis = parseInt(action.payload.val().gratis) || 0;
+   	    	
+   	    	
+		 
+		 	let pos = (indiceEAN[ean] && indiceEAN[ean].righe && indiceEAN[ean].righe[key].pos) ? indiceEAN[ean].righe[key].pos : null;
+		 	if (pos) {tabelleRigheEAN[ean][pos].pezzi = pezzi; tabelleRigheEAN[ean][pos].gratis = gratis;}
+		 	newState = {...newState, tabelleRigheEAN: tabelleRigheEAN, indiceBolleRese: indiceBolleRese};
+	    	break;
+	       
+	case rigaResaR.DELETED_ITEM:
+	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	break;
+	   
+	case rigaResaR.CHANGED_ITEM:
+			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaResaR.transformItem); 
+	    	break;
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;

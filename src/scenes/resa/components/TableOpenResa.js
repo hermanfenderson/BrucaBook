@@ -45,7 +45,7 @@ class TableOpenResa extends Component
 	
 	
 
-	expandedRowRender = (record) => {return(<TableDettagliResa listeningItemResa={this.props.listeningItemResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.ean]}/>)}
+	expandedRowRender = (record) => {return(<TableDettagliResa listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.ean]}/>)}
 
 
     
