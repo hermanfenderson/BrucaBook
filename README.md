@@ -4,6 +4,10 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.6.4
+* I messaggi di errore sono visualizzati; i campi in errore sono valorizzati in rosso
+* Hammer down di vari bachi
+*
 ### Versione 0.6.3
 * Refactoring del codice della gestione resa (#184)
 * Eliminati warning 

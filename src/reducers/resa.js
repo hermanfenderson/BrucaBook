@@ -146,6 +146,8 @@ const manageChangedRigaResa = (state, action) =>
 //In input il nuovo campo... in output il nuovo editedRigaBolla
 function transformAndValidateEditedRigaResa(cei, name, value)
 {  	
+	cei.errors = {};
+	cei.errorMessages = {};
 	cei.values[name] = value;
 	cei.values.prezzoTotale = cei.values.prezzoUnitario * cei.values.pezzi;
 	if (!cei.values.prezzoTotale>0) cei.values.prezzoTotale = 0;
