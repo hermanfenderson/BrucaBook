@@ -40,6 +40,8 @@ export function urlFactory(getState, destination, params, itemId)
 				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  +params[0]+'/'+params[1] + '/'+params[2] ; break;
 				//Un trucco per passare l'id che ho già nel formato giusto...
 				case "righeBollaInResa": url = prefissoNegozio(getState)+'bolle/'  +params[0]; break;
+				//Punta alle rese...
+				case "reseInRigheBolla": url = prefissoNegozio(getState)+'bolle/'  +params[0] + '/rese'; break;
 				
 				case "righeElencoBolle": url = prefissoNegozio(getState)+'elencoBolle/'+params[0]+'/'+params[1]; break;
 				//Persisto una chiave di accesso per ogni bolla ordinata secondo il fornitore
@@ -81,8 +83,8 @@ export function urlFactory(getState, destination, params, itemId)
 }
 
 
-
-export function childAdded(payload, state, dataArrayName, dataIndexName, transformItem)
+//Aggiunta possibilità di salvare i valori in un oggetto-prefisso qui e nei due metodi sotto...
+export function childAdded(payload, state, dataArrayName, dataIndexName, transformItem, prefix)
 {  //Creo un array e un indice per copia degli attuali
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndexNew = {...(state[dataIndexName])};
@@ -93,7 +95,13 @@ export function childAdded(payload, state, dataArrayName, dataIndexName, transfo
    if (transformItem) transformItem(tmp);
 
 
-   dataArrayNew.push(tmp);
+   if (!prefix) dataArrayNew.push(tmp);
+   else 
+	{   let obj = {};
+		obj[prefix] = tmp;
+		obj.key = payload.key;
+		dataArrayNew.push(obj);
+	}	
   //Creo un indice per recuperare in seguito la posizione nell'array per la chiave
    dataIndexNew[payload.key] = dataArrayNew.length - 1;
   
@@ -131,7 +139,7 @@ export function childDeleted(payload, state, dataArrayName, dataIndexName)
 	else return {...state};
 }
 
-export function childChanged(payload, state, dataArrayName, dataIndexName, transformItem)
+export function childChanged(payload, state, dataArrayName, dataIndexName, transformItem, prefix)
 {  //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
    var dataArrayNew = state[dataArrayName].slice();
    var dataIndex = state[dataIndexName];
@@ -146,8 +154,15 @@ export function childChanged(payload, state, dataArrayName, dataIndexName, trans
 		 //Se è definita una funzione di trasformazione la applico
 		   if (transformItem) transformItem(tmp);
 		  
-		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
-		  
+		   if (!prefix) dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
+			else 
+			{   let obj = {};
+				obj[prefix] = tmp;
+				obj.key = payload.key;
+		
+				dataArrayNew[index] = obj;
+			}	
+
 		  //Aggiorno lo stato passando nuovo array e nuovo indice
 		   var newState = {...state};
 		   newState[dataArrayName] = dataArrayNew;

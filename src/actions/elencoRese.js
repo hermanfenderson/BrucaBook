@@ -41,6 +41,12 @@ export const resaFA = new FormActions(SCENE, preparaItem, 'righeElencoRese');
 //Override di submit.... devo gestire il salvataggio in gerarchia....
 //Metto qui anche aggiungi e aggiorna...
 
-
-	
+//Setto bolla aperta o chiusa
+export const setStato = (listeningTestata, testata, stato)	=> 
+{   let newTestata = {...testata, stato : stato};
+return function(dispatch)
+	{
+	dispatch(resaFA.aggiornaItem(listeningTestata.params, listeningTestata.itemId, newTestata));
+	}
+}
 

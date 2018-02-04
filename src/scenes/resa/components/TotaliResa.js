@@ -7,7 +7,10 @@ const TotaliResa = (props) =>
 		<div>
 			<Form layout="inline"> 
 				<Form.Item label="Aperta"> 
-				<Switch checked={true} onChange={() => {}} /> 
+				<Switch checked={(props.testataResa.stato==='aperta')} onChange={(checked) => {
+																						if (checked) props.setStato(props.listeningTestataResa, props.testataResa, "aperta");
+																						else props.setStato(props.listeningTestataResa, props.testataResa, "chiusa");
+																						}} /> 
 				</Form.Item> 
 			</Form> 
 			<Spin spinning={props.staleTotali}> 

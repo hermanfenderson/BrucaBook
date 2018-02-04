@@ -3,13 +3,13 @@ import WrappedTable from '../../../components/WrappedTable'
 import TableDettagliResa from './TableDettagliResa'
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
-                {dataField: 'titolo', label: 'Titolo', width: '320px'},
-                {dataField: 'autore', label: 'Autore', width: '280px'},
+const header = [{dataField: 'values.ean', label: 'EAN', width: '160px'},
+                {dataField: 'values.titolo', label: 'Titolo', width: '320px'},
+                {dataField: 'values.autore', label: 'Autore', width: '280px'},
 			    
-			    {dataField: 'prezzoListino', label: 'Listino', width: '90px'},
-			    {dataField: 'stock', label: 'Stock', width: '60px'},
-			    {dataField: 'resi', label: 'Resi', width: '60px'},
+			    {dataField: 'values.prezzoListino', label: 'Listino', width: '90px'},
+			    {dataField: 'values.stock', label: 'Stock', width: '60px'},
+			    {dataField: 'values.resi', label: 'Resi', width: '60px'},
 			    
 			   ];
 			   
@@ -45,7 +45,7 @@ class TableOpenResa extends Component
 	
 	
 
-	expandedRowRender = (record) => {return(<TableDettagliResa listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.ean]}/>)}
+	expandedRowRender = (record) => {return(<TableDettagliResa listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]}/>)}
 
 
     
@@ -60,7 +60,6 @@ class TableOpenResa extends Component
     	  return(
 			<WrappedTable {...props} 
 			data={this.props.tabellaEAN}
-			rowKey={'ean'}
 			expandedRowRender={this.expandedRowRender} 
 			highlightedRowKey={selectedItemKey} 
 			header={header}/>

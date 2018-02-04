@@ -258,27 +258,28 @@ export const nomeFornitoreById = (id) =>
 
 
 //Metodi per inserire in un array sulla base di un indice... e rimuovere...
+//L'array ha un sotto-oggetto... valori per avere anche errors e riportarsi al caso noto della gestione delle righe...
 export const insertRow = (index, array, row, key, posField, keyField, afterKey) =>
 {
 if (afterKey) 
 	{
 	let afterPos = index[afterKey][posField];
-	array.splice(afterPos+1,0,row);
+	array.splice(afterPos+1,0,{values: row});
 	for (let i = afterPos+1; i < array.length; i++) index[array[i][keyField]][posField] = i;	
 	}
 else
 	{
 	let newPos = array.length;
 	index[key][posField] = newPos;
-	array.push(row);
+	array.push({key: row[keyField], values: row});
 	}
 }
 
-export const removeRow = (index, array, key, posField,keyField) => 
+export const removeRow = (index, array, key, posField, keyField) => 
 {
 	let pos = index[key][posField];
 	array.splice(pos,1);
-	for (let i = pos; i < array.length; i++) index[array[i][keyField]][posField] = i;	
+	for (let i = pos; i < array.length; i++) index[array[i].values[keyField]][posField] = i;	
 }
 
 //data una lista di dettagli di un EAN calcola i pezzi a stock... saltando se necessario il documento corrente, eventualmente fino a una data

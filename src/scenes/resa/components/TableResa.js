@@ -1,14 +1,20 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import SubInput from '../../../components/SubInput'
+import moment from 'moment'
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
-                {dataField: 'titolo', label: 'Titolo', width: '320px'},
-			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '60px'},
-			    {dataField: 'pezzi', label: 'Quantità', width: '60px'},
-			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
-			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
+const header = [
+				{dataField: 'values.riferimento', label: 'Rif.', width: '80px'},
+                {dataField: 'values.dataDocumento', label: 'Data', width: '160px'},
+				{dataField: 'values.ean', label: 'EAN', width: '160px'},
+                {dataField: 'values.titolo', label: 'Titolo', width: '320px'},
+                {dataField: 'values.prezzoListino', label: 'Listino', width: '60px'},
+			   
+			    {dataField: 'values.prezzoUnitario', label: 'Prezzo', width: '60px'},
+			    {dataField: 'values.pezzi', label: 'Quantità', width: '60px'},
+			    {dataField: 'values.gratis', label: 'Gratis', width: '60px'},
+			    {dataField: 'values.prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
 
 var currentListenedIdResa = null;
@@ -44,15 +50,30 @@ class TableResa extends Component
 	deleteRow = (row) => {
 		let params = [...this.props.period];
     	params.push(this.props.idResa);
-		this.props.deleteRigaResa(params,row.key,row);
+		this.props.deleteRigaResa(params,row.key,row.values);
 	}
 	
-	editRow = (row) => {
-		let params = [...this.props.period];
-    	params.push(this.props.idResa);
-		this.props.setSelectedRigaResa(row);
-	}
+
 	
+	
+  onSubmit = (record,index) => {return(() => {this.onSave(record, index)})};  //Se la key è null faccio insert altrimenti update...
+  onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index))}
+  onSave = (record, index) => { 
+  								
+  								let selectedItem = (record.key) ? {key: record.key} : null;  
+  								record.gratis = parseInt(record.gratis) || 0;
+  							    record.pezzi = parseInt(record.pezzi) || 0;
+  							    
+  							    if ((record.gratis + record.pezzi) > 0) this.props.submitEditedItem(true, selectedItem , this.props.listeningItemResa, record);
+  								else this.props.deleteRigaResa(this.props.listeningItemResa, record.key, record.values); //Se a zero cancello la riga resa...
+								};
+ 
+	pezziRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
+   gratisRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit(record,index)}  />)}
+    dataRowRender = (text, record, index) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
+   
+    customRowRender = {'values.pezzi' : this.pezziRowRender , 'values.gratis' : this.gratisRowRender, 'values.dataDocumento': this.dataRowRender}
+
    	render() { 
     
     	let props = {...this.props};
@@ -62,7 +83,7 @@ class TableResa extends Component
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props}  customRowRender={this.customRowRender}  highlightedRowKey={selectedItemKey} deleteRow={this.deleteRow} saveRow={this.onSave} header={header}/>
 			)}
     }		
 	

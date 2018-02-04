@@ -226,7 +226,7 @@ rigaResaFA.changeEditedItem = (name, value, row, index, ean) => {
 			}
 	}
 
-/*
+
 rigaResaFA.aggiungiItem = (params, valori) => {
   const typeAdd =  rigaResaFA.ADD_ITEM;
   var nuovoItem = {...valori};
@@ -242,6 +242,12 @@ rigaResaFA.aggiungiItem = (params, valori) => {
    var ref; 
     ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
     ref.set(nuovoItem);
+    let idRigaBolla = valori.idRigaBolla;
+    let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
+    let updatedRese = {};
+    updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
+    var ref2; 
+    ref2  = Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
    
     
    dispatch(
@@ -269,6 +275,14 @@ rigaResaFA.aggiornaItem = (params,itemId, valori) => {
 
     const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
     ref.update(nuovoItem);
+    let idRigaBolla = valori.idRigaBolla;
+     let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + itemId; //Ricostruisco l'id Riga resa
+   
+    let updatedRese = {};
+   updatedRese[itemId] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
+   var ref2; 
+    ref2  = Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+   
     dispatch(
    	{
    		type: typeChange,
@@ -294,6 +308,12 @@ const stockMessageQueue = rigaResaFA.stockMessageQueue;
 
   return function(dispatch, getState) {
     Firebase.database().ref(urlFactory(getState,itemsUrl,params, itemId)).remove();
+      let idRigaBolla = valori.idRigaBolla;
+  
+   
+    var ref2; 
+    ref2  = Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla, itemId)).remove();
+  
      dispatch(
 					{
    					type: typeDelete,
@@ -303,4 +323,4 @@ const stockMessageQueue = rigaResaFA.stockMessageQueue;
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));				
     };
   }
-*/
+

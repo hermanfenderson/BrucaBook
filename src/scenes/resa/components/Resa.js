@@ -72,7 +72,7 @@ render()
   
       <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
-    	 <TotaliResa staleTotali={this.props.staleTotali} testataResa={this.props.testataResa}/>
+    	 <TotaliResa staleTotali={this.props.staleTotali} testataResa={this.props.testataResa} listeningTestataResa={this.props.listeningTestataResa} setStato={this.props.setStato}/>
       </Col>
  
        <Col span={20}>

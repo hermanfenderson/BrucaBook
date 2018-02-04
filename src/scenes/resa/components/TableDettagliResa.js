@@ -4,14 +4,19 @@ import SubInput from '../../../components/SubInput'
 import moment from 'moment';
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'riferimento', label: 'Rif.', width: '160px'},
-                {dataField: 'dataDocumento', label: 'Data', width: '160px'},
-			   {dataField: 'prezzoUnitario', label: 'Prezzo', width: '160px'},
-			   {dataField: 'maxRese', label: 'Max. pezzi', width: '160px'},
-			   {dataField: 'maxGratis', label: 'Max. gratis', width: '160px'},
-			   {dataField: 'pezzi', label: 'Pezzi', width: '160px'},
-			   {dataField: 'gratis', label: 'Gratis', width: '160px'},
+//Trucco che mi consente di riciclare un po' di roba dopo...
+
+const header = [{dataField: 'values.riferimento', label: 'Rif.', width: '160px'},
+                {dataField: 'values.dataDocumento', label: 'Data', width: '160px'},
+                 {dataField: 'values.prezzoListino', label: 'Listino', width: '60px'},
 			   
+			    {dataField: 'values.prezzoUnitario', label: 'Prezzo', width: '60px'},
+			   {dataField: 'values.maxRese', label: 'Max. pezzi', width: '160px'},
+			   {dataField: 'values.maxGratis', label: 'Max. gratis', width: '160px'},
+			   {dataField: 'values.pezzi', label: 'Pezzi', width: '160px'},
+			   {dataField: 'values.gratis', label: 'Gratis', width: '160px'},
+			    {dataField: 'values.prezzoTotale', label: 'Totale', width: '60px'},
+			  
 			   
 			   ];
 
@@ -29,21 +34,21 @@ class TableDettagliResa extends Component
   	
 
   onSubmit = (record,index) => {return(() => {this.onSave(record, index)})};  //Se la key è null faccio insert altrimenti update...
-  onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, record.ean))}
+  onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, record.values.ean))}
   onSave = (record, index) => { 
-  								let selectedItem = (record.key) ? {key: record.key} : null;  
-  								record.gratis = parseInt(record.gratis) || 0;
-  							    record.pezzi = parseInt(record.pezzi) || 0;
+  								let selectedItem = (record.values.key) ? {key: record.values.key} : null;  
+  								record.values.gratis = parseInt(record.values.gratis) || 0;
+  							    record.values.pezzi = parseInt(record.values.pezzi) || 0;
   							    
-  							    if ((record.gratis + record.pezzi) > 0) this.props.submitEditedItem(true, selectedItem , this.props.listeningItemResa, record);
-  								else this.props.deleteRigaResa(this.props.listeningItemResa, record.key); //Se a zero cancello la riga resa...
+  							    if ((record.values.gratis + record.values.pezzi) > 0) this.props.submitEditedItem(true, selectedItem , this.props.listeningItemResa, record.values);
+  								else this.props.deleteRigaResa(this.props.listeningItemResa, record.key, record.values); //Se a zero cancello la riga resa...
 								};
   
  	pezziRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
    gratisRowRender = (text, record, index) => {return(<SubInput onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit(record,index)}  />)}
     dataRowRender = (text, record, index) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
    
-    customRowRender = {'pezzi' : this.pezziRowRender , 'gratis' : this.gratisRowRender, 'dataDocumento': this.dataRowRender}
+    customRowRender = {'values.pezzi' : this.pezziRowRender , 'values.gratis' : this.gratisRowRender, 'values.dataDocumento': this.dataRowRender}
 
     
     	render() { 
@@ -61,7 +66,6 @@ class TableDettagliResa extends Component
 			highlightedRowKey={selectedItemKey} 
 			saveRow={this.onSave}
 			size={'small'}
-			rowKey={'rigaBolla'}
 			header={header}/>
 			)}
     }		

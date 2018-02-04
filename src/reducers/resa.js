@@ -1,7 +1,6 @@
 //Il reducer RESA considera che i dati sono quelli della bolla originaria. E non dovrebbe farli modificare... ma lascio vivi i controlli se voglio gestire eccezioni...
 
 import FormReducer from '../helpers/formReducer'
-import {STORE_MEASURE} from '../actions';
 import {LISTEN_BOLLE_PER_FORNITORE, 
 		ADDED_BOLLE_PER_FORNITORE, 
 		CHANGED_BOLLE_PER_FORNITORE , 
@@ -30,15 +29,10 @@ const editedRigaResaValuesInitialState =
 				titolo: '',
 				autore: '',
 				prezzoListino: '',
-				sconto1: '',
-				sconto2: '',
-				sconto3: '',
-				manSconto: false,
 				prezzoUnitario: '',
-				pezzi: '1',
-				gratis: '',
+				pezzi: 0,
+				gratis: 0,
 				prezzoTotale: '',
-				imgUrl: ''	
 	};
 	
 	
@@ -62,23 +56,58 @@ const initialState = () => {
     
 
 
-
 //Metodi reducer per le Form
 const rigaResaR = new FormReducer('RESA', null, null, null, initialState); 
 
 
 
+//Data una rigaBolla e una rigaResa valorizza rigaResa col massimo di pezzi e gratis che posso rendere
+const setMaxRese = (rigaBolla, rigaResa, destination) => 
+{
+	destination.maxRese = rigaBolla.pezzi;
+	destination.maxGratis = rigaBolla.gratis;
+	let rigaResaKey = rigaResa.key;
+	for (var rigaKey in rigaBolla.rese)
+		{
+			if (rigaKey !== rigaResaKey) 
+				{
+				 destination.maxRese = destination.maxRese - rigaBolla.rese[rigaKey].pezzi;
+				 destination.maxGratis = destination.maxGratis - rigaBolla.rese[rigaKey].gratis;
+				}
+		}
+	
+}
 
+const getTotaleResi = (ean, righeResa) =>
+{
+	//Prendo tutte le righe con una resa che corrispondono a quell'EAN e le totalizzo...
+	//Faccio prima a forza bruta!
+	let totali = 0;
+	for (var i in righeResa)
+		{
+			if (righeResa[i].values.ean === ean)
+				{
+					totali = totali + righeResa[i].values.pezzi + righeResa[i].values.gratis;
+				}
+		}
+	return(totali);	
+}
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
 function transformAndValidateEditedRigaResa(cei, name, value)
 {  	
 	cei.values[name] = value;
+	cei.values.prezzoTotale = cei.values.prezzoUnitario * cei.values.pezzi;
+	/*
+	
+	cei.values[name] = value;
 	//Gestione cambiamenti
     switch (name) {
 				
 		case 'pezzi':
+		case 'gratis':
+		console.log("sono qui");
 			const pezzi = cei.values['pezzi'];
 			const prezzoUnitario = cei.values['prezzoUnitario'];
 			if (prezzoUnitario >=0 && pezzi>=0) cei.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);
@@ -92,27 +121,8 @@ function transformAndValidateEditedRigaResa(cei, name, value)
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
    
-   //Se tocco EAN il form è svalido sempre 
-   if (name === 'ean') 
-        {
-        //Aggiorno lo stato di EAN
-        eanState(cei);
-        //cancello provvisoriamente tutti gli error
-        noErrors(cei, 'ean');
-		//E cancello i campi del libro...
-		cei.values.titolo = '';
-		cei.values.autore = '';
-		cei.values.prezzoListino = '';
-		//Rivaluto gli errori e cosa mostrare
-	    updateEANErrors(cei);
-		}
-
   
-		
-   errMgmt(cei, 'sconto1','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto1));
-   errMgmt(cei, 'sconto2','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto2));
-   errMgmt(cei, 'sconto3','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto3));
-   	
+ 
    
    	errMgmt(cei, 'prezzoUnitario','invalidAmount','Importo (19.99)',  
    	    ((value) => {return !isAmount(value)})(cei.values.prezzoUnitario), 
@@ -137,6 +147,7 @@ function transformAndValidateEditedRigaResa(cei, name, value)
   	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
+    */
     return cei;
 }
 
@@ -146,25 +157,24 @@ export default function resa(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
-   case STORE_MEASURE:
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaResaHeight'] -130;
-   	    newState = {...state, tableHeight: height};
-        break;
-   
+
+   //Ascolto tutte le bolle collegate a un fornitore... 
    case LISTEN_BOLLE_PER_FORNITORE:
    	    newState = {...state, listeningFornitore : action.params};
    	    break;
+   	    
+   //Ascolto i dettagli per un singolo EAN	    
    case LISTEN_DETTAGLI_EAN:
    	    newState = state;
    	    break;
+   //Cesso di sentire i dettagli di un singolo EAN	    
    case UNLISTEN_DETTAGLI_EAN:
         {let dettagliEAN = {...state.dettagliEAN};
    	    delete dettagliEAN[action.params]; //Elimino la riga dai dettagli
    	    newState = {...state, dettagliEAN: dettagliEAN};
    	    }
-   	    break;	    
+   	    break;	  
+   	    
    //Anche qui aggiorno il valore dello stock	    
    case GET_DETTAGLI_EAN:
    	    {let dettagliEAN = {...state.dettagliEAN};
@@ -176,13 +186,14 @@ export default function resa(state = initialState(), action) {
    	    if (indiceEAN[ean] && indiceEAN[ean].pos >= 0) //Se serve ricalcolo lo stock
    	    	{
    	    	 let tabellaEAN = [...state.tabellaEAN];
-   	    	 tabellaEAN[indiceEAN[ean].pos].stock = getStock(details); 
+   	    	 tabellaEAN[indiceEAN[ean].pos].values.stock = getStock(details); 
    	    	 newState = {...state, dettagliEAN: dettagliEAN, tabellaEAN: tabellaEAN};
    	    	}
    	    else newState = {...state, dettagliEAN: dettagliEAN}	
    	    }
    	    break;
    
+   //Ascolto le bolle in resa aggiungendole a un elenco di bolle osservate...
    case LISTEN_BOLLA_IN_RESA:
    		{
    		let bolleOsservate = {...state.bolleOsservate};
@@ -191,6 +202,7 @@ export default function resa(state = initialState(), action) {
    			
    		}
    		break;
+   		
    	case UNLISTEN_BOLLA_IN_RESA:
    		{
    		let bolleOsservate = {...state.bolleOsservate};
@@ -217,6 +229,13 @@ export default function resa(state = initialState(), action) {
    		}
    		break;	
 
+    //ADDED_RIGABOLLA
+    
+    //Per ogni riga bolla potenzialmente potrei associare una riga resa...
+    
+    
+    
+   
    	case ADDED_RIGABOLLA_IN_RESA: 
    	case CHANGED_RIGABOLLA_IN_RESA:
    		{
@@ -228,18 +247,22 @@ export default function resa(state = initialState(), action) {
    		let idRigaBolla = anno + '/' + mese + '/' + bolla + '/' + riga;
    	    let bolleOsservate = {...state.bolleOsservate};
    	    let row = action.payload.val();
+   	     //Ne copio i contenuti in bolleOsservate...
+   
    	    bolleOsservate[bolla].righe[riga] = row;
    	    let ean =  action.payload.val().ean;
    	    let indiceEAN = {...state.indiceEAN};
    	    let tabellaEAN = [...state.tabellaEAN];
    	    let tabelleRigheEAN = {...state.tabelleRigheEAN};
+   	    //Creazione della testata EAN...
    	    if (!indiceEAN[ean]) 
    	    	{indiceEAN[ean] = {};
-   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, stock: getStock(ean)}, ean, 'pos', 'ean');
+   	    	 tabellaEAN[key] = ean;
+   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, stock: getStock(ean), resi: 0}, ean, 'pos', 'ean');
    	    	}
    	    if (!indiceEAN[ean].righe) indiceEAN[ean].righe = {};
    	    let rigaBollaKey = bolla+'/'+riga;
-   	    indiceEAN[ean].righe[rigaBollaKey] = {'pos': -1}; //Non è in mostra...
+   	    if (!indiceEAN[ean].righe[rigaBollaKey]) indiceEAN[ean].righe[rigaBollaKey] = {'pos': -1}; //Non è in mostra...
    	   	 
    	     if (!tabelleRigheEAN[ean]) tabelleRigheEAN[ean] = [];
    	     
@@ -257,27 +280,34 @@ export default function resa(state = initialState(), action) {
    	     	               'sconto2': row.sconto2,
    	     	               'sconto3': row.sconto3,
    	     	               'manSconto': row.manSconto,
-   	     	               'imgUrl': row.imgUrl
-   	    					}
+   	     	               'imgUrl': row.imgUrl,
+   	     	               'pezzi': row.pezzi,
+   	     	               'gratis': row.gratis
+   	     	               	}
    	     let itemsArrayIndex = state.itemsArrayIndex; //Non devo modificarle!
    	     let itemsArray = state.itemsArray;
    	     let indiceBolleRese = state.indiceBolleRese;
-   	     if (indiceBolleRese[rigaBollaKey]) 
+   	     let rigaResa = {pezzi: 0, gratis: 0}; //Oggetto inizialmente vuoto
+   	     
+   	     if (indiceBolleRese[rigaBollaKey])  //Se ho giè una riga resa collegata a questa riga bolla
    	    	{
-   	    		let rigaResa = itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]]];
-   	    		rigaBolla.pezzi = parseInt(rigaResa.pezzi) || 0;
-   	    		rigaBolla.gratis = parseInt(rigaResa.gratis) || 0;
+   	    		rigaResa = itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]]].values;
+   	    		tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //Aggiorno i totali...
+		 	
+   	    		//Se ho elementi a blank... li valorizzo
    	    	}
-   	     
-   	     
-   	     if (action.type === ADDED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], rigaBolla, rigaBollaKey, 'pos', 'rigaBolla' );
+   	     setMaxRese(rigaBolla, rigaResa, rigaResa ); //Calcolo quante rese posso fare... se non ho nessuna resa in memoria le prendo tutte...
+         
+   	     let blendedRiga = {...rigaBolla, ...rigaResa}; //Prevalenza di resa su bolla...
+   	     if (action.type === ADDED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], blendedRiga, rigaBollaKey, 'pos', 'rigaBolla' );
    	     else 
    	    	{   let pos = indiceEAN[ean].righe[rigaBollaKey].pos;
-   	    		tabelleRigheEAN[ean][pos] = {...tabelleRigheEAN[ean][pos], ...rigaBolla};
+   	    		tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, blendedRiga}; //Prevalenza di rigaresa su rigabolla!
    	    	}
    	    newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN, tabelleRigheEAN: tabelleRigheEAN};
    		}
         break;
+        
    case DELETED_RIGABOLLA_IN_RESA:
   	    {
   	    let bolla = action.payload.ref.path.pieces_[5];
@@ -324,26 +354,41 @@ export default function resa(state = initialState(), action) {
   	    }
   	    break;
    case rigaResaR.CHANGE_EDITED_ITEM:
+   	    {
+   		let tabelleRigheEAN = {...state.tabelleRigheEAN};
+   	    let itemsArray = [...state.itemsArray];
+   	    let itemsArrayIndex = state.itemsArrayIndex;
+   	    let indiceEAN = state.indiceEAN;
+   	    		
    	    if (action.ean) 
    	    	{
-   	    		 let tabelleRigheEAN = {...state.tabelleRigheEAN};
-   	    		 
-   	    		 tabelleRigheEAN[action.ean][action.index][action.field] = action.value;
-   	    		 newState = {...state, tabelleRigheEAN: tabelleRigheEAN};
+   	    		 //Passo il punto della tabella in cui fare le modifiche...
+   	    		 let cei = transformAndValidateEditedRigaResa(tabelleRigheEAN[action.ean][action.index], action.field, action.value);
+   	    		 if (action.row.values.key)
+   	    			{
+   	    			let rigaResaKey = action.row.values.key;
+   	    			let pos = itemsArrayIndex[rigaResaKey];
+   	    			itemsArray[pos] = {...cei};
+   	    			itemsArray[pos].key = key;
+   	    			}
    	    	}
    	    else 
    	    	{
-   	    		//DA IMPLEMENTARE
-   	    		newState = state;
+   	    	   let cei = transformAndValidateEditedRigaResa(itemsArray[action.index], action.field, action.value);
+   	    	   let pos = indiceEAN[action.row.values.ean].righe[action.row.values.rigaBolla].pos;
+   	    	   tabelleRigheEAN[action.row.values.ean][pos] = {...cei};
    	    	}
-
+   	     newState = {...state, tabelleRigheEAN: tabelleRigheEAN, itemsArray : itemsArray};
+   		console.log(newState);
+   	    }
    	    break;
    case rigaResaR.ADDED_ITEM:
    	        let tabelleRigheEAN = {...state.tabelleRigheEAN};
    	        let indiceEAN = state.indiceEAN;
    	        let indiceBolleRese = {...state.indiceBolleRese};
+   	        let tabellaEAN = [...state.tabellaEAN];
    	    		 
-		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", rigaResaR.transformItem); 
+		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", rigaResaR.transformItem, "values"); 
 		 	let ean = action.payload.val().ean;
 		 	let idRiga = action.payload.key;
 		 	let key = action.payload.val().rigaBolla;
@@ -354,7 +399,9 @@ export default function resa(state = initialState(), action) {
    	    	
 		 
 		 	let pos = (indiceEAN[ean] && indiceEAN[ean].righe && indiceEAN[ean].righe[key].pos) ? indiceEAN[ean].righe[key].pos : null;
-		 	if (pos) {tabelleRigheEAN[ean][pos].pezzi = pezzi; tabelleRigheEAN[ean][pos].gratis = gratis;}
+		 	if (pos) {tabelleRigheEAN[ean][pos].values.key = key, tabelleRigheEAN[ean][pos].values.pezzi = pezzi; tabelleRigheEAN[ean][pos].values.gratis = gratis;}
+		 	//Aggiorno totali rese... se la riga esiste già... altrimenti aggiornerò al prossimo giro...
+		 	if (indiceEAN[ean]) tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, newState.itemsArray); //L'array per come sarà...
 		 	newState = {...newState, tabelleRigheEAN: tabelleRigheEAN, indiceBolleRese: indiceBolleRese};
 	    	break;
 	       
@@ -363,7 +410,7 @@ export default function resa(state = initialState(), action) {
 	    	break;
 	   
 	case rigaResaR.CHANGED_ITEM:
-			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaResaR.transformItem); 
+			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaResaR.transformItem, "values"); 
 	    	break;
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);

@@ -37,7 +37,7 @@ class TableElencoRese extends Component
     		{
     			if (!isEqual(currentListened,this.props.period))
     				{
-    				    this.props.offListenBolla(currentListened);
+    				    this.props.offListenResa(currentListened);
     				    this.props.resetTable();
     					this.props.listenResa(this.props.period);
  
