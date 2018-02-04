@@ -37,10 +37,10 @@ class TableDettagliResa extends Component
   onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, record.values.ean))}
   onSave = (record, index) => { 
   								let selectedItem = (record.values.key) ? {key: record.values.key} : null;  
-  								record.values.gratis = parseInt(record.values.gratis) || 0;
-  							    record.values.pezzi = parseInt(record.values.pezzi) || 0;
+  								record.values.gratis = parseInt(record.values.gratis, 10) || 0;
+  							    record.values.pezzi = parseInt(record.values.pezzi, 10) || 0;
   							    
-  							    if ((record.values.gratis + record.values.pezzi) > 0) this.props.submitEditedItem(true, selectedItem , this.props.listeningItemResa, record.values);
+  							    if ((record.values.gratis + record.values.pezzi) > 0) this.props.submitEditedItem(record.isValid, selectedItem , this.props.listeningItemResa, record.values);
   								else this.props.deleteRigaResa(this.props.listeningItemResa, record.key, record.values); //Se a zero cancello la riga resa...
 								};
   

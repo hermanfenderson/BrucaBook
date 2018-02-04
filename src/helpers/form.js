@@ -58,16 +58,16 @@ export function errMgmt(cei, name,error,message, errorCondition, errorMessageCon
 	if (errorCondition === true) 
 	    {
 	    
-	    
+	    if (!cei.errors) cei.errors = {};
 	    if (!(name in cei.errors)) cei.errors[name] = {};
 		cei.errors[name][error] = message;
 	    }
 	else 
 		{
-		if (name in cei.errors) delete cei.errors[name][error];
-		 if (cei.errors[name] && Object.keys(cei.errors[name]).length === 0) delete cei.errors[name];
+		if (cei.errors && name in cei.errors) delete cei.errors[name][error];
+		 if (cei.errors && cei.errors[name] && Object.keys(cei.errors[name]).length === 0) delete cei.errors[name];
 		}
-	if (errorMessageCondition === true) cei.errorMessages[name] = message;
+	if (errorMessageCondition === true) {if (!cei.errorMessages) cei.errorMessages = {}; cei.errorMessages[name] = message;}
 }
 
 export function showError(cei,name)
@@ -88,7 +88,7 @@ export function noErrors(cei, name)
 }
 
 export function isValidEditedItem(editedItem) {
-	return ((Object.keys(editedItem.errors).length === 0) && editedItem.loading === false)
+	return (((!editedItem.errors) || (Object.keys(editedItem.errors).length === 0)) && (!editedItem.loading))
 }
 
 
@@ -263,6 +263,7 @@ export const insertRow = (index, array, row, key, posField, keyField, afterKey) 
 {
 if (afterKey) 
 	{
+	if (!index[afterKey]) index[afterKey] = {};	
 	let afterPos = index[afterKey][posField];
 	array.splice(afterPos+1,0,{values: row});
 	for (let i = afterPos+1; i < array.length; i++) index[array[i][keyField]][posField] = i;	
@@ -270,6 +271,7 @@ if (afterKey)
 else
 	{
 	let newPos = array.length;
+	if (!index[key]) index[key] = {};	
 	index[key][posField] = newPos;
 	array.push({key: row[keyField], values: row});
 	}

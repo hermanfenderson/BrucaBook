@@ -246,8 +246,7 @@ rigaResaFA.aggiungiItem = (params, valori) => {
     let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
     let updatedRese = {};
     updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
-    var ref2; 
-    ref2  = Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+    Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
    
     
    dispatch(
@@ -280,8 +279,7 @@ rigaResaFA.aggiornaItem = (params,itemId, valori) => {
    
     let updatedRese = {};
    updatedRese[itemId] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
-   var ref2; 
-    ref2  = Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+   Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
    
     dispatch(
    	{
@@ -311,8 +309,7 @@ const stockMessageQueue = rigaResaFA.stockMessageQueue;
       let idRigaBolla = valori.idRigaBolla;
   
    
-    var ref2; 
-    ref2  = Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla, itemId)).remove();
+   Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla, itemId)).remove();
   
      dispatch(
 					{

@@ -61,10 +61,10 @@ class TableResa extends Component
   onSave = (record, index) => { 
   								
   								let selectedItem = (record.key) ? {key: record.key} : null;  
-  								record.gratis = parseInt(record.gratis) || 0;
-  							    record.pezzi = parseInt(record.pezzi) || 0;
+  								record.values.gratis = parseInt(record.values.gratis, 10) || 0;
+  							    record.values.pezzi = parseInt(record.values.pezzi, 10) || 0;
   							    
-  							    if ((record.gratis + record.pezzi) > 0) this.props.submitEditedItem(true, selectedItem , this.props.listeningItemResa, record);
+  							    if ((record.values.gratis + record.values.pezzi) > 0) this.props.submitEditedItem(record.isValid, selectedItem , this.props.listeningItemResa, record.values);
   								else this.props.deleteRigaResa(this.props.listeningItemResa, record.key, record.values); //Se a zero cancello la riga resa...
 								};
  

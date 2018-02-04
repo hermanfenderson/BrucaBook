@@ -1,9 +1,14 @@
-BrucaBook V.0.6.2
+BrucaBook V.0.6.3
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.6.3
+* Refactoring del codice della gestione resa (#184)
+* Eliminati warning 
+* Il form non salva se ci sono errori (ma ancora non li sa evidenziare)
+
 ### Versione 0.6.2
 * Rilascio pre-alpha delle funzionalità rese (dimostratore). Le cose più ovvie funzionano. Non ci sono controlli sui form!
 * Il toggle resa aperta - resa chiusa funziona

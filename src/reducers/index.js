@@ -100,6 +100,7 @@ export const getIndiceEAN = (state) => {return fromResa.getIndiceEAN(state.resa)
 export const getTabellaEAN = (state) => {return fromResa.getTabellaEAN(state.resa)};
 export const getDettagliEANResa = (state) => {return fromResa.getDettagliEAN(state.resa)};
 export const getTabelleRigheEAN = (state) => {return fromResa.getTabelleRigheEAN(state.resa)};
+export const getTabellaRighe = (state) => {return fromResa.getTabellaRighe(state.resa)};
 
 
 //Scene Inventario
