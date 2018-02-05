@@ -1,4 +1,4 @@
-BrucaBook V.0.6.3
+BrucaBook V.0.6.4
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
@@ -6,8 +6,10 @@ Storia delle versioni
 ---------------------
 ### Versione 0.6.4
 * I messaggi di errore sono visualizzati; i campi in errore sono valorizzati in rosso
-* Hammer down di vari bachi
-*
+* Modificati i metodi submit per salvare le informazioni giuste dalle varie componenti della resa (bolla, resa e testata resa) 
+* Corretto l'update di riga (che non funzionava e generava doppi)
+* Corretta la delete di riga (che non funzionava #187)
+
 ### Versione 0.6.3
 * Refactoring del codice della gestione resa (#184)
 * Eliminati warning 

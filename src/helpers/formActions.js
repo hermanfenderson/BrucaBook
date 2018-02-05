@@ -643,7 +643,6 @@ this.submitEditedItem = (isValid,selectedItem,params,valori) => {
 	      const itemId = selectedItem ? selectedItem.key : null;
 	      return function(dispatch, getState) {
 			dispatch({type: type});
-			console.log(valori);
 			if (selectedItem && isValid) key=dispatch(aggiornaItem(params, itemId, valori));
 			else if(isValid) key=dispatch(aggiungiItem(params,valori));
 			return(key);

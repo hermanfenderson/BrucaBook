@@ -161,57 +161,7 @@ function transformAndValidateEditedRigaResa(cei, name, value)
 	errMgmt(cei, 'gratis','freeFirst','usa gratis', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
 	
 	cei.isValid = isValidEditedItem(cei);
-    
-   	
-	/*
-	
-	cei.values[name] = value;
-	//Gestione cambiamenti
-    switch (name) {
-				
-		case 'pezzi':
-		case 'gratis':
-		console.log("sono qui");
-			const pezzi = cei.values['pezzi'];
-			const prezzoUnitario = cei.values['prezzoUnitario'];
-			if (prezzoUnitario >=0 && pezzi>=0) cei.values['prezzoTotale'] =  (pezzi * prezzoUnitario).toFixed(2);
-	    break;
-		
-		default:
-		break;
-		
-	}
 
-  //I messaggi vengono ricalcolati a ogni iterazione...
-    cei.errorMessages = {};
-   
-  
- 
-   
-   	errMgmt(cei, 'prezzoUnitario','invalidAmount','Importo (19.99)',  
-   	    ((value) => {return !isAmount(value)})(cei.values.prezzoUnitario), 
-   	    ((value) => {return (value.length>0 && !isAmount(value))})(cei.values.prezzoUnitario));
-   	    
-    errMgmt(cei, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.pezzi));
-  	errMgmt(cei, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.gratis));
-  
-  
-
-
-    errMgmt(cei, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.pezzi));
-  	errMgmt(cei, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.gratis));
-  	//Così si accendono i campi vuoti quando valida...
-  	
-  	errMgmt(cei, 'pezzi','noItems','',  ((pezzi,gratis) => {return (!((pezzi>=0) && (gratis>=0) && (pezzi+gratis>0)))})(cei.values.pezzi,cei.values.gratis), false);
-  	errMgmt(cei, 'gratis','noItems','',  ((pezzi,gratis) => {return (!((pezzi>=0) && (gratis>=0) && (pezzi+gratis>0)))})(cei.values.pezzi,cei.values.gratis), false);
-  	
-  	
-  	errMgmt(cei, 'form','noItems','almeno un oggetto!',  ((pezzi,gratis) => {return (!((pezzi>=0) && (gratis>=0) && (pezzi+gratis>0)))})(cei.values.pezzi,cei.values.gratis),false);
-  	
-  	
-    //Se ho anche solo un errore... sono svalido.
-    cei.isValid = isValidEditedItem(cei);
-    */
     return cei;
 }
 
@@ -334,17 +284,12 @@ export default function resa(state = initialState(), action) {
    	     let rigaBolla = {'ean': ean, 
    	    				  'rigaBolla': rigaBollaKey, 
    	    				  'idRigaBolla': idRigaBolla, 
-   	    				  'riferimento': row.riferimento, 
-   	    				  'dataDocumento': row.dataDocumento, 
+   	    				  'riferimentoBolla': row.riferimento, 
+   	    				  'dataDocumentoBolla': row.dataDocumento, 
    	    				  'prezzoUnitario': row.prezzoUnitario,
    	     	               'titolo': row.titolo,
    	     	               'autore': row.autore,
    	     	               'prezzoListino': row.prezzoListino,
-   	     	               'sconto1': row.sconto1,
-   	     	               'sconto2': row.sconto2,
-   	     	               'sconto3': row.sconto3,
-   	     	               'manSconto': row.manSconto,
-   	     	               'imgUrl': row.imgUrl,
    	     	               'pezzi': row.pezzi,
    	     	               'gratis': row.gratis
    	     	               	}
@@ -357,7 +302,7 @@ export default function resa(state = initialState(), action) {
    	    	{
    	    		rigaResa = itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]].pos].values;
    	    		tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //Aggiorno i totali...
-		 	
+		 	    rigaResa.key = indiceBolleRese[rigaBollaKey];
    	    		//Se ho elementi a blank... li valorizzo
    	    	}
    	     setMaxRese(rigaBolla, rigaResa, rigaResa ); //Calcolo quante rese posso fare... se non ho nessuna resa in memoria le prendo tutte...
@@ -366,7 +311,7 @@ export default function resa(state = initialState(), action) {
    	     if (action.type === ADDED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], blendedRiga, rigaBollaKey, 'pos', 'rigaBolla' );
    	     else 
    	    	{   let pos = indiceEAN[ean].righe[rigaBollaKey].pos;
-   	    		tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, blendedRiga}; //Prevalenza di rigaresa su rigabolla!
+   	    		tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, ...blendedRiga}; //Prevalenza di rigaresa su rigabolla!
    	    	}
    	    newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN, tabelleRigheEAN: tabelleRigheEAN};
    		}

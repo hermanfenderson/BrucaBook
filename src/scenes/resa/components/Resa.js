@@ -76,7 +76,7 @@ render()
       </Col>
  
        <Col span={20}>
-    {isOpen ? <TableOpenResa  period={period} idResa={this.props.match.params.id}/> :  <TableResa  period={period} idResa={this.props.match.params.id}/> }
+    {isOpen ? <TableOpenResa  testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> :  <TableResa testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> }
       
     	   </Col>
       </Row>

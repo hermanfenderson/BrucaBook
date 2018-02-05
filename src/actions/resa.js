@@ -28,13 +28,20 @@ export const UNLISTEN_BOLLA_IN_RESA = 'UNLISTEN_BOLLA_IN_RESA';
 //Prepara riga con zeri ai fini della persistenza... resta così
 function preparaItem(riga)
    {
-     riga['sconto1'] = parseInt(riga['sconto1'],10) || 0;
-     riga['sconto2'] = parseInt(riga['sconto2'],10) || 0;
-     riga['sconto3'] = parseInt(riga['sconto3'],10) || 0;
-      riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
+        riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
       riga['gratis'] = parseInt(riga['gratis'],10) || 0;
       riga['prezzoUnitario'] = parseFloat(riga['prezzoUnitario']).toFixed(2);
      riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
+     //Pulizia...
+     riga['dataDocumento'] = riga.testata.dataDocumento;
+     riga['dataScarico'] = riga.testata.dataScarico;
+     riga['fornitore'] = riga.testata.fornitore;
+     riga['nomeFornitore'] = riga.testata.nomeFornitore;
+     riga['riferimento'] = riga.testata.riferimento;
+     
+     
+      delete riga['testata'];
+    
    }
 
    
