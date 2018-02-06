@@ -273,7 +273,7 @@ else
 	let newPos = array.length;
 	if (!index[key]) index[key] = {};	
 	index[key][posField] = newPos;
-	array.push({key: row[keyField], values: row});
+	array.push({key: key, values: row});
 	}
 }
 

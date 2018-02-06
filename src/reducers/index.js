@@ -87,6 +87,8 @@ export const getListeningItemElencoRese = (state) => {return fromElencoRese.getL
 
 //Scene Resa
 export const getRigheResa = (state) => {return fromResa.getItems(state.resa)};
+export const getRigheResaIndexed = (state) => {return fromResa.getRigheResaIndexed(state.resa)};
+
 export const getEditedRigaResa = (state) => {return fromResa.getEditedItem(state.resa)};
 export const getTestataResa = (state) => {return fromResa.getTestataResa(state.resa)};
 export const getTableResaHeight = (state) => {return fromResa.getTableHeight(state.resa)};

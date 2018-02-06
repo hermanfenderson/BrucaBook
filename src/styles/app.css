@@ -147,6 +147,11 @@ width: 75px;
 
 }
 
+.is-changed {
+	border: 2px solid #003a8c;
+	border-radius: 5px;
+}
+
 
 
 

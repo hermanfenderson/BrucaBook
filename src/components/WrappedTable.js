@@ -48,9 +48,10 @@ actionRowRender = (cell, row, index) => {
         );
  }
  
- 
+
+
 rowClassName = (record,index) => {
-	let rowClassName = (record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-highlight' : 'ant-table-row';
+	let rowClassName = (this.props.highlightedRowKey === record.key) ? 'ant-table-row ant-table-row-highlight' : 'ant-table-row';
 	if (this.props.pinField && record[this.props.pinField]) rowClassName += ' ant-table-row-pinned';
 	return(rowClassName);
 } 

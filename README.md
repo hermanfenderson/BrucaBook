@@ -4,6 +4,10 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.6.5
+* Rese più chiare le scritte di errore
+* Le modifiche nella form prima del salvataggio sono evidenziate in blu (#186)
+
 ### Versione 0.6.4
 * I messaggi di errore sono visualizzati; i campi in errore sono valorizzati in rosso
 * Modificati i metodi submit per salvare le informazioni giuste dalle varie componenti della resa (bolla, resa e testata resa) 

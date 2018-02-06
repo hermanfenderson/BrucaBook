@@ -44,9 +44,14 @@ class TableDettagliResa extends Component
   							    if ((record.values.gratis + record.values.pezzi) > 0) this.props.submitEditedItem(record.isValid, selectedItem , this.props.listeningItemResa, record.values);
   								else this.props.deleteRigaResa(this.props.listeningItemResa, record.values.key, record.values); //Se a zero cancello la riga resa...
 								};
-  
- 	pezziRowRender = (text, record, index) => {return(<SubInput errorMessage={(record.errorMessages && record.errorMessages.pezzi) ? record.errorMessages.pezzi : ''} onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
-   gratisRowRender = (text, record, index) => {return(<SubInput errorMessage={(record.errorMessages && record.errorMessages.gratis) ? record.errorMessages.gratis : ''} onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit(record,index)}  />)}
+  isChanged = (record, field) =>
+	{
+		if (record.values.key) return (parseInt(record.values[field],10) !== this.props.righeResa[record.values.key][field])
+		else return (parseInt(record.values[field],10) !==0); //Se non è memorizzato ed è diverso da zero è cambiato... 
+	}
+	
+ 	pezziRowRender = (text, record, index) => {return(<SubInput isChanged={this.isChanged(record, 'pezzi')} errorMessage={(record.errorMessages && record.errorMessages.pezzi) ? record.errorMessages.pezzi : ''} onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
+   gratisRowRender = (text, record, index) => {return(<SubInput isChanged={this.isChanged(record, 'gratis')} errorMessage={(record.errorMessages && record.errorMessages.gratis) ? record.errorMessages.gratis : ''} onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit(record,index)}  />)}
     dataRowRender = (text, record, index) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
    
     customRowRender = {'values.pezzi' : this.pezziRowRender , 'values.gratis' : this.gratisRowRender, 'values.dataDocumentoBolla': this.dataRowRender}
@@ -55,8 +60,6 @@ class TableDettagliResa extends Component
     	render() { 
     
     	let props = {...this.props};
-    	let selectedItemKey = null;
-    	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
@@ -64,7 +67,7 @@ class TableDettagliResa extends Component
 			<WrappedTable {...props} 
 			data={this.props.righeDettagli}
 			customRowRender={this.customRowRender} 
-			highlightedRowKey={selectedItemKey} 
+			highlightedRowKey={this.props.righeDettagli.changedKeys} 
 			saveRow={this.onSave}
 			size={'small'}
 			header={header}/>

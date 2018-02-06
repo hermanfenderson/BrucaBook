@@ -50,7 +50,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: []});
+	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}});
     }
     
 
@@ -122,13 +122,13 @@ const manageChangedRigaResa = (state, action) =>
    	        	case 'ADDED_ITEM_RESA': 
    	        		insertRow(itemsArrayIndex, itemsArray, row, idRigaResa, 'pos', 'key');
    	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos] = {};
-   	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos].values = row;
+   	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos].values = {...row};
    	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos].key = idRigaResa;
    	        		indiceBolleRese[key] = idRigaResa;
    	        		break;
    	        	case 'CHANGED_ITEM_RESA': 
-   	        	    itemsArray[itemsArrayIndex[idRigaResa].pos].values = row;
-   	        	    tabellaRighe[itemsArrayIndex[idRigaResa].pos].values = row;
+   	        	    itemsArray[itemsArrayIndex[idRigaResa].pos].values = {...row};
+   	        	    tabellaRighe[itemsArrayIndex[idRigaResa].pos].values = {...row};
    	        		break;
    	        	case 'DELETED_ITEM_RESA': 
    	        		row = {rigaBolla: itemsArray[itemsArrayIndex[idRigaResa].pos].values.rigaBolla, ean: itemsArray[itemsArrayIndex[idRigaResa].pos].values.ean}; //Riga finta... con solo EAN
@@ -155,10 +155,10 @@ function transformAndValidateEditedRigaResa(cei, name, value)
 	errMgmt(cei, 'pezzi','notNegativeNumber','Numero (>=0)', !isNotNegativeInteger(cei.values.pezzi));
 	errMgmt(cei, 'gratis','notNegativeNumber','Numero (>=0)', !isNotNegativeInteger(cei.values.gratis));
 	//Pezzi e gratis non possono essere > del massimo ammesso
-	errMgmt(cei, 'pezzi','lessThanMax','< Max', cei.values.pezzi > cei.values.maxRese);
-	errMgmt(cei, 'gratis','lessThanMax','< Max', cei.values.gratis > cei.values.maxGratis);
-	errMgmt(cei, 'pezzi','freeFirst','usa gratis', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
-	errMgmt(cei, 'gratis','freeFirst','usa gratis', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
+	errMgmt(cei, 'pezzi','lessThanMax','Pezzi deve essere minore di Max. pezzi (' + cei.values.maxRese + ')', cei.values.pezzi > cei.values.maxRese);
+	errMgmt(cei, 'gratis','lessThanMax','Gratis deve essere minore di Max. gratis (' + cei.values.maxGratis + ')', cei.values.gratis > cei.values.maxGratis);
+	errMgmt(cei, 'pezzi','freeFirst','Rendi prima copie gratis (' + cei.values.maxGratis + ')', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
+	errMgmt(cei, 'gratis','freeFirst','Rendi prima copie gratis (' + cei.values.maxGratis + ')', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
 	
 	cei.isValid = isValidEditedItem(cei);
 
@@ -300,7 +300,7 @@ export default function resa(state = initialState(), action) {
    	     
    	     if (indiceBolleRese[rigaBollaKey])  //Se ho giè una riga resa collegata a questa riga bolla
    	    	{
-   	    		rigaResa = itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]].pos].values;
+   	    		rigaResa = {...itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]].pos].values};
    	    		tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //Aggiorno i totali...
 		 	    rigaResa.key = indiceBolleRese[rigaBollaKey];
    	    		//Se ho elementi a blank... li valorizzo
@@ -373,6 +373,7 @@ export default function resa(state = initialState(), action) {
    	    	{
    	    		 //Passo il punto della tabella in cui fare le modifiche...
    	    		 let cei = transformAndValidateEditedRigaResa(tabelleRigheEAN[action.ean][action.index], action.field, action.value);
+   	    		 
    	    		 if (action.row.values.key)
    	    			{
    	    			let rigaResaKey = action.row.values.key;
@@ -426,8 +427,14 @@ export default function resa(state = initialState(), action) {
  export const getTabelleRigheEAN = (state) => {return state.tabelleRigheEAN};
  export const getTabellaRighe = (state) => {return state.tabellaRighe};
  
-
- 
+ export const getRigheResaIndexed = (state) => {
+ 	let righeResaIndexed = {}
+ 	for (var index in state.itemsArrayIndex)
+ 		{
+ 			righeResaIndexed[index] = {...state.itemsArray[state.itemsArrayIndex[index].pos].values};
+ 		}
+ 	return(righeResaIndexed);	
+ }
  
  
  
