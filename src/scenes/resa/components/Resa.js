@@ -45,7 +45,7 @@ componentDidUpdate() {
    if (this.props.testataResa && (this.props.testataResa.fornitore !== currentFornitore))
 		{
 			currentFornitore = this.props.testataResa.fornitore;
-			this.props.listenBollePerFornitore(currentFornitore);
+			this.props.listenBollePerFornitore(currentFornitore, this.props.testataResa.dataScarico);
 		}
 	
    if (riga !== this.props.testataResa) 

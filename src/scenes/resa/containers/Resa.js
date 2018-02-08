@@ -4,7 +4,7 @@ import {setStato} from '../../../actions/elencoRese'
 
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getMessageBufferResa,  getEditedCatalogItem, getTestataResa, getListeningTestataResa, isStaleTotali, getEditedRigaResa} from '../../../reducers'
+import {getMessageBufferResa,  getEditedCatalogItem, getTestataResa, getListeningTestataResa, isStaleTotaliResa, getEditedRigaResa} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataResa = rigaResaFA.listenTestata;
@@ -17,7 +17,7 @@ const mapStateToProps = (state) => {
 	         editedCatalogItem: getEditedCatalogItem(state),
 	         testataResa: getTestataResa(state),
 	         listeningTestataResa: getListeningTestataResa(state),
-	         staleTotali: isStaleTotali(state),
+	         staleTotali: isStaleTotaliResa(state),
 	         editedRigaResa: getEditedRigaResa(state),
 	         messageBuffer: getMessageBufferResa(state)
 	         

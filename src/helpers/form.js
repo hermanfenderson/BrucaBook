@@ -291,7 +291,10 @@ export const getStock = (details, excludedDoc=null, fromDate=null, toDate=null) 
         		  var righe;
             	  let date = details;	
             	  for(var propt2 in date)
-		  			{righe = date[propt2];
+		  			{
+		  			if ((!fromDate || propt2 >= fromDate) && (!toDate || propt2 <=toDate))
+		  			  {
+		  			  righe = date[propt2];
 		  				for (var propt in righe)	
 		  				{
 		  				 if (righe[propt].tipo === "bolla")
@@ -317,6 +320,7 @@ export const getStock = (details, excludedDoc=null, fromDate=null, toDate=null) 
 			    		
 			    			}		
 		  				}
+		  			  }	
 		  			}	
 		  		   return totalePezzi;  
 }

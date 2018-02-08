@@ -200,7 +200,7 @@ export default function resa(state = initialState(), action) {
    	    if (indiceEAN[ean] && indiceEAN[ean].pos >= 0) //Se serve ricalcolo lo stock
    	    	{
    	    	 let tabellaEAN = [...state.tabellaEAN];
-   	    	 tabellaEAN[indiceEAN[ean].pos].values.stock = getStock(details); 
+   	    	 tabellaEAN[indiceEAN[ean].pos].values.stock = getStock(details, null, null, state.testata.dataScarico -1); 
    	    	 newState = {...state, dettagliEAN: dettagliEAN, tabellaEAN: tabellaEAN};
    	    	}
    	    else newState = {...state, dettagliEAN: dettagliEAN}	
@@ -268,11 +268,12 @@ export default function resa(state = initialState(), action) {
    	    let indiceEAN = {...state.indiceEAN};
    	    let tabellaEAN = [...state.tabellaEAN];
    	    let tabelleRigheEAN = {...state.tabelleRigheEAN};
+   	    let dettagliEAN = state.dettagliEAN;
    	    //Creazione della testata EAN...
    	    if (!indiceEAN[ean]) 
    	    	{indiceEAN[ean] = {};
    	    	 //tabellaEAN[key] = ean;
-   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, stock: getStock(ean), resi: 0}, ean, 'pos', 'ean');
+   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, stock: getStock(dettagliEAN[ean], null,null, state.testata.dataScarico - 1), resi: 0}, ean, 'pos', 'ean');
    	    	}
    	    if (!indiceEAN[ean].righe) indiceEAN[ean].righe = {};
    	    let rigaBollaKey = bolla+'/'+riga;

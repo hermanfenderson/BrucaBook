@@ -45,7 +45,7 @@ function preparaItem(riga)
    }
 
    
-export function listenBollePerFornitore(idFornitore)
+export function listenBollePerFornitore(idFornitore, dataScarico)
 {
 	
 //Genero tre listener... come un'unica funzione...
@@ -56,21 +56,30 @@ export function listenBollePerFornitore(idFornitore)
   	if (url)
     {  
        const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
-	      dispatch({
+       	if (snapshot.val().dataCarico < dataScarico)
+       	 {
+       	  dispatch({
 	        type: ADDED_BOLLE_PER_FORNITORE,
 	        payload: snapshot
 	      });
 	      dispatch(listenBolla(snapshot.val().id))
+       	 }
 	    });
 	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
+	   	  if (snapshot.val().dataCarico < dataScarico)
+          {
 	      dispatch({
 	        type: CHANGED_BOLLE_PER_FORNITORE,
 	        payload: snapshot
-	      });  
+	      });
+	     //Se non stavo ascoltando... ascolto...
+	     let bolle = getBolleOsservate(getState());
+	     if (!bolle[snapshot.key]) dispatch(listenBolla(snapshot.val().id))
+          }
 	   });
 	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
 	     let bolle = getBolleOsservate(getState());
-	     dispatch(unlistenBolla(bolle[snapshot.key].id));
+	     if (bolle[snapshot.key]) dispatch(unlistenBolla(bolle[snapshot.key].id));
 	      dispatch({
 	        type: DELETED_BOLLE_PER_FORNITORE,
 	        payload: snapshot

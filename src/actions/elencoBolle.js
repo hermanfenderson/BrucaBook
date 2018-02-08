@@ -63,7 +63,7 @@ bollaFA.aggiungiItem = (params, valori) => {
     ref.set(nuovoItem);
    var bollaKey = params[0] + '/' + params[1] + '/' + ref.key; //Dato da persistere come bolla per fornitore
    var ref2 = Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.fornitore, ref.key)); //Persisto per fornitore... il riferimentoa alla bolla (che è chiave unica)
-   ref2.set({'id': bollaKey}); //Persisto il percorso a cui trovarla
+   ref2.set({'id': bollaKey, 'dataCarico': valori.dataCarico.valueOf(), 'dataDocumento': valori.dataDocumento.valueOf()}); //Persisto il percorso a cui trovarla
    dispatch(
    	{
    		type: typeAdd,
@@ -87,14 +87,10 @@ bollaFA.aggiornaItem = (params,itemId, valori) => {
     const itemsUrl = bollaFA.itemsUrl;
       return function(dispatch,getState) 
     		{
-		    if (nuovoItem.oldFornitore !== nuovoItem.fornitore)
-		    		{
-		    		Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.oldFornitore, itemId)).remove(); 
-		    	     var bollaKey = params[0] + '/' + params[1] + '/' + itemId; //Dato da persistere come bolla per fornitore
-					 var ref2 = Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.fornitore, itemId)); //Persisto per fornitore... il riferimentoa alla bolla (che è chiave unica)
-					ref2.set({'id': bollaKey}); //Persisto il percorso a cui trovarla
-		  
-		    		}
+		    if (nuovoItem.oldFornitore !== nuovoItem.fornitore) Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.oldFornitore, itemId)).remove(); 
+		    var bollaKey = params[0] + '/' + params[1] + '/' + itemId; //Dato da persistere come bolla per fornitore
+			var ref2 = Firebase.database().ref(urlFactory(getState,'bollePerFornitore', valori.fornitore, itemId)); //Persisto per fornitore... il riferimentoa alla bolla (che è chiave unica)
+			ref2.set({'id': bollaKey, 'dataCarico': valori.dataCarico.valueOf(), 'dataDocumento': valori.dataDocumento.valueOf()}); //Persisto il percorso a cui trovarla
 		    delete nuovoItem.oldFornitore;		
 		    const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
 		    ref.update(nuovoItem);
