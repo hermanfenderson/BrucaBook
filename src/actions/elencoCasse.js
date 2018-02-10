@@ -1,5 +1,5 @@
 import {FormActions} from '../helpers/formActions';
-import {moment2period} from '../helpers/form';
+import {moment2period, setDay} from '../helpers/form';
 
 export const SCENE = 'ELENCOCASSE';
 export const SET_PERIOD_ELENCOCASSE = 'SET_PERIOD_ELENCOCASSE'
@@ -9,7 +9,7 @@ export const SET_PERIOD_ELENCOCASSE = 'SET_PERIOD_ELENCOCASSE'
 //Prepara riga con zeri ai fini della persistenza... resta così. Gestisco le date...
 function preparaItem(riga)
    {
-   	riga['dataCassa'] = riga['dataCassa'].valueOf();
+   	riga['dataCassa'] = setDay(riga['dataCassa']);
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
    	if ('totali' in riga) {delete riga.totali}
    	

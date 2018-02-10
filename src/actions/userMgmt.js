@@ -1,4 +1,4 @@
-
+import {caricaAnagrafiche} from '../actions';
 import {FormActions} from '../helpers/formActions';
 import {urlFactory} from '../helpers/firebase';
 
@@ -75,9 +75,12 @@ if (isValid && mode==='configuration') return function(dispatch, getState) {
 	         			dispatch({type: 'RESET_MAGAZZINO'});
 	         			Firebase.database().ref(urlFactory(getState,'righeElencoInventari', null)).off();
 	         			dispatch({type: 'RESET_ELENCOINVENTARI'});
+	         			Firebase.database().ref(urlFactory(getState,'fornitori', null)).off();
+	         			dispatch({type: 'RESET_FORNITORI'});
 	         			
 	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
-	         			
+	         			dispatch(caricaAnagrafiche());
+    
 	         			
 	         		}
 	         	

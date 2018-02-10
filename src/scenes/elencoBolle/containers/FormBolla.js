@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
 	return ({editedBolla: getEditedBolla(state), 
 	readOnlyForm: getReadOnlyFormBolla(state), 
 	tipiBolla: getAnagrafiche(state).tipiBolla, 
-	fornitori: getAnagraficheLocali(state).fornitori
+	fornitori: (getAnagraficheLocali(state)) ? getAnagraficheLocali(state).fornitori : null
 	})
 }
  

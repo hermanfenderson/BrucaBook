@@ -13,6 +13,8 @@ const header = [
 			    {dataField: 'dettagli', label: 'Dettagli', width: '300px'},
 			    
 			    {dataField: 'pezzi', label: 'Pezzi', width: '100px'},
+			    {dataField: 'gratis', label: 'Gratis', width: '100px'},
+			    
 			   ];
 
 
@@ -32,7 +34,10 @@ const convertDetails = (inputData) =>
 					 case 'scontrino':
     					return 'cassa '+row.cassa+' sc. '+row.numero;
 					 case 'bolla':
-    				    return 'rif. '+row.riferimento+' '+row.fornitore;
+    				    return 'rif. '+row.riferimento+' '+row.nomeFornitore;
+    				 case 'resa':
+    				    return 'rif. '+row.riferimento+' '+row.nomeFornitore;
+    			
     				 case 'inventario':
     				 	return row.note;
     				 default:

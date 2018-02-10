@@ -325,6 +325,10 @@ export const getStock = (details, excludedDoc=null, fromDate=null, toDate=null) 
 		  		   return totalePezzi;  
 }
 
+export const setDay = (moment) =>
+{
+	return(moment.startOf('day').add(12,'hours').valueOf());
+}
 
 
 

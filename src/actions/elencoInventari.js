@@ -1,6 +1,7 @@
 import {FormActions} from '../helpers/formActions';
 import Firebase from 'firebase';
 import {urlFactory, addCreatedStamp} from '../helpers/firebase'
+import {setDay} from '../helpers/form';
 
 export const SCENE = 'ELENCOINVENTARI';
 
@@ -9,7 +10,7 @@ export const SCENE = 'ELENCOINVENTARI';
 //Prepara riga con zeri ai fini della persistenza... resta così. Gestisco le date...
 function preparaItem(riga)
    {
-   	riga['dataInventario'] = riga['dataInventario'].valueOf();
+   	riga['dataInventario'] = setDay(riga['dataInventario']);
    	riga['data'] = riga['dataInventario']; 
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
    	//if ('totali' in riga) {delete riga.totali}

@@ -2,9 +2,9 @@ import React from 'react'
 import {Row,Spin, Switch, Form} from 'antd' 
 const TotaliResa = (props) => 
 { const totali = props.testataResa ? props.testataResa.totali : null; 
-	if (totali) return( 
-		
-		<div>
+  const testata = props.testataResa;
+  return (testata) ?
+		 <div>
 			<Form layout="inline"> 
 				<Form.Item label="Aperta"> 
 				<Switch checked={(props.testataResa.stato==='aperta')} onChange={(checked) => {
@@ -15,12 +15,13 @@ const TotaliResa = (props) =>
 			</Form> 
 			<Spin spinning={props.staleTotali}> 
 				<div> 
-					<Row> Copie: {totali.pezzi} </Row> 
-					<Row> Gratis: {totali.gratis} </Row> 
-					<Row> Totale: {totali.prezzoTotale} </Row> 
+					<Row> Copie: {totali ? totali.pezzi : 0} </Row> 
+					<Row> Gratis: {totali ? totali.gratis : 0} </Row> 
+					<Row> Totale: {totali ? totali.prezzoTotale : '0.00'} </Row> 
 				</div> 
 			</Spin> 
 			</div>
-			) 
-else return <Spin spinning={props.staleTotali} /> } 
+		:
+		<Spin spinning={true} />
+}			
 export default TotaliResa;

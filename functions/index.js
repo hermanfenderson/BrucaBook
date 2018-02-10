@@ -508,7 +508,7 @@ exports.inserisciRegistroDaResa = functions.database.ref('{catena}/{negozio}/res
     		}
           ); 
 
-exports.modificaRegistroDaResa = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idResa}/{keyRiga}')
+exports.modificaRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}/{keyRiga}')
     .onUpdate(event =>
     		{
     			const key =event.params.keyRiga;
