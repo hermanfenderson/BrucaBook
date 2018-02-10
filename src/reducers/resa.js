@@ -99,7 +99,11 @@ const updateTabelleEANFromChangedRigaResa = (row, indiceEAN, tabelleRigheEAN, ta
 			let pezzi = parseInt(row.pezzi, 10) || 0;
    	    	let gratis = parseInt(row.gratis, 10) || 0;
 		   	let pos = (indiceEAN[ean] && indiceEAN[ean].righe && indiceEAN[ean].righe[key].pos) ? indiceEAN[ean].righe[key].pos : null;
-		 	if (pos) {tabelleRigheEAN[ean][pos].values.key = indiceBolleRese[key]; tabelleRigheEAN[ean][pos].values.pezzi = pezzi; tabelleRigheEAN[ean][pos].values.gratis = gratis;}
+		 	if (pos) {
+		 		tabelleRigheEAN[ean][pos].values.key = indiceBolleRese[key]; 
+		 		tabelleRigheEAN[ean][pos].values.pezzi = pezzi; 
+		 		tabelleRigheEAN[ean][pos].values.gratis = gratis;
+		 			}
 		 	//Aggiorno totali rese... se la riga esiste già... altrimenti aggiornerò al prossimo giro...
 		 	if (indiceEAN[ean]) tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //L'array per come sarà...
 }
@@ -134,7 +138,8 @@ const manageChangedRigaResa = (state, action) =>
    	        		row = {rigaBolla: itemsArray[itemsArrayIndex[idRigaResa].pos].values.rigaBolla, ean: itemsArray[itemsArrayIndex[idRigaResa].pos].values.ean}; //Riga finta... con solo EAN
    	        		tabellaRighe.splice(itemsArrayIndex[idRigaResa].pos, 1);
    	        		removeRow(itemsArrayIndex, itemsArray, idRigaResa, 'pos', 'key');
-   	        		delete indiceBolleRese[key] 
+   	        		delete tabelleRigheEAN[row.ean][indiceEAN[row.ean].righe[key].pos].values.key;
+   	        		delete indiceBolleRese[key];
    	        		break;
 		 		default: break;
    	        	}
