@@ -92,14 +92,14 @@ const getTotaleResi = (ean, righeResa) =>
 	return(totali);	
 }
 
-const updateTabelleEANFromChangedRigaResa = (row, indiceEAN, tabelleRigheEAN, tabellaEAN, itemsArray) =>
+const updateTabelleEANFromChangedRigaResa = (row, indiceEAN, tabelleRigheEAN, tabellaEAN, itemsArray, indiceBolleRese) =>
 {
 			let ean = row.ean;
 			let key = row.rigaBolla;
 			let pezzi = parseInt(row.pezzi, 10) || 0;
    	    	let gratis = parseInt(row.gratis, 10) || 0;
 		   	let pos = (indiceEAN[ean] && indiceEAN[ean].righe && indiceEAN[ean].righe[key].pos) ? indiceEAN[ean].righe[key].pos : null;
-		 	if (pos) {tabelleRigheEAN[ean][pos].values.key = key; tabelleRigheEAN[ean][pos].values.pezzi = pezzi; tabelleRigheEAN[ean][pos].values.gratis = gratis;}
+		 	if (pos) {tabelleRigheEAN[ean][pos].values.key = indiceBolleRese[key]; tabelleRigheEAN[ean][pos].values.pezzi = pezzi; tabelleRigheEAN[ean][pos].values.gratis = gratis;}
 		 	//Aggiorno totali rese... se la riga esiste già... altrimenti aggiornerò al prossimo giro...
 		 	if (indiceEAN[ean]) tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //L'array per come sarà...
 }
@@ -138,7 +138,7 @@ const manageChangedRigaResa = (state, action) =>
    	        		break;
 		 		default: break;
    	        	}
-   	    	updateTabelleEANFromChangedRigaResa(row, indiceEAN, tabelleRigheEAN, tabellaEAN, itemsArray);	 
+   	    	updateTabelleEANFromChangedRigaResa(row, indiceEAN, tabelleRigheEAN, tabellaEAN, itemsArray, indiceBolleRese);	 
 			let newState = {...state, tabellaEAN: tabellaEAN, tabellaRighe: tabellaRighe, itemsArray: itemsArray, itemsArrayIndex: itemsArrayIndex, tabelleRigheEAN: tabelleRigheEAN, indiceBolleRese: indiceBolleRese};	
 		 	return(newState);
 }
@@ -211,7 +211,8 @@ export default function resa(state = initialState(), action) {
    case LISTEN_BOLLA_IN_RESA:
    		{
    		let bolleOsservate = {...state.bolleOsservate};
-   		bolleOsservate[action.params.split('/')[2]].righe = {};
+   	 
+   	    bolleOsservate[action.params.split('/')[2]].righe = {};
    		newState = {...state, bolleOsservate : bolleOsservate};
    			
    		}
@@ -262,8 +263,7 @@ export default function resa(state = initialState(), action) {
    	    let bolleOsservate = {...state.bolleOsservate};
    	    let row = action.payload.val();
    	     //Ne copio i contenuti in bolleOsservate...
-   
-   	    bolleOsservate[bolla].righe[riga] = row;
+        bolleOsservate[bolla].righe[riga] = row;
    	    let ean =  action.payload.val().ean;
    	    let indiceEAN = {...state.indiceEAN};
    	    let tabellaEAN = [...state.tabellaEAN];
@@ -292,7 +292,8 @@ export default function resa(state = initialState(), action) {
    	     	               'autore': row.autore,
    	     	               'prezzoListino': row.prezzoListino,
    	     	               'pezzi': row.pezzi,
-   	     	               'gratis': row.gratis
+   	     	               'gratis': row.gratis,
+   	     	               'rese': row.rese
    	     	               	}
    	     let itemsArrayIndex = state.itemsArrayIndex; //Non devo modificarle!
    	     let itemsArray = state.itemsArray;

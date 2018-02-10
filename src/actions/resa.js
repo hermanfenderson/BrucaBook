@@ -41,6 +41,10 @@ function preparaItem(riga)
      
      
       delete riga['testata'];
+      delete riga['maxPezzi'];
+      delete riga['maxGratis'];
+      delete riga['rese'];
+      
     
    }
 

@@ -1,9 +1,13 @@
-BrucaBook V.0.6.6
+BrucaBook V.0.7.0
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.7.0
+* Crash salvando una modifica in rese
+* Calcolo di max rese e max gratis corretto
+
 ### Versione 0.6.6
 * Versione finale 0.6.x
 * La resa carica solo le bolle con dataCarico bolla < dataScarico resa

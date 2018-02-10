@@ -281,7 +281,8 @@ export const removeRow = (index, array, key, posField, keyField) =>
 {
 	let pos = index[key][posField];
 	array.splice(pos,1);
-	for (let i = pos; i < array.length; i++) index[array[i].values[keyField]][posField] = i;	
+	for (let i = pos + 1; i < array.length; i++) index[array[i].values[keyField]][posField] = i;
+	delete index[key];
 }
 
 //data una lista di dettagli di un EAN calcola i pezzi a stock... saltando se necessario il documento corrente, eventualmente fino a una data
