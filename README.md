@@ -6,7 +6,7 @@ Storia delle versioni
 ---------------------
 ### Versione 0.7.1
 * Mettere a zero una riga mandava in crash la resa
-* 
+* Corretto un warning su deepscan 
 
 ### Versione 0.7.0
 * Crash salvando una modifica in rese

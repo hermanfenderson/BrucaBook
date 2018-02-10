@@ -155,7 +155,7 @@ function transformAndValidateEditedRigaResa(cei, name, value)
 	cei.errorMessages = {};
 	cei.values[name] = value;
 	cei.values.prezzoTotale = cei.values.prezzoUnitario * cei.values.pezzi;
-	if (!cei.values.prezzoTotale>0) cei.values.prezzoTotale = 0;
+	if (!(cei.values.prezzoTotale>0)) cei.values.prezzoTotale = 0;
 	//Pezzi e gratis non possono essere che >=0
 	errMgmt(cei, 'pezzi','notNegativeNumber','Numero (>=0)', !isNotNegativeInteger(cei.values.pezzi));
 	errMgmt(cei, 'gratis','notNegativeNumber','Numero (>=0)', !isNotNegativeInteger(cei.values.gratis));
