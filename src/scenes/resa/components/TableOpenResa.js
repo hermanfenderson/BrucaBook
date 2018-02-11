@@ -4,12 +4,12 @@ import TableDettagliResa from './TableDettagliResa'
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'values.ean', label: 'EAN', width: '160px'},
-                {dataField: 'values.titolo', label: 'Titolo', width: '320px'},
-                {dataField: 'values.autore', label: 'Autore', width: '280px'},
+                {dataField: 'values.titolo', label: 'Titolo', width: '310px'},
+                {dataField: 'values.autore', label: 'Autore', width: '270px'},
 			    
 			    {dataField: 'values.prezzoListino', label: 'Listino', width: '90px'},
-			    {dataField: 'values.stock', label: 'Stock', width: '60px'},
-			    {dataField: 'values.resi', label: 'Resi', width: '60px'},
+			    {dataField: 'values.stock', label: 'Stock*', width: '70px'},
+			    {dataField: 'values.resi', label: 'Resi', width: '70px'},
 			    
 			   ];
 			   
