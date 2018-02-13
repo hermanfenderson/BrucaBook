@@ -24,6 +24,7 @@ class Inventario extends Component {
  }
  
  componentWillMount() {
+ 
  if (this.props.listeningTestataInventario) currentIdInventario = this.props.listeningTestataInventario.inventarioId;
  if (this.props.match.params.id !== currentIdInventario)	
 	{   //Faccio reset... tranne la prima volta...
@@ -33,6 +34,14 @@ class Inventario extends Component {
 			 this.props.unlistenTestataInventario(null, currentIdInventario);
 			} 
 		this.props.listenTestataInventario(null, this.props.match.params.id); //In modo da acoltare il valore giusto...
+	}
+ //Per ora rimonto ogni volta...
+
+ if (!this.props.listeningRegistroEAN) 
+	{
+		this.props.unlistenRegistroEAN(); //A scanso di equivoci...
+	 
+		this.props.listenRegistroEAN(this.props.match.params.id);
 	}
 		
  }

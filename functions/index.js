@@ -229,7 +229,7 @@ exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{ann
         	   
            );
                       
-           
+/* CAMBIO STRATEGIA... QUESTA FUNZIONE NON SERVE PIU'           
 exports.calcolaTotaleInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}')
     .onWrite(event => 
             {
@@ -280,6 +280,7 @@ exports.calcolaTotaleInventario = functions.database.ref('{catena}/{negozio}/inv
            );
        
 
+*/
 
 //Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...
 

@@ -292,6 +292,7 @@ export default function resa(state = initialState(), action) {
    	    				  'idRigaBolla': idRigaBolla, 
    	    				  'riferimentoBolla': row.riferimento, 
    	    				  'dataDocumentoBolla': row.dataDocumento, 
+   	    				  'dataCarico': row.dataCarico, 
    	    				  'prezzoUnitario': row.prezzoUnitario,
    	     	               'titolo': row.titolo,
    	     	               'autore': row.autore,

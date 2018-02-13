@@ -1,8 +1,10 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
+import {GENERA_RIGHE_INVENTARIO,LISTEN_REGISTRO_EAN, UNLISTEN_REGISTRO_EAN, ADDED_REGISTRO_EAN, CHANGED_REGISTRO_EAN, DELETED_REGISTRO_EAN } from '../actions/inventario';
+import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
 
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
+
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, getStock} from '../helpers/form';
 import {isInteger} from '../helpers/validators';
 
 const editedInventarioValuesInitialState = 
@@ -24,7 +26,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{});
+	return initialStateHelper(eiis,{listeningRegistroEAN: false, registroEAN: {}, stock: {}, totaleOccorrenze: 0});
     }
     
 
@@ -115,6 +117,73 @@ export default function inventario(state = initialState(), action) {
    case GENERA_RIGHE_INVENTARIO:
    	    newState = state;
    	    break;
+   	
+   case LISTEN_REGISTRO_EAN:
+   	    newState = {...state, listeningRegistroEAN: true};
+   	    break;
+   	        
+   	case ADDED_REGISTRO_EAN:
+   	case CHANGED_REGISTRO_EAN:
+   		{
+   	   let registroEAN = {...state.registroEAN};
+   	    let itemsArray = [...state.itemsArray];
+   	    let itemsArrayIndex = state.itemsArrayIndex;
+   	    let totaleOccorrenze = state.totaleOccorrenze;
+   	    let stock = {...state.stock};
+   	    	let ean = action.payload.key;
+		 	let data = state.testata.data;
+		let oldStock = stock[ean] ? stock[ean] : null;  
+   		registroEAN[ean] = action.payload.val();
+   		stock[ean] = getStock(registroEAN[ean],null, null, data-1);
+   		if ((oldStock === null) || (oldStock === 0 && stock[ean] !== 0)) totaleOccorrenze++;
+   		else if (oldStock !== 0 && stock[ean] === 0) totaleOccorrenze--;
+   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
+   	    newState = {...state, registroEAN: registroEAN, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;
+    
+    
+   	case DELETED_REGISTRO_EAN:
+   	    {
+   	    let registroEAN = {...state.registroEAN};
+   	    let stock = {...state.stock};
+   	     let totaleOccorrenze = state.totaleOccorrenze;
+   	   
+   		delete registroEAN[action.payload.key];
+   		delete stock[action.payload.key];
+   		totaleOccorrenze--;
+   	    newState = {...state, registroEAN: registroEAN, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;
+   	    
+   	 case rigaInventarioR.ADDED_ITEM:
+		 	{
+		    newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
+		 	//Se ho un dato migliore per stock lo metto qui...
+		 	let ean = action.payload.val().ean;
+		 	let key = action.payload.key;
+		 	if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
+		 	}
+	    	break;
+	       
+		case rigaInventarioR.DELETED_ITEM:
+	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    
+	    	break;
+	   
+		case rigaInventarioR.CHANGED_ITEM:
+			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
+				//Se ho un dato migliore per stock lo metto qui...
+		 	
+	    	let ean = action.payload.val().ean;
+		 	let key = action.payload.key;
+		 	if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
+		 
+	    	break;	    
+   	    	    
+   case UNLISTEN_REGISTRO_EAN:
+   	    newState = {...state, listeningRegistroEAN: false, registroEAN: {}, stock: {}, totaleOccorrenze: 0};
+   	    break;        
    	    
     default:
     
@@ -138,6 +207,7 @@ export default function inventario(state = initialState(), action) {
  export const getListeningItemBolla = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
+ export const isListeningRegistroEAN = (state) => {return state.listeningRegistroEAN};
  
  
  

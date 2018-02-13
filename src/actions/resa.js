@@ -38,6 +38,7 @@ function preparaItem(riga)
      riga['fornitore'] = riga.testata.fornitore;
      riga['nomeFornitore'] = riga.testata.nomeFornitore;
      riga['riferimento'] = riga.testata.riferimento;
+     riga['data'] = riga['dataScarico'];
      
      
       delete riga['testata'];

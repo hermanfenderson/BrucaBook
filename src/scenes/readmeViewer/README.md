@@ -1,9 +1,13 @@
-BrucaBook V.0.7.1
+BrucaBook V.0.7.2
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.7.2
+* Rese non venivano salvate correttamente nel registro per codice EAN (mancava la data)
+* Inventario adesso ragiona alla data per il calcolo dei pezzi in stock e degli oggetti a stock non zero...
+
 ### Versione 0.7.1
 * Mettere a zero una riga mandava in crash la resa
 * Corretto un warning su deepscan 

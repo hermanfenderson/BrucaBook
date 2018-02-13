@@ -116,7 +116,7 @@ export const getListeningTestataInventario = (state) => {return fromInventario.g
 export const getListeningItemInventario = (state) => {return fromInventario.getListeningItemBolla(state.inventario)};
 export const isStaleTotaliInventario = (state) => {return fromInventario.isStaleTotali(state.inventario)};
 export const getMessageBufferInventario = (state) => {return fromInventario.getMessageBuffer(state.inventario)};
-
+export const isListeningRegistroEAN = (state) => {return fromInventario.isListeningRegistroEAN(state.inventario)};
 
 //Scene ElencoInventari
 export const getElencoInventari = (state) => {return fromElencoInventari.getItems(state.elencoInventari)};
