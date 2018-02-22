@@ -49,7 +49,8 @@ class Inventario extends Component {
 componentDidUpdate() {
 	if (riga !== this.props.testataInventario) 
 		{riga = this.props.testataInventario;
-		 if (riga) this.props.setHeaderInfo("Inventario del " + moment(riga.dataDocumento).format("L"));
+		
+		 if (riga) this.props.setHeaderInfo("Inventario del " + moment(riga.dataInventario).format("L"));
 		}
 }
 

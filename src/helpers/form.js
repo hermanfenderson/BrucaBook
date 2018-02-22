@@ -326,6 +326,105 @@ export const getStock = (details, excludedDoc=null, fromDate=null, toDate=null) 
 		  		   return totalePezzi;  
 }
 
+
+export const getDetailsInMatrix = (details) =>
+{
+	//Creo una matrice con i dati anno per anno e mese per mese...
+	//Stock, deltaStock, bolla, resa, scontrino, inventario...
+	const copyDetails = (matrix, dataIn, key, row) =>
+	{
+		let data = (moment(parseInt(dataIn,10)));
+		let anno = data.format('YYYY');
+		let mese = data.format('MM');
+		let giorno = data.format('DD');
+		if (!matrix.totale.righe[dataIn])
+			{
+			matrix.totale.righe[dataIn] = {};
+			matrix.anno[anno].righe[dataIn] = {};
+			matrix.anno[anno].mese[mese].righe[dataIn] = {};
+			matrix.anno[anno].mese[mese].giorno[giorno].righe[dataIn] = {};
+			}
+		matrix.totale['righe'][dataIn][key] = row;	
+		matrix.anno[anno]['righe'][dataIn][key] = row;
+		matrix.anno[anno].mese[mese]['righe'][dataIn][key] = row;
+		matrix.anno[anno].mese[mese].giorno[giorno]['righe'][dataIn][key] = row;
+		
+	}
+	
+	const updateCell = (matrix, dataIn, tipo, value) =>
+		{ 
+		let data = (moment(parseInt(dataIn,10)));
+		let anno = data.format('YYYY');
+		  let mese = data.format('MM');
+		  let giorno = data.format('DD');
+			if (!matrix.anno[anno]) 
+				{
+				 matrix.anno[anno] = {righe: {}, totali: {}, mese: {}};
+				 matrix.anno[anno]['totali']['bolla'] = 0;
+				 matrix.anno[anno]['totali']['resa'] = 0;
+				 matrix.anno[anno]['totali']['scontrino'] = 0;
+				 matrix.anno[anno]['totali']['inventario'] = 0;
+				}
+			if (!matrix.anno[anno].mese[mese]) 
+				{
+				 matrix.anno[anno].mese[mese] = {righe: {}, totali: {}, giorno: {}};
+				  
+				 matrix.anno[anno].mese[mese]['totali']['bolla'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['resa'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['scontrino'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['inventario'] = 0;
+				}	
+				if (!matrix.anno[anno].mese[mese].giorno[giorno]) 
+				{
+				 matrix.anno[anno].mese[mese].giorno[giorno] = {righe: {}, totali: {}};
+				
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['bolla'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['resa'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['scontrino'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['inventario'] = 0;
+				}		
+			matrix.totale.totali[tipo] += value;	
+			matrix.anno[anno]['totali'][tipo] += value;
+			matrix.anno[anno].mese[mese]['totali'][tipo] += value;
+			matrix.anno[anno].mese[mese].giorno[giorno]['totali'][tipo] += value;
+		}
+		
+	let matrix = {anno: {}, totale: {righe: {}, totali: {bolla: 0, resa: 0, scontrino: 0, inventario: 0}}};
+	 let date = details;	
+            	  for(var propt2 in date)
+		  			{
+		  			  let righe = date[propt2];
+		  				for (var propt in righe)	
+		  				{
+		  				let totalePezzi = 0;
+		  				 if (righe[propt].tipo === "bolla")
+		  					{
+			    			totalePezzi = parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10);
+			    			
+			    			}
+					    if (righe[propt].tipo === "resa")
+		  					{
+			    			totalePezzi =  - (parseInt(righe[propt].pezzi,10) - parseInt(righe[propt].gratis,10));
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}	
+						if (righe[propt].tipo === "scontrino")
+		  					{
+		  					totalePezzi =  - parseInt(righe[propt].pezzi,10);
+			    		
+			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+							}
+							
+						if (righe[propt].tipo === "inventario")
+		  					{
+		  					totalePezzi = parseInt(righe[propt].pezzi,10);
+			    			}		
+			    		updateCell(matrix,propt2,righe[propt].tipo, totalePezzi);	
+			    		copyDetails(matrix,propt2, propt, righe[propt]);
+		  				}
+		  			}	
+   return matrix;		  			
+}
+
 export const setDay = (moment) =>
 {
 	return(moment.startOf('day').add(12,'hours').valueOf());

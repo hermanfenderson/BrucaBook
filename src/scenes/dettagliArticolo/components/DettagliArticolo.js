@@ -19,7 +19,8 @@ componentWillMount() {
  
   	
 render()
-{ 
+{
+console.log(this.props.matrixEAN);
   return (
  <div>	
       <Row>

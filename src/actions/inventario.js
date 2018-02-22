@@ -41,12 +41,13 @@ return function(dispatch, getState) {
 		  const righe = getState().inventario.registroEAN;
 		  const index = getState().inventario.itemsArrayIndex;
 		  const stock2 = getState().inventario.stock;
-		  console.log(stock2);
+		  const data = getState().inventario.testata.dataInventario;
+    
 		  for (var propt in righe) 
 			{
 			 let stock = stock2[propt];
 			 if (!(index[propt]>=0) && (stock !== 0)) 
-				{   let row = {...snapshot.val()[propt], ean: propt, pinned: true, pezzi: 0, stock: stock }
+				{   let row = {...snapshot.val()[propt], ean: propt, pinned: true, pezzi: 0, stock: stock, data: data, dataInventario: data }
 				    
 					dispatch(rigaInventarioFA.aggiungiItem(inventarioId,row));
 				}
