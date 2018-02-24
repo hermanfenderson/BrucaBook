@@ -5,6 +5,7 @@ export const LISTEN_EAN = 'LISTEN_EAN'
 export const ITEM_DETAILS = 'ITEM_DETAILS'
 export const ITEM_HEADER = 'ITEM_HEADER'
 export const OFF_LISTEN_EAN = 'OFF_LISTEN_EAN'
+export const SET_PERIOD_DETAILS = 'SET_PERIOD_DETAILS'
 
 export const listenEAN = (ean) =>
 {
@@ -43,5 +44,10 @@ export const offListenEAN = (ean) =>
 		dispatch({type: 'OFF_LISTEN_EAN',
 		})
 	}	
-	
+
+}
+
+export const setPeriod = (period) =>
+{
+	return ({type: SET_PERIOD_DETAILS, period: period});
 }

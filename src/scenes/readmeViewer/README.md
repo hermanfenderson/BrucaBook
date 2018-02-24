@@ -1,9 +1,14 @@
-BrucaBook V.0.7.2
+BrucaBook V.0.7.3
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.7.3
+* La data inventario era sbagliata (#198)
+* Baco nella data delle righe autogenerate in inventario
+* La tabella dettagli adesso consente di navigare per anno, mese, giorno
+
 ### Versione 0.7.2
 * Rese non venivano salvate correttamente nel registro per codice EAN (mancava la data)
 * Inventario adesso ragiona alla data per il calcolo dei pezzi in stock e degli oggetti a stock non zero...

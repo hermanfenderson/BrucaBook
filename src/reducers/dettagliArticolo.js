@@ -1,9 +1,10 @@
-import {LISTEN_EAN , ITEM_DETAILS, ITEM_HEADER, OFF_LISTEN_EAN} from '../actions/dettagliArticolo';
+import {LISTEN_EAN , ITEM_DETAILS, ITEM_HEADER, OFF_LISTEN_EAN, SET_PERIOD_DETAILS} from '../actions/dettagliArticolo';
 
 const initialState =  {
   listeningEAN: null,
   dettagliEAN: null,
   headerEAN: null,
+  period: {anno: null, mese: null}
 };
 
 export default function dettagliArticolo(state = initialState, action) {
@@ -30,6 +31,12 @@ export default function dettagliArticolo(state = initialState, action) {
      		headerEAN: null,
      		listeningEAN: null
      	}
+     case SET_PERIOD_DETAILS:
+     	return {
+     		...state,
+     		period: action.period
+     	}
+     	
     default:
       return state;
   }
@@ -38,4 +45,4 @@ export default function dettagliArticolo(state = initialState, action) {
 export const getListeningEAN = (state) => {return state.listeningEAN};
 export const getDettagliEAN = (state) => {return state.dettagliEAN};
 export const getHeaderEAN = (state) => {return state.headerEAN};
-
+export const getPeriod = (state) => {return state.period};

@@ -364,6 +364,9 @@ export const getDetailsInMatrix = (details) =>
 				 matrix.anno[anno]['totali']['resa'] = 0;
 				 matrix.anno[anno]['totali']['scontrino'] = 0;
 				 matrix.anno[anno]['totali']['inventario'] = 0;
+				 matrix.anno[anno]['totali']['delta'] = 0;
+				 matrix.anno[anno]['totali']['stock'] = 0;
+				 
 				}
 			if (!matrix.anno[anno].mese[mese]) 
 				{
@@ -373,6 +376,9 @@ export const getDetailsInMatrix = (details) =>
 				 matrix.anno[anno].mese[mese]['totali']['resa'] = 0;
 				 matrix.anno[anno].mese[mese]['totali']['scontrino'] = 0;
 				 matrix.anno[anno].mese[mese]['totali']['inventario'] = 0;
+				  matrix.anno[anno].mese[mese]['totali']['delta'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['stock'] = 0;
+				
 				}	
 				if (!matrix.anno[anno].mese[mese].giorno[giorno]) 
 				{
@@ -382,14 +388,24 @@ export const getDetailsInMatrix = (details) =>
 				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['resa'] = 0;
 				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['scontrino'] = 0;
 				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['inventario'] = 0;
+				  matrix.anno[anno].mese[mese].giorno[giorno]['totali']['delta'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['stock'] = 0;
 				}		
-			matrix.totale.totali[tipo] += value;	
+			matrix.totale.totali[tipo] += value;
+			matrix.totale.totali.stock += value;
+			
 			matrix.anno[anno]['totali'][tipo] += value;
 			matrix.anno[anno].mese[mese]['totali'][tipo] += value;
 			matrix.anno[anno].mese[mese].giorno[giorno]['totali'][tipo] += value;
+			matrix.anno[anno]['totali'].delta += value;
+			matrix.anno[anno].mese[mese]['totali'].delta += value;
+			matrix.anno[anno].mese[mese].giorno[giorno]['totali'].delta += value;
+			matrix.anno[anno]['totali'].stock = matrix.totale.totali.stock;
+			matrix.anno[anno].mese[mese]['totali'].stock = matrix.totale.totali.stock;
+			matrix.anno[anno].mese[mese].giorno[giorno]['totali'].stock = matrix.totale.totali.stock;
 		}
 		
-	let matrix = {anno: {}, totale: {righe: {}, totali: {bolla: 0, resa: 0, scontrino: 0, inventario: 0}}};
+	let matrix = {anno: {}, totale: {righe: {}, totali: {bolla: 0, resa: 0, scontrino: 0, inventario: 0, stock: 0}}};
 	 let date = details;	
             	  for(var propt2 in date)
 		  			{

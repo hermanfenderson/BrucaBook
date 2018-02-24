@@ -1,4 +1,4 @@
-import TableDettagliArticolo from '../components/TableDettagliArticolo';
+import TableTotaliDettagli from '../components/TableTotaliDettagli';
 import React, {Component} from 'react'
 
 import { Row} from 'antd'
@@ -20,14 +20,13 @@ componentWillMount() {
   	
 render()
 {
-console.log(this.props.matrixEAN);
   return (
  <div>	
       <Row>
          {this.props.headerEAN ? this.props.headerEAN.titolo + ' - ' + this.props.headerEAN.autore + ' - in magazzino: ' +  this.props.headerEAN.pezzi : null}
       </Row>
       <Row>
-       <TableDettagliArticolo dettagli={this.props.dettagliEAN} />
+         <TableTotaliDettagli matrix={this.props.matrixEAN} anno={this.props.period.anno} mese={this.props.period.mese} setPeriod={this.props.setPeriod}/>
       </Row>
    
   </div>
