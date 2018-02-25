@@ -22,6 +22,8 @@ export const CHANGED_RIGABOLLA_IN_RESA = 'CHANGED_RIGABOLLA_IN_RESA';
 export const DELETED_RIGABOLLA_IN_RESA = 'DELETED_RIGABOLLA_IN_RESA';
 
 export const UNLISTEN_BOLLA_IN_RESA = 'UNLISTEN_BOLLA_IN_RESA';
+export const SET_ACTIVE_MODAL = 'SET_ACTIVE_MODAL';
+export const SET_PERIOD_RESA = 'SET_PERIOD_RESA';
 
 
 //FUNZIONI DA VERIFICARE
@@ -229,6 +231,15 @@ return function(dispatch, getState) {
 
 
 
+export const setPeriodResa = (period) =>
+{
+	return({type: SET_PERIOD_RESA, period: period})
+};
+
+export const setActiveModal = (activeModal) =>
+{
+	return({type: SET_ACTIVE_MODAL, activeModal: activeModal})
+};
 
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi

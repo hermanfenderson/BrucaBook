@@ -104,6 +104,9 @@ export const getTabellaEAN = (state) => {return fromResa.getTabellaEAN(state.res
 export const getDettagliEANResa = (state) => {return fromResa.getDettagliEAN(state.resa)};
 export const getTabelleRigheEAN = (state) => {return fromResa.getTabelleRigheEAN(state.resa)};
 export const getTabellaRighe = (state) => {return fromResa.getTabellaRighe(state.resa)};
+export const getActiveModal = (state) => {return fromResa.getActiveModal(state.resa)};
+export const getPeriodResa = (state) => {return fromResa.getPeriod(state.resa)};
+
 
 
 //Scene Inventario

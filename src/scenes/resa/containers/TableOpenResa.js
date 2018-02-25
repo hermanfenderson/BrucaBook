@@ -1,8 +1,8 @@
 import TableOpenResaComponent from '../components/TableOpenResa'
-import {rigaResaFA} from '../../../actions/resa'
+import {rigaResaFA, setActiveModal} from '../../../actions/resa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaResa, getRigheResaIndexed, getTableResaHeight, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN} from '../../../reducers'
+import {getEditedRigaResa, getRigheResaIndexed, getTableResaHeight, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -24,12 +24,13 @@ const mapStateToProps = (state) => {
 	listeningItemResa: getListeningItemResa(state),
 	tabellaEAN: getTabellaEAN(state),
 	tabelleRigheEAN: getTabelleRigheEAN(state), 
+	dettagliEAN: getDettagliEANResa(state)
 	})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight }, dispatch);
+  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight, setActiveModal }, dispatch);
 }
 
 

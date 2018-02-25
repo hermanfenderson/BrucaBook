@@ -14,7 +14,9 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 		UNLISTEN_BOLLA_IN_RESA, 
 		LISTEN_DETTAGLI_EAN,
 		UNLISTEN_DETTAGLI_EAN,
-		GET_DETTAGLI_EAN
+		GET_DETTAGLI_EAN,
+		SET_ACTIVE_MODAL,
+		SET_PERIOD_RESA
 } from '../actions/resa';
 
 
@@ -50,7 +52,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}});
+	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}, activeModal: false, period: {anno: null, mese: null}});
     }
     
 
@@ -405,6 +407,18 @@ export default function resa(state = initialState(), action) {
 	case rigaResaR.CHANGED_ITEM:
 		    newState = manageChangedRigaResa(state, action);
 			break;
+     case SET_PERIOD_RESA:
+     	newState =  {
+     		...state,
+     		period: action.period
+     		}
+     	   break;
+     case SET_ACTIVE_MODAL: 
+     	 newState = {
+     	 	...state,
+     	 	activeModal: action.activeModal
+     	 }
+     	  break;
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;
@@ -434,6 +448,8 @@ export default function resa(state = initialState(), action) {
  export const getTabellaEAN = (state) => {return state.tabellaEAN};
  export const getTabelleRigheEAN = (state) => {return state.tabelleRigheEAN};
  export const getTabellaRighe = (state) => {return state.tabellaRighe};
+ export const getActiveModal = (state) => {return state.activeModal};
+ export const getPeriod = (state) => {return state.period};
  
  export const getRigheResaIndexed = (state) => {
  	let righeResaIndexed = {}

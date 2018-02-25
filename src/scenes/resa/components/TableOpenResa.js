@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import TableDettagliResa from './TableDettagliResa'
+import ModalDettagli from '../containers/ModalDettagli'
+import {getDetailsInMatrix} from '../../../helpers/form'
+
 
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'values.ean', label: 'EAN', width: '160px'},
@@ -38,12 +41,18 @@ class TableOpenResa extends Component
     	   	params.push(this.props.idResa);
     	   	this.props.listenRigaResa(params); 
     	   	}
-    	   	
+    this.props.setActiveModal(false);	   //Evita crash quando torno...	
 	}
 	
+	headerEAN = {};
+	matrixEAN = {};
 	
-	
-	
+	detailRow = (record) => {
+							this.matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
+		                    this.headerEAN = {titolo: record.values.titolo, autore: record.values.autore, pezzi: this.matrixEAN.totale.totali.stock};
+		                    this.props.setActiveModal(true);
+		                    
+							}
 
 	expandedRowRender = (record) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]} righeResa={this.props.righeResa} />)}
 
@@ -58,11 +67,15 @@ class TableOpenResa extends Component
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
     	  return(
+    	  	<div>
+    	  	<ModalDettagli headerEAN={this.headerEAN} matrixEAN={this.matrixEAN}/>
 			<WrappedTable {...props} 
 			data={this.props.tabellaEAN}
 			expandedRowRender={this.expandedRowRender} 
 			highlightedRowKey={selectedItemKey} 
+			detailRow={this.detailRow}
 			header={header}/>
+			</div>
 			)}
     }		
 	
