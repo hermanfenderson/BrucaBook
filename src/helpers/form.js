@@ -420,7 +420,8 @@ export const getDetailsInMatrix = (details) =>
 			    			}
 					    if (righe[propt].tipo === "resa")
 		  					{
-			    			totalePezzi =  - (parseInt(righe[propt].pezzi,10) - parseInt(righe[propt].gratis,10));
+		  						
+			    			totalePezzi =  - (parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10));
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}	
 						if (righe[propt].tipo === "scontrino")

@@ -187,4 +187,25 @@ export function addChangedStamp(record)
   record['changedAt'] = Firebase.database.ServerValue.TIMESTAMP;
   return record;
  }
+ 
+ export function firebaseUploader(obj)
+ {
+ 	var fileRef = Firebase.storage().ref().child(obj.filename);
+ 	fileRef.put(obj.file).then(function(snapshot) {
+  obj.file.status='done';
+ 
+  fileRef.getDownloadURL().then(function(url) {
+  		obj.file.url = url;
+		obj.onSuccess(obj);
+		});
+	});
+ }
+ 
+ export function firebaseGetDownloadURL(path, callback)
+ {
+ 		var fileRef = Firebase.storage().ref().child(path);
+ 		fileRef.getDownloadURL().then(function(url) {
+  		callback(url);
+		});
+ }
 

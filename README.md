@@ -4,6 +4,10 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.8.0
+* Upload di avatar personalizzato 
+* Fix di un baco nel segno delle rese nella reportistica (#201)
+ 
 ### Versione 0.7.4
 * Dalle rese è possibile visualizzare lo storico dell'inventario per ciascun EAN per anno, mese e giorno
 * Versione finale 0.7.x

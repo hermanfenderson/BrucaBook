@@ -27,7 +27,9 @@ const convertDetails = (inputData) =>
 		{   
 			let input = inputData[propt2];
 			let row = {key: propt, ...input[propt]};
-			if (row.tipo === 'scontrino') row.pezzi = -1 * row.pezzi;
+			if (row.tipo === 'scontrino' || row.tipo === 'resa') row.pezzi = -1 * row.pezzi;
+			if (row.tipo === 'resa') row.gratis = -1 * row.gratis;
+			
 			row.data = moment(row.data).format('DD-MM-YYYY');
 			row.dettagli = (function(tipo) {  
 				 switch(tipo) {
