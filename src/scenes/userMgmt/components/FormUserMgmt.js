@@ -3,7 +3,6 @@ import {message, Modal} from 'antd'
 import WrappedForm from '../../../components/WrappedForm'
 import {Redirect} from 'react-router';
 import queryString from 'query-string';
-import ImageUploader from '../../../components/ImageUploader';
 
 var query;
 var mode;
@@ -152,7 +151,7 @@ onSubmit = (e) => {
         : null }
         
           {(mode === 'configuration') ?
-        <ImageUploader />
+        <WrappedForm.ImageUploader field='imgFullName' fullName={'images/avatars/'+this.props.uid+'.jpg'} />
         : null }
         
           {(mode === 'configuration') ?

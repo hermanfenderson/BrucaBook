@@ -32,6 +32,7 @@ import {Form, Alert, Button, Input, Checkbox, DatePicker, TimePicker, InputNumbe
 import SelectBookstore from './SelectBookstore'; 
 import SelectList from './SelectList';
 import AutoCompleteList from './AutoCompleteList';
+import ImageUploaderWrapper from './ImageUploaderWrapper';
 
 import moment from 'moment';
 import 'moment/locale/it';
@@ -123,6 +124,7 @@ class WrappedForm extends Component {
     static SelectBookstore = InputDecorator(SelectBookstore);
     static SelectList = InputDecorator(SelectList);
       static AutoCompleteList = InputDecorator(AutoCompleteList);
+     static ImageUploader = InputDecorator(ImageUploaderWrapper);
  
     static Button = FormButton;
     static GeneralError = GeneralError;

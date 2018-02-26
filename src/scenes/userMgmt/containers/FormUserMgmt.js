@@ -11,7 +11,7 @@ const resetEditedSignup = loginFA.resetEditedItem;
 
 
 const mapStateToProps = (state) => { 
-	return ({editedItem: getEditedItemUserMgmt(state), authenticated: isAuthenticated(state), info: getInfo(state)})
+	return ({editedItem: getEditedItemUserMgmt(state), authenticated: isAuthenticated(state), info: getInfo(state) })
 }
  
 

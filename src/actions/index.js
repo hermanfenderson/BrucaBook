@@ -21,6 +21,7 @@ export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
 export const MASTER_DATA_LOADED = 'MASTER_DATA_LOADED';
 export const LOCAL_MASTER_DATA_LOADED = 'LOCAL_MASTER_DATA_LOADED';
+export const GET_URL_FROM_PATH = 'GET_URL_FROM_PATH';
 
 
 export function listenAuthStateChanged() {
@@ -38,6 +39,7 @@ export function listenAuthStateChanged() {
         info: snapshot.val(),
       })
       dispatch(caricaAnagrafiche());
+      if (snapshot.val().imgFullName) dispatch(getUrlFromPath(snapshot.val().imgFullName));
     });
         } 
       //Utente sloggato
@@ -128,6 +130,15 @@ export function caricaAnagrafiche() {
 	 		})
 	 		
 	  }	
+}
+
+export function getUrlFromPath(path) {
+	return function (dispatch) {
+	var fileRef = Firebase.storage().ref().child(path);
+ 		fileRef.getDownloadURL().then(function(url) {
+  		dispatch ({type: GET_URL_FROM_PATH, path: path, url: url})
+		});
+	}	
 }
 
 

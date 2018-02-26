@@ -17,6 +17,7 @@ const editedSignupValuesInitialState =
 				nome: '',
 				cognome: '',
 				nick: '',
+				imgFullName: '',
 				remember: false
 	};
 const editedItemInitialState = () => {
@@ -54,7 +55,7 @@ function transformAndValidateEditedSignup(cei, name, value)
    if ((cei.userMgmtMode !== 'requestPasswordReset')&&(cei.userMgmtMode !== 'configuration') )errMgmt(cei, 'confirmPassword','notIdentic','le password non coincidono', (!(cei.values.password === cei.values.confirmPassword)), (cei.values.confirmPassword.length > 0) && (!(cei.values.password === cei.values.confirmPassword)));
    if (cei.userMgmtMode === 'signup') errMgmt(cei, 'nome','blankNome','nome obbligatorio', (cei.values.nome.length === 0), false);	
    if (cei.userMgmtMode === 'signup') errMgmt(cei, 'cognome','blankCognome','Cognome obbligatorio', (cei.values.cognome.length === 0), false);	
-   
+   if (cei.userMgmtMode === 'configuration') errMgmt(cei, 'imgFullName','loading','Attendi upload per salvare', (cei.values.imgFullName === 'uploading'), false);
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
     return cei;

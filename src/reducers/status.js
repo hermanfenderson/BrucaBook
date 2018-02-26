@@ -25,6 +25,7 @@ export default function status(state = initialState, action) {
         cognome: (action.info ? action.info.cognome : ''),
         email: (action.info ? action.info.email : ''),
         elencoLibrerie: (action.info ? action.info.elencoLibrerie : null),
+        imgFullName: (action.info ? action.info.imgFullName : ''),
        	}	
      case USER_CONFIGURATION_CHANGED:
      	let info = {nick: action.info.nick};

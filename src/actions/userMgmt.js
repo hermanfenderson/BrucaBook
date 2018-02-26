@@ -59,7 +59,7 @@ if (isValid && mode==='login') return function(dispatch) {
 		}
 		
 if (isValid && mode==='configuration') return function(dispatch, getState) {
-	         let infoUser = {nick: credentials.nick};
+	         let infoUser = {nick: credentials.nick, imgFullName: credentials.imgFullName};
 	         if (credentials.libreria) 
 	        	{   let libreria = credentials.libreria.split("/");
 	        		infoUser.defaultCatena = libreria[0];

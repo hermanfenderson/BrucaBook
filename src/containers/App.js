@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
 import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure, setMenuSelectedKeys} from '../actions';
-import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo, getMenuSelectedKeys} from '../reducers';
+import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo, getMenuSelectedKeys, getPath2Url} from '../reducers';
 
 //Foglio di stile...
 import '../styles/app.css';
@@ -80,7 +80,7 @@ handleResize = () => {
        
        
           <Layout >
-           <Header setMenuSelectedKeys={this.props.setMenuSelectedKeys} toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} storeMeasure = {this.props.storeMeasure} />
+           <Header setMenuSelectedKeys={this.props.setMenuSelectedKeys} toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} path2url={this.props.path2url} storeMeasure = {this.props.storeMeasure} />
       
            
          
@@ -117,7 +117,8 @@ function mapStateToProps(state) {
     collapsed: getCollapsed(state),
     headerInfo: getHeaderInfo(state),
     info: getInfo(state),
-    menuSelectedKeys: getMenuSelectedKeys(state)
+    menuSelectedKeys: getMenuSelectedKeys(state),
+    path2url: getPath2Url(state)
   };
 }
 

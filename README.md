@@ -1,4 +1,4 @@
-BrucaBook V.0.7.4
+BrucaBook V.0.8.0
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   

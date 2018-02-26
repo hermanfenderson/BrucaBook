@@ -11,25 +11,6 @@ toggle = () => {
     this.props.toggleCollapsed();
   }
   
-/*
-menuSet = (destination) => 
-{
-	let selected = [];
-	switch (destination)
-		{
-			case 'acquisti': selected = ['acquisti'];  break;
-			case 'vendite': selected = ['2'];  break;
-			case 'inventari': selected = ['3'];  break;
-			case 'itemCatalogo': selected = ['4'];  break;
-			case 'userMgmt?mode=changePassword': selected = ['5'];  break;
-			case 'userMgmt?mode=configuration': selected = ['6'];  break;
-			case '#signout': selected = ['7'];  break;
-			case 'version': selected = ['8'];  break;
-		    default: selected = []; break;
-		}
-	this.props.setMenuSelectedKeys(selected);	
-}
-*/
 
 
 back = () => {
@@ -44,7 +25,7 @@ back = () => {
  componentDidMount() {
  	
  	this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
-     }
+ 	 }
 
 onClick = (selection) => {
 	let link = '';
@@ -77,7 +58,7 @@ menu = (<Menu onClick={this.onClick} theme="light" >
        )
 
   render()
-  {
+  { 
   	return(
   		<Layout.Header style={{ background: '#fff', padding: 0, width: '100%' }} ref='header' >
            
@@ -112,7 +93,7 @@ menu = (<Menu onClick={this.onClick} theme="light" >
                    
            <Dropdown trigger={['click']} placement={'bottomRight'} overlay={this.menu}>
           
-                <Avatar className='avatar' icon='user' />
+                <Avatar src={this.props.path2url[this.props.info.imgFullName]} className='avatar' icon='user' />
              </Dropdown> 
              </Col>
             </Row>
