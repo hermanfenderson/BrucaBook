@@ -28,6 +28,7 @@ resetForm = () => {
         <WrappedForm.Input field='editore' label='Editore'/>
         <WrappedForm.Input field='prezzoListino' label='Listino'/>
         <WrappedForm.SelectList field='iva' label='IVA' list={this.props.aliquoteIVA} defaultValue="a0"/>
+         <WrappedForm.ImageUploader label='Copertina' field='imgFullName' fullName={(this.props.editedCatalogItem.eanState ==='PARTIAL') ? this.props.saveGeneral ? 'images/books/'+this.props.editedCatalogItem.values.ean+'.jpg' : 'images/books/'+this.props.catena+'/'+this.props.libreria+'/'+this.props.editedCatalogItem.values.ean+'.jpg' : ''} />
         
         {this.props.isModal ? <WrappedForm.Group></WrappedForm.Group> :
         <WrappedForm.Group formGroupLayout={{gutter:0}}>

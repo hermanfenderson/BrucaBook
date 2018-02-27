@@ -151,7 +151,7 @@ onSubmit = (e) => {
         : null }
         
           {(mode === 'configuration') ?
-        <WrappedForm.ImageUploader field='imgFullName' fullName={'images/avatars/'+this.props.uid+'.jpg'} />
+        <WrappedForm.ImageUploader label='Avatar' field='imgFullName' fullName={'images/avatars/'+this.props.uid+'.jpg'} />
         : null }
         
           {(mode === 'configuration') ?

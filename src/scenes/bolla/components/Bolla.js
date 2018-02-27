@@ -2,7 +2,7 @@ import TableBolla from '../containers/TableBolla';
 import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../components/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
-import BookImg from '../../../components/BookImg'
+import BookImg from '../../../containers/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'

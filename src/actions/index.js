@@ -22,6 +22,8 @@ export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
 export const MASTER_DATA_LOADED = 'MASTER_DATA_LOADED';
 export const LOCAL_MASTER_DATA_LOADED = 'LOCAL_MASTER_DATA_LOADED';
 export const GET_URL_FROM_PATH = 'GET_URL_FROM_PATH';
+export const GET_PATH_FROM_EAN = 'GET_PATH_FROM_EAN';
+
 
 
 export function listenAuthStateChanged() {
@@ -129,6 +131,21 @@ export function caricaAnagrafiche() {
 	 		dispatch ({type: LOCAL_MASTER_DATA_LOADED, payload: snapshot.val()})	
 	 		})
 	 		
+	  }	
+}
+
+//Valorizzo associativa tra EAN e path
+export function getPathFromEAN(ean) {
+	 return function(dispatch, getState) {
+	 		Firebase.database().ref(urlFactory(getState, 'catalogoLocale',null,ean)).once('value', snapshot => {
+	 		if (snapshot.val() && snapshot.val().imgFullName) dispatch ({type: GET_PATH_FROM_EAN, path: snapshot.val().imgFullName, ean: ean});	
+	 		else {
+	 			Firebase.database().ref('/catalogo/'+ean).once('value', snapshot => {
+	 				if (snapshot.val() && snapshot.val().imgFullName) dispatch ({type: GET_PATH_FROM_EAN, path: snapshot.val().imgFullName, ean: ean});	
+	 				else dispatch ({type: GET_PATH_FROM_EAN, path: null, ean: ean});
+	 				});
+	 			}	
+	 		});
 	  }	
 }
 

@@ -50,6 +50,7 @@ export const getCollapsed = (state) => {return fromApp.getCollapsed(state.app)};
 export const getHeaderInfo = (state) => {return fromApp.getHeaderInfo(state.app)};
 export const getMenuSelectedKeys = (state) => {return fromApp.getMenuSelectedKeys(state.app)};
 export const getPath2Url = (state) => {return fromApp.getPath2Url(state.app)};
+export const getEAN2Path = (state) => {return fromApp.getEAN2Path(state.app)};
 //Scene Bolla
 export const getRigheBolla = (state) => {return fromBolla.getItems(state.bolla)};
 export const getEditedRigaBolla = (state) => {return fromBolla.getEditedItem(state.bolla)};

@@ -21,7 +21,8 @@ const editedCatalogValuesInitialState =
 				editore: '',
 				prezzoListino: '',
 				iva: '',
-				imgUrl: ''	
+				imgUrl: '',
+				imgFullName: ''
 	};
 	
 	
@@ -48,7 +49,7 @@ const catalogoR = new FormReducer('CATALOGO', foundCompleteItem, null, null, ini
 function foundCompleteItem(editedItem, action) 
 	{   
 		let cei = editedItemCopy(editedItem);
-	    cei.values = {...cei.values, ...action.item}
+		cei.values = {...cei.values, ...action.item}
         /*
        	//Copio l'esito della ricerca...
     	cei.values.titolo = action.item.titolo;
@@ -186,6 +187,9 @@ export default function catalog(state = initialState(), action) {
     	else  tbc3EditedCatalogItem.values.editore = '';
     	if (action.item.prezzoListino) tbc3EditedCatalogItem.values.prezzoListino = action.item.prezzoListino;
     	else  tbc3EditedCatalogItem.values.prezzoListino = '';
+    	if (action.item.imgFullName) tbc3EditedCatalogItem.values.imgFullName = action.item.imgFullName; 
+    	else  tbc3EditedCatalogItem.values.titolo = '';
+    
     	tbc3EditedCatalogItem.values.iva = 'a0'; //Eventualmente la cambi in anagrafica...
     	
      	

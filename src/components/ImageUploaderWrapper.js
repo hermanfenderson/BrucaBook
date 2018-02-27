@@ -7,13 +7,16 @@
 import ImageUploader from './ImageUploader'
 import React from 'react'
 
-const ImageUploaderWrapper = (props) => 
+class ImageUploaderWrapper extends React.Component
 		    {
-		     const {onChange, fullName, ...otherProps} = props;
+		     render()
+		     {
+		     const {onChange, fullName, ...otherProps} = this.props;
 	   	     //const onBlur = () => {onSubmit()};
 	   	     const onChangeInput = (value) => {onChange(value)}
 	   	     
 			return( <ImageUploader {...otherProps} fullName={fullName} setValue={onChangeInput} />)
+		     }
 		    }
 
 export default ImageUploaderWrapper;

@@ -25,12 +25,9 @@ class ImageUploader extends React.Component {
     loading: false,
   };
   
-  componentDidMount = () => {
-  	firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg);
-  }
+  
   
   handleChange = (info) => {
-  	console.log(info.file.status);
   	if (info.file.status === 'uploading') {
       this.setState({ imageUrl: null, loading: true });
       if (this.props.setValue) this.props.setValue('uploading');
@@ -64,6 +61,7 @@ class ImageUploader extends React.Component {
       </div>
     );
     const imageUrl = this.state.imageUrl;
+    if (this.props.fullName && !this.state.imageUrl) firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg); 
     return (
       <Upload
         name={this.props.fullName}
@@ -73,7 +71,7 @@ class ImageUploader extends React.Component {
         onChange={this.handleChange}
         customRequest={this.customUploader}
       >
-        {imageUrl ? <img src={imageUrl} alt="" /> : uploadButton}
+        {(this.props.fullName && imageUrl) ? <img src={imageUrl} alt="" /> : uploadButton}
       </Upload>
     );
   }
