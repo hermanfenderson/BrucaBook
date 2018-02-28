@@ -228,7 +228,24 @@ this.foundCloudItem = (ean,item) =>
 { const type = this.FOUND_CLOUD_ITEM;
   const updateCatalogItem = this.updateCatalogItem;
   const updateGeneralCatalogItem = this.updateGeneralCatalogItem;
+  //Qui inserisco il caricamento dell'immagine da internet...
   
+  if (item.imgUrl)
+  	  {
+  	      item.imgFullName = "images/books/"+ean+'.jpg';
+  	      new Promise( function (resolve, reject) {
+		  request.get(item.imgUrl).responseType('blob').then(
+	                  (response) => {
+	                                
+	                                var fileRef = Firebase.storage().ref().child(item.imgFullName);
+ 	
+	                                fileRef.put(response.req.xhr.response)
+	                                
+	                             }
+	                  )
+	          })
+	}
+
 	return function(dispatch) {
   	     item['ean'] = ean; //La ricerca non lo contiene...
   	     if (!item['iva']) item['iva'] = 'a0'; //Default

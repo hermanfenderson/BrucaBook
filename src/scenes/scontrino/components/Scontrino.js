@@ -8,7 +8,7 @@ import FormTestataScontrino from '../containers/FormTestataScontrino';
 import TotaliScontrino from '../components/TotaliScontrino';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import TestataCassa from '../components/TestataCassa';
-import BookImg from '../../../components/BookImg'
+import BookImg from '../../../containers/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'

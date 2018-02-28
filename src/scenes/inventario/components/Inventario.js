@@ -2,7 +2,7 @@ import TableInventario from '../containers/TableInventario';
 import FormRigaInventario from '../containers/FormRigaInventario';
 import TotaliInventario from '../components/TotaliInventario';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
-import BookImg from '../../../components/BookImg'
+import BookImg from '../../../containers/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'

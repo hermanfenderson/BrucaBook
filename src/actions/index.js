@@ -154,7 +154,10 @@ export function getUrlFromPath(path) {
 	var fileRef = Firebase.storage().ref().child(path);
  		fileRef.getDownloadURL().then(function(url) {
   		dispatch ({type: GET_URL_FROM_PATH, path: path, url: url})
-		});
+		}).catch(function(error) {
+  dispatch ({type: GET_URL_FROM_PATH, path: path, url: null});
+}); 
+		//Se non è ancora arrivato...
 	}	
 }
 

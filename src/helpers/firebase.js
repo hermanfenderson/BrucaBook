@@ -201,6 +201,8 @@ export function addChangedStamp(record)
 	});
  }
  
+
+ 
  export function firebaseGetDownloadURL(path, callback)
  {
  		var fileRef = Firebase.storage().ref().child(path);
