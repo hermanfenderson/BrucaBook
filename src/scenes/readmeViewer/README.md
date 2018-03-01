@@ -1,9 +1,17 @@
-BrucaBook V.0.8.1
+BrucaBook V.0.8.2
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.8.2
+* Bug fixing: immagine in catalogo non veniva aggiornata correttamente (#203)
+* Resizing immagine nel form configurazione utente e sistemazione scroll
+* Resizing immagine nel form catalogo e sistemazione scroll
+* Aggiornamento antd all'ultima versione (3.2.2)
+* Aggiornamento firebase all'ultima versione (4.10.1)
+* Aggiornamento react e react-dom all'ultima versione (16.2.0)
+
 ### Versione 0.8.1
 * Upload di immagini nel catalogo locale
 * Ridimensionamento automatico

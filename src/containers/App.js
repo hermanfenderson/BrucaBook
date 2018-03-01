@@ -65,7 +65,7 @@ handleResize = () => {
       <Spin />
       :
       (this.props.authenticated === true) ?
-      (<Layout>
+      (<Layout style={{height: '100vh'}}>
         <Sider style={{height: '100vh'}}
           trigger={null}
           collapsible
@@ -80,11 +80,12 @@ handleResize = () => {
        
        
           <Layout >
+           
            <Header setMenuSelectedKeys={this.props.setMenuSelectedKeys} toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} path2url={this.props.path2url} storeMeasure = {this.props.storeMeasure} />
-      
+     
            
          
-           <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-74' }}>
+           <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-74', overflow: 'scroll', maxHeight: '100vh-74'  }}>
           <Main authenticated={true} user={this.props.user}/>
           </Content>
         </Layout>

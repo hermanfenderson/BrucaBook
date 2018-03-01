@@ -61,7 +61,7 @@ class ImageUploader extends React.Component {
       </div>
     );
     const imageUrl = this.state.imageUrl;
-    if (this.props.fullName && !this.state.imageUrl) firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg); 
+    if (this.props.fullName) firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg); 
     return (
       <Upload
         name={this.props.fullName}
@@ -71,7 +71,7 @@ class ImageUploader extends React.Component {
         onChange={this.handleChange}
         customRequest={this.customUploader}
       >
-        {(this.props.fullName && imageUrl) ? <img src={imageUrl} alt="" /> : uploadButton}
+        {(this.props.fullName && imageUrl) ? <img className="upload-img" src={imageUrl} alt="" /> : uploadButton}
       </Upload>
     );
   }
