@@ -17,33 +17,13 @@ const header = [
 			    {dataField: 'values.prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
 
-var currentListenedIdResa = null;
+//var currentListenedIdResa = null;
 
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableResa extends Component 
     {
-    componentDidMount() {
-    	if (this.props.listeningItemResa) currentListenedIdResa = this.props.listeningItemResa[2];   
-    		//Ascolto modifiche sulle righe della Resa
-    	if (currentListenedIdResa !== this.props.idResa)
-    	   {
-    	   	if (currentListenedIdResa) 
-    	   		{
-    	   			let params = [...this.props.period];
-    	   			params.push(currentListenedIdResa);
-    
-    	   			this.props.offListenRigaResa(params); 
-    	   			this.props.resetTableResa();
-    	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = [...this.props.period];
-    	   	params.push(this.props.idResa);
-    	   	this.props.listenRigaResa(params); 
-    	   	}
-    	   	
-	}
-	
+ 
 	
 	
 	

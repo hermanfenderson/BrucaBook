@@ -1,7 +1,9 @@
 import TableTotaliDettagli from '../components/TableTotaliDettagli';
+import BookImg from '../../../containers/BookImg';
+
 import React, {Component} from 'react'
 
-import { Row} from 'antd'
+import { Row, Col} from 'antd'
 
 
 
@@ -26,7 +28,12 @@ render()
          {this.props.headerEAN ? this.props.headerEAN.titolo + ' - ' + this.props.headerEAN.autore + ' - in magazzino: ' +  this.props.headerEAN.pezzi : null}
       </Row>
       <Row>
+      <Col span={4}>
+      <BookImg ean={this.props.match.params.ean} eanState='COMPLETE' />
+      </Col>
+      <Col span={20}>
          <TableTotaliDettagli matrix={this.props.matrixEAN} anno={this.props.period.anno} mese={this.props.period.mese} setPeriod={this.props.setPeriod}/>
+      </Col>
       </Row>
    
   </div>

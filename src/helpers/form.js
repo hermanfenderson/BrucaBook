@@ -279,9 +279,12 @@ else
 
 export const removeRow = (index, array, key, posField, keyField) => 
 {
+		
+
 	let pos = index[key][posField];
 	array.splice(pos,1);
-	for (let i = pos + 1; i < array.length; i++) index[array[i].values[keyField]][posField] = i;
+	for (let i = pos + 1; i < array.length; i++) 
+		if (array[i].values[keyField]>=0 && index[array[i].values[keyField]]) index[array[i].values[keyField]][posField] = i;
 	delete index[key];
 }
 

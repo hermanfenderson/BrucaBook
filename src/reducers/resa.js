@@ -218,8 +218,7 @@ export default function resa(state = initialState(), action) {
    case LISTEN_BOLLA_IN_RESA:
    		{
    		let bolleOsservate = {...state.bolleOsservate};
-   	 
-   	    bolleOsservate[action.params.split('/')[2]].righe = {};
+   	    if (!bolleOsservate[action.params.split('/')[2]].righe) bolleOsservate[action.params.split('/')[2]].righe = {};
    		newState = {...state, bolleOsservate : bolleOsservate};
    			
    		}
@@ -270,7 +269,8 @@ export default function resa(state = initialState(), action) {
    	    let bolleOsservate = {...state.bolleOsservate};
    	    let row = action.payload.val();
    	     //Ne copio i contenuti in bolleOsservate...
-        bolleOsservate[bolla].righe[riga] = row;
+   	    if (!bolleOsservate[bolla].righe) bolleOsservate[bolla].righe = {};
+   	    bolleOsservate[bolla].righe[riga] = row;
    	    let ean =  action.payload.val().ean;
    	    let indiceEAN = {...state.indiceEAN};
    	    let tabellaEAN = [...state.tabellaEAN];

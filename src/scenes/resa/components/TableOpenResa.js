@@ -17,39 +17,19 @@ const header = [{dataField: 'values.ean', label: 'EAN', width: '160px'},
 			   ];
 			   
 
-var currentListenedIdResa = null;
+//var currentListenedIdResa = null;
 
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableOpenResa extends Component 
     {
-    componentDidMount() {
-    	if (this.props.listeningItemResa) currentListenedIdResa = this.props.listeningItemResa[2];   
-    		//Ascolto modifiche sulle righe della Resa
-    	if (currentListenedIdResa !== this.props.idResa)
-    	   {
-    	   	if (currentListenedIdResa) 
-    	   		{
-    	   			let params = [...this.props.period];
-    	   			params.push(currentListenedIdResa);
-    
-    	   			this.props.offListenRigaResa(params); 
-    	   			this.props.resetTableResa();
-    	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = [...this.props.period];
-    	   	params.push(this.props.idResa);
-    	   	this.props.listenRigaResa(params); 
-    	   	}
-    this.props.setActiveModal(false);	   //Evita crash quando torno...	
-	}
-	
+  
 	headerEAN = {};
 	matrixEAN = {};
 	
 	detailRow = (record) => {
 							this.matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
-		                    this.headerEAN = {titolo: record.values.titolo, autore: record.values.autore, pezzi: this.matrixEAN.totale.totali.stock};
+		                    this.headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, pezzi: this.matrixEAN.totale.totali.stock};
 		                    this.props.setActiveModal(true);
 		                    
 							}
