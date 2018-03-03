@@ -107,6 +107,8 @@ export const getTabelleRigheEAN = (state) => {return fromResa.getTabelleRigheEAN
 export const getTabellaRighe = (state) => {return fromResa.getTabellaRighe(state.resa)};
 export const getActiveModal = (state) => {return fromResa.getActiveModal(state.resa)};
 export const getPeriodResa = (state) => {return fromResa.getPeriod(state.resa)};
+export const getMatrixEAN = (state) => {return fromResa.getMatrixEAN(state.resa)};
+export const getHeaderEANResa = (state) => {return fromResa.getHeaderEAN(state.resa)};
 
 
 

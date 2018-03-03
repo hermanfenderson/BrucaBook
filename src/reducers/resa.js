@@ -16,7 +16,8 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 		UNLISTEN_DETTAGLI_EAN,
 		GET_DETTAGLI_EAN,
 		SET_ACTIVE_MODAL,
-		SET_PERIOD_RESA
+		SET_PERIOD_RESA,
+		SET_MODAL_DETAILS
 } from '../actions/resa';
 
 
@@ -39,7 +40,7 @@ const editedRigaResaValuesInitialState =
 	
 
 const editedItemInitialState = () => {
-	return(editedItemInitialStateHelper(editedRigaResaValuesInitialState, {} ));
+	return(editedItemInitialStateHelper(editedRigaResaValuesInitialState, {matrixEAN: {}, headerEAN: {}} ));
 }
 
 //Oggetto che contiene l'elenco dinamico delle bolle afferenti a un fornitore con il listener corrispondente.
@@ -418,6 +419,13 @@ export default function resa(state = initialState(), action) {
      	 	...state,
      	 	activeModal: action.activeModal
      	 }
+     	 break;
+     case SET_MODAL_DETAILS: 
+     	 newState = {
+     	 	...state,
+     	 	matrixEAN: action.matrixEAN,
+     	 	headerEAN: action.headerEAN
+     	 }	 
      	  break;
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
@@ -450,7 +458,9 @@ export default function resa(state = initialState(), action) {
  export const getTabellaRighe = (state) => {return state.tabellaRighe};
  export const getActiveModal = (state) => {return state.activeModal};
  export const getPeriod = (state) => {return state.period};
- 
+ export const getMatrixEAN = (state) => {return state.matrixEAN};
+  export const getHeaderEAN = (state) => {return state.headerEAN};
+
  export const getRigheResaIndexed = (state) => {
  	let righeResaIndexed = {}
  	for (var index in state.itemsArrayIndex)

@@ -93,7 +93,7 @@ menu = (<Menu onClick={this.onClick} theme="light" >
                    
            <Dropdown trigger={['click']} placement={'bottomRight'} overlay={this.menu}>
           
-                <Avatar src={this.props.path2url[this.props.info.imgFullName]} className='avatar' icon='user' />
+                <Avatar src={(this.props.path2url) ? this.props.path2url[this.props.info.imgFullName] : null} className='avatar' icon='user' />
              </Dropdown> 
              </Col>
             </Row>

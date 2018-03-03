@@ -24,13 +24,12 @@ const header = [{dataField: 'values.ean', label: 'EAN', width: '160px'},
 class TableOpenResa extends Component 
     {
   
-	headerEAN = {};
-	matrixEAN = {};
-	
 	detailRow = (record) => {
-							this.matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
-		                    this.headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, pezzi: this.matrixEAN.totale.totali.stock};
+						    let matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
+		                    let headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, pezzi: matrixEAN.totale.totali.stock};
+		                    this.props.setModalDetails(matrixEAN, headerEAN)
 		                    this.props.setActiveModal(true);
+		                    this.props.setPeriodResa([null, null]);
 		                    
 							}
 
@@ -43,12 +42,11 @@ class TableOpenResa extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
-    	
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
-    	  return(
+        return(
     	  	<div>
-    	  	<ModalDettagli headerEAN={this.headerEAN} matrixEAN={this.matrixEAN}/>
+    	  	<ModalDettagli headerEAN={this.props.headerEAN} matrixEAN={this.props.matrixEAN}/>
 			<WrappedTable {...props} 
 			data={this.props.tabellaEAN}
 			expandedRowRender={this.expandedRowRender} 

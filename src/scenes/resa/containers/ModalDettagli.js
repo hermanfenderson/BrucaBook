@@ -8,7 +8,8 @@ import { bindActionCreators} from 'redux'
 const mapStateToProps = (state) => {
 	return ({
 	         activeModal: getActiveModal(state),
-	         period: getPeriodResa(state)
+	         period: getPeriodResa(state),
+	        
 	})
 }
 

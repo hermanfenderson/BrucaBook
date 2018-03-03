@@ -24,6 +24,7 @@ export const DELETED_RIGABOLLA_IN_RESA = 'DELETED_RIGABOLLA_IN_RESA';
 export const UNLISTEN_BOLLA_IN_RESA = 'UNLISTEN_BOLLA_IN_RESA';
 export const SET_ACTIVE_MODAL = 'SET_ACTIVE_MODAL';
 export const SET_PERIOD_RESA = 'SET_PERIOD_RESA';
+export const SET_MODAL_DETAILS = 'SET_MODAL_DETAILS';
 
 
 //FUNZIONI DA VERIFICARE
@@ -241,6 +242,11 @@ export const setActiveModal = (activeModal) =>
 	return({type: SET_ACTIVE_MODAL, activeModal: activeModal})
 };
 
+
+export const setModalDetails = (matrixEAN, headerEAN) =>
+{
+	return({type: SET_MODAL_DETAILS, matrixEAN: matrixEAN, headerEAN: headerEAN})
+};
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
 export const rigaResaFA = new FormActions(SCENE, preparaItem, 'righeResa','righeElencoRese', true);
