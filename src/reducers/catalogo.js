@@ -22,7 +22,7 @@ const editedCatalogValuesInitialState =
 				prezzoListino: '',
 				iva: '',
 				imgUrl: '',
-				imgFullName: ''
+				imgFirebaseUrl: ''
 	};
 	
 	
@@ -99,7 +99,8 @@ function transformAndValidateEditedCatalogItem(changedEditedCatalogItem, name, v
    errMgmt(ceci, 'titolo','emptyField','Campo obbligatorio', ceci.values.titolo.length===0, false);
    errMgmt(ceci, 'autore','emptyField','Campo obbligatorio', ceci.values.autore.length===0, false);
   errMgmt(ceci, 'editore','emptyField','Campo obbligatorio', ceci.values.editore.length===0, false);
-
+  errMgmt(ceci, 'imgFirebaseUrl','loading','Attendi upload per salvare', (ceci.values.imgFirebaseUrl === 'uploading'), false);
+   
 
    
    	errMgmt(ceci, 'prezzoListino','invalidAmount','Importo (19.99)',  
@@ -187,7 +188,7 @@ export default function catalog(state = initialState(), action) {
     	else  tbc3EditedCatalogItem.values.editore = '';
     	if (action.item.prezzoListino) tbc3EditedCatalogItem.values.prezzoListino = action.item.prezzoListino;
     	else  tbc3EditedCatalogItem.values.prezzoListino = '';
-    	if (action.item.imgFullName) tbc3EditedCatalogItem.values.imgFullName = action.item.imgFullName; 
+    	if (action.item.imgFirebaseUrl) tbc3EditedCatalogItem.values.imgFirebaseUrl = action.item.imgFirebaseUrl; 
     	else  tbc3EditedCatalogItem.values.titolo = '';
     
     	tbc3EditedCatalogItem.values.iva = 'a0'; //Eventualmente la cambi in anagrafica...

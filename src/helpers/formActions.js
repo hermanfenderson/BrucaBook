@@ -229,7 +229,8 @@ this.foundCloudItem = (ean,item) =>
   const updateCatalogItem = this.updateCatalogItem;
   const updateGeneralCatalogItem = this.updateGeneralCatalogItem;
   //Qui inserisco il caricamento dell'immagine da internet...
-  
+  return function(dispatch) {
+	                                			
   if (item.imgUrl)
   	  {
   	      item.imgFullName = "images/books/"+ean+'.jpg';
@@ -239,22 +240,32 @@ this.foundCloudItem = (ean,item) =>
 	                                
 	                                var fileRef = Firebase.storage().ref().child(item.imgFullName);
  	
-	                                fileRef.put(response.req.xhr.response)
-	                                
-	                             }
+	                                fileRef.put(response.req.xhr.response).then(function()
+	                                	{
+	                                	fileRef.getDownloadURL().then(function(url) 
+	                                		{
+	                                				item['imgFirebaseUrl'] = url;
+  	    											item['ean'] = ean; //La ricerca non lo contiene...
+  	    											if (!item['iva']) item['iva'] = 'a0'; //Default
+													 dispatch({type: type,item});	
+													 dispatch(updateGeneralCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
+													 dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
+	                          
+	                                				
+	                                		})
+	                                	})	
+	                            	}
 	                  )
 	          })
 	}
-
-	return function(dispatch) {
-  	     item['ean'] = ean; //La ricerca non lo contiene...
+   else {
+	     item['ean'] = ean; //La ricerca non lo contiene...
   	     if (!item['iva']) item['iva'] = 'a0'; //Default
 	   dispatch({type: type,item});	
 	   dispatch(updateGeneralCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
 	   dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
-	   
-		
-	}
+		}
+  }	
 }
 
 this.foundGeneralCatalogItem = (ean,item) =>
@@ -561,6 +572,7 @@ this.aggiornaItem = (params,itemId, valori) => {
       return function(dispatch,getState) {
 
     const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
+    
     ref.update(nuovoItem);
     dispatch(
    	{

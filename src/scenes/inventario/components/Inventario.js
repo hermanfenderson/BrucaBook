@@ -2,7 +2,7 @@ import TableInventario from '../containers/TableInventario';
 import FormRigaInventario from '../containers/FormRigaInventario';
 import TotaliInventario from '../components/TotaliInventario';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
-import BookImg from '../../../containers/BookImg'
+import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
@@ -94,7 +94,7 @@ render()
     
     <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '250px'}}>
     <Col span={4}>
-     <BookImg eanState={this.props.editedRigaInventario.eanState} ean={this.props.editedRigaInventario.values.ean} />
+     <BookImg eanState={this.props.editedRigaInventario.eanState} ean={this.props.editedRigaInventario.values.ean} imgUrl={this.props.editedRigaInventario.values.imgFirebaseUrl} />
 
       </Col>
        <Col span={20}>

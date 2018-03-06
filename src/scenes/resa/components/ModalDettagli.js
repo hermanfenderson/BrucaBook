@@ -1,6 +1,6 @@
 import TableTotaliDettagli from '../../dettagliArticolo/components/TableTotaliDettagli';
 import React, {Component} from 'react'
-import BookImg from '../../../containers/BookImg';
+import BookImg from '../../../components/BookImg';
 
 import { Row, Button, Col} from 'antd'
 import ReactModal from 'react-modal';
@@ -31,7 +31,7 @@ render()
       </Row>
       <Row>
          <Col span={4}>
-           <BookImg ean={this.props.headerEAN ? this.props.headerEAN.ean: null} eanState={this.props.headerEAN ? 'COMPLETE' : 'BLANK'} />
+           <BookImg ean={this.props.headerEAN ? this.props.headerEAN.ean: null} eanState={this.props.headerEAN ? 'COMPLETE' : 'BLANK'} imgUrl={this.props.headerEAN ? this.props.headerEAN.imgFirebaseUrl: null}/>
     
       </Col>
       <Col span={20}>

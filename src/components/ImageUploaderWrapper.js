@@ -11,10 +11,10 @@ class ImageUploaderWrapper extends React.Component
 		    {
 		     render()
 		     {
-		     const {onChange, fullName, ...otherProps} = this.props;
+		     const {onChange, fullName, value, ...otherProps} = this.props;
 	   	     //const onBlur = () => {onSubmit()};
 	   	     const onChangeInput = (value) => {onChange(value)}
-			return( <ImageUploader {...otherProps} fullName={fullName} setValue={onChangeInput} />)
+			return( <ImageUploader {...otherProps} fullName={fullName} imgFirebaseUrl={value} setValue={onChangeInput} />)
 		     }
 		    }
 

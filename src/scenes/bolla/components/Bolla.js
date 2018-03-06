@@ -2,7 +2,7 @@ import TableBolla from '../containers/TableBolla';
 import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../components/TotaliBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
-import BookImg from '../../../containers/BookImg'
+import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
@@ -85,7 +85,7 @@ render()
       <Row type="flex" align="bottom" className='bottom-form' style={{height: '250px'}} ref='formRigaBolla'>
    
      <Col span={4}>
-     <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} />
+     <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} imgUrl={this.props.editedRigaBolla.values.imgFirebaseUrl}/>
 
       </Col>
        <Col span={20}>

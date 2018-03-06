@@ -25,10 +25,10 @@ export default function status(state = initialState, action) {
         cognome: (action.info ? action.info.cognome : ''),
         email: (action.info ? action.info.email : ''),
         elencoLibrerie: (action.info ? action.info.elencoLibrerie : null),
-        imgFullName: (action.info ? action.info.imgFullName : ''),
+        imgFirebaseUrl: (action.info ? action.info.imgFirebaseUrl : ''),
        	}	
      case USER_CONFIGURATION_CHANGED:
-     	let info = {nick: action.info.nick};
+     	let info = {nick: action.info.nick, imgFirebaseUrl: action.info.imgFirebaseUrl};
      	if (action.info.defaultLibreria) info.libreria = action.info.defaultLibreria;
      	if (action.info.defaultCatena) info.catena = action.info.defaultCatena;
      	if (action.info.defaultLibreria) info.nomeLibreria = state.elencoLibrerie[action.info.defaultCatena].librerie[action.info.defaultLibreria]; //Idem

@@ -19,7 +19,8 @@ const editedRigaBollaValuesInitialState =
 				pezzi: '1',
 				gratis: '',
 				prezzoTotale: '',
-				imgUrl: ''	
+				imgUrl: '',
+				imgFirebaseUrl: ''
 	};
 	
 	

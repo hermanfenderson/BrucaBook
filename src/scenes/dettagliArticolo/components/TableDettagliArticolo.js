@@ -27,20 +27,20 @@ const convertDetails = (inputData) =>
 		{   
 			let input = inputData[propt2];
 			let row = {key: propt, ...input[propt]};
-			if (row.tipo === 'scontrino' || row.tipo === 'resa') row.pezzi = -1 * row.pezzi;
-			if (row.tipo === 'resa') row.gratis = -1 * row.gratis;
+			if (row.tipo === 'scontrini' || row.tipo === 'rese') row.pezzi = -1 * row.pezzi;
+			if (row.tipo === 'rese') row.gratis = -1 * row.gratis;
 			
 			row.data = moment(row.data).format('DD-MM-YYYY');
 			row.dettagli = (function(tipo) {  
 				 switch(tipo) {
-					 case 'scontrino':
+					 case 'scontrini':
     					return 'cassa '+row.cassa+' sc. '+row.numero;
-					 case 'bolla':
+					 case 'bolle':
     				    return 'rif. '+row.riferimento+' '+row.nomeFornitore;
-    				 case 'resa':
+    				 case 'rese':
     				    return 'rif. '+row.riferimento+' '+row.nomeFornitore;
     			
-    				 case 'inventario':
+    				 case 'inventari':
     				 	return row.note;
     				 default:
     					return '';

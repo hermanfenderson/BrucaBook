@@ -143,10 +143,11 @@ return function(dispatch, getState) {
    
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
    var ref; 
-    ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
+    ref = Firebase.database().ref(urlFactory(getState,itemsUrl, params, valori.ean));
+     console.log(nuovoItem);
+
     ref.set(nuovoItem);
-    
-    
+       
    dispatch(
    	{
    		type: typeAdd,

@@ -17,7 +17,8 @@ const editedRigaBollaValuesInitialState =
 				prezzoUnitario: '',
 				pezzi: '1',
 				prezzoTotale: '',
-				imgUrl: ''	
+				imgUrl: '',
+				imgFirebaseUrl: ''
 	};
 	
 	

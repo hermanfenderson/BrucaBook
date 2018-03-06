@@ -1,5 +1,5 @@
 import TableTotaliDettagli from '../components/TableTotaliDettagli';
-import BookImg from '../../../containers/BookImg';
+import BookImg from '../../../components/BookImg';
 
 import React, {Component} from 'react'
 
@@ -29,7 +29,7 @@ render()
       </Row>
       <Row>
       <Col span={4}>
-      <BookImg ean={this.props.match.params.ean} eanState='COMPLETE' />
+      <BookImg ean={this.props.match.params.ean} eanState='COMPLETE' imgUrl={this.props.headerEAN ? this.props.headerEAN.imgFirebaseUrl: null} />
       </Col>
       <Col span={20}>
          <TableTotaliDettagli matrix={this.props.matrixEAN} anno={this.props.period.anno} mese={this.props.period.mese} setPeriod={this.props.setPeriod}/>

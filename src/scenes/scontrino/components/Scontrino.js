@@ -8,7 +8,7 @@ import FormTestataScontrino from '../containers/FormTestataScontrino';
 import TotaliScontrino from '../components/TotaliScontrino';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import TestataCassa from '../components/TestataCassa';
-import BookImg from '../../../containers/BookImg'
+import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
@@ -189,7 +189,7 @@ return (
        <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '250px'}}>
     		<Col span={5}>
 
-				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean}  />
+				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
 
 	
 		  </Col>

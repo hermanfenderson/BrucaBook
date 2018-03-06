@@ -301,24 +301,24 @@ export const getStock = (details, excludedDoc=null, fromDate=null, toDate=null) 
 		  			  righe = date[propt2];
 		  				for (var propt in righe)	
 		  				{
-		  				 if (righe[propt].tipo === "bolla")
+		  				 if (righe[propt].tipo === "bolle")
 		  					{
 			    			totalePezzi = parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10)+ totalePezzi;
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}
-					    if (righe[propt].tipo === "resa")
+					    if (righe[propt].tipo === "rese")
 		  					{
 			    			totalePezzi = totalePezzi - (parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10));
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}	
-						if (righe[propt].tipo === "scontrino")
+						if (righe[propt].tipo === "scontrini")
 		  					{
 		  					totalePezzi = totalePezzi - parseInt(righe[propt].pezzi,10);
 			    		
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}
 							
-						if (righe[propt].tipo === "inventario")
+						if (righe[propt].tipo === "inventari")
 		  					{
 		  					totalePezzi = totalePezzi + parseInt(righe[propt].pezzi,10);
 			    		
@@ -363,10 +363,10 @@ export const getDetailsInMatrix = (details) =>
 			if (!matrix.anno[anno]) 
 				{
 				 matrix.anno[anno] = {righe: {}, totali: {}, mese: {}};
-				 matrix.anno[anno]['totali']['bolla'] = 0;
-				 matrix.anno[anno]['totali']['resa'] = 0;
-				 matrix.anno[anno]['totali']['scontrino'] = 0;
-				 matrix.anno[anno]['totali']['inventario'] = 0;
+				 matrix.anno[anno]['totali']['bolle'] = 0;
+				 matrix.anno[anno]['totali']['rese'] = 0;
+				 matrix.anno[anno]['totali']['scontrini'] = 0;
+				 matrix.anno[anno]['totali']['inventari'] = 0;
 				 matrix.anno[anno]['totali']['delta'] = 0;
 				 matrix.anno[anno]['totali']['stock'] = 0;
 				 
@@ -375,10 +375,10 @@ export const getDetailsInMatrix = (details) =>
 				{
 				 matrix.anno[anno].mese[mese] = {righe: {}, totali: {}, giorno: {}};
 				  
-				 matrix.anno[anno].mese[mese]['totali']['bolla'] = 0;
-				 matrix.anno[anno].mese[mese]['totali']['resa'] = 0;
-				 matrix.anno[anno].mese[mese]['totali']['scontrino'] = 0;
-				 matrix.anno[anno].mese[mese]['totali']['inventario'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['bolle'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['rese'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['scontrini'] = 0;
+				 matrix.anno[anno].mese[mese]['totali']['inventari'] = 0;
 				  matrix.anno[anno].mese[mese]['totali']['delta'] = 0;
 				 matrix.anno[anno].mese[mese]['totali']['stock'] = 0;
 				
@@ -387,10 +387,10 @@ export const getDetailsInMatrix = (details) =>
 				{
 				 matrix.anno[anno].mese[mese].giorno[giorno] = {righe: {}, totali: {}};
 				
-				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['bolla'] = 0;
-				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['resa'] = 0;
-				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['scontrino'] = 0;
-				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['inventario'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['bolle'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['rese'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['scontrini'] = 0;
+				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['inventari'] = 0;
 				  matrix.anno[anno].mese[mese].giorno[giorno]['totali']['delta'] = 0;
 				 matrix.anno[anno].mese[mese].giorno[giorno]['totali']['stock'] = 0;
 				}		
@@ -408,7 +408,7 @@ export const getDetailsInMatrix = (details) =>
 			matrix.anno[anno].mese[mese].giorno[giorno]['totali'].stock = matrix.totale.totali.stock;
 		}
 		
-	let matrix = {anno: {}, totale: {righe: {}, totali: {bolla: 0, resa: 0, scontrino: 0, inventario: 0, stock: 0}}};
+	let matrix = {anno: {}, totale: {righe: {}, totali: {bolle: 0, rese: 0, scontrini: 0, inventari: 0, stock: 0}}};
 	 let date = details;	
             	  for(var propt2 in date)
 		  			{
@@ -416,25 +416,25 @@ export const getDetailsInMatrix = (details) =>
 		  				for (var propt in righe)	
 		  				{
 		  				let totalePezzi = 0;
-		  				 if (righe[propt].tipo === "bolla")
+		  				 if (righe[propt].tipo === "bolle")
 		  					{
 			    			totalePezzi = parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10);
 			    			
 			    			}
-					    if (righe[propt].tipo === "resa")
+					    if (righe[propt].tipo === "rese")
 		  					{
 		  						
 			    			totalePezzi =  - (parseInt(righe[propt].pezzi,10) + parseInt(righe[propt].gratis,10));
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}	
-						if (righe[propt].tipo === "scontrino")
+						if (righe[propt].tipo === "scontrini")
 		  					{
 		  					totalePezzi =  - parseInt(righe[propt].pezzi,10);
 			    		
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
 							}
 							
-						if (righe[propt].tipo === "inventario")
+						if (righe[propt].tipo === "inventari")
 		  					{
 		  					totalePezzi = parseInt(righe[propt].pezzi,10);
 			    			}		
@@ -442,6 +442,7 @@ export const getDetailsInMatrix = (details) =>
 			    		copyDetails(matrix,propt2, propt, righe[propt]);
 		  				}
 		  			}	
+   console.log(matrix);
    return matrix;		  			
 }
 

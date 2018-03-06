@@ -10,11 +10,11 @@ const headerFunc = (anno, mese) => {
 	           if (anno && !mese) labelPeriodo = anno;
 	           
 	           let header = [{dataField: 'key', label: labelPeriodo, width: '200px'},
-			    {dataField: 'bolla', label: 'Acquisti', width: '200px'},
-			    {dataField: 'scontrino', label: 'Vendite', width: '200px'},
+			    {dataField: 'bolle', label: 'Acquisti', width: '200px'},
+			    {dataField: 'scontrini', label: 'Vendite', width: '200px'},
 			    
-			    {dataField: 'resa', label: 'Rese', width: '200px'},
-			    {dataField: 'inventario', label: 'Rettifiche', width: '200px'},
+			    {dataField: 'rese', label: 'Rese', width: '200px'},
+			    {dataField: 'inventari', label: 'Rettifiche', width: '200px'},
 			    {dataField: 'delta', label: 'Variazione', width: '200px'},
 			    {dataField: 'stock', label: 'Stock', width: '200px'},
 			    ];

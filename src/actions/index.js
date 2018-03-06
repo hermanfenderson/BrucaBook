@@ -21,8 +21,6 @@ export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
 export const MASTER_DATA_LOADED = 'MASTER_DATA_LOADED';
 export const LOCAL_MASTER_DATA_LOADED = 'LOCAL_MASTER_DATA_LOADED';
-export const GET_URL_FROM_PATH = 'GET_URL_FROM_PATH';
-export const GET_PATH_FROM_EAN = 'GET_PATH_FROM_EAN';
 
 
 
@@ -41,7 +39,6 @@ export function listenAuthStateChanged() {
         info: snapshot.val(),
       })
       dispatch(caricaAnagrafiche());
-      if (snapshot.val().imgFullName) dispatch(getUrlFromPath(snapshot.val().imgFullName));
     });
         } 
       //Utente sloggato
@@ -134,32 +131,7 @@ export function caricaAnagrafiche() {
 	  }	
 }
 
-//Valorizzo associativa tra EAN e path
-export function getPathFromEAN(ean) {
-	 return function(dispatch, getState) {
-	 		Firebase.database().ref(urlFactory(getState, 'catalogoLocale',null,ean)).once('value', snapshot => {
-	 		if (snapshot.val() && snapshot.val().imgFullName) dispatch ({type: GET_PATH_FROM_EAN, path: snapshot.val().imgFullName, ean: ean});	
-	 		else {
-	 			Firebase.database().ref('/catalogo/'+ean).once('value', snapshot => {
-	 				if (snapshot.val() && snapshot.val().imgFullName) dispatch ({type: GET_PATH_FROM_EAN, path: snapshot.val().imgFullName, ean: ean});	
-	 				else dispatch ({type: GET_PATH_FROM_EAN, path: null, ean: ean});
-	 				});
-	 			}	
-	 		});
-	  }	
-}
 
-export function getUrlFromPath(path) {
-	return function (dispatch) {
-	var fileRef = Firebase.storage().ref().child(path);
- 		fileRef.getDownloadURL().then(function(url) {
-  		dispatch ({type: GET_URL_FROM_PATH, path: path, url: url})
-		}).catch(function(error) {
-  dispatch ({type: GET_URL_FROM_PATH, path: path, url: null});
-}); 
-		//Se non è ancora arrivato...
-	}	
-}
 
 
 

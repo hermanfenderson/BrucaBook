@@ -1,10 +1,12 @@
 //Image uploader parla con Firebase
 //Riceve in input un eventuale file come proprietà ed eventualmente chiama una callback per dire che ha finito...
 //La callback corrisponde al valore che assume un campo di una form... blank se non ho un immagine, uploading se sto caricando, e infine uguale a fullName
+//Aggiungo la possibilità di vedermi passare un link e gestirlo...
+
 
 import React from 'react';
 import { Upload, Icon, message } from 'antd';
-import {firebaseUploader, firebaseGetDownloadURL} from '../helpers/firebase';
+import {firebaseUploader} from '../helpers/firebase';
 
 
 function beforeUpload(file) {
@@ -39,7 +41,7 @@ class ImageUploader extends React.Component {
         imageUrl: imageUrl,
         loading: false,
       });
-      if (this.props.setValue) this.props.setValue(this.props.fullName);
+      if (this.props.setValue) this.props.setValue(imageUrl);
       
     }
   }
@@ -60,8 +62,8 @@ class ImageUploader extends React.Component {
         <div className="ant-upload-text">Upload</div>
       </div>
     );
-    const imageUrl = this.state.imageUrl;
-    if (this.props.fullName) firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg); 
+    const imageUrl = (this.state.imageUrl) ? this.state.imageUrl : this.props.imgFirebaseUrl;
+    //if (this.props.fullName) firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg); 
     return (
       <Upload
         name={this.props.fullName}

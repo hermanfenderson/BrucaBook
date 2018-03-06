@@ -1,13 +1,11 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
-import {TOGGLE_COLLAPSED, SET_MENU_SELECTED_KEYS, GET_URL_FROM_PATH, GET_PATH_FROM_EAN} from '../actions';
+import {TOGGLE_COLLAPSED, SET_MENU_SELECTED_KEYS} from '../actions';
 export const SET_HEADER_INFO='SET_HEADER_INFO';
 
 const initialState =  {
   collapsed: false,
   headerInfo: '',
   menuSelectedKeys: [],
-  path2url: {},
-  ean2path: {}
 };
 
 export default function status(state = initialState, action) {
@@ -27,21 +25,7 @@ export default function status(state = initialState, action) {
       	 ...state,
         menuSelectedKeys: action.menuSelectedKeys
       	}
-     case GET_URL_FROM_PATH:
-     	let path2url={...state.path2url};
-     	path2url[action.path] = action.url;
-     	return {
-      	 ...state,
-        path2url: path2url
-      	} 	
-      case GET_PATH_FROM_EAN:
-     	let ean2path={...state.ean2path};
-     	if (action.path) ean2path[action.ean] = action.path;
-     	else delete ean2path[action.ean];
-     	return {
-      	 ...state,
-        ean2path: ean2path
-      	} 	 	
+    	 	
     default:
       return state;
   }
