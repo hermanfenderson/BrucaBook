@@ -26,7 +26,7 @@ class TableOpenResa extends Component
   
 	detailRow = (record) => {
 						    let matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
-		                    let headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, pezzi: matrixEAN.totale.totali.stock};
+		                    let headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, imgFirebaseUrl: record.values.imgFirebaseUrl, pezzi: matrixEAN.totale.totali.stock};
 		                    this.props.setModalDetails(matrixEAN, headerEAN)
 		                    this.props.setActiveModal(true);
 		                    this.props.setPeriodResa([null, null]);

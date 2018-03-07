@@ -2,8 +2,8 @@ import TableTotaliDettagli from '../../dettagliArticolo/components/TableTotaliDe
 import React, {Component} from 'react'
 import BookImg from '../../../components/BookImg';
 
-import { Row, Button, Col} from 'antd'
-import ReactModal from 'react-modal';
+import { Row, Button, Col, Modal} from 'antd'
+//import ReactModal from 'react-modal';
 
 
 
@@ -19,11 +19,15 @@ handleCancel = () =>
             <Button key="back" onClick={this.handleCancel}>Chiudi</Button>,
             ]} visible={this.props.activeModal}> 	
             */
+//<ReactModal  ariaHideApp={false} onRequestClose={this.handleCancel}  isOpen={this.props.activeModal}> 	
             
 render()
 {
   return (
- <ReactModal  ariaHideApp={false} onRequestClose={this.handleCancel}  isOpen={this.props.activeModal}> 	
+ <Modal  destroyOnClose={true} onCancel={this.handleCancel} width={'90%'} footer={[
+            <Button key="back" onClick={this.handleCancel}>Chiudi</Button>,
+            ]} visible={this.props.activeModal}> 	
+    	
  <div>	
     
       <Row>
@@ -39,15 +43,9 @@ render()
      </Col>
    
       </Row>
-     <Row>
-     <Col span={20} />
-     <Col span={4}>
-      <Button key="back" onClick={this.handleCancel}>Chiudi</Button>
-      </Col>
-     </Row>
       
   </div>
- </ReactModal>
+ </Modal>
  
 )
 }

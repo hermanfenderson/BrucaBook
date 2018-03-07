@@ -2,6 +2,7 @@
 import FormReducer from '../helpers/formReducer'
 import moment from 'moment';
 import 'moment/locale/it';
+import {setDay} from '../helpers/form';
 
 //import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, moment2period} from '../helpers/form';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
@@ -52,17 +53,24 @@ const inventarioR = new FormReducer('ELENCOINVENTARI',null, transformEditedInven
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformAndValidateEditedInventario(cei, name, value)
-{  	
+function transformAndValidateEditedInventario(cei, name, value, itemsArray)
+{  
+	const datePresent = (inputData) => {
+		for (var i=0; i < itemsArray.length; i++) 
+    		{   if (itemsArray[i].data === inputData) return(true);}
+    	return(false);
+    	}
 	cei.values[name] = value;
 
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
    
    errMgmt(cei, 'dataInventario','invalidDate','Data non valida',  (!cei.values.dataInventario.isValid()));
+   errMgmt(cei, 'dataInventario','dupDate','Data già presente',  datePresent(setDay(cei.values.dataInventario)));
    	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
+    
     return cei;
 }
 

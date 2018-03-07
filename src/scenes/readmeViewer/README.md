@@ -1,9 +1,13 @@
-BrucaBook V.0.8.4
+BrucaBook V.0.8.5
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.8.5
+* Impossibile salvare due inventari nella stessa giornata (#206)
+* Ripristinato il modal standard di antd per le rese
+
 ### Versione 0.8.4
 * Velocizzato radicalmente il caricamento delle immagini persistendo il link nel database
 * Ripensata la persistenza dei dati nel database (cambiamento in catalogo scatena modifiche su tutti i record impattati)

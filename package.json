@@ -1,6 +1,6 @@
 {
   "name": "BrucaBook",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "private": true,
   "devDependencies": {
     "babel-plugin-import": "^1.6.2",
@@ -15,7 +15,6 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-markdown": "^3.1.4",
-    "react-modal": "^3.3.1",
     "react-redux": "^4.4.8",
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.0.14",

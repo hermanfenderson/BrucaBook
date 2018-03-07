@@ -281,7 +281,7 @@ export default function resa(state = initialState(), action) {
    	    if (!indiceEAN[ean]) 
    	    	{indiceEAN[ean] = {};
    	    	 //tabellaEAN[key] = ean;
-   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, stock: getStock(dettagliEAN[ean], null,null, state.testata.dataScarico - 1), resi: 0}, ean, 'pos', 'ean');
+   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, imgFirebaseUrl: row.imgFirebaseUrl, stock: getStock(dettagliEAN[ean], null,null, state.testata.dataScarico - 1), resi: 0}, ean, 'pos', 'ean');
    	    	}
    	    if (!indiceEAN[ean].righe) indiceEAN[ean].righe = {};
    	    let rigaBollaKey = bolla+'/'+riga;

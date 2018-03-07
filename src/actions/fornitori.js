@@ -7,15 +7,7 @@ export const SCENE = 'FORNITORI';
 //Prepara riga con zeri ai fini della persistenza... resta così. Gestisco le date...
 function preparaItem(riga)
    {
-//   	riga['dataInventario'] = riga['dataInventario'].valueOf();
-//   	riga['data'] = riga['dataInventario']; 
-   	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
-   	//if ('totali' in riga) {delete riga.totali}
-   	//IN questo caso... calcolo un pezzo di totali...spostata...
-   	
-//   	if (!riga['totali']) riga['totali'] = {magazzino: store.getState().magazzino.itemsArray.length, righe: 0}
-   	
-    
+   
      }
 
 
