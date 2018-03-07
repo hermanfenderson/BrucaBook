@@ -239,21 +239,17 @@ this.foundCloudItem = (ean,item) =>
 	                  (response) => {
 	                                
 	                                var fileRef = Firebase.storage().ref().child(item.imgFullName);
- 	
-	                                fileRef.put(response.req.xhr.response).then(function()
-	                                	{
-	                                	fileRef.getDownloadURL().then(function(url) 
-	                                		{
-	                                				item['imgFirebaseUrl'] = url;
-  	    											item['ean'] = ean; //La ricerca non lo contiene...
-  	    											if (!item['iva']) item['iva'] = 'a0'; //Default
-													 dispatch({type: type,item});	
-													 dispatch(updateGeneralCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
-													 dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
-	                          
-	                                				
-	                                		})
-	                                	})	
+	                                fileRef.put(response.req.xhr.response).then(
+    									function(snapshot) {
+    										let url = snapshot.downloadURL;
+    										item['imgFirebaseUrl'] = url;
+  	    									item['ean'] = ean; //La ricerca non lo contiene...
+  	    									if (!item['iva']) item['iva'] = 'a0'; //Default
+											dispatch({type: type,item});	
+											dispatch(updateGeneralCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
+											dispatch(updateCatalogItem(item)); //Persisto il risultato del cloud...anche nella cache e in locale
+    									});
+ 	                           
 	                            	}
 	                  )
 	          })

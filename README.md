@@ -4,6 +4,11 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.0
+* Velocizzato upload delle immagini in catalogo
+* Bug fixing: catalogo locale, non veniva caricato il titolo del libro
+* Inizio collaudo utente
+
 ### Versione 0.8.5
 * Impossibile salvare due inventari nella stessa giornata (#206)
 * Ripristinato il modal standard di antd per le rese

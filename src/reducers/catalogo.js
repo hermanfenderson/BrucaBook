@@ -189,7 +189,7 @@ export default function catalog(state = initialState(), action) {
     	if (action.item.prezzoListino) tbc3EditedCatalogItem.values.prezzoListino = action.item.prezzoListino;
     	else  tbc3EditedCatalogItem.values.prezzoListino = '';
     	if (action.item.imgFirebaseUrl) tbc3EditedCatalogItem.values.imgFirebaseUrl = action.item.imgFirebaseUrl; 
-    	else  tbc3EditedCatalogItem.values.titolo = '';
+    	else  tbc3EditedCatalogItem.values.imgFirebaseUrl = '';
     
     	tbc3EditedCatalogItem.values.iva = 'a0'; //Eventualmente la cambi in anagrafica...
     	

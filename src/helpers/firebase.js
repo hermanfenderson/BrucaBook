@@ -193,11 +193,14 @@ export function addChangedStamp(record)
  	var fileRef = Firebase.storage().ref().child(obj.filename);
  	fileRef.put(obj.file).then(function(snapshot) {
   obj.file.status='done';
- 
+  obj.file.url = snapshot.downloadURL;
+  obj.onSuccess(obj);
+  /*
   fileRef.getDownloadURL().then(function(url) {
   		obj.file.url = url;
 		obj.onSuccess(obj);
 		});
+  */		
 	});
  }
  
