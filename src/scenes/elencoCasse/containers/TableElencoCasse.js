@@ -1,5 +1,5 @@
 import TableElencoCasseComponent from '../components/TableElencoCasse'
-import {elencoCasseFA} from '../../../actions/elencoCasse'
+import {elencoCasseFA, saveCassa} from '../../../actions/elencoCasse'
 
 import {getEditedCassa, getElencoCasse, getTableElencoCasseHeight, getTableElencoCasseScroll} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenCassa, offListenCassa, deleteCassa, setSelectedCassa, toggleTableScroll, setReadOnlyForm, resetTable }, dispatch);
+  return bindActionCreators({ listenCassa, offListenCassa, deleteCassa, setSelectedCassa, toggleTableScroll, setReadOnlyForm, resetTable, saveCassa }, dispatch);
 }
 
 

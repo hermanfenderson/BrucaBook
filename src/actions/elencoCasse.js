@@ -1,8 +1,15 @@
 import {FormActions} from '../helpers/formActions';
 import {moment2period, setDay} from '../helpers/form';
+import Firebase from 'firebase';
+import {urlFactory} from '../helpers/firebase';
+import {aoa_to_xlsx} from '../helpers/file';
+import moment from 'moment';
+
+
 
 export const SCENE = 'ELENCOCASSE';
 export const SET_PERIOD_ELENCOCASSE = 'SET_PERIOD_ELENCOCASSE'
+export const SAVE_CASSA = 'SAVE_CASSA'
 
 
 //FUNZIONI DA VERIFICARE
@@ -31,6 +38,43 @@ export const setPeriodElencoCasse = (moment) =>
 }
 
 
+export const saveCassa = (period, cassaId) => 
+{
+	return function(dispatch,getState) 
+	   {
+	
+	//carico la tabella dal database...
+	
+	const url = urlFactory(getState,'righeCassa', [period[0], period[1], cassaId]);
+  	if (url)
+    {  
+       Firebase.database().ref(url).once('value', snapshot => {
+       	  let data = [];
+       	  data.push(['Scontrino','EAN','Titolo','Autore','Editore','Pezzi','Prezzo', 'Totale']);
+       	  let elencoScontrini = snapshot.val();
+       	  let riga = null
+       	  for (var scontrino in elencoScontrini)
+       		{	
+       			for (var idRiga in elencoScontrini[scontrino])
+       				{
+       				riga =  elencoScontrini[scontrino][idRiga];
+       				data.push([riga.numero, riga.ean, riga.titolo, riga.autore, riga.editore, parseInt(riga.pezzi, 10), parseFloat(riga.prezzoUnitario), parseFloat(riga.prezzoTotale)]);	
+       				}
+       		}
+       	  let date = riga ? moment(riga.data).format('YYYYMMDD') : null; 	
+       	  let fileName =  date ? date + '.xlsx' : 'empty.xlsx';
+       	  let sheet = date ? date : 'empty';
+       	  
+       	  aoa_to_xlsx(data,sheet,fileName);
+
+	      dispatch({
+	        type: 'SAVE_CASSA',
+	        fileName: fileName
+	      })
+	    });
+    }
+  }	 
+}
 
 
 //METODI DEL FORM

@@ -7,7 +7,7 @@ import 'moment/locale/it';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
 
 
-import {SET_PERIOD_ELENCOCASSE} from '../actions/elencoCasse';
+import {SET_PERIOD_ELENCOCASSE, SAVE_CASSA} from '../actions/elencoCasse';
 import {STORE_MEASURE} from '../actions';
 
 
@@ -89,6 +89,9 @@ export default function elencoCasse(state = initialState(), action) {
      case SET_PERIOD_ELENCOCASSE:
         newState = {...state, period: action.period};
         break;
+     case SAVE_CASSA:
+     	newState = state;
+     	break;
     default:
         newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa);
         //newState =  state;

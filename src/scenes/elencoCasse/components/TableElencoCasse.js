@@ -78,8 +78,12 @@ class TableElencoCasse extends Component
 	selectRow = (row) => {
 		this.props.setSelectedCassa(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
-	    this.props.history.push('/scontrino/' + period2month(this.props.period) + '/' + row.key);
+	   this.props.history.push('/scontrino/' + period2month(this.props.period) + '/' + row.key);
 
+	}
+	
+	saveRow = (row) => {
+		this.props.saveCassa(this.props.period, row.key);
 	}
 
     
@@ -90,7 +94,7 @@ class TableElencoCasse extends Component
     	delete props['deleteCassa']; //Non la passo liscia...
     	delete props['setSelectedCassa']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	

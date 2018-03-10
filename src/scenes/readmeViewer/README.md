@@ -1,9 +1,12 @@
-BrucaBook V.0.8.5
+BrucaBook V.0.9.1
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.1
+* Aggiunta funzione in elencoCasse per salvare in excel una giornata di cassa (icona "dischetto")
+
 ### Versione 0.9.0
 * Velocizzato upload delle immagini in catalogo
 * Bug fixing: catalogo locale, non veniva caricato il titolo del libro
