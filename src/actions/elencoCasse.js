@@ -62,10 +62,9 @@ export const saveCassa = (period, cassaId) =>
        				}
        		}
        	  let date = riga ? moment(riga.data).format('YYYYMMDD') : null; 	
-       	  let fileName =  date ? date + '.xlsx' : 'empty.xlsx';
-       	  let sheet = date ? date : 'empty';
+       	  let fileName =  date ? date : 'empty';
        	  
-       	  aoa_to_xlsx(data,sheet,fileName);
+       	  aoa_to_xlsx(data,fileName, true,[0,5,6,7]);
 
 	      dispatch({
 	        type: 'SAVE_CASSA',
