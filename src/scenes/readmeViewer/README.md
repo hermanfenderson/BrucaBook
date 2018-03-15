@@ -1,9 +1,12 @@
-BrucaBook V.0.9.2
+BrucaBook V.0.9.3
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.3
+* Attivata funzione calcolo resto
+
 ### Versione 0.9.2
 * Evidenziata testata scontrino in elenco cassa
 * Cambiata dicitura e icona da vendite a cassa
