@@ -57,7 +57,7 @@ const transformSelectedItem = (cei) =>
 	if (cei.tipoBolla === '') cei.tipoBolla = 'A';
 }
 
-const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem, false); 
+const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem, initialState, false); 
 
     
  

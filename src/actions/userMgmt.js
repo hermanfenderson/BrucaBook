@@ -77,7 +77,20 @@ if (isValid && mode==='configuration') return function(dispatch, getState) {
 	         			dispatch({type: 'RESET_ELENCOINVENTARI'});
 	         			Firebase.database().ref(urlFactory(getState,'fornitori', null)).off();
 	         			dispatch({type: 'RESET_FORNITORI'});
-	         			
+	         			if (getState().elencoBolle.listeningItem) 
+	         				{
+	         				Firebase.database().ref(urlFactory(getState,'righeElencoBolle', getState().elencoBolle.listeningItem )).off();
+	         				dispatch({type: 'RESET_ELENCOBOLLE'});
+	         				}
+	         			if (getState().elencoCasse.listeningItem) 
+	         				{Firebase.database().ref(urlFactory(getState,'righeElencoCasse', getState().elencoCasse.listeningItem)).off();
+	         				dispatch({type: 'RESET_ELENCOCASSE'});
+	         				}
+	         			if (getState().elencoRese.listeningItem) 
+	         				{Firebase.database().ref(urlFactory(getState,'righeElencoRese', getState().elencoRese.listeningItem)).off();
+	         				dispatch({type: 'RESET_ELENCORESE'});
+	         				}
+	         		
 	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
 	         			dispatch(caricaAnagrafiche());
     

@@ -25,6 +25,7 @@ initMode = () => {
   		this.props.changeEditedSignup('nome', this.props.info.nome);
   		this.props.changeEditedSignup('cognome', this.props.info.cognome);
   		this.props.changeEditedSignup('nick', this.props.info.nick);
+  		this.props.changeEditedSignup('imgFirebaseUrl', this.props.info.imgFirebaseUrl);
   		}
   	switch(mode)
   	{

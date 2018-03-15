@@ -48,7 +48,7 @@ const transformSelectedItem = (cei) =>
 	cei.dataCassa = moment(cei.dataCassa,"DD/MM/YYYY");
 	}
 
-const bollaR = new FormReducer('ELENCOCASSE',null, transformEditedCassa, transformSelectedItem); 
+const bollaR = new FormReducer('ELENCOCASSE',null, transformEditedCassa, transformSelectedItem, initialState); 
 
     
  
@@ -93,7 +93,7 @@ export default function elencoCasse(state = initialState(), action) {
      	newState = state;
      	break;
     default:
-        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa);
+        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa, initialState);
         //newState =  state;
     	break;
    

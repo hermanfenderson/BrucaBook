@@ -52,7 +52,7 @@ const transformSelectedItem = (cei) =>
 	cei.dataScarico = moment(cei.dataScarico,"DD/MM/YYYY");
 }
 
-const resaR = new FormReducer('ELENCORESE',null, transformEditedResa, transformSelectedItem, false); 
+const resaR = new FormReducer('ELENCORESE',null, transformEditedResa, transformSelectedItem, initialState, false); 
 
     
  
