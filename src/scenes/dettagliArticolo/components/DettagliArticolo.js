@@ -6,8 +6,8 @@ import React, {Component} from 'react'
 import { Row, Col} from 'antd'
 
 
-
 var listening = null;
+
 
 class DettagliArticolo extends Component {
 componentWillMount() {
@@ -43,4 +43,7 @@ render()
 }
 
 }
+
+
+
 export default DettagliArticolo;

@@ -42,8 +42,10 @@ actionRowRender = (cell, row) => {
  }
  
  rowClassName = (record,index) => {
-	return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-highlight tabella-cassa-row' : 'ant-table-row tabella-cassa-row');
-} 
+	if (record.tipo === 'scontrino') return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row' : 'ant-table-row ant-table-row-totale-cassa tabella-cassa-row');
+	else return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row' : 'ant-table-row  tabella-cassa-row');
+ 	
+ } 
  
 ordinaryRowRender = (cell,row) => {
  if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);

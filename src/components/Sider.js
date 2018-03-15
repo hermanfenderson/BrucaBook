@@ -43,8 +43,8 @@ class Sider extends React.Component {
               <span>Acquisti</span>
             </Menu.Item>
             <Menu.Item key="vendite">
-              <Icon type="gift" />
-              <span>Vendite</span>
+              <Icon type="smile-o" />
+              <span>Cassa</span>
             </Menu.Item>
             <Menu.Item key="inventari">
               <Icon type="tag" />

@@ -27,6 +27,17 @@ html, body {
  font-weight: bold;
 }
 
+.ant-table-row-cassa-highlight{
+ background-color: #91d5ff;
+ color: #108ee9;
+ font-weight: bold;
+}
+
+.ant-table-row-totale-cassa{
+ background-color: #e6f7ff;
+ color: #108ee9;
+}
+
 .ant-table-row-pinned{
  font-weight: bold;
 }

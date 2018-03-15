@@ -4,7 +4,10 @@ import Firebase from 'firebase';
 import {urlFactory} from '../helpers/firebase';
 import {aoa_to_xlsx} from '../helpers/file';
 import moment from 'moment';
+//Da riattivare per salvare docx
+//import fileDownload from 'js-file-download';
 
+//import htmlDocx from 'html-docx-js/dist/html-docx';
 
 
 export const SCENE = 'ELENCOCASSE';
@@ -40,6 +43,13 @@ export const setPeriodElencoCasse = (moment) =>
 
 export const saveCassa = (period, cassaId) => 
 {
+
+    /* PER SALVARE DOCX
+    let content = '<!DOCTYPE html> <html><head><title>Title of the document</title></head><body><div>The content of the document......</div><br clear="all" style="page-break-before:always" /><div  style="page-break-after: always">Another row</div></body></html>'
+	var data2 = htmlDocx.asBlob(content);
+
+	fileDownload(data2, 'filename.docx');*/
+	
 	return function(dispatch,getState) 
 	   {
 	

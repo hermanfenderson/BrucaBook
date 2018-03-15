@@ -14,7 +14,7 @@ const {MonthPicker} = DatePicker;
 class ElencoCasse extends Component {
 componentDidMount() {
     	if (ReactDOM.findDOMNode(this.refs.formCassa)) this.props.storeMeasure('formCassaHeight', ReactDOM.findDOMNode(this.refs.formCassa).clientHeight);
-    	this.props.setHeaderInfo('Vendite');
+    	this.props.setHeaderInfo('Cassa');
     	
  }
  

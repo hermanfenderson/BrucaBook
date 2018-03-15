@@ -4,6 +4,7 @@ import TableCassa from '../containers/TableCassa';
 
 import FormRigaScontrino from '../containers/FormRigaScontrino';
 import FormTestataScontrino from '../containers/FormTestataScontrino';
+import FormCalcoloResto from '../components/FormCalcoloResto';
 
 import TotaliScontrino from '../components/TotaliScontrino';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
@@ -168,6 +169,10 @@ return (
     	<Row>
 			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
 		</Row>
+		<Row>
+			<FormCalcoloResto testataScontrino={this.props.testataScontrino}/>
+		</Row>
+		
 		</Col>
 		<Col span={18}>
 	    <Row>
