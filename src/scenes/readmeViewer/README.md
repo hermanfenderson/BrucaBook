@@ -1,9 +1,12 @@
-BrucaBook V.0.9.4
+BrucaBook V.0.9.5
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.5
+* Richiesta utente: inversione di campo data e campo cassa in elenco casse
+
 ### Versione 0.9.4
 * Bug fixing: l'immagine del profilo non sopravviveva a un cambio di configurazione (#209)
 * Bug fixing: cambio di configurazione non sgancia l'elenco casse...(#210)

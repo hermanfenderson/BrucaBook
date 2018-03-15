@@ -8,8 +8,9 @@ import {withRouter} from 'react-router-dom'
 
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'cassa', label: 'Cassa', width: '150px'},
-			    {dataField: 'dataCassa', label: 'Data', width: '200px'},
+const header = [{dataField: 'dataCassa', label: 'Data', width: '200px'},
+			    
+				{dataField: 'cassa', label: 'Cassa', width: '150px'},
 			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '200px'},
 			      {dataField: 'totali.scontrini', label: 'Scontrini', width: '200px'},
 			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '200px'},
