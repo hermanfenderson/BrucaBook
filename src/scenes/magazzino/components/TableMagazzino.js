@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import { withRouter } from 'react-router-dom';
-
+import {Spin} from 'antd';
 
 
 //E' un dato.... che passo come costante...
@@ -31,7 +31,9 @@ class TableMagazzino extends Component
     	render() { 
     	let props = {...this.props};
     	  return(
+    	  	<Spin spinning={(this.props.data.length===0)}>
 			<WrappedTable {...props} selectRow={this.detailRow} detailRow={this.detailRow}  header={header}/>
+			</Spin>
 			)}
     }		
 	

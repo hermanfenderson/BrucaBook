@@ -442,8 +442,96 @@ export const getDetailsInMatrix = (details) =>
 			    		copyDetails(matrix,propt2, propt, righe[propt]);
 		  				}
 		  			}	
-   console.log(matrix);
    return matrix;		  			
+}
+
+export const getMatrixVenditeFromRegistroData = (registroData) =>
+{
+	//Creo una matrice con i dati anno per anno e mese per mese...
+	//Stock, deltaStock, bolla, resa, scontrino, inventario...
+   	const updateCellSublevel = (submatrix, period, details) =>
+	{
+		if (!submatrix[period])  submatrix[period] = {ean: {}, totalePezzi: 0, ricavoTotale: parseFloat(0.0), listinoTotale: parseFloat(0.0) };
+		submatrix[period].totalePezzi += details.totalePezzi;
+		submatrix[period].ricavoTotale += details.ricavoTotale;
+		submatrix[period].listinoTotale += details.listinoTotale;
+				
+	}
+	const updateCell = (matrix, dataIn, details) =>
+		{ 
+	 	let data = (moment(parseInt(dataIn,10)));
+		let anno = data.format('YYYY');
+		  let mese = data.format('MM');
+		  let giorno = data.format('DD');
+		   updateCellSublevel(matrix.anno, anno, details);
+		   if (!matrix.anno[anno].mese) matrix.anno[anno].mese = {};
+		   updateCellSublevel(matrix.anno[anno].mese, mese, details);
+		   if (!matrix.anno[anno].mese[mese].giorno) matrix.anno[anno].mese[mese].giorno = {};
+		   updateCellSublevel(matrix.anno[anno].mese[mese].giorno, giorno, details);
+		 }
+		
+	let matrix = {anno: {}, totale: {ean: {}, totalePezzi: 0, ricavoTotale: parseFloat(0.0), listinoTotale: parseFloat(0.0) }};
+	 
+	 let date = registroData;	
+            	  for(var propt2 in date)
+		  			{
+		  			  let righe = date[propt2];
+		  				for (var propt in righe)	
+		  				{
+		  				let totalePezzi = 0;
+		  				 	if (righe[propt].tipo === "scontrini")
+		  					{
+		  					let ean = righe[propt].ean;
+		  					let totalePezzi =  parseInt(righe[propt].pezzi,10);
+			    		    let ricavoTotale = parseFloat(righe[propt].prezzoTotale);
+			    		    let listinoTotale = totalePezzi * (parseFloat(righe[propt].prezzoListino));
+			    		     let dettagli = {
+			    		    	titolo: righe[propt].titolo, 
+			    		    	autore: righe[propt].autore, 
+			    		    	editore: righe[propt].editore,
+			    		    	ean: ean,
+			    		    	totalePezzi: totalePezzi,
+			    		    	ricavoTotale: ricavoTotale,
+			    		    	listinoTotale: listinoTotale
+			    		    	}
+			    		    	updateCell(matrix,propt2, dettagli);
+		  					}
+							
+			    		//copyDetails(matrix,propt2, propt, righe[propt]);
+		  				}
+		  			}	
+    return matrix;		  			
+}
+//Data una matrice di ricavi... e un livello richiesto formato 'anno/mese' o 'anno' o 'anno/mese/giorno' ritorna la sequenza completa
+
+export const getTimeSeries = (matrix, level) =>
+{
+
+let ts = [];
+let levels	= level.split('/');
+let count = levels.length;
+let list = matrix[levels[0]];
+let tag = [];
+let period = '';
+const branchExplorer = (branch, depth) =>
+{
+	for (let propt in branch)
+	   {
+	   	tag[depth] = propt;
+	    let subbranch = branch[propt];
+	   if (depth+1 === count) 
+			{
+			period = tag.join('/');
+			ts.push({period: period, tag: tag, ricavoTotale: parseFloat(subbranch.ricavoTotale.toFixed(2))});	
+			}
+		else
+			{
+			branchExplorer(subbranch[levels[depth+1]],depth+1);	
+			}
+	   }
+}
+branchExplorer(list,0);
+return ts;	
 }
 
 export const setDay = (moment) =>

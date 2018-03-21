@@ -5,6 +5,8 @@ import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import CassaReducer, * as fromCassa from './cassa';
 import ResaReducer, * as fromResa from './resa';
+import DashboardReducer, * as fromDashboard from './dashboard';
+
 
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
@@ -27,7 +29,7 @@ const rootReducer = combineReducers({
   bolla: BollaReducer,
   cassa: CassaReducer,
   resa: ResaReducer,
- 
+  dashboard: DashboardReducer,
   dettagliArticolo: DettagliArticoloReducer,
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
@@ -61,6 +63,12 @@ export const getListeningTestataBolla = (state) => {return fromBolla.getListenin
 export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
+
+//Scena Dashboard
+export const getRegistroData = (state) => {return fromDashboard.getRegistroData(state.dashboard)};
+export const isListeningRegistroData = (state) => {return fromDashboard.isListeningRegistroData(state.dashboard)};
+
+export const getSerieIncassi = (state) => {return fromDashboard.getSerieIncassi(state.dashboard)};
 
 //Scena DettagliArticolo
 export const getListeningEAN = (state) => {return fromDettagliArticolo.getListeningEAN(state.dettagliArticolo)};

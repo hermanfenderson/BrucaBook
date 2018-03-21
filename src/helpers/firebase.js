@@ -64,6 +64,7 @@ export function urlFactory(getState, destination, params, itemId)
 				
 				case "registroEAN": url = prefissoNegozio(getState)+'registroEAN'; break;
 				
+				case "registroData": url = prefissoNegozio(getState)+'registroData'; break;
 				
 				
 				//Sono piatti... ne avrò uno l'anno... per 50 anni sono a posto...
