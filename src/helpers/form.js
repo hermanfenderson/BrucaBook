@@ -478,7 +478,6 @@ export const getMatrixVenditeFromRegistroData = (registroData) =>
 		  			  let righe = date[propt2];
 		  				for (var propt in righe)	
 		  				{
-		  				let totalePezzi = 0;
 		  				 	if (righe[propt].tipo === "scontrini")
 		  					{
 		  					let ean = righe[propt].ean;
@@ -497,7 +496,6 @@ export const getMatrixVenditeFromRegistroData = (registroData) =>
 			    		    	updateCell(matrix,propt2, dettagli);
 		  					}
 							
-			    		//copyDetails(matrix,propt2, propt, righe[propt]);
 		  				}
 		  			}	
     return matrix;		  			

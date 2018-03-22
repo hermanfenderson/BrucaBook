@@ -1,34 +1,10 @@
 import React, {Component} from 'react'
 import {Spin} from 'antd'
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar } from 'recharts';
-import {getMatrixVenditeFromRegistroData, getTimeSeries} from '../../../helpers/form'
-
-let daily = [];
-
-class CustomTooltip  extends React.Component {
+//import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, BarChart, Bar } from 'recharts';
+import { Chart, Geom, Axis, Tooltip } from 'bizcharts';
 
 
-  getIntroOfPage(label) {
-    return(label)
-  };
 
-  render() {
-    const { active } = this.props;
-
-    if (active) {
-      const { payload, label } = this.props;
-       return (
-        <div className="custom-tooltip">
-          <p className="label">{`${label} : ${payload[0].value}`}</p>
-          <p className="intro">{this.getIntroOfPage(label)}</p>
-          <p className="desc">Anything you want can be displayed here.</p>
-        </div>
-      );
-    }
-
-    return null;
-  }
-};
 
 
 class Dashboard extends Component {
@@ -77,12 +53,8 @@ componentDidMount() {
   <Bar dataKey="amt" name="2017" stackId="2017" fill="#bbca9d" />
   
 </BarChart>
-*/
-render()
-{
-   return (
-  <Spin spinning={(this.props.serieIncassi.length===0)} >	
- <div>	
+
+
       <LineChart width={600} height={400}  data={this.props.serieIncassi} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
   <Line type="linear" dataKey="incasso" stroke="#8884d8" />
   <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
@@ -92,6 +64,24 @@ render()
       
 </LineChart>
 
+*/
+render()
+{
+	 const cols = {
+          'value': { min: 0 },
+          'period': {range: [ 0 , 1] }
+        };
+        
+   return (
+  <Spin spinning={(this.props.serieIncassi.length===0)} >	
+ <div>	
+<Chart height={400} data={this.props.serieIncassi} scale={cols} forceFit>
+            <Axis name="period" />
+            <Axis name="incasso" />
+            <Tooltip crosshairs={{type : "y"}}/>
+            <Geom type="line" position="period*incasso" size={2} />
+            <Geom type='point' position="period*incasso" size={4} shape={'circle'} style={{ stroke: '#fff', lineWidth: 1}} />
+          </Chart>
 
   </div>
   </Spin>

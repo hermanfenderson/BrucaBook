@@ -38,10 +38,9 @@ resetForm = () => {
   	const prezzoMan = formValues['manSconto'];
   	const loading = this.props.editedRigaScontrino.loading;
   	const readOnlyEAN = ((this.props.editedRigaScontrino.selectedItem !== null) || (this.props.editedRigaScontrino.eanState === 'PARTIAL'))
-  	
   	    
   	return (
-      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+      <WrappedForm  readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:0}}>
         <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:6}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:8}} itemStyle={{marginRight: 10}} disabled/>
