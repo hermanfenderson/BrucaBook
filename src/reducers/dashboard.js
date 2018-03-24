@@ -30,7 +30,7 @@ export const getSerieIncassi = (state) => {
 	if (registroData) 
 		{let ts = getTimeSeries(getMatrixVenditeFromRegistroData(registroData),'anno/mese/giorno');
 		for (let i=0; i<ts.length;i++) 
-			{ts[i].period = moment(ts[i].period, 'YYYY/MM/DD').format('DD/MM/YYYY');
+			{ts[i].period = moment(ts[i].period, 'YYYY/MM/DD').format('DD/MM/YY');
 			ts[i].incasso = ts[i].ricavoTotale;
 			}
 		return ts;

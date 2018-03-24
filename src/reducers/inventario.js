@@ -1,7 +1,7 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 import {GENERA_RIGHE_INVENTARIO,LISTEN_REGISTRO_EAN, UNLISTEN_REGISTRO_EAN, ADDED_REGISTRO_EAN, CHANGED_REGISTRO_EAN, DELETED_REGISTRO_EAN } from '../actions/inventario';
-import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
+import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
 
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, getStock} from '../helpers/form';
@@ -165,7 +165,17 @@ export default function inventario(state = initialState(), action) {
 		 	if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
 		 	}
 	    	break;
-	       
+	  case rigaInventarioR.INITIAL_LOAD_ITEM:
+		 	
+		    newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
+		 	//Se ho un dato migliore per stock lo metto qui...per ogni riga
+		 	for (let key in action.payload.val())
+		 		{
+		 			let ean = action.payload.val()[key].ean;
+		 			if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = newState.stock[ean];
+		 		}
+		 		
+	    	break;     
 		case rigaInventarioR.DELETED_ITEM:
 	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
 	    
@@ -180,6 +190,8 @@ export default function inventario(state = initialState(), action) {
 		 	if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
 		 
 	    	break;	    
+	    	
+	    	
    	    	    
    case UNLISTEN_REGISTRO_EAN:
    	    newState = {...state, listeningRegistroEAN: false, registroEAN: {}, stock: {}, totaleOccorrenze: 0};

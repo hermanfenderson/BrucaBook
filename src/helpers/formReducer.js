@@ -3,7 +3,7 @@
 import {errMgmt, editedItemCopy, showError, showAllErrors} from '../helpers/form';
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode} from '../helpers/validators';
-import { childAdded, childDeleted, childChanged } from '../helpers/firebase';
+import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
 import React from 'react';
 
 //la funzione transforItem se c'e' è responsabile di trasformare il risultato di firebase in uno compatibile con la tabella che voglio
@@ -45,6 +45,7 @@ this.RESET='RESET_'+scene;
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
 this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
+this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
@@ -272,7 +273,8 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	     	break;
 	     	
 		 case this.ADDED_ITEM:
-		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
+		 	if (state.itemsArrayIndex[action.payload.key]!==null) newState = state;
+		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
 	    	break;
 	       
 		case this.DELETED_ITEM:
@@ -281,6 +283,11 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	   
 		case this.CHANGED_ITEM:
 			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
+	    	break;
+	    case this.INITIAL_LOAD_ITEM:
+	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem);
+	    	
+	    
 	    	break;
 	  
 	   case this.TOTALI_CHANGED:

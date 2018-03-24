@@ -1,9 +1,13 @@
-BrucaBook V.0.9.7
+BrucaBook V.0.9.8
 =================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.8
+* Performance: risolto problema caricamento lento delle tabelle (esclusa cassa)
+* Piccolo miglioramento grafica report
+
 ### Versione 0.9.7
 * Bug fixing: il form scontrini rimaneva attivo anche senza uno scontrino selezionato
 * Sostituita libreria per grafici (bizchart)

@@ -116,6 +116,42 @@ export function childAdded(payload, state, dataArrayName, dataIndexName, transfo
    return newState;
 }
 
+export function initialLoading(payload,state, dataArrayName, dataIndexName, transformItem, prefix)
+{
+	//Creo un array e un indice per copia degli attuali
+   var dataArrayNew = state[dataArrayName].slice();
+   var dataIndexNew = {...(state[dataIndexName])};
+   for (let propt in payload.val())
+		{
+	    
+		//Aggiungo solo se non la ho già...
+		if (dataIndexNew[propt] === undefined)
+		  {
+		  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
+		   var tmp = payload.val()[propt];
+		   tmp['key'] = propt;
+		    //Se è definita una funzione di trasformazione la applico
+		   if (transformItem) transformItem(tmp);
+		
+		
+		   if (!prefix) dataArrayNew.push(tmp);
+		   else 
+			{   let obj = {};
+				obj[prefix] = tmp;
+				obj.key = tmp['key'];
+				dataArrayNew.push(obj);
+			}	
+		  //Creo un indice per recuperare in seguito la posizione nell'array per la chiave
+		   dataIndexNew[propt] = dataArrayNew.length - 1;
+		  } 
+		}
+    //Aggiorno lo stato passando nuovo array e nuovo indice
+    var newState = {...state};
+    newState[dataArrayName] = dataArrayNew;
+    newState[dataIndexName] = dataIndexNew;                    
+	return newState;
+}
+
 export function childDeleted(payload, state, dataArrayName, dataIndexName)
 {  //Creo un array e un indice per copia degli attuali
  

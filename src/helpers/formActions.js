@@ -46,6 +46,7 @@ this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
 this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
+this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
 this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
 //this.LISTEN_TOTALI='LISTEN_TOTALI_'+scene;
 
@@ -441,6 +442,7 @@ this.listenItem = (params) => {
  const type1 = this.ADDED_ITEM;
    const type2 = this.CHANGED_ITEM;
    const type3 = this.DELETED_ITEM;
+   const type4 = this.INITIAL_LOAD_ITEM;
    const typeListen = this.LISTEN_ITEM;
    
    const itemsUrl = this.itemsUrl;	
@@ -448,7 +450,7 @@ this.listenItem = (params) => {
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
     {  
-       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
+       const listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
 	      dispatch({
 	        type: type1,
 	        payload: snapshot
@@ -463,6 +465,12 @@ this.listenItem = (params) => {
 	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
 	      dispatch({
 	        type: type3,
+	        payload: snapshot
+	      })  
+	   });
+	   Firebase.database().ref(url).once('value', snapshot => {
+	      dispatch({
+	        type: type4,
 	        payload: snapshot
 	      })  
 	   });
