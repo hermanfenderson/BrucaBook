@@ -273,7 +273,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	     	break;
 	     	
 		 case this.ADDED_ITEM:
-		 	if (state.itemsArrayIndex[action.payload.key]!==null) newState = state;
+		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;
 		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
 	    	break;
 	       

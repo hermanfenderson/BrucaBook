@@ -4,6 +4,11 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+## Versione 0.9.9
+* Range di date nella estrazione delle serie storiche nella reportistica
+* Ripristinato recharts come strumento per i report
+* Bug fixing: non visualizzava nuove righe in tutto meno che nelle casse!
+
 ### Versione 0.9.8
 * Performance: risolto problema caricamento lento delle tabelle (esclusa cassa)
 * Piccolo miglioramento grafica report

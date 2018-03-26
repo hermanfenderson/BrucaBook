@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {Spin} from 'antd'
-import { Chart, Geom, Axis, Label } from 'bizcharts';
+import {Spin, Row} from 'antd'
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Bar, BarChart} from 'recharts';
 
 
 
@@ -17,25 +17,39 @@ componentDidMount() {
  
 render()
 {
-	 const cols = {
-          'incasso': { type:"linear",
-    min:0,
-    },
-         
-        };
-        
+	console.log(this.props.serieIncassiMesi);
+	
    return (
 <Spin spinning={(this.props.serieIncassi.length===0)} >	  
 {(this.props.serieIncassi.length===0) ? null:
- <Chart height={400} width={600} forceFit={true} data={this.props.serieIncassi} scale={cols}   >
-            <Axis name="period" />
-            <Axis name="incasso" />
-            <Geom type="line" position="period*incasso" size={2} />
-            <Geom type='point' position="period*incasso" size={4} shape={'circle'} style={{ stroke: '#fff', lineWidth: 1}}>
-                 <Label content="incasso" />
-          
-            </Geom>
-          </Chart> }
+<div>
+<Row>
+<LineChart  width={600} height={300} data={this.props.serieIncassi}
+            margin={{top: 5, right: 30, left: 20, bottom: 5}} >
+       <XAxis padding={{left: 30, right: 30}} dataKey="period"/>
+       <YAxis/>
+       <CartesianGrid strokeDasharray="3 3"/>
+       <Tooltip/>
+       <Legend />
+       <Line type="linear" dataKey="incasso" stroke="#8884d8" activeDot={{r: 8}}/>
+      </LineChart>
+</Row>
+<Row>
+<BarChart width={600} height={300} data={this.props.serieIncassiMesi}
+            margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+       <XAxis dataKey="mese"/>
+       <YAxis/>
+       <CartesianGrid strokeDasharray="3 3"/>
+       <Tooltip/>
+       <Legend />
+       <Bar dataKey="2017ytd" stackId="a" fill="#8884d8" />
+       <Bar dataKey="2017dty" stackId="a" fill="#82ca9d" />
+       <Bar dataKey="2018ytd" stackId="b" fill="#ffc658"/>
+        <Bar dataKey="2018dty" stackId="b" fill="#bbc658"/>
+      </BarChart>
+</Row>          
+</div>
+          }
 </Spin>          
 
  

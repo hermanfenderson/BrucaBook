@@ -69,6 +69,8 @@ export const getRegistroData = (state) => {return fromDashboard.getRegistroData(
 export const isListeningRegistroData = (state) => {return fromDashboard.isListeningRegistroData(state.dashboard)};
 
 export const getSerieIncassi = (state) => {return fromDashboard.getSerieIncassi(state.dashboard)};
+export const getSerieIncassiMesi = (state) => {return fromDashboard.getSerieIncassiMesi(state.dashboard)};
+
 
 //Scena DettagliArticolo
 export const getListeningEAN = (state) => {return fromDettagliArticolo.getListeningEAN(state.dettagliArticolo)};

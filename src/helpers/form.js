@@ -445,29 +445,66 @@ export const getDetailsInMatrix = (details) =>
    return matrix;		  			
 }
 
-export const getMatrixVenditeFromRegistroData = (registroData) =>
+export const getMatrixVenditeFromRegistroData = (registroData, today=setDay(moment())) =>
 {
 	//Creo una matrice con i dati anno per anno e mese per mese...
 	//Stock, deltaStock, bolla, resa, scontrino, inventario...
-   	const updateCellSublevel = (submatrix, period, details) =>
+	const isYTD = (date, today) =>
 	{
-		if (!submatrix[period])  submatrix[period] = {ean: {}, totalePezzi: 0, ricavoTotale: parseFloat(0.0), listinoTotale: parseFloat(0.0) };
+	//Vero se sto in un mese precedente o nel medesimo mese in un giorno precedente
+	let dateMmt = moment(parseInt(date,10));
+	let todayMmt = moment(parseInt(today,10)); 
+	
+    let meseIn = dateMmt.format('MM');
+    let mese = todayMmt.format('MM');
+    let giornoIn = dateMmt.format('DD');
+    let giorno = todayMmt.format('DD');
+    let ytd = ((meseIn < mese) || ((meseIn === mese) && (giornoIn < giorno)));
+	return (ytd);
+	}
+	
+   	const updateCellSublevel = (submatrix, period, details, ytd) =>
+	{
+		if (!submatrix[period])  submatrix[period] = {ean: {}, 
+													  totalePezzi: 0, 
+													  ricavoTotale: parseFloat(0.0), 
+													  listinoTotale: parseFloat(0.0),
+													  totalePezziYTD: 0, 
+													  ricavoTotaleYTD: parseFloat(0.0), 
+													  listinoTotaleYTD: parseFloat(0.0),
+													  totalePezziDTY: 0, 
+													  ricavoTotaleDTY: parseFloat(0.0), 
+													  listinoTotaleDTY: parseFloat(0.0),
+													 };
+													 
 		submatrix[period].totalePezzi += details.totalePezzi;
 		submatrix[period].ricavoTotale += details.ricavoTotale;
 		submatrix[period].listinoTotale += details.listinoTotale;
-				
+		if (ytd)
+			{
+			submatrix[period].totalePezziYTD += details.totalePezzi;
+			submatrix[period].ricavoTotaleYTD += details.ricavoTotale;
+			submatrix[period].listinoTotaleYTD += details.listinoTotale;
+			}
+		else 
+			{
+			submatrix[period].totalePezziDTY += details.totalePezzi;
+			submatrix[period].ricavoTotaleDTY += details.ricavoTotale;
+			submatrix[period].listinoTotaleDTY += details.listinoTotale;
+			}
 	}
-	const updateCell = (matrix, dataIn, details) =>
+	
+	const updateCell = (matrix, dataIn, details, ytd) =>
 		{ 
 	 	let data = (moment(parseInt(dataIn,10)));
 		let anno = data.format('YYYY');
 		  let mese = data.format('MM');
 		  let giorno = data.format('DD');
-		   updateCellSublevel(matrix.anno, anno, details);
+		   updateCellSublevel(matrix.anno, anno, details, ytd);
 		   if (!matrix.anno[anno].mese) matrix.anno[anno].mese = {};
-		   updateCellSublevel(matrix.anno[anno].mese, mese, details);
+		   updateCellSublevel(matrix.anno[anno].mese, mese, details, ytd);
 		   if (!matrix.anno[anno].mese[mese].giorno) matrix.anno[anno].mese[mese].giorno = {};
-		   updateCellSublevel(matrix.anno[anno].mese[mese].giorno, giorno, details);
+		   updateCellSublevel(matrix.anno[anno].mese[mese].giorno, giorno, details, ytd);
 		 }
 		
 	let matrix = {anno: {}, totale: {ean: {}, totalePezzi: 0, ricavoTotale: parseFloat(0.0), listinoTotale: parseFloat(0.0) }};
@@ -493,7 +530,7 @@ export const getMatrixVenditeFromRegistroData = (registroData) =>
 			    		    	ricavoTotale: ricavoTotale,
 			    		    	listinoTotale: listinoTotale
 			    		    	}
-			    		    	updateCell(matrix,propt2, dettagli);
+			    		    	updateCell(matrix,propt2, dettagli, isYTD(propt2,today));
 		  					}
 							
 		  				}
@@ -502,7 +539,7 @@ export const getMatrixVenditeFromRegistroData = (registroData) =>
 }
 //Data una matrice di ricavi... e un livello richiesto formato 'anno/mese' o 'anno' o 'anno/mese/giorno' ritorna la sequenza completa
 
-export const getTimeSeries = (matrix, level) =>
+export const getTimeSeries = (matrix, level, from, to) =>
 {
 
 let ts = [];
@@ -511,6 +548,7 @@ let count = levels.length;
 let list = matrix[levels[0]];
 let tag = [];
 let period = '';
+//Array from formato anno/mese/giorno... o comunque i livelli che mi servono
 const branchExplorer = (branch, depth) =>
 {
 	for (let propt in branch)
@@ -520,12 +558,25 @@ const branchExplorer = (branch, depth) =>
 	   if (depth+1 === count) 
 			{
 			period = tag.join('/');
-			ts.push({period: period, tag: tag, ricavoTotale: parseFloat(subbranch.ricavoTotale.toFixed(2))});	
+			if (((!from) || (period >= from)) && ((!to) || (period <=to))) ts.push(
+				{period: period, 
+				ricavoTotale: parseFloat(subbranch.ricavoTotale.toFixed(2)), 
+				listinoTotale: parseFloat(subbranch.listinoTotale.toFixed(2)),
+				tatalePezzi: parseInt(subbranch.totalePezzi,10),
+				ricavoTotaleYTD: parseFloat(subbranch.ricavoTotaleYTD.toFixed(2)), 
+				listinoTotaleYTD: parseFloat(subbranch.listinoTotaleYTD.toFixed(2)),
+				tatalePezziYTD: parseInt(subbranch.totalePezziYTD,10),
+				ricavoTotaleDTY: parseFloat(subbranch.ricavoTotaleDTY.toFixed(2)), 
+				listinoTotaleDTY: parseFloat(subbranch.listinoTotaleDTY.toFixed(2)),
+				tatalePezziDTY: parseInt(subbranch.totalePezziDTY,10),
+				});	
+				
 			}
 		else
 			{
 			branchExplorer(subbranch[levels[depth+1]],depth+1);	
 			}
+			
 	   }
 }
 branchExplorer(list,0);
