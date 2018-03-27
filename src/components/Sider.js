@@ -20,7 +20,8 @@ class Sider extends React.Component {
 			
 			case 'catalogo': link='/catalogo'; break;
 				case 'fornitori': link='/fornitori'; break;
-		
+		    case 'dashboard': link='/dashboard'; break;
+		    case 'magazzino': link='/magazzino'; break;
 			case 'userMgmt?mode=changePassword': link='/userMgmt?mode=changePassword'; break;
 			case 'userMgmt?mode=configuration': link='/userMgmt?mode=configuration'; break;
 			case '#signout': link='/#signout'; this.props.signOutUser();break;
@@ -54,6 +55,10 @@ class Sider extends React.Component {
               <Icon type="rocket" />
               <span>Rese</span>
             </Menu.Item>
+             <Menu.Item key="magazzino">
+              <Icon type="barcode" />
+              <span>Magazzino</span>
+            </Menu.Item>
             <SubMenu key="sub2" title={<span><Icon type="database" /><span>Anagrafiche</span></span>}>
 	        
             <Menu.Item key="catalogo">
@@ -81,6 +86,10 @@ class Sider extends React.Component {
 	            </Menu.Item>
 	            
 	         </SubMenu>   
+	          <Menu.Item key="dashboard">
+              <Icon type="line-chart" />
+              <span>Dashboard</span>
+            </Menu.Item>
 	          <Menu.Item key="version">
 	              <Icon type="info-circle" />
 	              <span>Versione</span>

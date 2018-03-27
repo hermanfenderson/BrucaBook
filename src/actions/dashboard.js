@@ -3,7 +3,7 @@ import {urlFactory} from '../helpers/firebase';
 
 
 export const GET_REGISTRO_DATA = 'GET_REGISTRO_DATA'
-
+export const RESET_LISTENING_DASHBOARD = 'RESET_LISTENING_DASHBOARD'
 export const getRegistroData = () =>
 {
 	return function(dispatch, getState) {
@@ -19,4 +19,9 @@ export const getRegistroData = () =>
 	}
 
 	
+}
+
+export const resetListening = () =>
+{
+	return ({type: RESET_LISTENING_DASHBOARD})
 }

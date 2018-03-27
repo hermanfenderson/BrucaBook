@@ -125,8 +125,19 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 		{
 	    
 		//Aggiungo solo se non la ho già...
-		if (dataIndexNew[propt] === undefined)
+		if (dataIndexNew[propt] !== undefined)
 		  {
+		  	  var index = dataIndexNew[propt];
+  
+		  	 delete dataIndexNew[propt];
+			//Cancello la rigna nell'array
+			 dataArrayNew.splice(index,1);
+			  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
+			   for(var propt2 in dataIndexNew){
+			          if (dataIndexNew[propt2] > index) dataIndexNew[propt2]--;
+			      }
+	  		  	 
+		  }		
 		  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
 		   var tmp = payload.val()[propt];
 		   tmp['key'] = propt;
@@ -143,8 +154,9 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 			}	
 		  //Creo un indice per recuperare in seguito la posizione nell'array per la chiave
 		   dataIndexNew[propt] = dataArrayNew.length - 1;
-		  } 
+		   
 		}
+	 
     //Aggiorno lo stato passando nuovo array e nuovo indice
     var newState = {...state};
     newState[dataArrayName] = dataArrayNew;

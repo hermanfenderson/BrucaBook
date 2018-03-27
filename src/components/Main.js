@@ -19,6 +19,8 @@ import DettagliArticolo from '../scenes/dettagliArticolo';
 import ReadmeViewer from '../scenes/readmeViewer';
 import Fornitori from '../scenes/fornitori';
 import Dashboard from '../scenes/dashboard';
+import Magazzino from '../scenes/magazzino';
+
 
 //import GestioneScontrino from '../containers/GestioneScontrino';
 //        		<Route path="/cassa/:idCassa/:idScontrino" component={RequireAuth(GestioneScontrino)} />
@@ -58,6 +60,8 @@ const Main= (props) =>
     					      			              
 		        						<Route path="/catalogo" component={RequireAuth(GestioneItemCatalog)} />
 		        							<Route path="/dashboard" component={RequireAuth(Dashboard)} />
+		        								<Route path="/magazzino" component={RequireAuth(Magazzino)} />
+    					      		
     					      		
     					      			<Route exact path='/version' component={RequireAuth(ReadmeViewer)}/>
 		        					   

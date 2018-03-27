@@ -90,7 +90,7 @@ if (isValid && mode==='configuration') return function(dispatch, getState) {
 	         				{Firebase.database().ref(urlFactory(getState,'righeElencoRese', getState().elencoRese.listeningItem)).off();
 	         				dispatch({type: 'RESET_ELENCORESE'});
 	         				}
-	         		
+	         		    dispatch({type: 'RESET_LISTENING_DASHBOARD'});
 	         			dispatch({type: USER_CONFIGURATION_CHANGED, info: infoUser})
 	         			dispatch(caricaAnagrafiche());
     

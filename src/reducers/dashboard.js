@@ -1,4 +1,4 @@
-import {GET_REGISTRO_DATA} from '../actions/dashboard';
+import {GET_REGISTRO_DATA, RESET_LISTENING_DASHBOARD} from '../actions/dashboard';
 import {getMatrixVenditeFromRegistroData,getTimeSeries } from '../helpers/form';
 import moment from 'moment';
 
@@ -21,7 +21,8 @@ export default function dashboard(state = initialState, action) {
          return {
         ...state, registroData: registroData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, matrixVendite: matrixVendite, listening: true
       };
-  
+    case RESET_LISTENING_DASHBOARD: 
+      return {...state, listening: false};
     
     default:
       return state;
