@@ -2,7 +2,6 @@ import {GET_REGISTRO_DATA, RESET_LISTENING_DASHBOARD} from '../actions/dashboard
 import {getMatrixVenditeFromRegistroData,getTimeSeries } from '../helpers/form';
 import moment from 'moment';
 
-
 const initialState =  {
  registroData: {},
  matrixVendite: {},

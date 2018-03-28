@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {XAxis, YAxis, Tooltip, Legend, Bar, BarChart} from 'recharts';
+import {XAxis, YAxis, Tooltip, Legend, Bar, BarChart, ResponsiveContainer} from 'recharts';
 import {year2color} from '../colors';
 import TooltipComponentYTD from './TooltipComponentYTD';
 
@@ -25,7 +25,9 @@ render()
 		for (let k=0; k<elencoAnni.length; k++) legend.push(years[elencoAnni[k]]); 
 		
 	return(	
-	<BarChart width={this.props.width} height={this.props.height} data={this.props.serieIncassiMesi}
+	<ResponsiveContainer width={this.props.width} height={this.props.height} >	
+		
+	<BarChart  data={this.props.serieIncassiMesi}
 	            margin={{top: 20, right: 30, left: 20, bottom: 5}}>
 	       <XAxis dataKey="mese"/>
 	       <YAxis/>
@@ -34,7 +36,10 @@ render()
 	      
 	       {Object.keys(years).map((currentValue, index, arr) => {return( <Bar key={currentValue+'ytd'} dataKey={currentValue+'ytd'} stackId={index} fill={year2color(currentValue,0)} /> )})}
 	       {Object.keys(years).map((currentValue, index, arr) => {return( <Bar key={currentValue+'dty'} dataKey={currentValue+'dty'} stackId={index} fill={year2color(currentValue,1)} /> )})}
-	</BarChart>) 
+	</BarChart>
+</ResponsiveContainer>
+
+	) 
  }
 }
 export default ChartIncassiMesi;

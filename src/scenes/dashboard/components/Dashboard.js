@@ -19,6 +19,13 @@ componentDidMount() {
    		}
     	
  }
+ 
+componentDidUpdate() {
+	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
+   		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
+   		if (this.props.measures['dashboardWidth'] !==node.clientWidth) this.props.storeMeasure('dashboardWidth', node.clientWidth);
+   		}
+} 
 
 //  <Tooltip crosshairs={{type : "y"}}/>
  
@@ -29,17 +36,17 @@ let width = this.props.measures['dashboardWidth']-50;
 <Spin spinning={(this.props.serieIncassi.length===0)} >	  
 {(this.props.serieIncassi.length===0) ? null:
 <div ref='dashboardWidth'>
-
-<Row>
-<Col span={12}>
+<Row >
+<Col span={12} style={{ height: width/4}}>
 	<ChartIncassiAnni width={width/2} height={width/4} serieIncassiAnni={this.props.serieIncassiAnni} />
+
 </Col>
-<Col span={12}>
+<Col span={12} style={{ height: width/4}}>
 	<ChartIncassiMesi width={width/2} height={width/4} serieIncassiMesi={this.props.serieIncassiMesi} />
 </Col>
 </Row>
-<Row>
-	<ChartIncassi width={width} height={width/2} serieIncassi={this.props.serieIncassi} />
+<Row style={{ height: width/4}}>
+	<ChartIncassi width={width} height={width/4} serieIncassi={this.props.serieIncassi} />
 
 </Row> 
 
