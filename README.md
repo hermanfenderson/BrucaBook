@@ -1,9 +1,14 @@
-BrucaBook V.0.9.10
+BrucaBook V.0.9.11
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.11
+* Ordinate per anno le label del report mese
+* Aggiunto un report anno (con gli stessi criteri)
+* Organizzato lo spazio del dashboard per gestire i report 
+* Allargato lo spazio del report giornaliero
 
 ### Versione 0.9.10
 * Separati report da magazzino. Ora homepage va ai report...(#218)

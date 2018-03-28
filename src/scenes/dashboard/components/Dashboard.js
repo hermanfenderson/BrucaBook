@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
-import {Spin, Row} from 'antd'
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {Spin, Row, Col} from 'antd'
+
+import ChartIncassi from './ChartIncassi';
 
 import ChartIncassiMesi from './ChartIncassiMesi';
+import ChartIncassiAnni from './ChartIncassiAnni';
+import ReactDOM from 'react-dom';
 
 
 
@@ -10,6 +13,10 @@ class Dashboard extends Component {
 componentDidMount() {
     	this.props.setHeaderInfo('Dashboard');
     	if (!this.props.listeningRegistroData) this.props.getRegistroDataAction();
+   	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
+   		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
+   		this.props.storeMeasure('dashboardWidth', node.clientWidth);
+   		}
     	
  }
 
@@ -17,25 +24,25 @@ componentDidMount() {
  
 render()
 {
-
+let width = this.props.measures['dashboardWidth']-50;
    return (
 <Spin spinning={(this.props.serieIncassi.length===0)} >	  
 {(this.props.serieIncassi.length===0) ? null:
-<div>
+<div ref='dashboardWidth'>
+
 <Row>
-<LineChart  width={600} height={300} data={this.props.serieIncassi}
-            margin={{top: 5, right: 30, left: 20, bottom: 5}} >
-       <XAxis padding={{left: 30, right: 30}} dataKey="period"/>
-       <YAxis/>
-       <CartesianGrid strokeDasharray="3 3"/>
-       <Tooltip />
-       <Legend />
-       <Line type="linear" dataKey="incasso" stroke={"#8884d8"} activeDot={{r: 8}}/>
-      </LineChart>
+<Col span={12}>
+	<ChartIncassiAnni width={width/2} height={width/4} serieIncassiAnni={this.props.serieIncassiAnni} />
+</Col>
+<Col span={12}>
+	<ChartIncassiMesi width={width/2} height={width/4} serieIncassiMesi={this.props.serieIncassiMesi} />
+</Col>
 </Row>
 <Row>
-<ChartIncassiMesi serieIncassiMesi={this.props.serieIncassiMesi} />
-</Row>          
+	<ChartIncassi width={width} height={width/2} serieIncassi={this.props.serieIncassi} />
+
+</Row> 
+
 </div>
           }
 </Spin>          

@@ -18,8 +18,9 @@ export default function dashboard(state = initialState, action) {
        let matrixVendite = getMatrixVenditeFromRegistroData(registroData);
        let serieIncassi = generateSerieIncassi(matrixVendite);
        let serieIncassiMesi = generateSerieIncassiMesi(matrixVendite);
+       let serieIncassiAnni = generateSerieIncassiAnni(matrixVendite);
          return {
-        ...state, registroData: registroData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, matrixVendite: matrixVendite, listening: true
+        ...state, registroData: registroData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, matrixVendite: matrixVendite, listening: true
       };
     case RESET_LISTENING_DASHBOARD: 
       return {...state, listening: false};
@@ -32,6 +33,7 @@ export default function dashboard(state = initialState, action) {
 export const getRegistroData = (state) => {return state.registroData};
 export const getSerieIncassi = (state) => {return state.serieIncassi};
 export const getSerieIncassiMesi = (state) => {return state.serieIncassiMesi};  
+export const getSerieIncassiAnni = (state) => {return state.serieIncassiAnni};  
 
 export const isListeningRegistroData = (state) => {return state.listening};
 
@@ -45,6 +47,28 @@ export const generateSerieIncassi = (matrixVendite) => {
 		return ts;
 };
 
+
+export const generateSerieIncassiAnni = (matrixVendite) => {
+		let ts = getTimeSeries(matrixVendite,'anno',null,null);
+		let tsOut = [];
+		//Poggio totale, ytd e dty per mese e per anno
+		for (let j=0; j<ts.length; j++) 
+			{   
+			    let year = ts[j].period;
+			    let ytd = year+'ytd';
+			    let dty = year+'dty';
+			    let obj = {};
+			    obj.anno = year;
+			    obj[ytd] = ts[j].ricavoTotaleYTD;
+				obj[dty] = ts[j].ricavoTotaleDTY;
+				obj[year] = ts[j].ricavoTotale;
+			    tsOut.push({...obj})
+				
+			};	
+		return tsOut;	
+} 
+
+
 export const generateSerieIncassiMesi = (matrixVendite) => {
 		let ts = getTimeSeries(matrixVendite,'anno/mese',null,null);
 		let tsOut = [];
@@ -56,7 +80,7 @@ export const generateSerieIncassiMesi = (matrixVendite) => {
 			     
 			    let tag = ts[j].period.split('/');
 			    let year = tag[0];
-			    let period = parseInt(tag[1])-1;
+			    let period = parseInt(tag[1],10)-1;
 			    let ytd = year+'ytd';
 			    let dty = year+'dty';
 			   

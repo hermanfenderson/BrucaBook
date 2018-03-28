@@ -70,6 +70,7 @@ export const isListeningRegistroData = (state) => {return fromDashboard.isListen
 
 export const getSerieIncassi = (state) => {return fromDashboard.getSerieIncassi(state.dashboard)};
 export const getSerieIncassiMesi = (state) => {return fromDashboard.getSerieIncassiMesi(state.dashboard)};
+export const getSerieIncassiAnni = (state) => {return fromDashboard.getSerieIncassiAnni(state.dashboard)};
 
 
 //Scena DettagliArticolo
