@@ -25,7 +25,7 @@ render()
 		for (let k=0; k<elencoAnni.length; k++) legend.push(years[elencoAnni[k]]); 
 		
 	return(	
-	<ResponsiveContainer width={this.props.width} height={this.props.height} >	
+	<ResponsiveContainer width={'100%'} height={this.props.height} >	
 		
 	<BarChart  data={this.props.serieIncassiMesi}
 	            margin={{top: 20, right: 30, left: 20, bottom: 5}}>

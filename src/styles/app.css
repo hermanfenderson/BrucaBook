@@ -187,5 +187,14 @@ width: 75px;
 	white-space: nowrap;
 }
 
+.tabella-top-books {
+	margin: 10px;
+}
+
+
+
+.tabella-top-books-row {
+	font-size: 12px;
+}
 
 

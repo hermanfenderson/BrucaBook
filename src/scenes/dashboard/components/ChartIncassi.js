@@ -6,9 +6,9 @@ render()
 	{
 
 return(
-<ResponsiveContainer width={this.props.width} height={this.props.height} >	
+<ResponsiveContainer width={'100%'} height={this.props.height} >	
 	
-<LineChart  width={this.props.width} height={this.props.height} data={this.props.serieIncassi}
+<LineChart   data={this.props.serieIncassi}
             margin={{top: 5, right: 30, left: 20, bottom: 5}} >
        <XAxis padding={{left: 30, right: 30}} dataKey="period"/>
        <YAxis/>

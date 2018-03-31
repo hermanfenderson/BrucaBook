@@ -18,9 +18,8 @@ render()
 				}
 		elencoAnni.sort(); //Ordino per anno
 		for (let k=0; k<elencoAnni.length; k++) legend.push(years[elencoAnni[k]]); 
-		console.log(years);
 	return(	
-	<ResponsiveContainer width={this.props.width} height={this.props.height} >	
+	<ResponsiveContainer width={'100%'} height={this.props.height} >	
 	<BarChart  data={this.props.serieIncassiAnni}
 	            margin={{top: 20, right: 30, left: 20, bottom: 5}}>
 	       <XAxis dataKey="anno"/>

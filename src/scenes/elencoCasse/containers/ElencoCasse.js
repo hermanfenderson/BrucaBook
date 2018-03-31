@@ -7,6 +7,8 @@ import { bindActionCreators} from 'redux'
 
 const setSelectedCassa = elencoCasseFA.setSelectedItem;
 const resetElencoCasse = elencoCasseFA.reset;
+const toggleTableScroll = elencoCasseFA.toggleTableScroll;
+
 
 const mapStateToProps = (state) => {
 	return ({period: getPeriodElencoCasse(state),
@@ -15,7 +17,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ resetElencoCasse, setSelectedCassa, storeMeasure, setHeaderInfo, setPeriodElencoCasse}, dispatch);
+  return bindActionCreators({ toggleTableScroll, resetElencoCasse, setSelectedCassa, storeMeasure, setHeaderInfo, setPeriodElencoCasse}, dispatch);
 }
 
 const ElencoCasse = connect(mapStateToProps, mapDispatchToProps)(ElencoCasseComponent)

@@ -71,6 +71,9 @@ export const isListeningRegistroData = (state) => {return fromDashboard.isListen
 export const getSerieIncassi = (state) => {return fromDashboard.getSerieIncassi(state.dashboard)};
 export const getSerieIncassiMesi = (state) => {return fromDashboard.getSerieIncassiMesi(state.dashboard)};
 export const getSerieIncassiAnni = (state) => {return fromDashboard.getSerieIncassiAnni(state.dashboard)};
+export const getTop5thisYear = (state) => {return fromDashboard.getTop5thisYear(state.dashboard)};
+export const getTop5lastYear = (state) => {return fromDashboard.getTop5lastYear(state.dashboard)};
+export const getTop5lastMonth = (state) => {return fromDashboard.getTop5lastMonth(state.dashboard)};
 
 
 //Scena DettagliArticolo

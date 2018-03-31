@@ -4,6 +4,10 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.13
+* Elenco casse... parte dalla fine
+* Classifica libri anno precedente, mese precedente
+
 ### Versione 0.9.12
 * Resizing dei report funziona (#221)
 * Report responsive! (#222)

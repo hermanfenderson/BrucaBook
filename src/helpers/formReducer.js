@@ -286,7 +286,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	    	break;
 	    case this.INITIAL_LOAD_ITEM:
 	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem);
-	    	
+	    	newState = {...newState, tableScroll: true};
 	    
 	    	break;
 	  

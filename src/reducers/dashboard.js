@@ -1,5 +1,5 @@
 import {GET_REGISTRO_DATA, RESET_LISTENING_DASHBOARD} from '../actions/dashboard';
-import {getMatrixVenditeFromRegistroData,getTimeSeries } from '../helpers/form';
+import {getMatrixVenditeFromRegistroData,getTimeSeries, topList, firstX } from '../helpers/form';
 import moment from 'moment';
 
 const initialState =  {
@@ -7,19 +7,33 @@ const initialState =  {
  matrixVendite: {},
  serieIncassi: [],
  serieIncassiMesi: [],
+ serieIncassiAnni: [],
+ top5thisYear: [],
+ top5lastYear: [],
+ top5lastMonth: [],
+ 
+ 
  listening: false,
 };
 
 export default function dashboard(state = initialState, action) {
   switch (action.type) {
     case GET_REGISTRO_DATA:
+       let year = moment().format('YYYY');
+       let lastYear = (parseInt(year,10) -1).toString(10);
+       let lastMonthArray = moment().subtract(1, 'months').format('YYYY/MM').split('/');
        let registroData = action.payload.val();
        let matrixVendite = getMatrixVenditeFromRegistroData(registroData);
        let serieIncassi = generateSerieIncassi(matrixVendite);
        let serieIncassiMesi = generateSerieIncassiMesi(matrixVendite);
        let serieIncassiAnni = generateSerieIncassiAnni(matrixVendite);
+       let top5thisYear = matrixVendite.anno[year] ? firstX(topList(matrixVendite.anno[year].ean),5) : [];
+       let top5lastYear = matrixVendite.anno[lastYear] ? firstX(topList(matrixVendite.anno[lastYear].ean),5) : [];
+        let top5lastMonth = (matrixVendite.anno[lastMonthArray[0]] && matrixVendite.anno[lastMonthArray[0]].mese[lastMonthArray[1]]) ?  firstX(topList(matrixVendite.anno[lastMonthArray[0]].mese[lastMonthArray[1]].ean),5) : [];
+      
+       
          return {
-        ...state, registroData: registroData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, matrixVendite: matrixVendite, listening: true
+        ...state, registroData: registroData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, matrixVendite: matrixVendite, top5thisYear: top5thisYear, top5lastYear: top5lastYear, top5lastMonth: top5lastMonth, listening: true
       };
     case RESET_LISTENING_DASHBOARD: 
       return {...state, listening: false};
@@ -33,6 +47,9 @@ export const getRegistroData = (state) => {return state.registroData};
 export const getSerieIncassi = (state) => {return state.serieIncassi};
 export const getSerieIncassiMesi = (state) => {return state.serieIncassiMesi};  
 export const getSerieIncassiAnni = (state) => {return state.serieIncassiAnni};  
+export const getTop5thisYear = (state) => {return state.top5thisYear};  
+export const getTop5lastYear = (state) => {return state.top5lastYear};  
+export const getTop5lastMonth = (state) => {return state.top5lastMonth};  
 
 export const isListeningRegistroData = (state) => {return state.listening};
 

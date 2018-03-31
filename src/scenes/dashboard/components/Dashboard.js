@@ -5,6 +5,7 @@ import ChartIncassi from './ChartIncassi';
 
 import ChartIncassiMesi from './ChartIncassiMesi';
 import ChartIncassiAnni from './ChartIncassiAnni';
+import TopBooks from './TopBooks';
 import ReactDOM from 'react-dom';
 
 
@@ -31,10 +32,10 @@ componentDidUpdate() {
  
 render()
 {
-let width = this.props.measures['dashboardWidth']-50;
-   return (
-<Spin spinning={(this.props.serieIncassi.length===0)} >	  
-{(this.props.serieIncassi.length===0) ? null:
+let width =  (this.props.measures['dashboardWidth']) ? this.props.measures['dashboardWidth']-50 : 100; //Default a caso...
+if (isNaN(width) || this.props.serieIncassi.length===0) return (<Spin spinning={(true)} />)
+else  
+	return (
 <div ref='dashboardWidth'>
 <Row >
 <Col span={12} style={{ height: width/4}}>
@@ -49,14 +50,21 @@ let width = this.props.measures['dashboardWidth']-50;
 	<ChartIncassi width={width} height={width/4} serieIncassi={this.props.serieIncassi} />
 
 </Row> 
+<Row>
+<Col span={12} >
+	{(this.props.top5thisYear.length > 0) ? <TopBooks topBooks={this.props.top5thisYear} /> : null}
+</Col>
+<Col span={12} >
+	{(this.props.top5lastYear.length > 0) ?  <TopBooks topBooks={this.props.top5lastYear} /> : null}
+</Col>	
+<Col span={12} >
+ 	{(this.props.top5lastMonth.length > 0) ?  <TopBooks topBooks={this.props.top5lastMonth} /> : null}
+</Col>	
+</Row>
 
 </div>
-          }
-</Spin>          
+          )       
 
- 
- 
-)
 }
 
 }

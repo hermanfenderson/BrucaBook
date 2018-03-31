@@ -492,6 +492,19 @@ export const getMatrixVenditeFromRegistroData = (registroData, today=setDay(mome
 			submatrix[period].ricavoTotaleDTY += details.ricavoTotale;
 			submatrix[period].listinoTotaleDTY += details.listinoTotale;
 			}
+		if (!submatrix[period].ean[details.ean]) submatrix[period].ean[details.ean] = {totalePezzi: 0, 
+													  ricavoTotale: parseFloat(0.0), 
+													  listinoTotale: parseFloat(0.0)};
+			submatrix[period].ean[details.ean].titolo = details.titolo;
+			submatrix[period].ean[details.ean].autore = details.autore;
+			submatrix[period].ean[details.ean].editore = details.editore;
+			submatrix[period].ean[details.ean].imgFirebaseUrl = details.imgFirebaseUrl;
+		
+			submatrix[period].ean[details.ean].ean = details.ean;
+			submatrix[period].ean[details.ean].totalePezzi += details.totalePezzi;
+			submatrix[period].ean[details.ean].ricavoTotale += details.ricavoTotale;
+			submatrix[period].ean[details.ean].listinoTotale += details.listinoTotale;
+	
 	}
 	
 	const updateCell = (matrix, dataIn, details, ytd) =>
@@ -525,6 +538,7 @@ export const getMatrixVenditeFromRegistroData = (registroData, today=setDay(mome
 			    		    	titolo: righe[propt].titolo, 
 			    		    	autore: righe[propt].autore, 
 			    		    	editore: righe[propt].editore,
+			    		    	imgFirebaseUrl: righe[propt].imgFirebaseUrl,
 			    		    	ean: ean,
 			    		    	totalePezzi: totalePezzi,
 			    		    	ricavoTotale: ricavoTotale,
@@ -582,6 +596,35 @@ const branchExplorer = (branch, depth) =>
 branchExplorer(list,0);
 return ts;	
 }
+
+//Dato un pezzo di matriceVenditeEAN ritorna un array ordinato secondo totalePezzi decrescente e a paritù di pezzi listinoTotale decrescente
+export const topList = (eanObj) =>
+{  if (eanObj)
+		{
+		let eanArray = Object.values(eanObj);
+		eanArray.sort((a,b) => {return ((a.totalePezzi !== b.totalePezzi) ? b.totalePezzi - a.totalePezzi : (a.listinoTotale !== b.listinoTotale) ? b.listinoTotale - a.listinoTotale : 0) })
+		return eanArray;
+		}
+	return null;	
+}
+
+//Trova i primi in classifica (su array ordinato)
+export const firstX = (eanSortedArray, number) =>
+{
+let rank = 0;
+let lastPezzi = 0;
+let outputArray = [];
+console.log(number);
+for (let i=0; i<eanSortedArray.length; i++)
+	{
+		if (i===0 || eanSortedArray[i].totalePezzi < lastPezzi) {rank++; lastPezzi = eanSortedArray[i].totalePezzi}
+		outputArray.push({...eanSortedArray[i], rank: rank, key: i});
+		if (outputArray.length === number) break;
+	}
+	
+return outputArray;	
+}
+
 
 export const setDay = (moment) =>
 {

@@ -17,6 +17,8 @@ var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo s
 class WrappedTable extends React.Component {
 componentDidMount()
   {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+     if (this.props.tableScroll) this.forceUpdate(); //Ci vadoo sempre...
+ 
   }
   
   
@@ -69,7 +71,6 @@ onRow=(record, other) => ({
 
 render ()
      {
-   
     let columns = this.props.header.map((header) => 
   	            	{
   	            		return({
@@ -111,7 +112,7 @@ render ()
 			else columns.push(actionColumn);
   		}
     return(
-        	 <Table  expandedRowRender={this.props.expandedRowRender} size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data} rowKey={this.props.rowKey}/>
+        	 <Table className={this.props.className} expandedRowRender={this.props.expandedRowRender} size={this.props.size ? this.props.size : 'middle'} onRow={this.onRow} ref='antTable' rowClassName={this.props.rowClassName || this.rowClassName} scroll={{ y: this.props.height}}  loading={this.props.loading} pagination={false} columns={columns} dataSource={data} rowKey={this.props.rowKey}/>
        		);	
      }	
 } 
