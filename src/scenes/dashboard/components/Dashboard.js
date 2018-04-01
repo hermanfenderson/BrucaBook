@@ -39,26 +39,41 @@ else
 <div ref='dashboardWidth'>
 <Row >
 <Col span={12} style={{ height: width/4}}>
-	<ChartIncassiAnni width={width/2} height={width/4} serieIncassiAnni={this.props.serieIncassiAnni} />
+<div className='report-title'>Confronto incassi annui</div>
+
+	<ChartIncassiAnni width={width/2} height={width/4 -25} serieIncassiAnni={this.props.serieIncassiAnni} />
 
 </Col>
+
 <Col span={12} style={{ height: width/4}}>
-	<ChartIncassiMesi width={width/2} height={width/4} serieIncassiMesi={this.props.serieIncassiMesi} />
+<div className='report-title'>Confronto incassi mesi</div>
+
+	<ChartIncassiMesi width={width/2} height={width/4 - 25} serieIncassiMesi={this.props.serieIncassiMesi} />
 </Col>
 </Row>
 <Row style={{ height: width/4}}>
-	<ChartIncassi width={width} height={width/4} serieIncassi={this.props.serieIncassi} />
+<div className='report-title'>Incassi giornalieri</div>
+
+	<ChartIncassi width={width} height={width/4 - 25} serieIncassi={this.props.serieIncassi} />
 
 </Row> 
 <Row>
 <Col span={12} >
-	{(this.props.top5thisYear.length > 0) ? <TopBooks topBooks={this.props.top5thisYear} /> : null}
+
+	{(this.props.top5thisYear.length > 0) ? <div><div className='report-title'>I libri di quest'anno</div>
+ <TopBooks topBooks={this.props.top5thisYear} /> </div>: null}
 </Col>
+
 <Col span={12} >
-	{(this.props.top5lastYear.length > 0) ?  <TopBooks topBooks={this.props.top5lastYear} /> : null}
-</Col>	
+ 	{(this.props.top5lastMonth.length > 0) ?  <div><div className='report-title'>I libri del mese scorso</div>
+<TopBooks topBooks={this.props.top5lastMonth} /> </div>: null}
+</Col>
+</Row>
+<Row>
 <Col span={12} >
- 	{(this.props.top5lastMonth.length > 0) ?  <TopBooks topBooks={this.props.top5lastMonth} /> : null}
+
+	{(this.props.top5lastYear.length > 0) ?  <div><div className='report-title'>I libri dello scorso anno</div>
+ <TopBooks topBooks={this.props.top5lastYear} /> </div>: null}
 </Col>	
 </Row>
 

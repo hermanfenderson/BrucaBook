@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {XAxis, YAxis, Tooltip, Legend, Bar, BarChart, ResponsiveContainer} from 'recharts';
+import {XAxis, YAxis, Tooltip, Legend, Bar, BarChart, ResponsiveContainer, Label} from 'recharts';
 import {year2color} from '../colors';
 import TooltipComponentYTD from './TooltipComponentYTD';
 
@@ -33,6 +33,8 @@ render()
 	       <YAxis/>
 	       <Legend payload={legend}/>
 	        <Tooltip content={<TooltipComponentYTD span={'month'}/>}/>
+	        <Label value='Confronto incassi mensili' position='top'/>
+       
 	      
 	       {Object.keys(years).map((currentValue, index, arr) => {return( <Bar key={currentValue+'ytd'} dataKey={currentValue+'ytd'} stackId={index} fill={year2color(currentValue,0)} /> )})}
 	       {Object.keys(years).map((currentValue, index, arr) => {return( <Bar key={currentValue+'dty'} dataKey={currentValue+'dty'} stackId={index} fill={year2color(currentValue,1)} /> )})}

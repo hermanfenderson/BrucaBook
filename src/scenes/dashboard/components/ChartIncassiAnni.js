@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {XAxis, YAxis, Tooltip, Legend, Bar, BarChart, LabelList, ResponsiveContainer} from 'recharts';
+import {XAxis, YAxis, Tooltip, Legend, Bar, BarChart, LabelList, ResponsiveContainer, Label} from 'recharts';
 import {year2color} from '../colors';
 import TooltipComponentYTD from './TooltipComponentYTD';
 
@@ -24,6 +24,8 @@ render()
 	            margin={{top: 20, right: 30, left: 20, bottom: 5}}>
 	       <XAxis dataKey="anno"/>
 	       <YAxis/>
+	       <Label value='Confronto incassi annui' position='top'/>
+       
 	       <Legend payload={legend}/>
 	        <Tooltip content={<TooltipComponentYTD span={'year'}/>}/>
 	      
