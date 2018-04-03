@@ -1,9 +1,13 @@
-BrucaBook V.0.9.14
+BrucaBook V.0.9.15
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.15
+* Selezionare tipo assoluto in un documento di acquisti cancella la data rendiconto (#229)
+* Selezionare Man.Sconto in bolla cancella gli sconti inseriti 
+
 ### Versione 0.9.14
 * Tasto refresh per i report
 * Richiesta vecchia password al cambio password

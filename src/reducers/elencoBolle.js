@@ -69,6 +69,8 @@ function transformAndValidateEditedBolla(cei, name, value)
 {  	
 	cei.values[name] = value;
     if ((name === 'tipoBolla') && value === 'R') cei.values.dataRendiconto = moment();
+    if ((name === 'tipoBolla') && value !== 'R') cei.values.dataRendiconto = null;
+    
     if (name === 'fornitore') cei.values.nomeFornitore = nomeFornitoreById(cei.values.fornitore);
   //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};

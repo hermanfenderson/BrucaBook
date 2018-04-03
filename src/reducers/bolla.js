@@ -79,6 +79,13 @@ function transformAndValidateEditedRigaBolla(cei, name, value)
 	    case 'sconto3':
 	    case 'manSconto':
 	    case 'prezzoUnitario':
+	        if (name === 'manSconto' && value) 
+	        	{
+	        		cei.values.sconto1 = '';
+	        		cei.values.sconto2 = '';
+	        		cei.values.sconto3 = '';
+	        		
+	        	}
 	    	if (cei.values['prezzoListino'] > 0) pricesMgmt(cei, name);
 		break;		
 		case 'pezzi':
