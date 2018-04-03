@@ -5,6 +5,8 @@ import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedI
 import {isValidEmail} from '../helpers/validators';
 //Override
 import {SUBMIT_EDITED_ITEM_USERMGMT, RESET_MAIL_SENT, RESET_MAIL_ERROR} from '../actions/userMgmt';
+import {fbItaErr} from '../helpers/firebase';
+
 import {USER_CONFIGURATION_CHANGED, AUTH_ERROR_LOGIN, DISMISS_AUTH_ERROR_LOGIN, AUTH_ERROR_SIGNUP, DISMISS_AUTH_ERROR_SIGNUP, AUTH_ERROR_NEW_PASSWORD, DISMISS_AUTH_ERROR_NEW_PASSWORD, SET_USERMGMT_MODE, RESET_USERMGMT_STATE, CODE_OK, CODE_KO} from '../actions/userMgmt';
 
 //Metodi reducer per le Form
@@ -130,7 +132,9 @@ export default function userMgmt(state = initialState(), action) {
 	
 		  {
 		  	let cei = editedItemCopy(state.editedItem);
-		    		     errMgmt(cei,'form','loginError',action.error.message,true,true);
+		    		     errMgmt(cei,'form','loginError',fbItaErr(action.error),true,true);
+		    		     cei.userMgmtState = 'loginKO'	
+		    
 		    		newState = {...state, 'editedItem': cei};     	
 		        
 		  }

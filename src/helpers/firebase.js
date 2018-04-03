@@ -262,4 +262,22 @@ export function addChangedStamp(record)
   		callback(url);
 		});
  }
+//Ritorna errore in italiano se lo ho tradotto... altrimenti ritorna errore originario...
+
+ export const fbItaErr = (error) =>
+ {
+ let message = '';
+ if (error) 
+	{
+	    switch (error.code) 
+	    {
+	    case 'auth/wrong-password': message = 'Password sbagliata o account non esistente'; break;
+	    case 'auth/email-already-in-use': message = 'Indirizzo email già in uso'; break;
+	    case 'auth/weak-password': message = 'Password troppo debole (almeno 6 caratteri)'; break;
+	
+		default:  message = error.message; break;
+	    }
+	}    
+ return message;   	
+ }
 

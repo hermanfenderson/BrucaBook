@@ -1,6 +1,6 @@
 import DashboardComponent from '../components/Dashboard'
 import {setHeaderInfo, storeMeasure} from  '../../../actions'
-import {getRegistroData as getRegistroDataAction} from '../../../actions/dashboard'
+import {getRegistroData as getRegistroDataAction , resetListening } from '../../../actions/dashboard'
 import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYear, getTop5lastYear, getTop5lastMonth, isListeningRegistroData, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -10,7 +10,7 @@ import { bindActionCreators} from 'redux'
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setHeaderInfo, getRegistroDataAction, storeMeasure}, dispatch);
+  return bindActionCreators({ setHeaderInfo, getRegistroDataAction, storeMeasure, resetListening}, dispatch);
 }
 
 const mapStateToProps = (state) => {

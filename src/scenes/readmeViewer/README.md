@@ -1,9 +1,14 @@
-BrucaBook V.0.9.13
+BrucaBook V.0.9.14
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.14
+* Tasto refresh per i report
+* Richiesta vecchia password al cambio password
+* Stringhe errore localizzate (italiano... in corso)
+
 ### Versione 0.9.13
 * Elenco casse... parte dalla fine
 * Classifica libri anno corrente, anno precedente, mese precedente
@@ -20,7 +25,7 @@ Storia delle versioni
 
 ### Versione 0.9.10
 * Separati report da magazzino. Ora homepage va ai report...(#218)
-* Dashboard viene ricaricaricato al cambio della configurazione utente (#217)
+* Dashboard viene ricaricato al cambio della configurazione utente (#217)
 * Bugfixing: ultima riga di una tabella viene caricata per prima
 * Dashboard: report mensile
 

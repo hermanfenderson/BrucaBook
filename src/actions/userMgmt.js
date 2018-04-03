@@ -4,6 +4,7 @@ import {urlFactory} from '../helpers/firebase';
 
 import Firebase from 'firebase';
 
+
 //Questa genera i path... e mi dorvrebbe aggiungere flessibilità...
 export const SCENE = 'USERMGMT';
 export const SUBMIT_EDITED_ITEM_USERMGMT = 'SUBMIT_EDITED_ITEM_USERMGMT' //Override
@@ -144,7 +145,24 @@ if (isValid && mode==='signup') return function(dispatch) {
 if (isValid && mode==='changePassword') return function(dispatch) {
 			var user = Firebase.auth().currentUser;
             var newPassword = credentials.password;
-
+            var oldPassword = credentials.oldPassword;
+            var email = credentials.email;
+            var credential = Firebase.auth.EmailAuthProvider.credential(email,oldPassword);
+            user.reauthenticateWithCredential(credential)
+    		 .then(response => {
+    		 	user.updatePassword(newPassword).then(response => {
+			// Update successful.
+			dispatch({type: DISMISS_AUTH_ERROR_NEW_PASSWORD});
+			}).catch(error => {
+			 // An error happened.
+			dispatch({type: AUTH_ERROR_NEW_PASSWORD, error: error}); 
+			});
+    		    })
+		     .catch(error => {
+		     dispatch({type: AUTH_ERROR_LOGIN, error: error});
+		     
+	      });
+	      /*
 			user.updatePassword(newPassword).then(response => {
 			// Update successful.
 			dispatch({type: DISMISS_AUTH_ERROR_NEW_PASSWORD});
@@ -152,6 +170,8 @@ if (isValid && mode==='changePassword') return function(dispatch) {
 			 // An error happened.
 			dispatch({type: AUTH_ERROR_NEW_PASSWORD, error: error}); 
 			});
+		*/
+		
 			
 		}
 		

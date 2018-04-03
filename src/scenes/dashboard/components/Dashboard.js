@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Spin, Row, Col} from 'antd'
+import {Spin, Row, Col, Button} from 'antd'
 
 import ChartIncassi from './ChartIncassi';
 
@@ -26,6 +26,7 @@ componentDidUpdate() {
    		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
    		if (this.props.measures['dashboardWidth'] !==node.clientWidth) this.props.storeMeasure('dashboardWidth', node.clientWidth);
    		}
+   	if (!this.props.listeningRegistroData) this.props.getRegistroDataAction();	
 } 
 
 //  <Tooltip crosshairs={{type : "y"}}/>
@@ -36,6 +37,7 @@ let width =  (this.props.measures['dashboardWidth']) ? this.props.measures['dash
 if (isNaN(width) || this.props.serieIncassi.length===0) return (<Spin spinning={(true)} />)
 else  
 	return (
+<Spin spinning={(!this.props.listeningRegistroData)} >		
 <div ref='dashboardWidth'>
 <Row >
 <Col span={12} style={{ height: width/4}}>
@@ -46,7 +48,9 @@ else
 </Col>
 
 <Col span={12} style={{ height: width/4}}>
-<div className='report-title'>Confronto incassi mesi</div>
+<div className='report-title'>Confronto incassi mesi
+ <Button type="primary" shape="circle" icon="retweet" onClick={this.props.resetListening} style={{float:'right'}}/>
+</div>
 
 	<ChartIncassiMesi width={width/2} height={width/4 - 25} serieIncassiMesi={this.props.serieIncassiMesi} />
 </Col>
@@ -78,6 +82,7 @@ else
 </Row>
 
 </div>
+</Spin>
           )       
 
 }

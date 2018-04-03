@@ -1,6 +1,6 @@
 {
   "name": "BrucaBook",
-  "version": "0.9.13",
+  "version": "0.9.14",
   "private": true,
   "devDependencies": {
     "babel-plugin-import": "^1.6.2",

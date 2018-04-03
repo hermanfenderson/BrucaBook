@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {message, Modal} from 'antd'
+import {message} from 'antd'
 import WrappedForm from '../../../components/WrappedForm'
 import {Redirect} from 'react-router';
 import queryString from 'query-string';
@@ -70,9 +70,7 @@ componentDidUpdate = () =>{
     		this.initMode();
     	}
 
-const redoLogin = () =>{
-	mode='login'; nextUrl = '/userMgmt?mode=changePassword'; this.props.signOutUser(); this.props.history.push('/userMgmt?mode=login');
-}
+
 const redirectHome = () => {
 this.props.resetState();
 this.props.history.push(nextUrl);	
@@ -86,6 +84,7 @@ if (this.props.editedItem.userMgmtState === 'changeOK') {this.props.resetState()
 if (this.props.editedItem.userMgmtState === 'loginOK') {this.props.resetState(); message.info("Login effettuato",2,redirectHome()); nextUrl = '/';}
 if (this.props.editedItem.userMgmtState === 'signupOK') {this.props.resetState(); message.info("Utente creato e login effettuato",2,redirectHome());}
 if (this.props.editedItem.userMgmtState === 'codeKO') {mode='requestPasswordReset'; this.props.resetState(); this.props.history.push('/userMgmt?mode=requestPasswordReset');} 
+/*
 if (this.props.editedItem.userMgmtState === 'passwordChangeKO' && mode === 'changePassword') 
 	{   Modal.confirm({
     		title: 'Impossibile cambiare la password',
@@ -99,6 +98,7 @@ if (this.props.editedItem.userMgmtState === 'passwordChangeKO' && mode === 'chan
     		onCancel() {redirectHome();
     		},});
 	}
+*/
 
 
 //message.error("Impossibile cambiare password. Effettua il login",2,() => {this.props.signOutUser(); this.props.history.push('/login')});
@@ -160,7 +160,10 @@ onSubmit = (e) => {
 bookstoresList={this.props.info.elencoLibrerie} label='Libreria' field='libreria' />
         : null }
         
-       
+       {(mode==='changePassword') ?
+        <WrappedForm.Input required={true}  label='Vecchia password' type="password" field='oldPassword' />
+        : null }
+        
        
         {((mode!=='requestPasswordReset') && (mode!=='configuration')) ?
         <WrappedForm.Input required={true}  label='Password' type="password" field='password' />
