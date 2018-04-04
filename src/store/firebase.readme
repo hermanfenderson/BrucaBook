@@ -1,0 +1,9 @@
+//In firebase.js ci va la configurazione da usare...
+export const config = {
+ apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    storageBucket: "",
+    messagingSenderId: ""
+};
+

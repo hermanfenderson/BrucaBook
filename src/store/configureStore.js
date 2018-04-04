@@ -1,26 +1,19 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import reduxThunk from 'redux-thunk';
 import {persistStore, autoRehydrate} from 'redux-persist'
-
+import {config} from './firebase';
 
 import rootReducer from '../reducers';
 import Firebase from 'firebase';
 
 export var persistor;
 
-const config = {
- apiKey: "AIzaSyAfrGzYIIRlmtN50IiChv8raxSKve-a0Sc",
-    authDomain: "brucabook.firebaseapp.com",
-    databaseURL: "https://brucabook.firebaseio.com",
-    storageBucket: "brucabook.appspot.com",
-    messagingSenderId: "684965752152"
-};
+
 
 Firebase.initializeApp(config);
 
 export function purgeLocalStorage()
 {
-	console.log("sono qui");
 	persistor.purge();
 }
 
