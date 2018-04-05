@@ -614,7 +614,6 @@ export const firstX = (eanSortedArray, number) =>
 let rank = 0;
 let lastPezzi = 0;
 let outputArray = [];
-console.log(number);
 for (let i=0; i<eanSortedArray.length; i++)
 	{
 		if (i===0 || eanSortedArray[i].totalePezzi < lastPezzi) {rank++; lastPezzi = eanSortedArray[i].totalePezzi}

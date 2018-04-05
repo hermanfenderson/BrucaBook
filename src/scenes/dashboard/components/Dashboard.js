@@ -13,7 +13,7 @@ import ReactDOM from 'react-dom';
 class Dashboard extends Component {
 componentDidMount() {
     	this.props.setHeaderInfo('Dashboard');
-    	if (!this.props.listeningRegistroData) this.props.getRegistroDataAction();
+    	if (!this.props.listeningReportData) this.props.getReportDataAction();
    	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
    		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
    		this.props.storeMeasure('dashboardWidth', node.clientWidth);
@@ -26,7 +26,7 @@ componentDidUpdate() {
    		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
    		if (this.props.measures['dashboardWidth'] !==node.clientWidth) this.props.storeMeasure('dashboardWidth', node.clientWidth);
    		}
-   	if (!this.props.listeningRegistroData) this.props.getRegistroDataAction();	
+   	if (!this.props.listeningReportData) this.props.getReportDataAction();	
 } 
 
 //  <Tooltip crosshairs={{type : "y"}}/>
@@ -37,7 +37,7 @@ let width =  (this.props.measures['dashboardWidth']) ? this.props.measures['dash
 if (isNaN(width) || this.props.serieIncassi.length===0) return (<Spin spinning={(true)} />)
 else  
 	return (
-<Spin spinning={(!this.props.listeningRegistroData)} >		
+<Spin spinning={(!this.props.listeningReportData)} >		
 <div ref='dashboardWidth'>
 <Row >
 <Col span={12} style={{ height: width/4}}>
@@ -64,19 +64,19 @@ else
 <Row>
 <Col span={12} >
 
-	{(this.props.top5thisYear.length > 0) ? <div><div className='report-title'>I libri di quest'anno</div>
+	{(this.props.top5thisYear && this.props.top5thisYear.length > 0) ? <div><div className='report-title'>I libri di quest'anno</div>
  <TopBooks topBooks={this.props.top5thisYear} /> </div>: null}
 </Col>
 
 <Col span={12} >
- 	{(this.props.top5lastMonth.length > 0) ?  <div><div className='report-title'>I libri del mese scorso</div>
+ 	{(this.props.top5lastMonth && this.props.top5lastMonth.length > 0) ?  <div><div className='report-title'>I libri del mese scorso</div>
 <TopBooks topBooks={this.props.top5lastMonth} /> </div>: null}
 </Col>
 </Row>
 <Row>
 <Col span={12} >
 
-	{(this.props.top5lastYear.length > 0) ?  <div><div className='report-title'>I libri dello scorso anno</div>
+	{(this.props.top5lastYear && this.props.top5lastYear.length > 0) ?  <div><div className='report-title'>I libri dello scorso anno</div>
  <TopBooks topBooks={this.props.top5lastYear} /> </div>: null}
 </Col>	
 </Row>

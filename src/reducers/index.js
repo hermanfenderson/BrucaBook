@@ -65,8 +65,7 @@ export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bo
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 
 //Scena Dashboard
-export const getRegistroData = (state) => {return fromDashboard.getRegistroData(state.dashboard)};
-export const isListeningRegistroData = (state) => {return fromDashboard.isListeningRegistroData(state.dashboard)};
+export const isListeningReportData = (state) => {return fromDashboard.isListeningReportData(state.dashboard)};
 
 export const getSerieIncassi = (state) => {return fromDashboard.getSerieIncassi(state.dashboard)};
 export const getSerieIncassiMesi = (state) => {return fromDashboard.getSerieIncassiMesi(state.dashboard)};

@@ -1,6 +1,19 @@
 
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const cors = require('cors')({
+  origin: true,
+});
+const moment = require('moment');
+
+const {generateTop5thisYear} = require('./report');
+const {generateTop5lastYear} = require('./report');
+const {getMatrixVenditeFromRegistroData} = require('./report');
+const {generateSerieIncassi} = require('./report');
+const {generateSerieIncassiMesi} = require('./report');
+const {generateSerieIncassiAnni} = require('./report');
+
 
 function areEqualShallow(a, b) {
     if (a===b) return true;
@@ -18,6 +31,8 @@ function areEqualShallow(a, b) {
     return true;
 }
 
+
+
 // The Firebase Admin SDK to access the Firebase Realtime Database. 
 //const admin = require('firebase-admin');
 
@@ -26,6 +41,51 @@ function areEqualShallow(a, b) {
 //admin.initializeApp(functions.config().firebase);
 
 //Da catalogo generale a catalogo locale...
+
+
+admin.initializeApp();
+
+
+exports.report = functions.https.onRequest((req, res) => {
+let req2 = req;
+let catena = req2.query.catena;
+let libreria = req2.query.libreria;
+
+cors(req, res, () => {
+ let urlSource = catena + '/' + libreria + '/registroData'
+ let urlDest = catena + '/' + libreria + '/report/bulk';
+ admin.database().ref(urlDest).remove();
+								 
+  res.status(200).send(`<!doctype html>
+    <head>
+      <title>Report</title>
+    </head>
+    <body>
+      OK
+    </body>
+  </html>`);
+  
+ admin.database().ref(urlSource).once("value").then(function(snapshot)
+								{   let year = moment().format('YYYY');
+    								let lastYear = (parseInt(year,10) -1).toString(10);
+    								let lastMonthArray = moment().subtract(1, 'months').format('YYYY/MM').split('/');
+      
+									let matrixVendite = getMatrixVenditeFromRegistroData(snapshot.val());
+									let serieIncassi = generateSerieIncassi(matrixVendite);
+    								let serieIncassiMesi = generateSerieIncassiMesi(matrixVendite);
+    								let serieIncassiAnni = generateSerieIncassiAnni(matrixVendite);
+    								let top5thisYear = generateTop5thisYear(matrixVendite, year);
+    								let top5lastYear = generateTop5lastYear(matrixVendite, lastYear);
+    								let top5lastMonth = generateTop5lastMonth(matrixVendite, lastMonthArray);
+    							
+    							
+    								admin.database().ref(urlDest).update({'serieIncassi': serieIncassi, 'serieIncassiMesi': serieIncassiMesi, 'serieIncassiAnni': serieIncassiAnni, 'top5thisYear': top5thisYear, 'top5lastYear': top5lastYear,  'top5lastMonth': top5lastMonth });	
+									
+
+								})
+
+});
+});
 
 exports.aggiornaDaCatalogo = functions.database.ref('/catalogo/{ean}')
 //DA MODIFICARE 
@@ -94,7 +154,7 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
              const anno = context.params.anno;
              const mese = context.params.mese;
 			 var key = context.params.idScontrino;	
-			 if (change.after.val()) key = change.after.val().lastActionKey;
+			 if (change.after.val() && change.after.val().lastActionKey) key = change.after.val().lastActionKey;
 		  //Come prima cosa determino cosa è cambiato...
            //POi calcolo i totali...
             const righeRef = change.after.ref.parent.parent;

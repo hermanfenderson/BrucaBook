@@ -1,7 +1,7 @@
 import DashboardComponent from '../components/Dashboard'
 import {setHeaderInfo, storeMeasure} from  '../../../actions'
-import {getRegistroData as getRegistroDataAction , resetListening } from '../../../actions/dashboard'
-import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYear, getTop5lastYear, getTop5lastMonth, isListeningRegistroData, getMeasures} from '../../../reducers'
+import {getReportData as getReportDataAction , resetListening } from '../../../actions/dashboard'
+import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYear, getTop5lastYear, getTop5lastMonth, isListeningReportData, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -10,7 +10,7 @@ import { bindActionCreators} from 'redux'
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setHeaderInfo, getRegistroDataAction, storeMeasure, resetListening}, dispatch);
+  return bindActionCreators({ setHeaderInfo, getReportDataAction, storeMeasure, resetListening}, dispatch);
 }
 
 const mapStateToProps = (state) => {
@@ -23,7 +23,7 @@ const mapStateToProps = (state) => {
 		top5lastMonth: getTop5lastMonth(state),
 		
 	    measures: getMeasures(state),
-		listeningRegistroData: isListeningRegistroData(state)
+		listeningReportData: isListeningReportData(state)
 	})
 }
 
