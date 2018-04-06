@@ -11,24 +11,28 @@ const { Option } = Select;
 class SelectList extends React.Component 
 {
 	
-options = ((list)	=> {
-	let phrase2 = [];
-	let key = 0;
-    for (var propt2 in list) phrase2.push(<Option key={key++} value={propt2}>{list[propt2]}</Option>)
-	return(phrase2);	
-})(this.props.list);
 
 
 
 defaultValue = this.props.defaultValue
 	render()
   {	
+  let options = ((list)	=> {
+	let phrase2 = [];
+	let key = 0;
+    for (var propt2 in list) phrase2.push(<Option key={key++} value={propt2}>{list[propt2]}</Option>)
+	return(phrase2);	
+})(this.props.list);
+	
+  const {onChange, value, ...otherProps } = this.props;
   return (<Select
+  
     defaultValue={this.defaultValue}
-    onChange={this.props.onChange}
-    value={this.props.value}
+    onChange={onChange}
+    value={value}
+    {...otherProps}
   >
-  {this.options}
+  {options}
   </Select>
   );
  }

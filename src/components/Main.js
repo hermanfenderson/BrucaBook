@@ -12,6 +12,7 @@ import ElencoRese from '../scenes/elencoRese';
 
 import GestioneBolla from '../scenes/bolla';
 import Resa from '../scenes/resa';
+import ResaLibera from '../scenes/resaLibera';
 
 import Inventario from '../scenes/inventario';
 import ElencoInventari from '../scenes/elencoInventari';
@@ -52,6 +53,7 @@ const Main= (props) =>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
     										<Route exact path='/rese/:anno/:mese' component={RequireAuth(ElencoRese)}/>
     								     <Route path='/resa/:anno/:mese/:id' component={RequireAuth(Resa)}/>
+    									<Route path='/resaLibera/:anno/:mese/:id' component={RequireAuth(ResaLibera)}/>
     									
 		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
 		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>

@@ -5,6 +5,8 @@ import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import CassaReducer, * as fromCassa from './cassa';
 import ResaReducer, * as fromResa from './resa';
+import ResaLiberaReducer, * as fromResaLibera from './resaLibera';
+
 import DashboardReducer, * as fromDashboard from './dashboard';
 
 
@@ -29,6 +31,7 @@ const rootReducer = combineReducers({
   bolla: BollaReducer,
   cassa: CassaReducer,
   resa: ResaReducer,
+  resaLibera: ResaLiberaReducer,
   dashboard: DashboardReducer,
   dettagliArticolo: DettagliArticoloReducer,
   elencoBolle: ElencoBolleReducer,
@@ -122,6 +125,17 @@ export const getPeriodResa = (state) => {return fromResa.getPeriod(state.resa)};
 export const getMatrixEAN = (state) => {return fromResa.getMatrixEAN(state.resa)};
 export const getHeaderEANResa = (state) => {return fromResa.getHeaderEAN(state.resa)};
 
+//Scene ResaLibera
+export const getRigheResaLibera = (state) => {return fromResaLibera.getItems(state.resaLibera)};
+export const getEditedRigaResaLibera = (state) => {return fromResaLibera.getEditedItem(state.resaLibera)};
+export const getTestataResaLibera = (state) => {return fromResaLibera.getTestataResa(state.resaLibera)};
+export const getShowCatalogModalResaLibera = (state) => {return fromResaLibera.getShowCatalogModal(state.resaLibera)};
+export const getTableHeightResaLibera = (state) => {return fromResaLibera.getTableHeight(state.resaLibera)};
+export const getTableScrollResaLibera = (state)  => {return fromResaLibera.getTableScroll(state.resaLibera)};
+export const getListeningTestataResaLibera = (state) => {return fromResaLibera.getListeningTestataResa(state.resaLibera)};
+export const getListeningItemResaLibera = (state) => {return fromResaLibera.getListeningItemResa(state.resaLibera)};
+export const isStaleTotaliResaLibera = (state) => {return fromResaLibera.isStaleTotali(state.resaLibera)};
+export const getMessageBufferResaLibera = (state) => {return fromResaLibera.getMessageBuffer(state.resaLibera)};
 
 
 //Scene Inventario

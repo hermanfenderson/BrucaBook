@@ -46,7 +46,7 @@ componentWillMount = () =>
       </WrappedForm.Group>
        <WrappedForm.Group>
       
-       <WrappedForm.SelectList formColumnLayout={{span: 4}} field='stato' label='Stato' list={{'aperta': 'aperta', 'chiusa': 'chiusa'}} defaultValue = 'aperta' />
+       <WrappedForm.SelectList formColumnLayout={{span: 4}} disabled={(this.props.editedResa.selectedItem!==null && this.props.editedResa.selectedItem.stato==='libera')} field='stato' label='Stato' list={(this.props.editedResa.selectedItem===null) ? {'aperta': 'aperta', 'chiusa': 'chiusa', 'libera': 'libera'} : {'aperta': 'aperta', 'chiusa': 'chiusa'}} defaultValue = 'aperta' />
        <WrappedForm.Button   type={'button'} formColumnLayout={{offset: 6, span:4}} itemStyle={{width:'90%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
         <WrappedForm.Button  type="primary" htmlType="submit" itemStyle={{width:'90%'}} formColumnLayout={{span:4}}>{submitLabel}</WrappedForm.Button>

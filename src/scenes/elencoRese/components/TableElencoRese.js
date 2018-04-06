@@ -84,6 +84,9 @@ class TableElencoRese extends Component
 		this.props.history.push('/resa/' + period2month(this.props.period) + '/' + row.key);
 	}
 
+   saveRow = (row) => {
+		this.props.saveResa(this.props.period, row.key);
+	}
     
     	render() { 
     	let props = {...this.props};
@@ -92,7 +95,7 @@ class TableElencoRese extends Component
     	delete props['deleteResa']; //Non la passo liscia...
     	delete props['setSelectedResa']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} saveRow={this.saveRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	

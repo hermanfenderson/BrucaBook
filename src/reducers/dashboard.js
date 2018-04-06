@@ -17,6 +17,7 @@ export default function dashboard(state = initialState, action) {
     
     case RESET_LISTENING_DASHBOARD: 
       return {...state, listening: false};
+      
      case GET_REPORT_DATA:
      	let reportData = action.payload.val();
      	let serieIncassi = action.payload.val().serieIncassi;

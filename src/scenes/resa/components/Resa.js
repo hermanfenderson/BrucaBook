@@ -8,6 +8,7 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
+import {Redirect} from 'react-router-dom';
 
 import { Row, Col, Spin} from 'antd'
 
@@ -94,8 +95,13 @@ render()
   	
   const isOpen = (this.props.testataResa && (this.props.testataResa.stato === 'aperta')) ? true : false;   
   const period = [this.props.match.params.anno, this.props.match.params.mese];
-  
- return (
+  if (this.props.testataResa && this.props.testataResa.stato ==='libera' ) 
+{
+const url = '/resaLibera/'+this.props.match.params.anno+'/'+this.props.match.params.mese+'/'+this.props.match.params.id;	
+ return(<Redirect to={url} />)
+}
+else return (
+
  
   <Spin spinning={!this.props.testataResa}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />

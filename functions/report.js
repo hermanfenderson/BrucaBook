@@ -1,4 +1,6 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+const moment = require('moment');
+
 const generateTop5thisYear = (matrixVendite, year) => {return matrixVendite.anno[year] ? firstX(topList(matrixVendite.anno[year].ean),5) : []};
 
 const generateTop5lastYear  = (matrixVendite, lastYear) => {return matrixVendite.anno[lastYear] ? firstX(topList(matrixVendite.anno[lastYear].ean),5) : [];}

@@ -1,5 +1,5 @@
 import TableElencoReseComponent from '../components/TableElencoRese'
-import {resaFA} from '../../../actions/elencoRese'
+import {resaFA, saveResa} from '../../../actions/elencoRese'
 
 import {getEditedResa, getElencoRese, getTableElencoReseHeight, getTableElencoReseScroll} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenResa, offListenResa, deleteResa, setSelectedResa, toggleTableScroll, setReadOnlyForm, resetTable }, dispatch);
+  return bindActionCreators({ listenResa, offListenResa, deleteResa, setSelectedResa, toggleTableScroll, setReadOnlyForm, resetTable, saveResa }, dispatch);
 }
 
 

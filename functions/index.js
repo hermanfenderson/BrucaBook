@@ -9,6 +9,8 @@ const moment = require('moment');
 
 const {generateTop5thisYear} = require('./report');
 const {generateTop5lastYear} = require('./report');
+const {generateTop5lastMonth} = require('./report');
+
 const {getMatrixVenditeFromRegistroData} = require('./report');
 const {generateSerieIncassi} = require('./report');
 const {generateSerieIncassiMesi} = require('./report');
