@@ -127,7 +127,7 @@ export default function catalog(state = initialState(), action) {
   
    case SUBMIT_EDITED_CATALOG_ITEM:
 	    //Posso sottomettere il form se lo stato della riga è valido
-			
+		console.log("Sono qui");	
 		if (state.editedItem.isValid)
 	    	{
 	        
@@ -170,7 +170,18 @@ export default function catalog(state = initialState(), action) {
 	    			newState = {...state, editedItem: tbcEditedCatalogItem};	
 	    	}
         break;
-  
+     case 'SHOW_CATALOG_FORM_ERRORS':
+     	{
+     	 let tbcEditedCatalogItem = {...state.editedItem};
+         let ceci = tbcEditedCatalogItem ;
+	    		
+     	 errMgmt(ceci, 'titolo','emptyField','Campo obbligatorio', ceci.values.titolo.length===0);
+		 errMgmt(ceci, 'autore','emptyField','Campo obbligatorio', ceci.values.autore.length===0);
+		 errMgmt(ceci, 'editore','emptyField','Campo obbligatorio', ceci.values.editore.length===0);
+         errMgmt(ceci, 'prezzoListino','invalidAmount', 'Importo (19.99)',((value) => {return !isAmount(value)})(ceci.values.prezzoListino));
+    	 newState = {...state, editedItem: ceci};
+     	}
+     	break;
      case FOUND_CATALOG_ITEM:
      case NOT_FOUND_CLOUD_ITEM:	
      case FOUND_CLOUD_ITEM:

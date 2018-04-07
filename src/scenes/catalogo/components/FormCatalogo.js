@@ -23,10 +23,10 @@ resetForm = () => {
   	return (
      <WrappedForm layout='horizontal' readOnlyForm={false} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
           <WrappedForm.Input field='ean' label='EAN' readOnly={this.props.readOnlyEAN} />
-        <WrappedForm.Input field='titolo' required={true} label='Titolo' />
-        <WrappedForm.Input field='autore' required={true} label='Autore'  />
-        <WrappedForm.Input field='editore' required={true}  label='Editore'/>
-        <WrappedForm.Input field='prezzoListino' required={true}  label='Listino'/>
+        <WrappedForm.Input field='titolo'  label='Titolo' />
+        <WrappedForm.Input field='autore'  label='Autore'  />
+        <WrappedForm.Input field='editore'  label='Editore'/>
+        <WrappedForm.Input field='prezzoListino'   label='Listino'/>
         <WrappedForm.SelectList field='iva' label='IVA' list={this.props.aliquoteIVA} defaultValue="a0"/>
          <WrappedForm.ImageUploader label='Copertina' field='imgFirebaseUrl' fullName={(this.props.editedCatalogItem.eanState ==='PARTIAL') ? this.props.saveGeneral ? 'images/books/'+this.props.editedCatalogItem.values.ean+'.jpg' : 'images/books/'+this.props.catena+'/'+this.props.libreria+'/'+this.props.editedCatalogItem.values.ean+'.jpg' : ''} />
         

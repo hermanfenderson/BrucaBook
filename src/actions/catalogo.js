@@ -1,5 +1,6 @@
 
 import {FormActions} from '../helpers/formActions';
+import {isValidEAN} from '../helpers/ean';
 
 export const SCENE = 'CATALOGO';
 
@@ -23,8 +24,9 @@ export const submitEditedCatalogItem = (isValid, item, scene, saveGeneral) => {
 		    {   item['prezzoListino'] = parseFloat(item['prezzoListino']).toFixed(2); //Formato corretto...
 		    	dispatch(catalogoFA.updateCatalogItem(item))
 		    	if (saveGeneral) dispatch(catalogoFA.updateGeneralCatalogItem(item))
-		    };
-
+		    }
+		  //Pezzaccia per far comparire gli errori...  
+         else if (isValidEAN(item.ean)) dispatch({type: 'SHOW_CATALOG_FORM_ERRORS'});
       dispatch({type: 'SUBMIT_EDITED_CATALOG_ITEM_'+scene, isValid:isValid, item:item});
       
       }

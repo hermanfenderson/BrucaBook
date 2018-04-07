@@ -184,7 +184,14 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
         
      case this.SUBMIT_EDITED_CATALOG_ITEM:
      	  //Se torno dal form sono sicuro che è completo...ma solo se il form è valido...
-      	  if (action.isValid) newState = {...state, editedItem: foundCompleteItem(state.editedItem, action), showCatalogModal : false};
+     	  if (action.isValid) newState = {...state, editedItem: foundCompleteItem(state.editedItem, action), showCatalogModal : false};
+          else if (isValidEAN(state.editedItem.values.ean)) 
+	    		     {
+	    		      //Mostro gli errori nel form...
+	    		      console.log(action);
+	    		      newState = {...state};
+	    		     }
+	    			
           else newState = state;
           break;
      
