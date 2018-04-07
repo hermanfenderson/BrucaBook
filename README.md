@@ -1,9 +1,12 @@
-BrucaBook V.0.9.18
+BrucaBook V.0.9.19
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.19
+* Cassa scrolla automaticamente a ultimo scontrino modificato...
+
 ### Versione 0.9.18
 * Patch nella funzione per il calcolo nel backend
 * Introdotta resa libera (non legata a una bolla)

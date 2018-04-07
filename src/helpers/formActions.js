@@ -58,6 +58,8 @@ this.RESET='RESET_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
+this.TABLE_SCROLL_BY_KEY = 'TABLE_SCROLL_BY_KEY'+scene;
+
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.FOCUS_SET = 'FOCUS_SET_'+scene;
 
@@ -429,6 +431,13 @@ this.toggleTableScroll = (toggle) => {
 	    toggle: toggle
 	  }  
 	}
+	
+this.setTableScrollByKey = (key) => {
+ return {
+	    type: this.TABLE_SCROLL_BY_KEY,
+	    key: key
+	  }  
+	}	
 
 this.resetTable = () => {
  return {

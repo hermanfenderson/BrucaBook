@@ -39,7 +39,7 @@ class Scontrino extends Component {
     	
     if (ReactDOM.findDOMNode(this.refs.testataCassa)) 	this.props.storeMeasure('testataCassaHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
     if (ReactDOM.findDOMNode(this.refs.formTestataScontrino)) 	this.props.storeMeasure('testataScontrinoHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
-    
+   
     	
  }
  

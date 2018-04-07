@@ -48,6 +48,8 @@ this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
+this.TABLE_SCROLL_BY_KEY = 'TOGGLE_TABLE_SCROLL_BY_KEY_'+scene;
+
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
 this.FOCUS_SET = 'FOCUS_SET_'+scene;
@@ -130,6 +132,9 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
     case this.TOGGLE_TABLE_SCROLL:
 		newState = {...state, tableScroll: action.toggle};
 		break;
+	 case this.TABLE_SCROLL_BY_KEY:
+		newState = {...state, tableScrollByKey: action.key};
+		break;	
 		
 	case this.SEARCH_CATALOG_ITEM:
     case this.SEARCH_CLOUD_ITEM:	

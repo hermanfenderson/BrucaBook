@@ -165,7 +165,7 @@ export default function catalog(state = initialState(), action) {
 	    				// updateEANErrors(cerb); //Serve???
 	    				}
 	    			}
-	    	         
+	    	        console.log(tbcEditedCatalogItem.errorMessages);
 	    	         //
 	    			newState = {...state, editedItem: tbcEditedCatalogItem};	
 	    	}

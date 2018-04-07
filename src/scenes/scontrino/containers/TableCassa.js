@@ -2,7 +2,7 @@ import TableCassaComponent from '../components/TableCassa'
 import {cassaFA} from '../../../actions/cassa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaCassa, getRigheCassa, getRigheCassaIndex, getTableHeightCassa, getTableScrollCassa, getListeningItemCassa} from '../../../reducers'
+import {getEditedRigaCassa, getRigheCassa, getRigheCassaIndex, getTableHeightCassa, getTableScrollCassa, getTableScrollByKeyCassa, getListeningItemCassa} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -12,6 +12,7 @@ const listenRigaCassa = cassaFA.listenItem;
 const offListenRigaCassa = cassaFA.offListenItem;
 const deleteRigaCassa = cassaFA.deleteItem;
 const toggleTableScroll = cassaFA.toggleTableScroll;
+const setTableScrollByKey = cassaFA.setTableScrollByKey;
 
 
 const mapStateToProps = (state) => {
@@ -20,13 +21,14 @@ const mapStateToProps = (state) => {
 	selectedItem: getEditedRigaCassa(state).selectedItem,
 	listeningItemCassa: getListeningItemCassa(state),
 	index: getRigheCassaIndex(state),
+	tableScrollByKey: getTableScrollByKeyCassa(state),
 	
 	})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight }, dispatch);
+  return bindActionCreators({listenRigaCassa, offListenRigaCassa, deleteRigaCassa, setSelectedRigaCassa, toggleTableScroll, setTableWindowHeight, setTableScrollByKey }, dispatch);
 }
 
 

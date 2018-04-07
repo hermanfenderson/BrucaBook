@@ -24,6 +24,13 @@ componentDidMount()
 	        this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
+	  if (this.props.tableScrollByKey)
+			{
+			this.nodeKey = 	ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('tabella-cassa-record-'+this.props.tableScrollByKey)[0];
+		    this.node.scrollTop = this.nodeKey.offsetTop; //Mi sposto nel padre della distanza tra la riga figlio e il padre!
+			this.props.setTableScrollByKey(null); //Resetto lo scroll...
+			
+			}
 		
  }
 	
@@ -42,8 +49,8 @@ actionRowRender = (cell, row) => {
  }
  
  rowClassName = (record,index) => {
-	if (record.tipo === 'scontrino') return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row' : 'ant-table-row ant-table-row-totale-cassa tabella-cassa-row');
-	else return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row' : 'ant-table-row  tabella-cassa-row');
+	if (record.tipo === 'scontrino') return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row tabella-cassa-record-'+record.key : 'ant-table-row ant-table-row-totale-cassa tabella-cassa-row tabella-cassa-record-'+record.key);
+	else return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row tabella-cassa-record-'+record.key : 'ant-table-row  tabella-cassa-row tabella-cassa-record-'+record.key);
  	
  } 
  

@@ -392,7 +392,7 @@ export default function cassa(state = initialState(), action) {
   //FACCIO OVERRIDE DEL REDUCER QUI...
   
    case ADDED_ITEM_CASSA:
-		 	newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa); 
+		 	newState = {...childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa), tableScrollByKey: action.payload.key}; 
 	    	break;
 	       
 	case DELETED_ITEM_CASSA:
@@ -400,11 +400,11 @@ export default function cassa(state = initialState(), action) {
 	    	break;
 	   
 	case CHANGED_ITEM_CASSA:
-		    newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa); 
+		    newState = {...childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa), tableScrollByKey: action.payload.key}; 
 	    	break;    
 	    	
     case ADDED_RIGASCONTRINO:
-		 	newState = subChildAdded(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+		 	newState = {...subChildAdded(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
 	    	break;
 	       
 	case DELETED_RIGASCONTRINO:
@@ -412,7 +412,7 @@ export default function cassa(state = initialState(), action) {
 	    	break;
 	   
 	case CHANGED_RIGASCONTRINO:
-			newState = subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+			newState = {...subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
 	    	break;    
 	    	
     default:
@@ -432,6 +432,8 @@ export default function cassa(state = initialState(), action) {
  export const getTestataCassa = (state) => {return state.testata};
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
+ 
  export const getMeasures = (state) => {return state.measures};
  export const getListeningTestataCassa = (state) => {return state.listeningTestata};
  export const getListeningItemCassa = (state) => {return state.listeningItem};
