@@ -14,6 +14,7 @@ class Dashboard extends Component {
 componentDidMount() {
     	this.props.setHeaderInfo('Dashboard');
     	if (!this.props.listeningReportData) this.props.getReportDataAction();
+    	if (!this.props.listeningMagazzino) this.props.listenMagazzino(""); //Ascolto da subito il magazzino....
    	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
    		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
    		this.props.storeMeasure('dashboardWidth', node.clientWidth);

@@ -33,6 +33,8 @@ import SelectBookstore from './SelectBookstore';
 import SelectList from './SelectList';
 import AutoCompleteList from './AutoCompleteList';
 import ImageUploaderWrapper from './ImageUploaderWrapper';
+import InputLookup from './InputLookup';
+
 
 import moment from 'moment';
 import 'moment/locale/it';
@@ -72,20 +74,22 @@ const FormButton =  (props) =>
 				
 const WrapGeneric = (props) =>
 				{ 
-					const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, ...otherProps} = props;
+					const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus,  ...otherProps} = props;
 					return(React.cloneElement(props.children, {...otherProps}));
 				}
 					
              	
   const InputDecorator = (InputComponent) => {return (props) => {
-  	     const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, disabled, ...otherProps} = props;
+  	     const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, lookupElement, disabled, ...otherProps} = props;
 	    const onChangeInput=(input) => {
 	    	//const value = input.target ? (('checked' in input.target) ? input.target.checked : input.target.value) : input;
 	    	const value = (input !==null) ? (input.target ? (input.target.type ==='checkbox' ? input.target.checked : input.target.value) : input) : null;
 	    	
 	    	onChange(field,value)
 	    };
-	      return(
+	    //Sporchissima!
+	    if (InputComponent === InputLookup) 
+	    return (
          <FormItem {...formItemLayout}
               	width={props.width} 
         		required={props.required}
@@ -95,12 +99,28 @@ const WrapGeneric = (props) =>
         		style={itemStyle}>
         	<InputComponent value={props.formValues[field]} 
         	       onChange={onChangeInput} 
-        	      
+        	       lookupElement={lookupElement}
         	       ref={input => { input && setFocus && setFocus(input,props.field)}}
         	       {...otherProps}
         	        disabled={props.readOnlyForm || props.readOnly || props.disabled}
         	       />
          </FormItem>)
+        else return (
+         <FormItem {...formItemLayout}
+              	width={props.width} 
+        		required={props.required}
+        		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
+        		help={props.errorMessages[props.field]}
+        		label={props.label}
+        		style={itemStyle}>
+        	<InputComponent value={props.formValues[field]} 
+        	       onChange={onChangeInput} 
+        	       ref={input => { input && setFocus && setFocus(input,props.field)}}
+        	       {...otherProps}
+        	        disabled={props.readOnlyForm || props.readOnly || props.disabled}
+        	       />
+         </FormItem>)
+         
          }
   }
 
@@ -126,6 +146,7 @@ class WrappedForm extends Component {
     static SelectList = InputDecorator(SelectList);
       static AutoCompleteList = InputDecorator(AutoCompleteList);
      static ImageUploader = InputDecorator(ImageUploaderWrapper);
+     static InputLookup = InputDecorator(InputLookup);
  
     static Button = FormButton;
     static GeneralError = GeneralError;
@@ -134,8 +155,7 @@ class WrappedForm extends Component {
     setFocus = (input, field) => {
     
     	if (this.props.willFocus === field)
-    		{  
-    			setTimeout(() => {
+    		{   setTimeout(() => {
     			if ((input.input) || !(input.hasOwnProperty('input'))) input.focus(); //Su suggerimento antd #8846
     				}, 0);
     			
@@ -149,6 +169,8 @@ class WrappedForm extends Component {
 	render ()
 	{  
    	return <Spin spinning={this.props.loading}>
+   	        	
+    
     		<Form className={this.props.formClass}
     			layout={this.props.layout}  
     			hideRequiredMark={this.props.hideRequiredMark}

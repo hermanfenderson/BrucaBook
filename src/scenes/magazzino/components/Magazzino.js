@@ -9,20 +9,20 @@ import { Row} from 'antd'
 
 class Magazzino extends Component {
 componentDidMount() {
-    	this.props.setHeaderInfo('Magazzino');
+    	if (!this.props.noHeader) this.props.setHeaderInfo('Magazzino'); //Per usare magazzino anche per la ricerca libri...
  }
  
   	
 render()
 {
-  return (
+ return (
  <div>	
       <Row>
       <FilterMagazzino filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
       <Row>
       
-         <TableMagazzino filters={this.props.filters}/>
+         <TableMagazzino noDetails={this.props.noDetails} filters={this.props.filters} selectedCallback={this.props.selectedCallback}/>
       </Row>
    
   </div>

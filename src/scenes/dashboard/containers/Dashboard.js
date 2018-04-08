@@ -5,12 +5,16 @@ import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYe
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
+import {magazzinoFA} from '../../../actions/magazzino'
 
+import {getListeningMagazzino} from '../../../reducers'
+//Ascolto qui magazzino... mi servirà in giro...
 
+const listenMagazzino = magazzinoFA.listenItem;
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setHeaderInfo, getReportDataAction, storeMeasure, resetListening}, dispatch);
+  return bindActionCreators({ setHeaderInfo, getReportDataAction, storeMeasure, resetListening, listenMagazzino}, dispatch);
 }
 
 const mapStateToProps = (state) => {
@@ -23,7 +27,8 @@ const mapStateToProps = (state) => {
 		top5lastMonth: getTop5lastMonth(state),
 		
 	    measures: getMeasures(state),
-		listeningReportData: isListeningReportData(state)
+		listeningReportData: isListeningReportData(state),
+		listeningMagazzino: getListeningMagazzino(state)
 	})
 }
 

@@ -56,7 +56,20 @@ class TableDettagliArticolo extends Component
     {
 
 detailRow = (row) => {
-    	this.props.history.push('/'+row.tipo+'/'+row.id);
+	     let tipo = "";
+	     switch(row.tipo) {
+					 case 'scontrini':
+    					tipo = 'scontrino'; break;
+					 case 'bolle':
+    				    tipo = 'bolla'; break;
+    				case 'rese':
+    				     tipo = 'resa'; break;
+    				 case 'inventari':
+    				       tipo = 'inventario'; break;
+    				 default:
+    					tipo = ''; break;
+	    		}
+    	this.props.history.push('/'+tipo+'/'+row.id);
     }
     
     	render() { 
