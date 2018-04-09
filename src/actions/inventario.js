@@ -17,7 +17,7 @@ export const DELETED_REGISTRO_EAN = 'DELETED_REGISTRO_EAN';
 function preparaItem(riga)
    {
       riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
-      riga['prezzoUnitario'] = parseFloat(riga['prezzoUnitario']).toFixed(2);
+      riga['prezzoListino'] = parseFloat(riga['prezzoListino']).toFixed(2);
    }
 
    
@@ -131,7 +131,7 @@ return function(dispatch, getState) {
 }
 
  rigaInventarioFA.aggiungiItem = (params, valori) => {
-  const typeAdd =  rigaInventarioFA.ADD_ITEM;
+ const typeAdd =  rigaInventarioFA.ADD_ITEM;
   var nuovoItem = {...valori};
   const itemsUrl = rigaInventarioFA.itemsUrl;
   const stockMessageQueue = rigaInventarioFA.stockMessageQueue;
@@ -144,8 +144,7 @@ return function(dispatch, getState) {
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
    var ref; 
     ref = Firebase.database().ref(urlFactory(getState,itemsUrl, params, valori.ean));
-     console.log(nuovoItem);
-
+    
     ref.set(nuovoItem);
        
    dispatch(
@@ -203,8 +202,7 @@ const typeDelete = rigaInventarioFA.DELETE_ITEM;
 const itemsUrl = rigaInventarioFA.itemsUrl;
 const stockMessageQueue = rigaInventarioFA.stockMessageQueue;
  const stockMessageQueueListener = rigaInventarioFA.stockMessageQueueListener;
-  
-
+ 
   return function(dispatch, getState) {
     Firebase.database().ref(urlFactory(getState,itemsUrl,params, itemId)).remove();
       dispatch(
@@ -217,7 +215,7 @@ const stockMessageQueue = rigaInventarioFA.stockMessageQueue;
    const idInventario = params;
 
     let updatedTotali = {righe: getState().inventario.itemsArray.length, lastActionKey: itemId};
-   Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+    Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
 
     };
   }

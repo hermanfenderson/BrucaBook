@@ -168,17 +168,21 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 export function childDeleted(payload, state, dataArrayName, dataIndexName)
 {  //Creo un array e un indice per copia degli attuali
  
-   var dataArrayNew = state[dataArrayName].slice();
+   var dataArrayNew = [...state[dataArrayName]];
    var dataIndexNew = {...(state[dataIndexName])};
    //Cerco nell'indice la riga nell'array da cancellare  
    var index = dataIndexNew[payload.key];
-   //Antirimbalzo...
+   console.log(state[dataArrayName]);
+   console.log(dataArrayNew);
+  //Antirimbalzo...
    if (index>=0) 
 		{
 	  //Cancello la riga nell'indice
-	   delete dataIndexNew[payload.key]
+	   delete dataIndexNew[payload.key];
+	   
 	  //Cancello la rigna nell'array
 	   dataArrayNew.splice(index,1);
+	   console.log(dataArrayNew);
 	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
 	   for(var propt in dataIndexNew){
 	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;
@@ -186,7 +190,7 @@ export function childDeleted(payload, state, dataArrayName, dataIndexName)
 	   //Aggiorno lo stato passando nuovo array e nuovo indice   
 	   let newState = {...state};
 	   newState[dataArrayName] = dataArrayNew;
-	   newState[dataIndexName] = dataIndexNew;                    
+	   newState[dataIndexName] = dataIndexNew;  
 	   return newState;
 	   }
 	else return {...state};

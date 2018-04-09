@@ -27,7 +27,7 @@ componentDidMount()
 	  if (this.props.tableScrollByKey)
 			{
 			this.nodeKey = 	ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('tabella-cassa-record-'+this.props.tableScrollByKey)[0];
-		    this.node.scrollTop = this.nodeKey.offsetTop; //Mi sposto nel padre della distanza tra la riga figlio e il padre!
+		    if (this.nodeKey) this.node.scrollTop = this.nodeKey.offsetTop; //Mi sposto nel padre della distanza tra la riga figlio e il padre!
 			this.props.setTableScrollByKey(null); //Resetto lo scroll...
 			
 			}

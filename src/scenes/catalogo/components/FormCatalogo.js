@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
 
+
 class FormCatalogo extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
 onChange = (name, value) => {

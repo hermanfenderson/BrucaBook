@@ -69,7 +69,7 @@ constructor(props) {
         
     	value={inputValue}
     	addonAfter={<Icon type="search"
-      onClick={value => {let newState = {...this.state, showModal:true}; this.setState(newState); }} />}
+      onClick={value => {if (!this.props.disabled) {let newState = {...this.state, showModal:true}; this.setState(newState); }}} />}
     	> 
     	
     

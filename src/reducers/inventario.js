@@ -158,7 +158,8 @@ export default function inventario(state = initialState(), action) {
    	    
    	 case rigaInventarioR.ADDED_ITEM:
 		 	{
-		    newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
+		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;
+		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
 		 	//Se ho un dato migliore per stock lo metto qui...
 		 	let ean = action.payload.val().ean;
 		 	let key = action.payload.key;
@@ -177,7 +178,7 @@ export default function inventario(state = initialState(), action) {
 		 		
 	    	break;     
 		case rigaInventarioR.DELETED_ITEM:
-	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+			newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
 	    
 	    	break;
 	   

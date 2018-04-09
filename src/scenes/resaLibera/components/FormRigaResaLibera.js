@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
+import Magazzino from '../../magazzino'
 
 class FormRigaResaLibera extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -39,7 +40,7 @@ resetForm = () => {
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.Input field='ean' required={true} label='EAN' formColumnLayout={{span:5}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
+        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>}  field='ean' required={true} label='EAN' formColumnLayout={{span:5}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:10}} itemStyle={{marginRight: 10}} disabled/>
         <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:6}} itemStyle={{marginRight: 10}} disabled/>
         <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{span:3}}  disabled/>

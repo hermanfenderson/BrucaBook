@@ -1,9 +1,15 @@
-BrucaBook V.0.9.21
+BrucaBook V.0.9.22
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.22
+* Bug fixing crash in caso di scontrino cancellato durante il caricamento (#240)
+* Ricerca inserita in tutte le componenti del software (tranne catalogo)
+* Bug fixing: inventario rimesso a posto (righe doppie in fase di visualizzazione e calcolo totali sbagliato)
+* Bug fixing: lente di ingrandimento disabilitata se campo EAN disabilitato
+
 ### Versione 0.9.21
 * Aggiornato React a versione 16.3
 * Aggiornato Antd a versione 3.4

@@ -44,8 +44,7 @@ class TableInventario extends Component
 	
 	
 	deleteRow = (row) => {
-	
-    	this.props.deleteRigaInventario(this.props.idInventario,row.key,row);
+	   this.props.deleteRigaInventario(this.props.idInventario,row.key,row);
 	}
 	
 	editRow = (row) => {
@@ -62,8 +61,7 @@ class TableInventario extends Component
     }
     
     	render() { 
-    
-    	let props = {...this.props};
+        let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
