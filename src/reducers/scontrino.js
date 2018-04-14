@@ -57,7 +57,10 @@ function pricesMgmt(changedEditedRigaBolla, name)
 	const manSconto = changedEditedRigaBolla.values['manSconto'];
 	if (name !== 'prezzoUnitario' && sconto>=0)
 		{
-		if (manSconto) changedEditedRigaBolla.values['prezzoUnitario'] = prezzoListino;
+		if (manSconto) 
+			{changedEditedRigaBolla.values['prezzoUnitario'] = prezzoListino;
+			changedEditedRigaBolla.values['sconto'] = '';
+			}
 		else changedEditedRigaBolla.values['prezzoUnitario'] = discountPrice(prezzoListino, sconto);
 		}
 	const prezzoUnitario = changedEditedRigaBolla.values['prezzoUnitario'];

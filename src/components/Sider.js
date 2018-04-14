@@ -26,7 +26,8 @@ class Sider extends React.Component {
 			case 'userMgmt?mode=configuration': link='/userMgmt?mode=configuration'; break;
 			case '#signout': link='/#signout'; this.props.signOutUser();break;
 			case 'version': link='/version';break;
-			
+				case 'help': link='/help';break;
+		
 			default: break;
 		}
         this.props.setMenuSelectedKeys([selection.key]);
@@ -91,8 +92,12 @@ class Sider extends React.Component {
               <span>Dashboard</span>
             </Menu.Item>
 	          <Menu.Item key="version">
-	              <Icon type="info-circle" />
+	              <Icon type="info-circle-o" />
 	              <span>Versione</span>
+	            </Menu.Item>
+	            <Menu.Item key="help">
+	              <Icon type="question-circle-o" />
+	              <span>Aiuto</span>
 	            </Menu.Item>
           </Menu>
          </div> 

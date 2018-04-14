@@ -1,6 +1,6 @@
 {
   "name": "BrucaBook",
-  "version": "0.9.22",
+  "version": "0.9.23",
   "private": true,
   "devDependencies": {
     "babel-plugin-import": "^1.6.2",
@@ -22,6 +22,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.0.14",
     "react-slick": "^0.16.0",
+    "react-youtube": "^7.5.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",
     "redux-persist": "^4.10.2",

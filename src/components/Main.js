@@ -21,6 +21,7 @@ import ReadmeViewer from '../scenes/readmeViewer';
 import Fornitori from '../scenes/fornitori';
 import Dashboard from '../scenes/dashboard';
 import Magazzino from '../scenes/magazzino';
+import Help from '../scenes/help';
 
 
 //import GestioneScontrino from '../containers/GestioneScontrino';
@@ -66,6 +67,8 @@ const Main= (props) =>
     					      		
     					      		
     					      			<Route exact path='/version' component={RequireAuth(ReadmeViewer)}/>
+		        					 
+    					      			<Route exact path='/help' component={Help}/>
 		        					   
 						    		
 						            </Switch>

@@ -36,7 +36,7 @@ handleCancel = () =>
             <Button key="back" onClick={this.handleCancel}>Chiudi</Button>,
             ]} visible={this.props.showModal} onCancel={this.handleCancel}>
   	<ReactMarkdown skipHtml={true} source={this.props.readme} />
- </Modal>
+  </Modal>
       ) : (
         <Redirect to='/' />
       )}
