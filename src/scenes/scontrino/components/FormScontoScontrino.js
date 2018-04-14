@@ -51,12 +51,6 @@ onSubmit = (e) => {
         
         <WrappedForm.Button  icon='edit' formColumnLayout={{span:7}} type="primary" htmlType="submit" />
         </WrappedForm.Group>
-          <WrappedForm.Group formGroupLayout={{gutter:0}}>
-       <WrappedForm.Input formColumnLayout={{span:7}} field='sconto'  />
-        <WrappedForm.Button  formColumnLayout={{span:14}} type="primary" htmlType="submit">Sconto </WrappedForm.Button>
-       
-        </WrappedForm.Group>
-       
        </WrappedForm>
     )
   }

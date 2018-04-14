@@ -1,9 +1,12 @@
-BrucaBook V.0.9.23
+BrucaBook V.0.9.24
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.24
+* Sconto in testata scontrino
+
 ### Versione 0.9.23
 * Sconto manuale in scontrino azzera lo sconto percentuale
 * Video youtube inseriti nel menu aiuto

@@ -2,9 +2,8 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const cors = require('cors')({
-  origin: true,
-});
+
+
 const moment = require('moment');
 
 const {generateTop5thisYear} = require('./report');
@@ -46,19 +45,28 @@ function areEqualShallow(a, b) {
 
 
 admin.initializeApp();
+/*
+exports.sample = functions.https.onRequest((req, res) => {
+  cors(req, res, () => {
+    res.send('Passed.');
+  });
+});
+*/
+const cors = require('cors')({origin: true});
 
 
 exports.report = functions.https.onRequest((req, res) => {
-let req2 = req;
-let catena = req2.query.catena;
-let libreria = req2.query.libreria;
 
 cors(req, res, () => {
+let catena = req.query.catena;
+let libreria = req.query.libreria;
+
  let urlSource = catena + '/' + libreria + '/registroData'
  let urlDest = catena + '/' + libreria + '/report/bulk';
  admin.database().ref(urlDest).remove();
-								 
-  res.status(200).send(`<!doctype html>
+  res.send('Passed.');    							 
+  /*
+  res.send(`<!doctype html>
     <head>
       <title>Report</title>
     </head>
@@ -66,6 +74,8 @@ cors(req, res, () => {
       OK
     </body>
   </html>`);
+  */
+  
   
  admin.database().ref(urlSource).once("value").then(function(snapshot)
 								{   let year = moment().format('YYYY');
@@ -525,6 +535,8 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
             {
              let oldTot = change.before.child('totali');
             let newTot = change.after.child('totali');
+            let oldSconto = change.before.child('sconto').val();
+            let newSconto = change.after.child('sconto').val();
             
             if (!areEqualShallow(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
             {	
@@ -539,13 +551,28 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
 			    delete values.changedBy;
 			    delete values.changedAt;
 			    delete values.key;
+			    delete values.sconto; //Non devo persistere lo sconto se non è cambiato...
 			    values.data = values.dataCassa;
 				console.info("Aggiorno scontrino "+key);
 				const ref = change.after.ref.parent.parent.parent.parent.parent.child('scontrini').child(anno).child(mese).child(cassa).child(key);
 				ref.once('value', function(snapshot) {
 					snapshot.forEach(function(childSnapshot) 
 						{
-				    	childSnapshot.ref.update(values);
+					    delete values.sconto;
+					    delete values.prezzoUnitario;
+					    delete values.prezzoTotale;
+						if (newSconto !== oldSconto && !childSnapshot.val().manSconto) //Modifico solo le righe con manSconto falso
+							{
+								let prezzoListino = childSnapshot.val().prezzoListino;
+								let pezzi = childSnapshot.val().pezzi;
+								
+								let prezzoUnitario = ((1 - newSconto/100) * prezzoListino).toFixed(2);
+								let prezzoTotale = (pezzi * prezzoUnitario).toFixed(2);
+								values.sconto = newSconto;
+								values.prezzoUnitario = prezzoUnitario;
+								values.prezzoTotale = prezzoTotale;
+							}
+						childSnapshot.ref.update(values);
 	    				})
 					})
               }	

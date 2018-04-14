@@ -6,11 +6,12 @@ import WrappedTable from '../../../components/WrappedTable'
 
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '145px'},
-                {dataField: 'titolo', label: 'Titolo', width: '355px'},
-			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '70px'},
+const header = [{dataField: 'ean', label: 'EAN', width: '165px'},
+                {dataField: 'titolo', label: 'Titolo', width: '290px'},
+			    {dataField: 'prezzoUnitario', label: 'Eur', width: '70px'},
 			    {dataField: 'pezzi', label: 'Q.tà', width: '60px'},
-			     {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
+			      {dataField: 'sconto', label: 'Sc.', width: '60px'},
+			     {dataField: 'prezzoTotale', label: 'Tot.', width: '70px'}
 			   ];
 var currentListenedIdScontrino = null;
     
