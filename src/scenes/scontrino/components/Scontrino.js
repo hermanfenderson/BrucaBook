@@ -191,7 +191,7 @@ return (
 	   
 	</Row>  
 	
-       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '250px'}}>
+       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '200px'}}>
     		<Col span={5}>
 
 				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />

@@ -3,7 +3,7 @@ import {STORE_MEASURE} from '../actions';
 import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO} from '../actions/cassa';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
-import {isPositiveInteger} from '../helpers/validators'
+import {isPositiveInteger, isPercentage} from '../helpers/validators'
 import moment from 'moment';
 
 const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
@@ -351,6 +351,7 @@ function transformAndValidateEditedRigaCassa(cei, name, value)
     cei.errorMessages = {};
     errMgmt(cei, 'oraScontrino','invalidTime','Ora non valida',  (!cei.values.oraScontrino.isValid()));
     errMgmt(cei, 'numero','notPositive','Numero > 0',  (!isPositiveInteger(cei.values.numero)));
+   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto));
   
   	
     //Se ho anche solo un errore... sono svalido.

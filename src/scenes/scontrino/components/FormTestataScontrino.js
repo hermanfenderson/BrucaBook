@@ -29,6 +29,7 @@ onSubmit = (e) => {
     params.push(this.props.cassa);
     params.push(this.props.scontrino);
     this.props.submitEditedCassa(this.props.editedCassa.isValid, this.props.editedCassa.selectedItem, params, values); //Per sapere cosa fare... dopo
+    if (this.props.editedCassa.isValid) this.props.setSconto(params,values.sconto,this.props.righeScontrino);
   }
  
 
@@ -41,7 +42,6 @@ onSubmit = (e) => {
   	const errorMessages = this.props.editedCassa.errorMessages;
   	const willFocus = this.props.editedCassa.willFocus;
   	const loading = this.props.editedCassa.loading;
-  	
   	    
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>

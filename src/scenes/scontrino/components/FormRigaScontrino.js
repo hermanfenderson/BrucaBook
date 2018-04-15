@@ -17,6 +17,7 @@ onSubmit = (e) => {
     delete valuesTestata.changedBy;
     delete valuesTestata.changedAt;
     delete valuesTestata.key;
+    delete valuesTestata.sconto;
 	valuesTestata.data = valuesTestata.dataCassa;
     const values =  {...this.props.editedRigaScontrino.values, ...valuesTestata};
     let params = [...this.props.period];

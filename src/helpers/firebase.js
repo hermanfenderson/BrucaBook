@@ -172,9 +172,7 @@ export function childDeleted(payload, state, dataArrayName, dataIndexName)
    var dataIndexNew = {...(state[dataIndexName])};
    //Cerco nell'indice la riga nell'array da cancellare  
    var index = dataIndexNew[payload.key];
-   console.log(state[dataArrayName]);
-   console.log(dataArrayNew);
-  //Antirimbalzo...
+   //Antirimbalzo...
    if (index>=0) 
 		{
 	  //Cancello la riga nell'indice
@@ -182,7 +180,6 @@ export function childDeleted(payload, state, dataArrayName, dataIndexName)
 	   
 	  //Cancello la rigna nell'array
 	   dataArrayNew.splice(index,1);
-	   console.log(dataArrayNew);
 	  //Aggiorno l'indice decrementando tutti i puntatori maggiori della posizione eliminata...
 	   for(var propt in dataIndexNew){
 	          if (dataIndexNew[propt] > index) dataIndexNew[propt]--;

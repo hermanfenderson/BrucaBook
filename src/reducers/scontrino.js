@@ -2,6 +2,7 @@
 
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
+import {SET_SCONTO_SCONTRINO} from '../actions/scontrino';
 
 import {isAmount, isNotZeroInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -31,7 +32,7 @@ const editedItemInitialState = () => {
 const initialState = () => {
     const eiis = editedItemInitialState();
     
-	return initialStateHelper(eiis,{});
+	return initialStateHelper(eiis,{defaultSconto: ''});
     }
     
 
@@ -165,7 +166,39 @@ export default function scontrino(state = initialState(), action) {
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaScontrinoHeight'] -130;
    	    newState = {...state, tableHeight: height};
         break;
-  	
+  	case SET_SCONTO_SCONTRINO: 
+  		newState = {...state, defaultSconto: action.sconto};
+  		break;
+  	case scontrinoR.SUBMIT_EDITED_ITEM:
+  		newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
+  		//Forzo qui lo stato dello sconto al valore di default se ho una form valida (e quindi un campo pulito)
+  		if (newState.editedItem.eanState === 'BLANK') 
+  			{   let cei = editedItemCopy(newState.editedItem);
+		        cei.values.sconto = newState.defaultSconto;
+  				newState = {...newState, editedItem: cei};
+  			}	
+  		break;
+    case scontrinoR.TESTATA_CHANGED:
+  		newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
+  		//Forzo qui lo stato dello sconto al valore di default 
+  		if (action.payload && action.payload.sconto)
+  			{
+	  		let defaultSconto = action.payload.sconto;
+	  		let cei = editedItemCopy(newState.editedItem);
+			cei.values.sconto = defaultSconto;
+			if (cei.values['prezzoListino'] > 0) pricesMgmt(cei, 'sconto');
+	  	    newState = {...newState, editedItem: cei, defaultSconto: defaultSconto};
+  			}
+	  	break;
+    case scontrinoR.RESET_EDITED_ITEM:
+    	{
+  		newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
+  	  	let cei = editedItemCopy(newState.editedItem);
+		cei.values.sconto = newState.defaultSconto;
+	    newState = {...newState, editedItem: cei};
+	    console.log(newState);
+    	}
+  	    break;
     default:
         newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
         //newState =  state;

@@ -205,64 +205,44 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
         	 }
            );
 
-exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
+exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}/{idItem}')
     .onWrite((change, context) => 
             {
+             //Da riscrivere....
              const key = context.params.idScontrino;	
              const cassa = context.params.idCassa;
              const anno = context.params.anno;
              const mese = context.params.mese;
-			
+			 const idItem = context.params.idItem;
             var righeSnapshot = change;
-            var idItem = null;	
-           	
-            const righe = change.after.val();
             
-        	var totalePezzi = 0.0;
+            const refScontrino = change.after.ref.parent;
+            var totalePezzi = 0.0;
 			var totaleImporto = 0.0;
-		  	for(var propt in righe)
-		  		{
-		  		let newObj = righeSnapshot.after.child(propt).val();
-		  		let oldObj = righeSnapshot.before.child(propt).val();
-		  		if (!areEqualShallow(newObj, oldObj)) idItem = propt; //Prendo la riga cambiata...	
-		  		
-			   
-			    totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
-			    totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-				}
-			//Se non la ho....  è una riga cancellata...
-			if (!idItem)
-				{
-				var oldRighe=righeSnapshot.before.val();
-				for (let propt in oldRighe) 
-							{
-							if (righe) 
-								{if (!righe[propt]) 
-									{idItem = propt; //prendo la riga cancellata
-									break;
-									}
-								}	
-							else	
-								{
-									idItem = propt; //prendo l'ultima rimasta nel passato
-									break;
-								}
-							}		
-				}
-			const totali = {'pezzi' : totalePezzi, 
-			'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem}; 
-			const ref = change.after.ref.parent.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).child(key);
-			if (totalePezzi > 0) ref.child('totali').set(totali); //Per non perdere tempo...
-			//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
-			else 
-				{
-					ref.once("value")
-						.then(function(snapshot) {
-							console.log(snapshot.val());
-		    				var notEmpty = snapshot.hasChildren(); 
-		    				if (notEmpty) ref.child('totali').set(totali);
-							 });
-		    		}
+		  	
+            refScontrino.transaction(function(righe) {
+            	   	for(var propt in righe)
+		    			{
+		    			totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
+	    				totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+		    			}
+		    		const totali = {'pezzi' : totalePezzi, 
+						'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem}; 
+					const ref = change.after.ref.parent.parent.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).child(key);
+					if (totalePezzi > 0) ref.child('totali').set(totali); //Per non perdere tempo...
+					//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
+					else 
+						{
+							ref.once("value")
+								.then(function(snapshot) {
+									var notEmpty = snapshot.hasChildren(); 
+				    				if (notEmpty) ref.child('totali').set(totali);
+									 });
+				    		}
+		    		return righe;
+					});
+            
+        
            return true;	      
                 }	
         	   
@@ -558,6 +538,7 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
 				ref.once('value', function(snapshot) {
 					snapshot.forEach(function(childSnapshot) 
 						{
+						/* PASSATO SUL FRONT-END	
 					    delete values.sconto;
 					    delete values.prezzoUnitario;
 					    delete values.prezzoTotale;
@@ -572,6 +553,7 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
 								values.prezzoUnitario = prezzoUnitario;
 								values.prezzoTotale = prezzoTotale;
 							}
+						*/	
 						childSnapshot.ref.update(values);
 	    				})
 					})

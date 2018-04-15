@@ -88,9 +88,18 @@ const WrapGeneric = (props) =>
 	    	onChange(field,value)
 	    };
 	    //Sporchissima!
-	    if (InputComponent === InputLookup) 
-	    return (
-         <FormItem {...formItemLayout}
+	    let inputProps = 
+				{value: props.formValues[field],
+					 onChange: onChangeInput, 
+        	       ref: input => { input && setFocus && setFocus(input,props.field)},
+        	       disabled: (props.readOnlyForm || props.readOnly || props.disabled),
+				};
+		inputProps = {...inputProps, ...otherProps};
+		
+	    if (InputComponent === InputLookup) inputProps.lookupElement = lookupElement;
+	    if (InputComponent === Checkbox) inputProps.checked = inputProps.value;
+	   /* 
+	    <FormItem {...formItemLayout}
               	width={props.width} 
         		required={props.required}
         		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
@@ -118,6 +127,18 @@ const WrapGeneric = (props) =>
         	       ref={input => { input && setFocus && setFocus(input,props.field)}}
         	       {...otherProps}
         	        disabled={props.readOnlyForm || props.readOnly || props.disabled}
+        	       />
+         </FormItem>
+         */
+	    return (
+         <FormItem {...formItemLayout}
+              	width={props.width} 
+        		required={props.required}
+        		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
+        		help={props.errorMessages[props.field]}
+        		label={props.label}
+        		style={itemStyle}>
+        	<InputComponent {...inputProps}
         	       />
          </FormItem>)
          

@@ -1,6 +1,8 @@
 import FormTestataScontrinoComponent from '../components/FormTestataScontrino'
 import {cassaFA} from '../../../actions/cassa'
-import {getEditedRigaCassa, getRigheCassa} from '../../../reducers'
+import {setSconto} from '../../../actions/scontrino'
+
+import {getEditedRigaCassa, getRigheCassa, getRigheScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -11,12 +13,12 @@ const focusSet = cassaFA.focusSet;
 
 //Passo tutti i dati per passare la key dello scontrino se già esiste e swappare...
 const mapStateToProps = (state) => { 
-	return ({editedCassa: getEditedRigaCassa(state), data: getRigheCassa(state)})
+	return ({editedCassa: getEditedRigaCassa(state), data: getRigheCassa(state), righeScontrino: getRigheScontrino(state)})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeEditedCassa, submitEditedCassa, focusSet }, dispatch);
+  return bindActionCreators({ changeEditedCassa, submitEditedCassa, focusSet, setSconto }, dispatch);
 }
 
 
