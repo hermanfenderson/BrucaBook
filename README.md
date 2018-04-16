@@ -1,9 +1,14 @@
-BrucaBook V.0.9.25
+BrucaBook V.0.9.26
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.26
+* Calcolo totali "anticipato" in locale (continua a comandare il calcolo sul server) per scontrino e cassa
+* Generalizzata la funzionalità di calcolo nell'helper
+* Sanato un problema del calcolo totali scontrino
+
 ### Versione 0.9.25
 * Sconto in testata scontrino (improvement): ora con calcolo sul front-end (molto più veloce) e memorizzazione del default sconto per righe successive
 

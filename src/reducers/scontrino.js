@@ -23,6 +23,20 @@ const editedRigaBollaValuesInitialState =
 	};
 	
 	
+const calcolaTotali = (state) =>
+{
+	let totalePezzi = 0;
+	let totaleImporto = 0.00;
+	let righe = state.itemsArray;
+	for (let propt=0; propt<righe.length; propt++)
+		{	
+			totalePezzi = parseInt(righe[propt].pezzi, 10) + totalePezzi;
+	    	totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+		}
+	const totali = {'pezzi' : totalePezzi, 
+						'prezzoTotale' : totaleImporto.toFixed(2)}; 
+	return ({...state, totali: totali});				
+};
 
 const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} ));
@@ -32,7 +46,7 @@ const editedItemInitialState = () => {
 const initialState = () => {
     const eiis = editedItemInitialState();
     
-	return initialStateHelper(eiis,{defaultSconto: ''});
+	return initialStateHelper(eiis,{defaultSconto: '', totali: {pezzi: 0, prezzoTotale: 0.00}});
     }
     
 
@@ -200,7 +214,7 @@ export default function scontrino(state = initialState(), action) {
     	}
   	    break;
     default:
-        newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
+        newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino, calcolaTotali);
         //newState =  state;
     	break;
    

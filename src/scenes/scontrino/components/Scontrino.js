@@ -138,7 +138,7 @@ return (
    
     </Row>
     <Row>
-    	<TestataCassa filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa}/>
+    	<TestataCassa filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa} totaliCassa={this.props.totaliCassa}/>
 	
     </Row>
 	
@@ -167,7 +167,7 @@ return (
 			
     	</Row>
     	<Row>
-			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino}/>
+			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino} totaliScontrino={this.props.totaliScontrino}/>
 		</Row>
 		<Row>
 			<FormCalcoloResto testataScontrino={this.props.testataScontrino}/>

@@ -217,10 +217,11 @@ exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scon
             var righeSnapshot = change;
             
             const refScontrino = change.after.ref.parent;
-            var totalePezzi = 0.0;
-			var totaleImporto = 0.0;
-		  	
+              	
             refScontrino.transaction(function(righe) {
+            	    var totalePezzi = 0.0;
+					var totaleImporto = 0.0;
+	
             	   	for(var propt in righe)
 		    			{
 		    			totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
@@ -513,12 +514,12 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
  exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
     .onUpdate((change, context) => 
             {
-             let oldTot = change.before.child('totali');
-            let newTot = change.after.child('totali');
+             let oldTot = change.before.child('totali').val();
+            let newTot = change.after.child('totali').val();
             let oldSconto = change.before.child('sconto').val();
             let newSconto = change.after.child('sconto').val();
             
-            if (!areEqualShallow(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
+            if ((oldSconto === newSconto) && (areEqualShallow(oldTot, newTot))) //Per discernere cambiamenti genuini in testata
             {	
 	            const key = context.params.idScontrino;	
 	            const anno = context.params.anno;
@@ -538,22 +539,6 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
 				ref.once('value', function(snapshot) {
 					snapshot.forEach(function(childSnapshot) 
 						{
-						/* PASSATO SUL FRONT-END	
-					    delete values.sconto;
-					    delete values.prezzoUnitario;
-					    delete values.prezzoTotale;
-						if (newSconto !== oldSconto && !childSnapshot.val().manSconto) //Modifico solo le righe con manSconto falso
-							{
-								let prezzoListino = childSnapshot.val().prezzoListino;
-								let pezzi = childSnapshot.val().pezzi;
-								
-								let prezzoUnitario = ((1 - newSconto/100) * prezzoListino).toFixed(2);
-								let prezzoTotale = (pezzi * prezzoUnitario).toFixed(2);
-								values.sconto = newSconto;
-								values.prezzoUnitario = prezzoUnitario;
-								values.prezzoTotale = prezzoTotale;
-							}
-						*/	
 						childSnapshot.ref.update(values);
 	    				})
 					})

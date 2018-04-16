@@ -9,18 +9,16 @@ onChange = (field, value) => {this.props.setFilter(field,value)}
 	
 render()
     {
-    const totali = this.props.testataCassa ? this.props.testataCassa.totali : null;
+    const totali = (this.props.testataCassa && !this.props.staleTotaliCassa) ? this.props.testataCassa.totali : this.props.totaliCassa;
     	 if (totali) return(
 		  
 			<div>
 		
-			<Spin spinning={this.props.staleTotaliCassa}>	
 			
 			<Row> Totale cassa: {totali.prezzoTotale} </Row>
 			<Row> Scontrini: {totali.scontrini} </Row>
 			<Row> Copie: {totali.pezzi} </Row>
 				
-			</Spin>
 				<WrappedForm  onChange={this.onChange} loading={false} formValues={this.props.filters} errorMessages={{}}>
         			 <WrappedForm.Group formGroupLayout={{gutter:0}}>
     					<WrappedForm.Input placeholder='filtra titolo' field='titolo' formColumnLayout={{span:20}} itemStyle={{marginRight: 10}}/>
@@ -32,7 +30,7 @@ render()
 			</div>
 			
 			)
-    	 else return   <Spin spinning={this.props.staleTotaliCassa}>
+    	 else return   <Spin spinning={true}>
     	     
     	 </Spin>
     }		

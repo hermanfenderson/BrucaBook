@@ -20,6 +20,42 @@ const ADD_ITEM_SCONTRINO = 'ADD_ITEM_SCONTRINO';
 const CHANGE_ITEM_SCONTRINO= 'CHANGE_ITEM_SCONTRINO';
 const DELETE_ITEM_SCONTRINO = 'DELETE_ITEM_SCONTRINO';
 
+
+const aggiornaTotaliLocale = (newState) =>
+{
+let righe = [...newState.itemsArray];
+ let totalePezzi = 0;
+	let totaleImporto = 0.00;
+let totalePezziGen = 0;
+let totaleImportoGen = 0.00;
+let scontrini = 0;
+
+for (let propt=righe.length-1; propt>=0; propt--)
+	{
+			if (righe[propt].tipo==='scontrino') 
+				{
+				righe[propt].totali = {'pezzi' : totalePezzi, 
+						'prezzoTotale' : totaleImporto.toFixed(2)}; 
+				totalePezziGen = totalePezziGen + totalePezzi;
+	    		totaleImportoGen =  parseFloat(totaleImportoGen) + parseFloat(totaleImporto);
+	    		scontrini++;
+				
+				totalePezzi = 0;
+				totaleImporto = 0.00;
+				} 
+			else 
+				{
+				totalePezzi = parseInt(righe[propt].totali.pezzi, 10) + totalePezzi;
+	    		totaleImporto =  parseFloat(righe[propt].totali.prezzoTotale) + parseFloat(totaleImporto);	
+				}
+	}
+	
+return({...newState,  itemsArray: righe, totali: {'scontrini': scontrini, 'pezzi' : totalePezziGen, 
+						'prezzoTotale' : totaleImportoGen.toFixed(2)} });
+//return(newState);
+}
+
+
 const editedRigaCassaValuesInitialState = 
 	  {			
 	            oraScontrino: null,
@@ -256,6 +292,7 @@ function subChildAdded(payload, state, dataArrayName, dataIndexName, transformIt
    var numero = tmp['numero'];
    tmp['numero'] = tmp['titolo'];
    tmp['totali'] = {pezzi: tmp['pezzi'], prezzoTotale: tmp['prezzoTotale']};
+   tmp['numeroScontrino'] = payload.val().numero;
     //Se è definita una funzione di trasformazione la applico
    if (transformItem) transformItem(tmp);
    
@@ -320,6 +357,8 @@ function subChildChanged(payload, state, dataArrayName, dataIndexName, transform
 		   tmp['tipo'] = 'rigaScontrino';
 		   tmp['numero'] = tmp['titolo'];
 		   tmp['totali'] = {pezzi: tmp['pezzi'], prezzoTotale: tmp['prezzoTotale']};
+		   tmp['numeroScontrino'] = payload.val().numero;
+  
 		    //Se è definita una funzione di trasformazione la applico
 		   if (transformItem) transformItem(tmp);
 		   
@@ -394,26 +433,40 @@ export default function cassa(state = initialState(), action) {
   
    case ADDED_ITEM_CASSA:
 		 	newState = {...childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa), tableScrollByKey: action.payload.key}; 
-	    	break;
+		 		newState = aggiornaTotaliLocale(newState);	
+		 		break;
 	       
 	case DELETED_ITEM_CASSA:
 	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	newState = aggiornaTotaliLocale(newState);
+	    
 	    	break;
 	   
 	case CHANGED_ITEM_CASSA:
 		    newState = {...childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa), tableScrollByKey: action.payload.key}; 
+		    	newState = aggiornaTotaliLocale(newState);
+	    
 	    	break;    
 	    	
     case ADDED_RIGASCONTRINO:
-		 	newState = {...subChildAdded(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
+    	 	newState = {...subChildAdded(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
+		 		newState = aggiornaTotaliLocale(newState);
+	    
 	    	break;
 	       
 	case DELETED_RIGASCONTRINO:
+		 
 	    	newState = subChildDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	
+		newState = aggiornaTotaliLocale(newState);
+	    
 	    	break;
 	   
 	case CHANGED_RIGASCONTRINO:
-			newState = {...subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
+		    
+		    newState = {...subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
+			newState = aggiornaTotaliLocale(newState, state, action);
+	    
 	    	break;    
 	    	
     default:
@@ -440,7 +493,8 @@ export default function cassa(state = initialState(), action) {
  export const getListeningItemCassa = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getFilters = (state) => {return state.filters};
- 
+  export const getTotaliCassa = (state) => {return state.totali};
+
       
 
 

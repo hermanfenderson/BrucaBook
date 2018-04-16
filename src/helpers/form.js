@@ -36,7 +36,7 @@ export const initialState = (editedItemInitialState, extraInitialState) =>
 			listeningItem: null,
 			messageBuffer: [],
 			 filters: {},
-		
+		    totali: {},
 			editedItem: editedItemInitialState,
 			...initOverrides
 	    	}

@@ -188,6 +188,7 @@ export const getListeningTestataCassa = (state) => {return fromCassa.getListenin
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
 export const isStaleTotaliCassa = (state) => {return fromCassa.isStaleTotali(state.cassa)};
 export const getFiltersCassa = (state) => { return fromCassa.getFilters(state.cassa)};
+export const getTotaliCassa = (state) => { return fromCassa.getTotaliCassa(state.cassa)};
 
 
 //Scene Scontrino
@@ -203,6 +204,7 @@ export const getListenersItemScontrino = (state) => {return fromScontrino.getLis
 
 export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTotali(state.scontrino)};
 export const getMessageBufferScontrino = (state) => {return fromBolla.getMessageBuffer(state.scontrino)};
+export const getTotaliScontrino = (state) => {return fromScontrino.getTotali(state.scontrino)};
 
 
 //Scene Catalogo

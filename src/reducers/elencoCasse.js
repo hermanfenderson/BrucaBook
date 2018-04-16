@@ -93,7 +93,7 @@ export default function elencoCasse(state = initialState(), action) {
      	newState = state;
      	break;
     default:
-        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa, initialState);
+        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa);
         //newState =  state;
     	break;
    

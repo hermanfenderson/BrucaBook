@@ -68,7 +68,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	
 	//Questa funzione calcola gli stati ulteriori...l'override si fa definendo un case che reagisce alla stessa stringa nel padre...
 	
-	this.updateState =(state,action, editedItemInitialState, transformAndValidateEditedItem) =>
+	this.updateState =(state,action, editedItemInitialState, transformAndValidateEditedItem, calcolaTotali) =>
 	{ var newState;
 		switch(action.type)
 		{
@@ -287,18 +287,26 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		 case this.ADDED_ITEM:
 		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;
 		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
+		    if (calcolaTotali) newState = calcolaTotali(newState); //Se mi viene passata una funzione di calcolo totali la applico...
+  
 	    	break;
 	       
 		case this.DELETED_ITEM:
 	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
+	    	 if (calcolaTotali) newState = calcolaTotali(newState); 
+  
 	    	break;
 	   
 		case this.CHANGED_ITEM:
 			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
+			 if (calcolaTotali) newState = calcolaTotali(newState);
+  
 	    	break;
 	    case this.INITIAL_LOAD_ITEM:
 	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem);
 	    	newState = {...newState, tableScroll: true};
+	    	 if (calcolaTotali) newState = calcolaTotali(newState);
+  
 	    
 	    	break;
 	  
