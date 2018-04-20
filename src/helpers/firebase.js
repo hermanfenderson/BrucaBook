@@ -283,3 +283,19 @@ export function addChangedStamp(record)
  return message;   	
  }
 
+
+export const getServerTime = (ref) => {
+    var offset = 0;
+    ref.child('.info/serverTimeOffset').on('value', function(snap) {
+       offset = snap.val();
+    });
+
+    return function() {
+       return Date.now() + offset;
+    }
+};
+
+
+
+
+

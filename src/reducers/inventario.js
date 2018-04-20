@@ -186,9 +186,8 @@ export default function inventario(state = initialState(), action) {
 			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
 				//Se ho un dato migliore per stock lo metto qui...
 		 	
-	    	let ean = action.payload.val().ean;
-		 	let key = action.payload.key;
-		 	if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
+	    	let key = action.payload.key;
+		 	if (newState.registroEAN[key]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[key];
 		 
 	    	break;	    
 	    	

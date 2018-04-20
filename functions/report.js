@@ -15,10 +15,13 @@ const setDay = (moment) =>
 
 const generateSerieIncassi = (matrixVendite) => {
 		let ts = getTimeSeries(matrixVendite,'anno/mese/giorno',null,null);
+		ts.sort((a,b) => {return (moment(a.period, 'YYYY/MM/DD') - moment(b.period, 'YYYY/MM/DD'))});
 		for (let i=0; i<ts.length;i++) 
-			{ts[i].period = moment(ts[i].period, 'YYYY/MM/DD').format('DD/MM/YY');
+			{
+			ts[i].period = moment(ts[i].period, 'YYYY/MM/DD').format('DD/MM/YY');
 			ts[i].incasso = ts[i].ricavoTotale;
 			}
+		console.log(ts);	
 		return ts;
 };
 

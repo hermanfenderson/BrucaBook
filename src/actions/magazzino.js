@@ -3,9 +3,9 @@ import {FormActions} from '../helpers/formActions';
 export const SCENE = 'MAGAZZINO';
 
 
-
 //METODI DEL FORM
-export const magazzinoFA = new FormActions(SCENE, null, 'magazzino');
+//Lavora per EAN
+export const magazzinoFA = new FormActions(SCENE, null, 'magazzino',null, false, false, true);
 
 //Se devo fare override.... definisco metodi alternativi qui...
 

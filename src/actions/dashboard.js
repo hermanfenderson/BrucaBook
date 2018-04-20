@@ -1,5 +1,5 @@
 import Firebase from 'firebase';
-import {urlFactory} from '../helpers/firebase';
+import {urlFactory, getServerTime} from '../helpers/firebase';
 import request from 'superagent';
 
 
@@ -15,7 +15,8 @@ export const getReportData = () =>
 	let libreria = getState().status.libreria;
 	let catena = getState().status.catena;
 	let url2 = 'https://brucabook.com/report?id=bulk&catena='+catena+'&libreria='+libreria;
-	
+    console.log(getServerTime(Firebase.database().ref('/'))());
+
 	request.get(url2).then(
 	                  (response) => {Firebase.database().ref(url3).once('child_added', snapshot => {
 	

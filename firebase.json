@@ -8,6 +8,8 @@
     ],
     "rewrites": [
       {"source": "/report", "function": "report"},
+       {"source": "/forzaAggiornaMagazzino", "function": "forzaAggiornaMagazzino"},
+     
       {
         "source": "**",
         "destination": "/index.html"

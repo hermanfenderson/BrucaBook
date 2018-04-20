@@ -22,6 +22,12 @@ function preparaItem(riga)
 
    
 
+//Traccia per il seguito...
+// Firebase.database().ref(dateStoricoMagazzino).orderByKey().endAt(dataInventario - 1).limitToLast(1).once
+//Preso il valore so quale storicoMagazzino devo seguire in modo "convenzionale"
+//A questo punto... devo ossevare aggiunte e cancellazioni...
+//Se ho aggiunte...e ho una data che non mi interessa... me ne frego. Altrimenti comincio a seguire la nuova data
+//Se ho cancellazioni... me ne frego a meno che non ha toccato proprio la data che stavo seguendo...e allora ricomiuncio...
 
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi

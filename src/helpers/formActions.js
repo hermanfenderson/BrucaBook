@@ -7,7 +7,7 @@ import Firebase from 'firebase';
 import request from 'superagent';
 import {isComplete} from './catalog';
 
-import {urlFactory} from './firebase';
+import {urlFactory, getServerTime} from './firebase';
 import {isInternalEAN} from './ean';
 //3 modificatori...
 //stockMessageQueue aggiorna con la info dello stock
@@ -453,18 +453,32 @@ this.listenItem = (params) => {
    const type3 = this.DELETED_ITEM;
    const type4 = this.INITIAL_LOAD_ITEM;
    const typeListen = this.LISTEN_ITEM;
-   
+   const onEAN = this.onEAN
    const itemsUrl = this.itemsUrl;	
   return function(dispatch, getState) {
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
-    {  
-       const listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
+    { var listener_added = null;
+    	if (!onEAN)
+      {
+       listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
 	      dispatch({
 	        type: type1,
 	        payload: snapshot
 	      })
 	    });
+      }
+      else
+      {
+      let now = getServerTime(Firebase.database().ref('/'))();
+      //Ragiono per timestamp
+      listener_added = Firebase.database().ref(url).orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
+	      dispatch({
+	        type: type1,
+	        payload: snapshot
+	      })
+	    });	
+      }
 	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
 	      dispatch({
 	        type: type2,

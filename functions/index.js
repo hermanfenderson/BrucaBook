@@ -15,17 +15,32 @@ const {generateSerieIncassi} = require('./report');
 const {generateSerieIncassiMesi} = require('./report');
 const {generateSerieIncassiAnni} = require('./report');
 
+const equal = require('deep-equal');
 
-function areEqualShallow(a, b) {
+function areEqualShallow(a, b, debug=false) {
     if (a===b) return true;
     if ((!a && b) || (!b && a)) return false;
     for(let key in a) {
         if(!(key in b) || a[key] !== b[key]) {
+        	if (debug)
+        		{
+        			
+        			console.log(key);
+        			console.log(a);
+        			console.log(b);
+        			
+        		}
             return false;
         }
     }
     for(let key in b) {
         if(!(key in a) || a[key] !== b[key]) {
+        	if (debug)
+        		{
+        			console.log(key);
+        			console.log(a);
+        			console.log(b);
+        		}
             return false;
         }
     }
@@ -65,20 +80,11 @@ let libreria = req.query.libreria;
  let urlDest = catena + '/' + libreria + '/report/bulk';
  admin.database().ref(urlDest).remove();
   res.send('Passed.');    							 
-  /*
-  res.send(`<!doctype html>
-    <head>
-      <title>Report</title>
-    </head>
-    <body>
-      OK
-    </body>
-  </html>`);
-  */
+ 
   
   
  admin.database().ref(urlSource).once("value").then(function(snapshot)
-								{   let year = moment().format('YYYY');
+								{ 	let year = moment().format('YYYY');
     								let lastYear = (parseInt(year,10) -1).toString(10);
     								let lastMonthArray = moment().subtract(1, 'months').format('YYYY/MM').split('/');
       
@@ -764,24 +770,66 @@ exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}
     		}
           ); 
 
+
+//Da modificare per storicizzarla e prevedere una full... 
 exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')
     .onWrite((change, context) => 
             {
             const ean = context.params.ean;	
+            const refBookStoreRadix = change.after.ref.parent.parent;
+            const date = change.after.val();	//Loop dalla prima all'ultima data...
+            const oldDate = change.before.val(); //Prendo il dato precedente
+            const emptyAfter = !change.after.exists();
+            return (aggiornaMagazzinoEAN(ean, refBookStoreRadix, date, oldDate, emptyAfter));
+            });
+            
+exports.forzaAggiornaMagazzino = functions.https.onRequest((req, res) => {
+
+cors(req, res, () => {
+let catena = req.query.catena;
+let libreria = req.query.libreria;
+let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
+res.send('Passed.');    							 
+refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
+								{
+								if (snapshot.val())
+									{
+									for (let ean in snapshot.val()) 
+										{
+											aggiornaMagazzinoEAN(ean, refBookStoreRadix, snapshot.val()[ean], null, false); //forzo l'aggiornamento massivo...
+									
+											
+										}		
+									}
+								})
+  
+});
+});          
+
+const aggiornaMagazzinoEAN = (ean, refBookStoreRadix, date, oldDate, emptyAfter) =>
+{
+
             //Caso riga cancellata....cancello semplicemente EAN ... e cancello la entry corrispondente 
-         
-            if (!change.after.exists()) 
+            if (emptyAfter) 
                   {
-                  return change.after.ref.parent.parent.child('magazzino/'+ean).remove();	
+                  let lastDate = Object.keys(change.before.val())[0]; //L'ultima data
+                  refBookStoreRadix.child('storicoMagazzino/'+lastDate+'/'+ean).remove();
+                  return refBookStoreRadix.child('magazzino/'+ean).remove();	
                   }
             else 
             	  {
             	  var totalePezzi = 0;
         		  var righe;
-            	  date = change.after.val();	
+        		 // date = change.after.val();	//Loop dalla prima all'ultima data...
+            	 // oldDate = change.before.val(); //Prendo il dato precedente
+            	  var changed = false; //Da quando scopro che e' cambiato...mi va sempre bene...
             	  for(var propt2 in date)
-		  			{righe = date[propt2];
-		  				for (var propt in righe)	
+		  		   	{
+		  		   	righe = date[propt2];
+		  		   	oldRighe = oldDate ? oldDate[propt2] : null
+		  		   	let changed = !equal(oldRighe, righe);
+		  		   
+		  			   	for (var propt in righe)	
 		  				{
 		  				 if (righe[propt].tipo == "bolle")
 		  					{
@@ -805,15 +853,26 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
 		  					totalePezzi = totalePezzi + parseInt(righe[propt].pezzi);
 			    		
 			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-							}		
+							}
+						}
+						 //Se e' cambiato per una specifica data aggiorno il suo storico	
+				
+		  			 if (changed )
+		  				{
+		  				let totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino, 'imgFirebaseUrl': righe[propt].imgFirebaseUrl, 'createdAt' : admin.database.ServerValue.TIMESTAMP } ; 
+            			refBookStoreRadix.child('storicoMagazzino/'+propt2+'/'+ean).set(totali);
+            			let dataStorico = {};
+            			dataStorico = {'createdAt': admin.database.ServerValue.TIMESTAMP};
+            			refBookStoreRadix.child('dateStoricoMagazzino/'+propt2).set(dataStorico);
 		  				}
 		  		     }	
-			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino, 'imgFirebaseUrl': righe[propt].imgFirebaseUrl } ; 
-            	  return change.after.ref.parent.parent.child('magazzino/'+ean).set(totali);
+			      //Inserito un timestamp qui...
+			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino, 'imgFirebaseUrl': righe[propt].imgFirebaseUrl, 'createdAt': admin.database.ServerValue.TIMESTAMP } ; 
+            	  
+            	  return refBookStoreRadix.child('magazzino/'+ean).set(totali);
             	  }
                
             //Caso riga inserita o modificata... la sostituisco integralmente. 
             return true;	
-            }
-           ); 
+            };
     
