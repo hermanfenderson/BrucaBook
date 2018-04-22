@@ -1,3 +1,5 @@
+//Sistemati i lifecycle a versione 16.3...
+
 import TableInventario from '../containers/TableInventario';
 import FormRigaInventario from '../containers/FormRigaInventario';
 import TotaliInventario from '../components/TotaliInventario';
@@ -12,46 +14,33 @@ import 'moment/locale/it';
 
 import { Row, Col,  Modal, Spin, Button} from 'antd'
 
-var currentIdInventario = null; 
-var riga = null; 
 
 class Inventario extends Component {
 
  componentDidMount() {
+ 	    //Misura della form...
     	if(ReactDOM.findDOMNode(this.refs.formRigaInventario)) this.props.storeMeasure('formRigaInventarioHeight', ReactDOM.findDOMNode(this.refs.formRigaInventario).clientHeight);
-    
-    	
+       this.props.listenTestataInventario(null, this.props.match.params.id);
  }
  
- componentWillMount() {
  
- if (this.props.listeningTestataInventario) currentIdInventario = this.props.listeningTestataInventario.inventarioId;
- if (this.props.match.params.id !== currentIdInventario)	
-	{   //Faccio reset... tranne la prima volta...
-		if (currentIdInventario) 
-			{this.props.resetInventario(this.props.match.params.id);
-			//Ragiono solo per anno...
-			 this.props.unlistenTestataInventario(null, currentIdInventario);
-			} 
-		this.props.listenTestataInventario(null, this.props.match.params.id); //In modo da acoltare il valore giusto...
-	}
- //Per ora rimonto ogni volta...
+ componentWillUnmount() {
+ 	this.props.resetInventario(this.props.match.params.id);
+	this.props.unlistenTestataInventario(null, this.props.match.params.id);
+ }
+ 
+componentDidUpdate = (oldProps) => {
 
- if (!this.props.listeningRegistroEAN) 
-	{
-		this.props.unlistenRegistroEAN(); //A scanso di equivoci...
-	 
-		this.props.listenRegistroEAN(this.props.match.params.id);
-	}
-		
- }
- 
-componentDidUpdate() {
-	if (riga !== this.props.testataInventario) 
-		{riga = this.props.testataInventario;
-		
-		 if (riga) this.props.setHeaderInfo("Inventario del " + moment(riga.dataInventario).format("L"));
+	let dataInventarioNew = this.props.testataInventario ? this.props.testataInventario.dataInventario : null;
+	let dataInventarioOld = oldProps.testataInventario ? oldProps.testataInventario.dataInventario : null;
+	//Ho ricevuto una data inventario nuova oppure la ho per la prima volta
+	if (dataInventarioNew !== dataInventarioOld)
+		{
+		this.props.setHeaderInfo("Inventario del " + moment(dataInventarioNew).format("L"));
+		this.props.searchDataMagazzino(dataInventarioNew, this.props.match.params.id);		
 		}
+		
+
 }
 
 resetEditedCatalogItem = () => {

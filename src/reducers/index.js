@@ -149,7 +149,6 @@ export const getListeningTestataInventario = (state) => {return fromInventario.g
 export const getListeningItemInventario = (state) => {return fromInventario.getListeningItemBolla(state.inventario)};
 export const isStaleTotaliInventario = (state) => {return fromInventario.isStaleTotali(state.inventario)};
 export const getMessageBufferInventario = (state) => {return fromInventario.getMessageBuffer(state.inventario)};
-export const isListeningRegistroEAN = (state) => {return fromInventario.isListeningRegistroEAN(state.inventario)};
 
 //Scene ElencoInventari
 export const getElencoInventari = (state) => {return fromElencoInventari.getItems(state.elencoInventari)};
@@ -245,5 +244,24 @@ export const getReadme = (state) => {return fromReadmeViewer.getReadme(state.rea
 export const getReadmeHeight = (state) => {return fromReadmeViewer.getReadmeHeight(state.readmeViewer)};
 export const getShowModal = (state) => {return fromReadmeViewer.getShowModal(state.readmeViewer)};
 
+//Strato per andare da scena a sorgente e pezzo di stato
+export const s2s = (scene) => {
+	let s = {};
+	switch (scene)	
+		{
+			case 'INVENTARIO':
+				s.stato = 'inventario';
+				s.origin = fromInventario;
+			break;
+			default:
+			
+		}
+	return(s);	
+}
 
+//Multi-scena (ragiono in modo diverso... passo esplicitamente la scena...con strato piccolino per disaccoppiamento...
+
+
+export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return s.origin.listeningDataMagazzino(state[s.stato])};
+export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.origin.getDataMagazzino(state[s.stato])};
  

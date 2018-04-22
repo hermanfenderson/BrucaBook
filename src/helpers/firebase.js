@@ -76,6 +76,8 @@ export function urlFactory(getState, destination, params, itemId)
 				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
 			     case "fornitori": url = prefissoNegozio(getState)+'anagrafiche/fornitori'; break;
 			      case "report": url = prefissoNegozio(getState)+'report'; break;
+			    case "dateStoricoMagazzino": url = prefissoNegozio(getState)+'dateStoricoMagazzino'; break;
+			    case "storicoMagazzino": url = prefissoNegozio(getState)+'storicoMagazzino/'+params[0]; break;
 			    
 				
 				default: return null;

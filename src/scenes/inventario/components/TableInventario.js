@@ -14,34 +14,20 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    {dataField: 'pezzi', label: 'Delta', width: '60px'},
 			   ];
 
-var currentListenedIdInventario = null;
 
-//Per gestire in modo smmooth il ricaricamento!
+// Fixed ascoltatori ecc..
 
 class TableInventario extends Component 
     {
-    componentDidMount() {
-    	if (this.props.listeningItemInventario) currentListenedIdInventario = this.props.listeningItemInventario;   
-    		//Ascolto modifiche sulle righe della bolla
-    	if (currentListenedIdInventario !== this.props.idInventario)
-    	   {
-    	   	if (currentListenedIdInventario) 
-    	   		{
-    	   		
-    
-    	   			this.props.offListenRigaInventario(currentListenedIdInventario); 
-    	   			this.props.resetTableInventario();
-    	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	
-    	   	
+    componentDidMount = () =>{
     	   	this.props.listenRigaInventario(this.props.idInventario); 
-    	   	}
-    	   	
 	}
 	
 	
-	
+	componentWillUnmount = () => {
+		  			this.props.offListenRigaInventario(this.props.listeningItemInventario); 
+    	   			this.props.resetTableInventario();
+	}
 	
 	deleteRow = (row) => {
 	   this.props.deleteRigaInventario(this.props.idInventario,row.key,row);

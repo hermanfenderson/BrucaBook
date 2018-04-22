@@ -813,7 +813,13 @@ const aggiornaMagazzinoEAN = (ean, refBookStoreRadix, date, oldDate, emptyAfter)
             if (emptyAfter) 
                   {
                   let lastDate = Object.keys(change.before.val())[0]; //L'ultima data
-                  refBookStoreRadix.child('storicoMagazzino/'+lastDate+'/'+ean).remove();
+                  //refBookStoreRadix.child('storicoMagazzino/'+lastDate+'/'+ean).remove();
+                  //Qui aggiungere cancellazione per righe successive....
+                  refBookStoreRadix.child('dateStoricoMagazzino/').orderByKey().startAt(lastDate).once("value").then(function(snapshot)
+            				{
+            				 for (let dateLoop in snapshot.val()) refBookStoreRadix.child('storicoMagazzino/'+dateLoop+'/'+ean).remove();
+ 
+            				})
                   return refBookStoreRadix.child('magazzino/'+ean).remove();	
                   }
             else 
@@ -827,7 +833,7 @@ const aggiornaMagazzinoEAN = (ean, refBookStoreRadix, date, oldDate, emptyAfter)
 		  		   	{
 		  		   	righe = date[propt2];
 		  		   	oldRighe = oldDate ? oldDate[propt2] : null
-		  		   	let changed = !equal(oldRighe, righe);
+		  		   	changed = (changed || !equal(oldRighe, righe));
 		  		   
 		  			   	for (var propt in righe)	
 		  				{
@@ -859,11 +865,26 @@ const aggiornaMagazzinoEAN = (ean, refBookStoreRadix, date, oldDate, emptyAfter)
 				
 		  			 if (changed )
 		  				{
+		  				
 		  				let totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino, 'imgFirebaseUrl': righe[propt].imgFirebaseUrl, 'createdAt' : admin.database.ServerValue.TIMESTAMP } ; 
             			refBookStoreRadix.child('storicoMagazzino/'+propt2+'/'+ean).set(totali);
             			let dataStorico = {};
             			dataStorico = {'createdAt': admin.database.ServerValue.TIMESTAMP};
             			refBookStoreRadix.child('dateStoricoMagazzino/'+propt2).set(dataStorico);
+            			// Qui ci va qualcosa di complicato....una copia di tutti gli ean fino a questa data...non ho altra strada...
+            			let date2 = propt2;
+            			refBookStoreRadix.child('storicoMagazzino/').orderByKey().endAt(date2).once("value").then(function(snapshot)
+            				{
+            					let eans = {};
+            					let storico = snapshot.val();
+            					for (date in storico)
+            						for (ean in storico[date])
+            							{
+            								eans[ean] = storico[date][ean];
+            								eans[ean].createdAt = admin.database.ServerValue.TIMESTAMP;
+            							}
+            				refBookStoreRadix.child('storicoMagazzino/'+date2).set(eans); //Tutti gli ean... compresi gli ultimo....			
+            				});
 		  				}
 		  		     }	
 			      //Inserito un timestamp qui...

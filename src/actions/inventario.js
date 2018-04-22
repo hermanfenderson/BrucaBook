@@ -1,16 +1,20 @@
 import Firebase from 'firebase';
 
 import {FormActions} from '../helpers/formActions';
-import {urlFactory, addCreatedStamp, addChangedStamp} from '../helpers/firebase';
+import {urlFactory, addCreatedStamp, addChangedStamp, getServerTime} from '../helpers/firebase';
+import {getDataMagazzino}  from '../reducers';
 
 export const SCENE = 'INVENTARIO';
 export const GENERA_RIGHE_INVENTARIO = 'GENERA_RIGHE_INVENTARIO';
+export const DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED';
+export const LISTEN_STORICO_MAGAZZINO_INVENTARIO = 'LISTEN_STORICO_MAGAZZINO_INVENTARIO';
+export const UNLISTEN_STORICO_MAGAZZINO_INVENTARIO = 'UNLISTEN_STORICO_MAGAZZINO_INVENTARIO';
+export const INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO = 'INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO';
 
-export const LISTEN_REGISTRO_EAN = 'LISTEN_REGISTRO_EAN';
-export const UNLISTEN_REGISTRO_EAN = 'UNLISTEN_REGISTRO_EAN';
-export const ADDED_REGISTRO_EAN = 'ADDED_REGISTRO_EAN';
-export const CHANGED_REGISTRO_EAN = 'CHANGED_REGISTRO_EAN';
-export const DELETED_REGISTRO_EAN = 'DELETED_REGISTRO_EAN';
+export const ADDED_STORICO_MAGAZZINO_INVENTARIO = 'ADDED_STORICO_MAGAZZINO_INVENTARIO';
+export const CHANGED_STORICO_MAGAZZINO_INVENTARIO = 'CHANGED_STORICO_MAGAZZINO_INVENTARIO';
+export const DELETED_STORICO_MAGAZZINO_INVENTARIO = 'DELETED_STORICO_MAGAZZINO_INVENTARIO';
+
 
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
@@ -36,6 +40,107 @@ export const rigaInventarioFA = new FormActions(SCENE, preparaItem, 'righeInvent
 //Se devo fare override.... definisco metodi alternativi qui...
 
 
+export function searchDataMagazzino(dataInventario, idInventario)
+{
+return function(dispatch, getState) {
+
+	const url = urlFactory(getState,'dateStoricoMagazzino', null);
+	const upto = (dataInventario - 1).toString();
+	Firebase.database().ref(url).orderByKey().endAt(upto).limitToLast(1).on('value', snapshot => {
+	let dataMagazzino = Object.keys(snapshot.val())[0];
+	let oldDataMagazzino = getDataMagazzino(getState(), SCENE);
+	if (dataMagazzino !== oldDataMagazzino)
+		{dispatch({
+		        type: DATA_MAGAZZINO_CHANGED,
+		        dataMagazzino: dataMagazzino
+		      })
+		 //Se stavo già ascoltando qualcosa...     
+		 if (oldDataMagazzino > 0) dispatch(unListenStoricoMagazzino(oldDataMagazzino));
+		 //Carico in tabella specifica tutti gli stock per quella data...
+		 
+		 dispatch(listenStoricoMagazzino(dataMagazzino, idInventario));
+		}     
+	})
+	
+	}
+}
+
+export function listenStoricoMagazzino(dataMagazzino, idInventario)
+{
+	
+//Genero tre listener... come un'unica funzione...
+
+   
+   return function(dispatch, getState) {
+  	const url = urlFactory(getState,'storicoMagazzino', dataMagazzino);
+  	if (url)
+    {  
+       
+       
+       let now = getServerTime(Firebase.database().ref('/'))();
+      //Ragiono per timestamp
+      const listener_added = Firebase.database().ref(url).orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
+	      dispatch({
+	        type: ADDED_STORICO_MAGAZZINO_INVENTARIO,
+	        payload: snapshot
+	      })
+	      let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
+	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+	      });
+	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
+	      dispatch({
+	        type: CHANGED_STORICO_MAGAZZINO_INVENTARIO,
+	        payload: snapshot
+	      })
+	         let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
+	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+ 
+	   });
+	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
+	      dispatch({
+	        type: DELETED_STORICO_MAGAZZINO_INVENTARIO,
+	        payload: snapshot
+	      })
+	         let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
+	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+        
+	   });
+	   Firebase.database().ref(url).once('value', snapshot => {
+	      dispatch({
+	        type: INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO,
+	        payload: snapshot
+	      }) 
+	      let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
+	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+	   });
+	   dispatch({
+	   	type: LISTEN_STORICO_MAGAZZINO_INVENTARIO,
+	   	params: dataMagazzino,
+	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
+	   })
+	}   
+	else dispatch({
+	   	type: LISTEN_STORICO_MAGAZZINO_INVENTARIO,
+	   	params: null,
+	   })   
+  }
+  
+}
+
+export function unListenStoricoMagazzino(dataMagazzino)
+{
+
+return function(dispatch, getState) {	
+	Firebase.database().ref(urlFactory(getState,'storicoMagazzino', dataMagazzino)).off();
+		dispatch({
+		   	type: UNLISTEN_STORICO_MAGAZZINO_INVENTARIO,
+		   	params: dataMagazzino
+		   })
+
+	}
+}
+
+
 
 export function generaRighe(inventarioId, dataInventario)
 {
@@ -44,7 +149,7 @@ export function generaRighe(inventarioId, dataInventario)
 return function(dispatch, getState) {
 	const url = urlFactory(getState,'magazzino', null);
 	Firebase.database().ref(url).once('value', snapshot => {
-		  const righe = getState().inventario.registroEAN;
+		  const righe = getState().inventario.estrattoStoricoMagazzino;
 		  const index = getState().inventario.itemsArrayIndex;
 		  const stock2 = getState().inventario.stock;
 		  const data = getState().inventario.testata.dataInventario;
@@ -69,72 +174,6 @@ return function(dispatch, getState) {
 
 
    
-export function listenRegistroEAN(idInventario)
-{
-	
-//Genero tre listener... come un'unica funzione...
-
-   
-   return function(dispatch, getState) {
-  	const url = urlFactory(getState,'registroEAN');
-  	if (url)
-    {  
-    
-       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
-	      dispatch({
-	        type: ADDED_REGISTRO_EAN,
-	        payload: snapshot
-	      })
-	      let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
-	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
- 
-
-  
-	      });
-	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
-	      dispatch({
-	        type: CHANGED_REGISTRO_EAN,
-	        payload: snapshot
-	      })
-	         let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
-	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
- 
-	   });
-	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
-	      dispatch({
-	        type: DELETED_REGISTRO_EAN,
-	        payload: snapshot
-	      })
-	         let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
-	      Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
- 
-	   });
-	   dispatch({
-	   	type: LISTEN_REGISTRO_EAN,
-	   	params: '',
-	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
-	   })
-	}   
-	else dispatch({
-	   	type: LISTEN_REGISTRO_EAN,
-	   	params: null,
-	   })   
-  }
-  
-}
-
-//Uso il fatto che id ha già il path giusto... trucchismo...
-export function unlistenRegistroEAN()
-{
-return function(dispatch, getState) {	
-	Firebase.database().ref(urlFactory(getState,'registroEAN')).off();
-		dispatch({
-		   	type: UNLISTEN_REGISTRO_EAN,
-		   	params: ''
-		   })
-
-	}
-}
 
  rigaInventarioFA.aggiungiItem = (params, valori) => {
  const typeAdd =  rigaInventarioFA.ADD_ITEM;

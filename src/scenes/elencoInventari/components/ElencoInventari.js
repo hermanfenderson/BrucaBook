@@ -15,8 +15,6 @@ componentDidMount() {
  }
  
   	
-//Rimosso il reset da qui... non mi serve mai resettare visto che non ho casi ambigui...devo solo resettare la riga selezionata
- 
 
 
 

@@ -1,10 +1,12 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-import {GENERA_RIGHE_INVENTARIO,LISTEN_REGISTRO_EAN, UNLISTEN_REGISTRO_EAN, ADDED_REGISTRO_EAN, CHANGED_REGISTRO_EAN, DELETED_REGISTRO_EAN } from '../actions/inventario';
+import {GENERA_RIGHE_INVENTARIO,LISTEN_STORICO_MAGAZZINO_INVENTARIO, UNLISTEN_STORICO_MAGAZZINO_INVENTARIO,
+INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO, ADDED_STORICO_MAGAZZINO_INVENTARIO, CHANGED_STORICO_MAGAZZINO_INVENTARIO, DELETED_STORICO_MAGAZZINO_INVENTARIO, 
+DATA_MAGAZZINO_CHANGED} from '../actions/inventario';
 import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
 
 
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors, getStock} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 import {isInteger} from '../helpers/validators';
 
 const editedInventarioValuesInitialState = 
@@ -26,7 +28,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningRegistroEAN: false, registroEAN: {}, stock: {}, totaleOccorrenze: 0});
+	return initialStateHelper(eiis,{listeningStoricoMagazzino: null, dataMagazzino: null, estrattoStoricoMagazzino: null, stock: {}, totaleOccorrenze: 0});
     }
     
 
@@ -118,43 +120,66 @@ export default function inventario(state = initialState(), action) {
    	    newState = state;
    	    break;
    	
-   case LISTEN_REGISTRO_EAN:
-   	    newState = {...state, listeningRegistroEAN: true};
+   case LISTEN_STORICO_MAGAZZINO_INVENTARIO:
+   	    newState = {...state, listeningStoricoMagazzino: action.params[0]};
    	    break;
-   	        
-   	case ADDED_REGISTRO_EAN:
-   	case CHANGED_REGISTRO_EAN:
+    
+    case INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO:
+    	{
+   	   let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
+   	    let itemsArray = [...state.itemsArray];
+   	    let itemsArrayIndex = state.itemsArrayIndex;
+   	    let totaleOccorrenze = state.totaleOccorrenze;
+   	    let stock = {...state.stock};
+   	    	for (let ean in action.payload.val())
+   	    		{
+		   	    let oldStock = stock[ean] ? stock[ean] : null;  
+		   		estrattoStoricoMagazzino[ean] = action.payload.val()[ean];
+		   		stock[ean] = action.payload.val()[ean].pezzi;
+		   		if ((oldStock === null) || (oldStock === 0 && stock[ean] !== 0)) totaleOccorrenze++;
+		   		else if (oldStock !== 0 && stock[ean] === 0) totaleOccorrenze--;
+		   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
+   	    		}
+		newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;
+        
+       break;
+    case ADDED_STORICO_MAGAZZINO_INVENTARIO:
+   	case CHANGED_STORICO_MAGAZZINO_INVENTARIO:
    		{
-   	   let registroEAN = {...state.registroEAN};
+   	   let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
    	    let itemsArray = [...state.itemsArray];
    	    let itemsArrayIndex = state.itemsArrayIndex;
    	    let totaleOccorrenze = state.totaleOccorrenze;
    	    let stock = {...state.stock};
    	    	let ean = action.payload.key;
-		 	let data = state.testata.data;
 		let oldStock = stock[ean] ? stock[ean] : null;  
-   		registroEAN[ean] = action.payload.val();
-   		stock[ean] = getStock(registroEAN[ean],null, null, data-1);
+   		estrattoStoricoMagazzino[ean] = action.payload.val();
+   		stock[ean] = action.payload.val().pezzi;
+   		
    		if ((oldStock === null) || (oldStock === 0 && stock[ean] !== 0)) totaleOccorrenze++;
    		else if (oldStock !== 0 && stock[ean] === 0) totaleOccorrenze--;
    		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
-   	    newState = {...state, registroEAN: registroEAN, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
    		}
    	    break;
     
     
-   	case DELETED_REGISTRO_EAN:
+   	case DELETED_STORICO_MAGAZZINO_INVENTARIO:
    	    {
-   	    let registroEAN = {...state.registroEAN};
+   	    let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
+   	
    	    let stock = {...state.stock};
    	     let totaleOccorrenze = state.totaleOccorrenze;
    	   
-   		delete registroEAN[action.payload.key];
+   		delete estrattoStoricoMagazzino[action.payload.key];
    		delete stock[action.payload.key];
    		totaleOccorrenze--;
-   	    newState = {...state, registroEAN: registroEAN, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, stock: stock, totaleOccorrenze: totaleOccorrenze};
    		}
-   	    break;
+   	    break;	        
+
    	    
    	 case rigaInventarioR.ADDED_ITEM:
 		 	{
@@ -163,7 +188,7 @@ export default function inventario(state = initialState(), action) {
 		 	//Se ho un dato migliore per stock lo metto qui...
 		 	let ean = action.payload.val().ean;
 		 	let key = action.payload.key;
-		 	if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
+		 	if (newState.estrattoStoricoMagazzino[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
 		 	}
 	    	break;
 	  case rigaInventarioR.INITIAL_LOAD_ITEM:
@@ -173,7 +198,8 @@ export default function inventario(state = initialState(), action) {
 		 	for (let key in action.payload.val())
 		 		{
 		 			let ean = action.payload.val()[key].ean;
-		 			if (newState.registroEAN[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = newState.stock[ean];
+		 			
+		 			if (newState.estrattoStoricoMagazzino && newState.estrattoStoricoMagazzino[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = newState.stock[ean];
 		 		}
 		 		
 	    	break;     
@@ -185,18 +211,20 @@ export default function inventario(state = initialState(), action) {
 		case rigaInventarioR.CHANGED_ITEM:
 			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
 				//Se ho un dato migliore per stock lo metto qui...
-		 	
-	    	let key = action.payload.key;
-		 	if (newState.registroEAN[key]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[key];
+		 	let key = action.payload.key;
+		 	if (newState.estrattoStoricoMagazzino[key]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[key];
 		 
 	    	break;	    
 	    	
 	    	
    	    	    
-   case UNLISTEN_REGISTRO_EAN:
-   	    newState = {...state, listeningRegistroEAN: false, registroEAN: {}, stock: {}, totaleOccorrenze: 0};
+   case UNLISTEN_STORICO_MAGAZZINO_INVENTARIO:
+   	    newState = {...state, listeningStoricoMagazzino: false, estrattoStoricoMagazzino: {}, stock: {}, totaleOccorrenze: 0};
    	    break;        
    	    
+    case DATA_MAGAZZINO_CHANGED:
+    	newState = {...state, dataMagazzino: action.dataMagazzino};
+    	break;
     default:
     
         newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
@@ -219,7 +247,8 @@ export default function inventario(state = initialState(), action) {
  export const getListeningItemBolla = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
- export const isListeningRegistroEAN = (state) => {return state.listeningRegistroEAN};
+ export const listeningDataMagazzino = (state) => {return state.listeningDataMagazzino};
+ export const getDataMagazzino = (state) => {return state.dataMagazzino};
  
  
  

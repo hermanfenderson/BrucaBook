@@ -1,9 +1,17 @@
-BrucaBook V.0.9.26
+BrucaBook V.0.9.27
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.27
+* Messo a posto e reingegnerizzato inventario: utilizza un magazzino storicizzato lato server
+* Report ordinati per data crescente 
+* Sperimentata estrazione da firebase per timestamp (diventa lo standard per le tabelle senza una chiave tempo)
+* Aggiornamenti magazzino per timestamp
+* Funzionalità di aggiornamento massivo (amministratore) magazzino (per ora con link brutale)
+* Aggiunto indice su data creazione per magazzino e storicoMagazzino
+
 ### Versione 0.9.26
 * Calcolo totali "anticipato" in locale (continua a comandare il calcolo sul server) per scontrino e cassa
 * Generalizzata la funzionalità di calcolo nell'helper

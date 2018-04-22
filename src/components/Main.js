@@ -33,7 +33,14 @@ import Help from '../scenes/help';
 import GestioneItemCatalog from '../scenes/catalogo';
 
 
-    
+ const RequireAuthRoute = ({ component: Component, ...rest }) => 
+			{
+			  return(
+			  <Route {...rest} render={props => (
+			    rest.authenticated?  <Component {...props}/>:  <Redirect to='/userMgmt?mode=login' />
+			  )}/>)
+			}
+			
     
 const Main= (props) => 
 {  	const authenticated = props.authenticated;
@@ -42,13 +49,16 @@ const Main= (props) =>
      	                   	return (authenticated ?  <Component {...props}/>:  <Redirect to='/userMgmt?mode=login' />);
     						})}
     						
+   
+// 	<Route path='/inventario/:id' component={RequireAuth(Inventario)}/>
+    								
 	return( 					<Switch>
       									<Route exact path='/' component={RequireAuth(Home)}/>
       									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
-		        					   	<Route path='/inventario/:id' component={RequireAuth(Inventario)}/>
-    									<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
+		        					  	<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
     									<Route path='/dettagli/:ean' component={RequireAuth(DettagliArticolo)}/>
-    								
+    								    <RequireAuthRoute path="/inventario/:id" component={Inventario} authenticated={authenticated}/>
+
     									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
     									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>

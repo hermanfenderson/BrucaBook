@@ -22,10 +22,14 @@ class TableElencoInventari extends Component
     {
     componentDidMount() {
      //Ascolto modifiche sulle bolle... non passo parametri...sono nella radice. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
-    	if (this.props.listeningElencoInventari!=='')  this.props.listenElencoInventari("");
+    	this.props.listenElencoInventari("");
     		
 	}
     
+    componentWillUnmount() {
+       this.props.offListenElencoInventari("");
+       this.props.resetTable();
+    }
    
 	
 	
