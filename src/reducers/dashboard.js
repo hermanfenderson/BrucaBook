@@ -1,4 +1,4 @@
-import {GET_REPORT_DATA, RESET_LISTENING_DASHBOARD} from '../actions/dashboard';
+import {GET_REPORT_DATA,  REPORT_DATA_ASKED} from '../actions/dashboard';
 
 const initialState =  {
  serieIncassi: [],
@@ -9,16 +9,17 @@ const initialState =  {
  top5lastMonth: [],
  
  
- listening: false,
+ waitingForData: false,
 };
 
 export default function dashboard(state = initialState, action) {
   switch (action.type) {
     
-    case RESET_LISTENING_DASHBOARD: 
-      return {...state, listening: false};
-      
-     case GET_REPORT_DATA:
+        
+    case REPORT_DATA_ASKED: 
+      return {...state, waitingForData: true};  
+    
+    case GET_REPORT_DATA:
      	let reportData = action.payload.val();
      	let serieIncassi = action.payload.val().serieIncassi;
        let serieIncassiMesi = action.payload.val().serieIncassiMesi;
@@ -28,7 +29,7 @@ export default function dashboard(state = initialState, action) {
        let top5lastMonth =  action.payload.val().top5lastMonth;
        
      	return {
-        ...state, reportData: reportData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, top5thisYear: top5thisYear, top5lastYear: top5lastYear, top5lastMonth: top5lastMonth, listening: true
+        ...state, reportData: reportData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, top5thisYear: top5thisYear, top5lastYear: top5lastYear, top5lastMonth: top5lastMonth, waitingForData: false
       };
 		
     default:
@@ -43,6 +44,6 @@ export const getTop5thisYear = (state) => {return state.top5thisYear};
 export const getTop5lastYear = (state) => {return state.top5lastYear};  
 export const getTop5lastMonth = (state) => {return state.top5lastMonth};  
 
-export const isListeningReportData = (state) => {return state.listening};
+export const isWaitingForData = (state) => {return state.waitingForData};
 
 

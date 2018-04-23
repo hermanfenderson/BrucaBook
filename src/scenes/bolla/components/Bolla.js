@@ -12,40 +12,35 @@ import 'moment/locale/it';
 
 import { Row, Col,  Modal, Spin} from 'antd'
 
-var currentIdBolla = null; 
-var riga = null; 
 
 class Bolla extends Component {
 
 
+ //Modificato per eliminare il WillMount
  
  componentDidMount() {
-   	if(ReactDOM.findDOMNode(this.refs.formRigaBolla)) 
+    	if(ReactDOM.findDOMNode(this.refs.formRigaBolla)) 
    		{var node = ReactDOM.findDOMNode(this.refs.formRigaBolla);
    		this.props.storeMeasure('formRigaBollaHeight', node.clientHeight);
    		}
+   	this.props.listenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...	
  }
  
- componentWillMount() {
- if (this.props.listeningTestataBolla) currentIdBolla = this.props.listeningTestataBolla.bollaId;
- if (this.props.match.params.id !== currentIdBolla)	
-	{   //Faccio reset... tranne la prima volta...
-		if (currentIdBolla) 
-			{this.props.resetBolla(this.props.match.params.id);
-			 this.props.unlistenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], currentIdBolla);
-			} 
-		this.props.listenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...
-	}
-		
- }
  
-componentDidUpdate() {
-   if (riga !== this.props.testataBolla) 
-	{riga = this.props.testataBolla;
+ 
+componentDidUpdate(oldProps) {
+	let oldTestataBolla = oldProps.testataBolla ? oldProps.testataBolla : null
+    let riga = this.props.testataBolla ?  this.props.testataBolla : null
+   if (riga !== oldTestataBolla) 
+	{
 	if (riga) this.props.setHeaderInfo("Acquisti - Doc. " + riga.riferimento + ' ' 
 				          						+ riga.nomeFornitore + ' del ' + moment(riga.dataDocumento).format("L"));
-
 	}	
+}
+
+componentWillUnmount() {
+	this.props.resetBolla(this.props.match.params.id);
+	this.props.unlistenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id);
 }
 
 resetEditedCatalogItem = () => {
@@ -73,7 +68,7 @@ render()
     </Modal>  
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
-    	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla}/>
+    	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla} totaliBolla={	this.props.totaliBolla}/>
       </Col>
  
        <Col span={20}>

@@ -12,9 +12,9 @@ import ReactDOM from 'react-dom';
 
 class Dashboard extends Component {
 componentDidMount() {
-	    
-    	this.props.setHeaderInfo('Dashboard');
-    	if (!this.props.listeningReportData) this.props.getReportDataAction();
+	   	this.props.setHeaderInfo('Dashboard');
+    	//Chiedo sempre dati freschi...quando entro qui...
+    	this.props.getReportDataAction();
     	if (!this.props.listeningMagazzino) this.props.listenMagazzino(""); //Ascolto da subito il magazzino....
    	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
    		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
@@ -28,7 +28,6 @@ componentDidUpdate() {
    		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
    		if (this.props.measures['dashboardWidth'] !==node.clientWidth) this.props.storeMeasure('dashboardWidth', node.clientWidth);
    		}
-   	if (!this.props.listeningReportData) this.props.getReportDataAction();	
 } 
 
 //  <Tooltip crosshairs={{type : "y"}}/>
@@ -39,7 +38,7 @@ let width =  (this.props.measures['dashboardWidth']) ? this.props.measures['dash
 if (isNaN(width) || this.props.serieIncassi.length===0) return (<Spin spinning={(true)} />)
 else  
 	return (
-<Spin spinning={(!this.props.listeningReportData)} >		
+<Spin spinning={(this.props.waitingForData)} >		
 <div ref='dashboardWidth'>
 <Row >
 <Col span={12} style={{ height: width/4}}>
@@ -51,7 +50,7 @@ else
 
 <Col span={12} style={{ height: width/4}}>
 <div className='report-title'>Confronto incassi mesi
- <Button type="primary" shape="circle" icon="retweet" onClick={this.props.resetListening} style={{float:'right'}}/>
+ <Button type="primary" shape="circle" icon="retweet" onClick={this.props.getReportDataAction} style={{float:'right'}}/>
 </div>
 
 	<ChartIncassiMesi width={width/2} height={width/4 - 25} serieIncassiMesi={this.props.serieIncassiMesi} />

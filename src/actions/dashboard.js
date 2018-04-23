@@ -1,11 +1,10 @@
 import Firebase from 'firebase';
-import {urlFactory, getServerTime} from '../helpers/firebase';
+import {urlFactory} from '../helpers/firebase';
 import request from 'superagent';
 
 
 export const GET_REPORT_DATA = 'GET_REPORT_DATA'
-
-export const RESET_LISTENING_DASHBOARD = 'RESET_LISTENING_DASHBOARD'
+export const REPORT_DATA_ASKED = 'REPORT_DATA_ASKED'
 //Questa va riscritta per usare invece una child_changed!!! 
 export const getReportData = () =>
 {
@@ -15,8 +14,9 @@ export const getReportData = () =>
 	let libreria = getState().status.libreria;
 	let catena = getState().status.catena;
 	let url2 = 'https://brucabook.com/report?id=bulk&catena='+catena+'&libreria='+libreria;
-    console.log(getServerTime(Firebase.database().ref('/'))());
-
+    dispatch({
+	        type: REPORT_DATA_ASKED,
+	        	 });
 	request.get(url2).then(
 	                  (response) => {Firebase.database().ref(url3).once('child_changed', snapshot => {
 	
@@ -32,9 +32,4 @@ export const getReportData = () =>
 	}
 
 	
-}
-
-export const resetListening = () =>
-{
-	return ({type: RESET_LISTENING_DASHBOARD})
 }

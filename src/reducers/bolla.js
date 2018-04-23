@@ -36,7 +36,22 @@ const initialState = () => {
     }
     
 
-
+const calcolaTotali = (state) =>
+{
+	let totalePezzi = 0;
+	let totaleGratis = 0;
+	let totaleImporto = 0.00;
+	let righe = state.itemsArray;
+	for (let propt=0; propt<righe.length; propt++)
+		{	
+			totalePezzi = parseInt(righe[propt].pezzi, 10) + totalePezzi;
+			totaleGratis = parseInt(righe[propt].gratis, 10) + totaleGratis;
+	    	totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+		}
+	const totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis,
+						'prezzoTotale' : totaleImporto.toFixed(2)}; 
+	return ({...state, totali: totali});				
+};
  
     
 //Metodi reducer per le Form
@@ -190,7 +205,7 @@ export default function bolla(state = initialState(), action) {
         break;
   	
     default:
-        newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla);
+        newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla, calcolaTotali);
         //newState =  state;
     	break;
    
@@ -211,6 +226,7 @@ export default function bolla(state = initialState(), action) {
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  
+ export const getTotali = (state) => {return state.totali};
  
  
  

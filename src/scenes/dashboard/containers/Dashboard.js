@@ -1,7 +1,7 @@
 import DashboardComponent from '../components/Dashboard'
 import {setHeaderInfo, storeMeasure} from  '../../../actions'
-import {getReportData as getReportDataAction , resetListening } from '../../../actions/dashboard'
-import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYear, getTop5lastYear, getTop5lastMonth, isListeningReportData, getMeasures} from '../../../reducers'
+import {getReportData as getReportDataAction } from '../../../actions/dashboard'
+import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYear, getTop5lastYear, getTop5lastMonth, isWaitingForData, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -14,7 +14,7 @@ const listenMagazzino = magazzinoFA.listenItem;
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setHeaderInfo, getReportDataAction, storeMeasure, resetListening, listenMagazzino}, dispatch);
+  return bindActionCreators({ setHeaderInfo, getReportDataAction, storeMeasure, listenMagazzino}, dispatch);
 }
 
 const mapStateToProps = (state) => {
@@ -27,7 +27,7 @@ const mapStateToProps = (state) => {
 		top5lastMonth: getTop5lastMonth(state),
 		
 	    measures: getMeasures(state),
-		listeningReportData: isListeningReportData(state),
+		waitingForData: isWaitingForData(state),
 		listeningMagazzino: getListeningMagazzino(state)
 	})
 }

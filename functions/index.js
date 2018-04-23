@@ -98,7 +98,7 @@ let libreria = req.query.libreria;
     								let top5lastMonth = generateTop5lastMonth(matrixVendite, lastMonthArray);
     							
     							
-    								admin.database().ref(urlDest).update({'serieIncassi': serieIncassi, 'serieIncassiMesi': serieIncassiMesi, 'serieIncassiAnni': serieIncassiAnni, 'top5thisYear': top5thisYear, 'top5lastYear': top5lastYear,  'top5lastMonth': top5lastMonth });	
+    								admin.database().ref(urlDest).update({'serieIncassi': serieIncassi, 'serieIncassiMesi': serieIncassiMesi, 'serieIncassiAnni': serieIncassiAnni, 'top5thisYear': top5thisYear, 'top5lastYear': top5lastYear,  'top5lastMonth': top5lastMonth, 'createdAt': admin.database.ServerValue.TIMESTAMP });	
 									
 
 								})

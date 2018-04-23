@@ -4,19 +4,17 @@ import {Row,Spin} from 'antd'
 
 const TotaliBolla = (props) => 
     {
-    	const totali = props.testataBolla ? props.testataBolla.totali : null;
+    	const totali = (props.testataBolla && !props.staleTotali) ? props.testataBolla.totali : props.totaliBolla; //Uso la copia calcolata in locale finchè non arriva quella calcolata al centro...
     	 if (totali) return(
-		  <Spin spinning={props.staleTotali}>	
-
+	
 			<div>
-			<Row> Copie: {totali.pezzi} </Row>
+		<Row> Copie: {totali.pezzi} </Row>
 			<Row> Gratis:  {totali.gratis} </Row>
 			<Row> Totale: {totali.prezzoTotale} </Row>
 			</div>
-		</Spin>	
 			
 			)
-    	 else return   <Spin spinning={props.staleTotali} />		
+    	 else return   <Spin spinning={true} />		
     }		
 	
 export default TotaliBolla;

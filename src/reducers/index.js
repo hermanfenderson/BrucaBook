@@ -66,9 +66,10 @@ export const getListeningTestataBolla = (state) => {return fromBolla.getListenin
 export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
+export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
 
 //Scena Dashboard
-export const isListeningReportData = (state) => {return fromDashboard.isListeningReportData(state.dashboard)};
+export const isWaitingForData = (state) => {return fromDashboard.isWaitingForData(state.dashboard)};
 
 export const getSerieIncassi = (state) => {return fromDashboard.getSerieIncassi(state.dashboard)};
 export const getSerieIncassiMesi = (state) => {return fromDashboard.getSerieIncassiMesi(state.dashboard)};

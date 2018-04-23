@@ -3,7 +3,7 @@ import {rigaBollaFA} from '../../../actions/bolla'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getMessageBufferBolla, getShowCatalogModal, getEditedCatalogItem, getTestataBolla, getListeningTestataBolla, isStaleTotali, getEditedRigaBolla} from '../../../reducers'
+import {getMessageBufferBolla, getShowCatalogModal, getEditedCatalogItem, getTestataBolla, getListeningTestataBolla, isStaleTotali, getEditedRigaBolla, getTotaliBolla} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataBolla = rigaBollaFA.listenTestata;
@@ -19,8 +19,8 @@ const mapStateToProps = (state) => {
 	         listeningTestataBolla: getListeningTestataBolla(state),
 	         staleTotali: isStaleTotali(state),
 	         editedRigaBolla: getEditedRigaBolla(state),
-	         messageBuffer: getMessageBufferBolla(state)
-	         
+	         messageBuffer: getMessageBufferBolla(state),
+	         totaliBolla: getTotaliBolla(state)
 		
 		
 	})

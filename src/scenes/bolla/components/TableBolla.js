@@ -10,34 +10,24 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
 
-var currentListenedIdBolla = null;
 
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableBolla extends Component 
     {
     componentDidMount() {
-    	if (this.props.listeningItemBolla) currentListenedIdBolla = this.props.listeningItemBolla[2];   
-    		//Ascolto modifiche sulle righe della bolla
-    	if (currentListenedIdBolla !== this.props.idBolla)
-    	   {
-    	   	if (currentListenedIdBolla) 
-    	   		{
-    	   			let params = [...this.props.period];
-    	   			params.push(currentListenedIdBolla);
-    
-    	   			this.props.offListenRigaBolla(params); 
-    	   			this.props.resetTableBolla();
-    	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = [...this.props.period];
+    	 	let params = [...this.props.period];
     	   	params.push(this.props.idBolla);
     	   	this.props.listenRigaBolla(params); 
-    	   	}
-    	   	
 	}
 	
-	
+	 componentWillUnmount() {
+	 	let params = [...this.props.period];
+    	params.push(this.props.idBolla);
+    	this.props.offListenRigaBolla(params); 
+    	this.props.resetTableBolla();
+	 }
+   
 	
 	
 	deleteRow = (row) => {
