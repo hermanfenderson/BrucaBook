@@ -49,12 +49,13 @@ class TableElencoBolle extends Component
     }
     
     componentDidMount = () => {
-       this.periodMount();
+       let oldProps = null;
+       this.periodMount(oldProps);
     
 	}
 	
-	componentDidUpdate = () => {
-	   this.periodMount();
+	componentDidUpdate = (oldProps) => {
+	   this.periodMount(oldProps);
 	}
 	
 	

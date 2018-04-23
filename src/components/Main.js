@@ -53,14 +53,14 @@ const Main= (props) =>
 // 	<Route path='/inventario/:id' component={RequireAuth(Inventario)}/>
     								
 	return( 					<Switch>
-      									<Route exact path='/' component={RequireAuth(Home)}/>
+      									<RequireAuthRoute exact path='/' component={Home} authenticated={authenticated}/>
       									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
 		        					  	<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
     									<Route path='/dettagli/:ean' component={RequireAuth(DettagliArticolo)}/>
     								    <RequireAuthRoute path="/inventario/:id" component={Inventario} authenticated={authenticated}/>
 
-    									<Route path='/bolla/:anno/:mese/:id' component={RequireAuth(GestioneBolla)}/>
-    									<Route exact path='/acquisti/:anno/:mese' component={RequireAuth(ElencoBolle)}/>
+    									<RequireAuthRoute path='/bolla/:anno/:mese/:id' component={GestioneBolla} authenticated={authenticated}/>
+    									<RequireAuthRoute exact path='/acquisti/:anno/:mese' component={ElencoBolle} authenticated={authenticated}/>
     									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
     										<Route exact path='/rese/:anno/:mese' component={RequireAuth(ElencoRese)}/>
     								     <Route path='/resa/:anno/:mese/:id' component={RequireAuth(Resa)}/>
@@ -72,7 +72,7 @@ const Main= (props) =>
     					      		     <Route path="/fornitori" component={RequireAuth(Fornitori)} />
     					      			              
 		        						<Route path="/catalogo" component={RequireAuth(GestioneItemCatalog)} />
-		        							<Route path="/dashboard" component={RequireAuth(Dashboard)} />
+		        							<RequireAuthRoute path="/dashboard" component={Dashboard} authenticated={authenticated} />
 		        								<Route path="/magazzino" component={RequireAuth(Magazzino)} />
     					      		
     					      		

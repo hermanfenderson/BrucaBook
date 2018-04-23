@@ -6,7 +6,7 @@ import request from 'superagent';
 export const GET_REPORT_DATA = 'GET_REPORT_DATA'
 
 export const RESET_LISTENING_DASHBOARD = 'RESET_LISTENING_DASHBOARD'
-
+//Questa va riscritta per usare invece una child_changed!!! 
 export const getReportData = () =>
 {
 	return function(dispatch, getState) {
@@ -18,7 +18,7 @@ export const getReportData = () =>
     console.log(getServerTime(Firebase.database().ref('/'))());
 
 	request.get(url2).then(
-	                  (response) => {Firebase.database().ref(url3).once('child_added', snapshot => {
+	                  (response) => {Firebase.database().ref(url3).once('child_changed', snapshot => {
 	
 		dispatch({
 	        type: GET_REPORT_DATA,

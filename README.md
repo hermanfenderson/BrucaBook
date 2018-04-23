@@ -1,9 +1,14 @@
-BrucaBook V.0.9.27
+BrucaBook V.0.9.28
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.28
+* Inventario non conta le righe a zero tra quelle da inventariare (#260)
+* Dashboard, elencobolle e bolle caricano con nuovo requireAuth
+* Correzione routine caricamento dei report (#262)
+
 ### Versione 0.9.27
 * Messo a posto e reingegnerizzato inventario: utilizza un magazzino storicizzato lato server
 * Report ordinati per data crescente 

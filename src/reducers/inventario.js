@@ -133,18 +133,15 @@ export default function inventario(state = initialState(), action) {
    	    let stock = {...state.stock};
    	    	for (let ean in action.payload.val())
    	    		{
-		   	    let oldStock = stock[ean] ? stock[ean] : null;  
-		   		estrattoStoricoMagazzino[ean] = action.payload.val()[ean];
-		   		stock[ean] = action.payload.val()[ean].pezzi;
-		   		if ((oldStock === null) || (oldStock === 0 && stock[ean] !== 0)) totaleOccorrenze++;
-		   		else if (oldStock !== 0 && stock[ean] === 0) totaleOccorrenze--;
+   	    		estrattoStoricoMagazzino[ean] = action.payload.val()[ean];
+		   		stock[ean] = parseInt(action.payload.val()[ean].pezzi,10);
+		   		if (stock[ean] !== 0) totaleOccorrenze++;
 		   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
    	    		}
 		newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
    		}
    	    break;
         
-       break;
     case ADDED_STORICO_MAGAZZINO_INVENTARIO:
    	case CHANGED_STORICO_MAGAZZINO_INVENTARIO:
    		{

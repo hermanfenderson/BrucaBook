@@ -78,7 +78,8 @@ let libreria = req.query.libreria;
 
  let urlSource = catena + '/' + libreria + '/registroData'
  let urlDest = catena + '/' + libreria + '/report/bulk';
- admin.database().ref(urlDest).remove();
+ //Questa cancellazione va cancellata!
+ //admin.database().ref(urlDest).remove();
   res.send('Passed.');    							 
  
   
