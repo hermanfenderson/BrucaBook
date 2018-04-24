@@ -1,4 +1,4 @@
-import {GET_REPORT_DATA,  REPORT_DATA_ASKED} from '../actions/dashboard';
+import {GET_REPORT_DATA,  GET_REPORT_DATA_INITIAL_LOAD, REPORT_DATA_ASKED} from '../actions/dashboard';
 
 const initialState =  {
  serieIncassi: [],
@@ -20,6 +20,7 @@ export default function dashboard(state = initialState, action) {
       return {...state, waitingForData: true};  
     
     case GET_REPORT_DATA:
+    	{
      	let reportData = action.payload.val();
      	let serieIncassi = action.payload.val().serieIncassi;
        let serieIncassiMesi = action.payload.val().serieIncassiMesi;
@@ -31,7 +32,22 @@ export default function dashboard(state = initialState, action) {
      	return {
         ...state, reportData: reportData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, top5thisYear: top5thisYear, top5lastYear: top5lastYear, top5lastMonth: top5lastMonth, waitingForData: false
       };
-		
+       }
+     //Identico ma non cambia lo stato di loading... 
+	case GET_REPORT_DATA_INITIAL_LOAD:
+		{
+     	let reportData = action.payload.val();
+     	let serieIncassi = action.payload.val().serieIncassi;
+       let serieIncassiMesi = action.payload.val().serieIncassiMesi;
+       let serieIncassiAnni = action.payload.val().serieIncassiAnni;
+       let top5thisYear = action.payload.val().top5thisYear;
+       let top5lastYear = action.payload.val().top5lastYear;
+       let top5lastMonth =  action.payload.val().top5lastMonth;
+       
+     	return {
+        ...state, reportData: reportData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, top5thisYear: top5thisYear, top5lastYear: top5lastYear, top5lastMonth: top5lastMonth
+      };
+		}
     default:
       return state;
   }

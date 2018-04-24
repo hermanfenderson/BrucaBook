@@ -9,12 +9,15 @@ import {isComplete} from './catalog';
 
 import {urlFactory, getServerTime} from './firebase';
 import {isInternalEAN} from './ean';
+import {getListeningMagazzino} from '../reducers'
+import {magazzinoFA} from '../actions/magazzino'
 //3 modificatori...
 //stockMessageQueue aggiorna con la info dello stock
 //getStock... passa lo stock quando viene cercato il catalogo
 //onEAN.... persiste EAN e non una key...
 export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl, stockMessageQueue=false, getStock=false, onEAN=false) {
 //Azioni legate ad azioni di ricerca
+this.scene = scene;
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
 this.UPDATE_GENERAL_CATALOG_ITEM = 'UPDATE_GENERAL_CATALOG_ITEM_'+scene;
@@ -39,9 +42,10 @@ this.ADD_ITEM = 'ADD_ITEM_'+scene;
 this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
 this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
 this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+scene;
+//Ascolto cambiamenti per questo EAN
+this.ADD_EAN_LISTENER = 'ADD_EAN_LISTENER_'+scene;
 
 
-this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
 
 this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
 this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
@@ -454,8 +458,13 @@ this.listenItem = (params) => {
    const type4 = this.INITIAL_LOAD_ITEM;
    const typeListen = this.LISTEN_ITEM;
    const onEAN = this.onEAN
-   const itemsUrl = this.itemsUrl;	
+   const itemsUrl = this.itemsUrl;
+   const scene = this.scene;
   return function(dispatch, getState) {
+  	if (!getListeningMagazzino(getState()) && scene !=='MAGAZZINO') //Ascolto il magazzino... serve a farlo al refresh...
+		{    
+				dispatch(magazzinoFA.listenItem());
+		}
   	const url = urlFactory(getState,itemsUrl, params);
   	if (url)
     { var listener_added = null;
@@ -532,31 +541,12 @@ this.offListenItem = (params, listeners=null) =>
 
 
 this.stockMessageQueueListener = (valori) =>
-{      
-	const type2 = this.EAN_STOCK_CHANGED;
-	var i=0;
-		return function(dispatch, getState) {
-		const url = urlFactory(getState,'magazzino',null,valori.ean);
-		Firebase.database().ref(url).on('value', snapshot => {
-	      //Tricky... mi serve il secondo risultato della listen....
-	      i++;
-	      if (i>1) 
-	      {Firebase.database().ref(url).off();
-	      //Se ho null... i pezzi sono 0
-	      let pezzi = 0;
-	      if (snapshot.val()) pezzi = snapshot.val().pezzi;
-	      dispatch({
-	        type: type2,
-	        titolo: valori.titolo,
-	        autore: valori.autore,
-	        pezzi: pezzi,
-	        ean: valori.ean
-	      })
-	      }
-	   });
-	    
-	   
-		} 
+{
+//Riscritto per gestire il timestamp...
+//Qui se non sto ascoltando i magazzini... devo cominciare a farlo...!
+	const type1 = this.ADD_EAN_LISTENER;
+	 let now = getServerTime(Firebase.database().ref('/'))();
+    return ({type: type1, ean: valori.ean, timestamp: now })  
 }
 
 this.aggiungiItem = (params, valori) => {

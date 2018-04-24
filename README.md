@@ -1,9 +1,14 @@
-BrucaBook V.0.9.29
+BrucaBook V.0.9.30
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.30
+* A prima chiamata dashboard si prende comunque i dati del giorno prima...
+* Sistemato calcolo stock nei messaggi (#256)
+* Aggiornato magazzino anche al refresh (sia per messaggi che per visualizzazione modal)
+
 ### Versione 0.9.29
 * Sistemate le chiamate in partenza per la reportistica 
 * Bolla in modalità "fast" (senza clessidra)

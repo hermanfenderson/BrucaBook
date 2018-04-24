@@ -32,7 +32,7 @@ this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
 this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
 this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
 this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
-this.EAN_STOCK_CHANGED = 'EAN_STOCK_CHANGED_'+scene;
+this.ADD_EAN_LISTENER = 'ADD_EAN_LISTENER_'+scene;
 
 
 this.ADD_ITEM = 'ADD_ITEM_'+scene;
@@ -58,7 +58,6 @@ this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
 this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
 this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
 this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
-
 
 if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
 if (transformItem) this.transformItem = transformItem;
@@ -334,18 +333,39 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
       	newState =  {...initialState(), tableHeight: tableHeight};
 		break;
 		
-		case this.EAN_STOCK_CHANGED:
-			{   
-				let element = <span><span style={{fontWeight: 'bold'}}>{action.titolo}</span><span> a magazzino: </span><span style={{fontWeight: 'bold'}}>{action.pezzi}</span></span>
+	
+			
+      //Viene attivato solo se ho il listener attivo...  
+      case 'ADDED_ITEM_MAGAZZINO':
+      case	'CHANGED_ITEM_MAGAZZINO':
+      	    let ean = action.payload.key;
+      	    let createdAt = action.payload.val().createdAt;
+      	    
+      	    //Se ero in ascolto...smettto di ascoltare e metto il messaggio nel buffer...
+      	    if (state.eanListeners && state.eanListeners[ean] && state.eanListeners[ean] < createdAt )
+	      	   {
+	      	   	   let pezzi = action.payload.val().pezzi;
+      		   let titolo = action.payload.val().titolo;
+      	 
+	      	   	let eanListeners = {...state.eanListeners};
+	      	   	delete eanListeners[ean];
+	      	   	let element = <span><span style={{fontWeight: 'bold'}}>{titolo}</span><span> a magazzino: </span><span style={{fontWeight: 'bold'}}>{pezzi}</span></span>
   
 				let messageBuf = [...state.messageBuffer];
  				messageBuf.push(element);
- 				newState = {...state, messageBuffer: messageBuf};
- 			}
-			break;
-        
-      
-        
+ 			 	newState = {...state, eanListeners: eanListeners,messageBuffer: messageBuf};
+	      	   }
+      	   	else newState =  state;
+    		
+      	   break;
+      	   
+      case this.ADD_EAN_LISTENER:
+      	   let listeners = {...state.eanListeners}
+           listeners[action.ean] = action.timestamp;
+           newState = {...state, eanListeners: listeners};
+           
+           break;
+           
 
 	    	default:
         		newState =  state;

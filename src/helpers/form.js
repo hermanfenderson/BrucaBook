@@ -37,6 +37,7 @@ export const initialState = (editedItemInitialState, extraInitialState) =>
 			messageBuffer: [],
 			 filters: {},
 		    totali: {},
+		    eanListeners: {}, //Qui metto gli EAN per cui devo ricevere notifica... nella forma ean: timestamp
 			editedItem: editedItemInitialState,
 			...initOverrides
 	    	}
