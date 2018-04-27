@@ -48,7 +48,7 @@ this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
 this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
-this.TABLE_SCROLL_BY_KEY = 'TOGGLE_TABLE_SCROLL_BY_KEY_'+scene;
+this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+scene;
 
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
@@ -131,7 +131,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
     case this.TOGGLE_TABLE_SCROLL:
 		newState = {...state, tableScroll: action.toggle};
 		break;
-	 case this.TABLE_SCROLL_BY_KEY:
+	 case this.SET_TABLE_SCROLL_BY_KEY:
 		newState = {...state, tableScrollByKey: action.key};
 		break;	
 		
@@ -287,7 +287,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;
 		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
 		    if (calcolaTotali) newState = calcolaTotali(newState); //Se mi viene passata una funzione di calcolo totali la applico...
-  
+            newState.tableScrollByKey = action.payload.key;
 	    	break;
 	       
 		case this.DELETED_ITEM:
@@ -299,6 +299,8 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 		case this.CHANGED_ITEM:
 			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
 			 if (calcolaTotali) newState = calcolaTotali(newState);
+			      newState.tableScrollByKey = action.payload.key;
+	    
   
 	    	break;
 	    case this.INITIAL_LOAD_ITEM:

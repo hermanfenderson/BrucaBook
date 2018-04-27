@@ -16,7 +16,9 @@ var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo s
 
 class WrappedTable extends React.Component {
 componentDidMount()
-  {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+  {  
+  //	this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+  
      if (this.props.tableScroll) this.forceUpdate(); //Ci vadoo sempre...
  
   }
@@ -27,9 +29,23 @@ componentDidMount()
   	lastRowClicked = this.props.highlightedRowKey; //Ma quando arriva me la prendo...
 	   if (this.props.tableScroll)
 			{
-			this.node.scrollTop = this.node.scrollHeight;
+			this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+  		
+		   	this.node.scrollTop = this.node.scrollHeight;
 			this.props.toggleTableScroll(false); //Resetto lo scroll...
 			}
+		if (this.props.tableScrollByKey)
+			{
+			 this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
+  	
+			this.nodeKey = 	ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-row-record-'+this.props.tableScrollByKey)[0];
+		    if (this.nodeKey)
+		    	{
+		    	this.node.scrollTop = this.nodeKey.offsetTop; //Mi sposto nel padre della distanza tra la riga figlio e il padre!
+		    	}
+			this.props.setTableScrollByKey(null); //Resetto lo scroll...
+			
+			}	
  }
 	
 selectRow = (row) => {
@@ -53,8 +69,8 @@ actionRowRender = (cell, row, index) => {
 
 
 rowClassName = (record,index) => {
-	let rowClassName = (this.props.highlightedRowKey === record.key) ? 'ant-table-row ant-table-row-highlight' : 'ant-table-row';
-	if (this.props.pinField && record[this.props.pinField]) rowClassName += ' ant-table-row-pinned';
+	let rowClassName = (this.props.highlightedRowKey === record.key) ? 'ant-table-row ant-table-row-highlight ant-table-row-record-'+record.key : 'ant-table-row ant-table-row-record-'+record.key;
+	if (this.props.pinField && record[this.props.pinField]) rowClassName += ' ant-table-row-pinned ant-table-row-record-'+record.key;
 	return(rowClassName);
 } 
 

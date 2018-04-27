@@ -67,6 +67,7 @@ export const getListeningItemBolla = (state) => {return fromBolla.getListeningIt
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
+//export const getTableScrollByKeyBolla = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 
 //Scena Dashboard
 export const isWaitingForData = (state) => {return fromDashboard.isWaitingForData(state.dashboard)};
@@ -182,7 +183,7 @@ export const getEditedRigaCassa = (state) => {return fromCassa.getEditedItem(sta
 export const getTestataCassa = (state) => {return fromCassa.getTestataCassa(state.cassa)};
 export const getTableHeightCassa = (state) => {return fromCassa.getTableHeight(state.cassa)};
 export const getTableScrollCassa = (state)  => {return fromCassa.getTableScroll(state.cassa)};
-export const getTableScrollByKeyCassa = (state)  => {return fromCassa.getTableScrollByKey(state.cassa)};
+//export const getTableScrollByKeyCassa = (state)  => {return fromCassa.getTableScrollByKey(state.cassa)};
 
 export const getListeningTestataCassa = (state) => {return fromCassa.getListeningTestataCassa(state.cassa)};
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
@@ -254,6 +255,14 @@ export const s2s = (scene) => {
 				s.stato = 'inventario';
 				s.origin = fromInventario;
 			break;
+			case 'BOLLA':
+				s.stato = 'bolla';
+				s.origin = fromBolla;
+			break;
+			case 'CASSA':
+				s.stato = 'cassa';
+				s.origin = fromCassa;
+			break;
 			default:
 			
 		}
@@ -265,4 +274,7 @@ export const s2s = (scene) => {
 
 export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return s.origin.listeningDataMagazzino(state[s.stato])};
 export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.origin.getDataMagazzino(state[s.stato])};
+export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return s.origin.getTableScrollByKey(state[s.stato])};
+
+
  

@@ -238,6 +238,7 @@ export default function scontrino(state = initialState(), action) {
 
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
  

@@ -23,77 +23,68 @@ import {period2month} from '../../../helpers/form'
 
 import { Row, Col,  Modal, Spin, Button} from 'antd'
 
-var currentIdCassa = null;
-var currentIdScontrino = null; 
-var scontrino = null;
-var cassa = null;
- 
- //<TableCassa  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
-
 class Scontrino extends Component {
 
 
-				  
  componentDidMount() {
     if (ReactDOM.findDOMNode(this.refs.formRigaScontrino)) this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
     	
     if (ReactDOM.findDOMNode(this.refs.testataCassa)) 	this.props.storeMeasure('testataCassaHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
     if (ReactDOM.findDOMNode(this.refs.formTestataScontrino)) 	this.props.storeMeasure('testataScontrinoHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
-   
-    	
- }
- 
- componentWillMount() {
- 	
-  //Sento sia lo scontrino che la cassa...
- if (this.props.listeningTestataCassa) currentIdCassa = this.props.listeningTestataCassa.itemId;
- if (this.props.match.params.cassa !== currentIdCassa)	
-	{ 
-		if (currentIdCassa) 
-			{
-			this.props.resetCassa(currentIdCassa);
-			 this.props.unlistenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  currentIdCassa);
-			} 
-		if (this.props.match.params.cassa) this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
-	}
-	
- if (this.props.listeningTestataScontrino) currentIdScontrino = this.props.listeningTestataScontrino.itemId;
- if (this.props.match.params.scontrino !== currentIdScontrino)	
-	{ 
-		if (currentIdScontrino) 
-			{
-			if (this.props.match.params.scontrino) this.props.resetTableScontrino(currentIdScontrino);
-			else this.props.resetScontrino(currentIdScontrino);
-			 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  currentIdScontrino);
-			} 
-		if (this.props.match.params.scontrino) 
+    this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
+	if (this.props.match.params.scontrino) 
 			{this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
 			}
-	}
+ 	
+    }
+
+ 
+ 
+ 
+
+ 
+componentDidUpdate = (oldProps) => {
+	    let scontrino = this.props.testataScontrino;
+		let cassa = this.props.testataCassa;
+        let oldScontrino = oldProps.testataScontrino;
+		let oldCassa = oldProps.testataCassa;
+		let oldCassaCassa = oldCassa ? oldCassa.cassa : null;
 	
- }
- 
-
- 
-componentDidUpdate() {
-		scontrino = this.props.testataScontrino;
-		cassa = this.props.testataCassa;
-
-	//Da mettere a posto
+		let oldDataCassa = oldCassa ? oldCassa.dataCassa : null;
+		let oldNumero = oldScontrino ? oldScontrino.numero : null;
+		
+        let oldIdScontrino = (oldProps.match && oldProps.match.params) ? oldProps.match.params.scontrino : null;
+        let idScontrino = this.props.match.params.scontrino;
+        //Reset e reload scontrino? 
+	    if (oldIdScontrino !== idScontrino)
+	    	{
+	    		if (oldIdScontrino)
+	    			{
+	    			//this.props.setSelectedRigaCassa(null);
+					 this.props.resetScontrino(oldIdScontrino);	
+					 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  oldIdScontrino);
+	    			}
+	    		this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+				
+	    	}
 	    var header = "Cassa ";
 	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");
-	if (scontrino) header = header + ' - scontrino n. ' + scontrino.numero;
+	if (scontrino && scontrino.numero) header = header + ' - scontrino n. ' + scontrino.numero;
 	
-	this.props.setHeaderInfo(header);
-}
+    if ((cassa && oldCassaCassa !== cassa.cassa) || (cassa && oldDataCassa !== cassa.dataCassa)  || (scontrino && oldNumero !== scontrino.numero))
+		this.props.setHeaderInfo(header);
+};
 
 
-componentWillUnmount() {
+componentWillUnmount = () =>{
 	
-  if (!this.props.match.params.scontrino) 
+  if (this.props.match.params.scontrino) 
 		{this.props.setSelectedRigaCassa(null);
-		currentIdScontrino = null; }
-    
+		 this.props.resetScontrino(this.props.match.params.scontrino);	//Serve?
+		  this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino);
+		}
+  	this.props.resetCassa(this.props.match.params.cassa);
+	 this.props.unlistenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa);
 }
 
 resetEditedCatalogItem = () => {
@@ -170,7 +161,7 @@ return (
 			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino} totaliScontrino={this.props.totaliScontrino}/>
 		</Row>
 		<Row>
-			<FormCalcoloResto testataScontrino={this.props.testataScontrino}/>
+			<FormCalcoloResto staleTotali={this.props.staleTotali} totaliScontrino={this.props.totaliScontrino} testataScontrino={this.props.testataScontrino}/>
 		</Row>
 		
 		</Col>

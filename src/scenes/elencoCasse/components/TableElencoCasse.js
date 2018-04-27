@@ -53,6 +53,12 @@ class TableElencoCasse extends Component
 	   this.periodMount();
 	}
 	
+	componentWillUnmount = () => {
+		if (this.props.period) this.props.offListenCassa(this.props.period);
+    	this.props.resetTable();
+    								    
+	}
+	
 	
 	deleteRow = (row) => {
 	   const deleteCassa = () => {this.props.deleteCassa(this.props.period, row.key);};

@@ -15,17 +15,14 @@ class ElencoCasse extends Component {
 componentDidMount() {
     	if (ReactDOM.findDOMNode(this.refs.formCassa)) this.props.storeMeasure('formCassaHeight', ReactDOM.findDOMNode(this.refs.formCassa).clientHeight);
     	this.props.setHeaderInfo('Cassa');
-    	
+    	if (!this.props.period) this.props.setPeriodElencoCasse(period2moment([this.props.match.params.anno, this.props.match.params.mese]));	
+		 else if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoCasse(period2moment(this.props.period));
+		this.props.toggleTableScroll(true); //Vado a fine tabella
+
  }
  
   	
-//Rimosso il reset da qui... non mi serve mai resettare visto che non ho casi ambigui...devo solo resettare la riga selezionata
- componentWillMount() {
-if (!this.props.period) this.props.setPeriodElencoCasse(period2moment([this.props.match.params.anno, this.props.match.params.mese]));	
- else if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoCasse(period2moment(this.props.period));
-	this.props.toggleTableScroll(true); //Vado a fine tabella
-    
-}
+
 
 
 

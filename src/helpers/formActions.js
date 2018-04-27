@@ -62,7 +62,7 @@ this.RESET='RESET_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
-this.TABLE_SCROLL_BY_KEY = 'TABLE_SCROLL_BY_KEY'+scene;
+this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+scene;
 
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.FOCUS_SET = 'FOCUS_SET_'+scene;
@@ -438,7 +438,7 @@ this.toggleTableScroll = (toggle) => {
 	
 this.setTableScrollByKey = (key) => {
  return {
-	    type: this.TABLE_SCROLL_BY_KEY,
+	    type: this.SET_TABLE_SCROLL_BY_KEY,
 	    key: key
 	  }  
 	}	
@@ -560,7 +560,7 @@ this.aggiungiItem = (params, valori) => {
    this.preparaItem(nuovoItem);
     return function(dispatch,getState) {
    
-   dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
+  dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
    var ref; 
     if(!onEAN) ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
     else ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, valori.ean));
@@ -572,6 +572,7 @@ this.aggiungiItem = (params, valori) => {
    	}
    	)  	
    if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));	
+ 
    return(ref.key);
   }
   
@@ -598,6 +599,7 @@ this.aggiornaItem = (params,itemId, valori) => {
    	}
    	)  	 
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));
+   	
    	 return(itemId); 
   }
  

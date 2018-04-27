@@ -120,6 +120,7 @@ export default function elencoBolle(state = initialState(), action) {
  export const getReadOnlyForm = (state) => {return state.editedItem.readOnlyForm};
  export const getPeriod = (state) => {return state.period};
  export const getListeningItem = (state) => {return state.listeningItem};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
       

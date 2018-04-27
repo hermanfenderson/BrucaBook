@@ -105,6 +105,7 @@ export default function elencoInventari(state = initialState(), action) {
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getReadOnlyForm = (state) => {return state.editedItem.readOnlyForm};
   export const getListeningItem = (state) => {return state.listeningItem};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
       

@@ -459,7 +459,7 @@ exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{a
             let oldTot = change.before.child('totali');
             let newTot = change.after.child('totali');
             
-            if (!areEqualShallow(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
+            if (equal(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
               {
 	            const key = context.params.idBolla;	
 	            const anno = context.params.anno;
@@ -492,7 +492,7 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
              let oldTot = change.before.child('totali');
             let newTot = change.after.child('totali');
             
-            if (!areEqualShallow(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
+            if (equal(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
              {
 	            const key = context.params.idResa;	
 	            const anno = context.params.anno;
@@ -526,7 +526,7 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
             let oldSconto = change.before.child('sconto').val();
             let newSconto = change.after.child('sconto').val();
             
-            if ((oldSconto === newSconto) && (areEqualShallow(oldTot, newTot))) //Per discernere cambiamenti genuini in testata
+            if ((oldSconto === newSconto) && (equal(oldTot, newTot))) //Per discernere cambiamenti genuini in testata
             {	
 	            const key = context.params.idScontrino;	
 	            const anno = context.params.anno;

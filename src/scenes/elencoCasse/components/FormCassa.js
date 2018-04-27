@@ -23,7 +23,7 @@ resetForm = () => {
 	this.props.resetEditedCassa();
 }
 
-componentWillMount = () => 
+componentDidMount = () => 
 {
 	this.resetForm();
 }

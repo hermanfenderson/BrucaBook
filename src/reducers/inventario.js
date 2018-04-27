@@ -246,6 +246,7 @@ export default function inventario(state = initialState(), action) {
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  export const listeningDataMagazzino = (state) => {return state.listeningDataMagazzino};
  export const getDataMagazzino = (state) => {return state.dataMagazzino};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
  

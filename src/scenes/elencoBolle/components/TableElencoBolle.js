@@ -58,6 +58,12 @@ class TableElencoBolle extends Component
 	   this.periodMount(oldProps);
 	}
 	
+	componentWillUnmount = () => {
+		if (this.props.period) this.props.offListenBolla(this.props.period);
+    	this.props.resetTable();
+    					
+	}
+	
 	
 	deleteRow = (row) => {
 	   const deleteBolla = () => {this.props.deleteBolla(this.props.period, row.key, row);};

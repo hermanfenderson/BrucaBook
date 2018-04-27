@@ -470,6 +470,7 @@ export default function resa(state = initialState(), action) {
  	return(righeResaIndexed);	
  }
  
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
       

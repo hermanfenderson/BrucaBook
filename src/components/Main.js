@@ -54,20 +54,19 @@ const Main= (props) =>
     								
 	return( 					<Switch>
       									<RequireAuthRoute exact path='/' component={Home} authenticated={authenticated}/>
-      									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
-		        					  	<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
+      								 	<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
     									<Route path='/dettagli/:ean' component={RequireAuth(DettagliArticolo)}/>
     								    <RequireAuthRoute path="/inventario/:id" component={Inventario} authenticated={authenticated}/>
 
     									<RequireAuthRoute path='/bolla/:anno/:mese/:id' component={GestioneBolla} authenticated={authenticated}/>
     									<RequireAuthRoute exact path='/acquisti/:anno/:mese' component={ElencoBolle} authenticated={authenticated}/>
-    									<Route exact path='/vendite/:anno/:mese' component={RequireAuth(ElencoCasse)}/>
+    									<RequireAuthRoute exact path='/vendite/:anno/:mese' component={ElencoCasse} authenticated={authenticated}/>
     										<Route exact path='/rese/:anno/:mese' component={RequireAuth(ElencoRese)}/>
     								     <Route path='/resa/:anno/:mese/:id' component={RequireAuth(Resa)}/>
     									<Route path='/resaLibera/:anno/:mese/:id' component={RequireAuth(ResaLibera)}/>
     									
-		        					     <Route exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={RequireAuth(Scontrino)}/>
-		        						<Route exact path='/scontrino/:anno/:mese/:cassa' component={RequireAuth(Scontrino)}/>
+		        					     	<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={Scontrino} authenticated={authenticated}/>
+		        							<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa' component={Scontrino} authenticated={authenticated}/>
 		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props}/>} />
     					      		     <Route path="/fornitori" component={RequireAuth(Fornitori)} />
     					      			              

@@ -13,34 +13,54 @@ const header = [{dataField: 'ean', label: 'EAN', width: '165px'},
 			      {dataField: 'sconto', label: 'Sc.', width: '60px'},
 			     {dataField: 'prezzoTotale', label: 'Tot.', width: '70px'}
 			   ];
-var currentListenedIdScontrino = null;
-    
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableScontrino extends Component 
     {
-    componentDidMount() {
-    	   		
-    	if (this.props.listeningItemScontrino) currentListenedIdScontrino = this.props.listeningItemScontrino[3];   
-    		//Ascolto modifiche sulle righe della bolla
     	
-    	if ((currentListenedIdScontrino !== this.props.scontrino))
-    	   {
-    	   	if (currentListenedIdScontrino) 
-    	   		{   
-    	   			   
+    listenScontrino = (oldProps, newProps) => 
+    {
+    		let newId = newProps.scontrino;
+    		let oldId = (oldProps && oldProps.listeningItemScontrino) ? oldProps.listeningItemScontrino[3] : null;
+    		if (newId !== oldId)
+    			{   
+    			    if (oldId)
+    			    	{
+    			    	let params = [...this.props.period];
+    	   				params.push(this.props.cassa)
+    	   				params.push(oldId);
+                   		newProps.offListenRigaScontrino(params, oldProps.listenersItemScontrino); 	
+    			    	}
+    				let params = newProps.period;
+    	   			params.push(newProps.cassa);
+    	   			params.push(newProps.scontrino);
+    	   			newProps.listenRigaScontrino(params); 
+    			}
+    	   
+
+    }
     
+    
+    componentDidMount() {
+    	this.listenScontrino(null, this.props);   		
+    		}
+	
+	componentDidUpdate = (oldProps) => {
+		console.log("aggiorno");
+		this.listenScontrino(oldProps, this.props);
+	}
+	
+	 componenWillUnmount() {
+    	   		
+    	if (this.props.listeningItemScontrino && this.props.listeningItemScontrino[3])
+    			{
+    				
+    			    let currentListenedIdScontrino = this.props.listeningItemScontrino[3];
     	   			let params = [...this.props.period];
     	   			params.push(this.props.cassa)
     	   			params.push(currentListenedIdScontrino);
                    	this.props.offListenRigaScontrino(params, this.props.listenersItemScontrino); 
     	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = this.props.period;
-    	   	params.push(this.props.cassa);
-    	   	params.push(this.props.scontrino);
-    	   	this.props.listenRigaScontrino(params); 
-    	   	}
     	   	
 	}
 	

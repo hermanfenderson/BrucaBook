@@ -227,6 +227,7 @@ export default function bolla(state = initialState(), action) {
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  
  export const getTotali = (state) => {return state.totali};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
  

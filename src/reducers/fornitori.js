@@ -94,6 +94,7 @@ export default function fornitori(state = initialState(), action) {
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
   export const getListeningItem = (state) => {return state.listeningItem};
+ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  
       
