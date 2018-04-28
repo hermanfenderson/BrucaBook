@@ -54,7 +54,7 @@ const Main= (props) =>
     								
 	return( 					<Switch>
       									<RequireAuthRoute exact path='/' component={Home} authenticated={authenticated}/>
-      								 	<Route exact path='/inventari' component={RequireAuth(ElencoInventari)}/>
+      								 	<RequireAuthRoute exact path='/inventari' component={ElencoInventari} authenticated={authenticated}/>
     									<Route path='/dettagli/:ean' component={RequireAuth(DettagliArticolo)}/>
     								    <RequireAuthRoute path="/inventario/:id" component={Inventario} authenticated={authenticated}/>
 
@@ -68,14 +68,14 @@ const Main= (props) =>
 		        					     	<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={Scontrino} authenticated={authenticated}/>
 		        							<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa' component={Scontrino} authenticated={authenticated}/>
 		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props}/>} />
-    					      		     <Route path="/fornitori" component={RequireAuth(Fornitori)} />
+    					      		     <RequireAuthRoute path="/fornitori" component={Fornitori} authenticated={authenticated}/>
     					      			              
-		        						<Route path="/catalogo" component={RequireAuth(GestioneItemCatalog)} />
+		        						<RequireAuthRoute path="/catalogo" component={GestioneItemCatalog} authenticated={authenticated}/>
 		        							<RequireAuthRoute path="/dashboard" component={Dashboard} authenticated={authenticated} />
-		        								<Route path="/magazzino" component={RequireAuth(Magazzino)} />
+		        								<RequireAuthRoute path="/magazzino" component={Magazzino} authenticated={authenticated}/>
     					      		
     					      		
-    					      			<Route exact path='/version' component={RequireAuth(ReadmeViewer)}/>
+    					      			<RequireAuthRoute exact path='/version' component={ReadmeViewer} authenticated={authenticated}/>
 		        					 
     					      			<Route exact path='/help' component={Help}/>
 		        					   

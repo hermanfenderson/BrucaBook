@@ -77,8 +77,7 @@ const initialState = () => {
     
     
 const transformSelectedItem = (cei) =>
-{
-    var	oraScontrino = moment(cei.dataCassa);
+{   var	oraScontrino = moment(cei.dataCassa);
     oraScontrino.hour(moment(cei.oraScontrino, "HH:mm").hour());
     oraScontrino.minute(moment(cei.oraScontrino, "HH:mm").minute());
 	cei.oraScontrino = oraScontrino;
@@ -385,8 +384,7 @@ const rigaCassaR = new FormReducer('CASSA', null, transformEditedCassa, transfor
 function transformAndValidateEditedRigaCassa(cei, name, value)
 {  	
 	cei.values[name] = value;
-
-  //I messaggi vengono ricalcolati a ogni iterazione...
+    //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
     errMgmt(cei, 'oraScontrino','invalidTime','Ora non valida',  (!cei.values.oraScontrino.isValid()));
     errMgmt(cei, 'numero','notPositive','Numero > 0',  (!isPositiveInteger(cei.values.numero)));

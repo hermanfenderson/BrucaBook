@@ -187,7 +187,6 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
           else if (isValidEAN(state.editedItem.values.ean)) 
 	    		     {
 	    		      //Mostro gli errori nel form...
-	    		      console.log(action);
 	    		      newState = {...state};
 	    		     }
 	    			

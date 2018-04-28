@@ -8,7 +8,9 @@ Storia delle versioni
 * Fix dello scroll (aggiungendo visualizzazione specifica per chiave)
 * Fix righe fantasma cancellando (#270)
 * Aggiornato scontrino e cassa a react 17 (in prospettiva)
-* Bug fixing complessivo in ambito scontrino e casse ()
+* Bug fixing complessivo in ambito scontrino e casse (#248)
+* Eliminazione di rimbalzi in caricamenti di pagine (in corso)
+* Migrazione a lifecycle di rect 17 (in corso)
 
 ### Versione 0.9.30
 * A prima chiamata dashboard si prende comunque i dati del giorno prima...

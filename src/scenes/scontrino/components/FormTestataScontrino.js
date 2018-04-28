@@ -42,7 +42,6 @@ onSubmit = (e) => {
   	const errorMessages = this.props.editedCassa.errorMessages;
   	const willFocus = this.props.editedCassa.willFocus;
   	const loading = this.props.editedCassa.loading;
-  	    
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
         <WrappedForm.Group formGroupLayout={{gutter:0}}>

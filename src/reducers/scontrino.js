@@ -126,7 +126,7 @@ function transformAndValidateEditedRigaScontrino(cei, name, value)
 
   
 		
-   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto));
+   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((value) => {return ((value.length > 0)  && (!isPercentage(value)))})(cei.values.sconto));
    	
    
    	errMgmt(cei, 'prezzoUnitario','invalidAmount','Importo (19.99)',  

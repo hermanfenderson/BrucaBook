@@ -15,7 +15,7 @@ resetForm = () => {
 	this.props.resetEditedFornitore();
 }
 
-componentWillMount = () => 
+componentDidMount = () => 
 {
 	this.resetForm();
 }

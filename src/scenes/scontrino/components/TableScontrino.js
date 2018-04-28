@@ -46,7 +46,6 @@ class TableScontrino extends Component
     		}
 	
 	componentDidUpdate = (oldProps) => {
-		console.log("aggiorno");
 		this.listenScontrino(oldProps, this.props);
 	}
 	

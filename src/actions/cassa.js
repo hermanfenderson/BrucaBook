@@ -132,6 +132,8 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
    					}
    					)  	
 			nuovoItem['key'] = ref.key;
+			nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
+		
 			dispatch(cassaFA.setSelectedItem(nuovoItem));
 			
 			

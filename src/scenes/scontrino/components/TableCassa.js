@@ -13,12 +13,11 @@ class WrappedTable extends React.Component {
 componentDidMount()
   {  this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
     
-   
-  }
+    }
   
   
 
-  componentDidUpdate() {
+  componentDidUpdate = (oldProps) => {
   	this.node = ReactDOM.findDOMNode(this.refs.antTable).getElementsByClassName('ant-table-body')[0];
     
 	   if (this.props.tableScroll)
@@ -35,7 +34,12 @@ componentDidMount()
 			this.props.setTableScrollByKey(null); //Resetto lo scroll...
 			
 			}
-		
+	 //Se entro qui... è perchè ho fatto refresh in mezzo....	
+	 if (this.props.index.chiavi && (this.props.match.params.scontrino !== null) && (this.props.selectedItem === null) && (this.props.index.chiavi[this.props.match.params.scontrino] >=0) )
+		{
+			let row = this.props.data[this.props.index.chiavi[this.props.match.params.scontrino]];
+			this.props.setSelectedRigaCassa(row);
+		}	
  }
 	
 selectRow = (row) => {

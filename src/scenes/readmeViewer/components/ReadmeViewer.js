@@ -7,13 +7,12 @@ import {Redirect} from 'react-router';
 class ReadmeViewer extends React.Component 
 {
 
-componentWillMount() {
-  this.props.setHeaderInfo('Versione');
-  this.props.setShowModal(true);
 
-}
 componentDidMount() {
+this.props.setHeaderInfo('Versione');
+this.props.setShowModal(true);
 this.props.loadReadme();
+
 }
 
 componentWillUnmount() {
