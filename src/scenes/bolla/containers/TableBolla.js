@@ -2,7 +2,7 @@ import TableBollaComponent from '../components/TableBolla'
 import {rigaBollaFA} from '../../../actions/bolla'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaBolla, getRigheBolla, getTableHeight, getTableScroll,  getListeningItemBolla, getTableScrollByKey} from '../../../reducers'
+import {getEditedRigaBolla, getTableHeight, getTableScroll,  getListeningItemBolla, getTableScrollByKey, getItems} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -17,7 +17,9 @@ const setTableScrollByKey = rigaBollaFA.setTableScrollByKey;
 
 
 const mapStateToProps = (state) => {
-	return ({data: getRigheBolla(state),
+	return ({
+	//data: getRigheBolla(state),
+	data: getItems(state,'BOLLA'),
 	height: getTableHeight(state), 
 	selectedItem: getEditedRigaBolla(state).selectedItem,
 	listeningItemBolla: getListeningItemBolla(state),

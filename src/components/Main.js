@@ -45,25 +45,20 @@ import GestioneItemCatalog from '../scenes/catalogo';
 const Main= (props) => 
 {  	const authenticated = props.authenticated;
     
-     const RequireAuth = (Component) => {return((props) => {
-     	                   	return (authenticated ?  <Component {...props}/>:  <Redirect to='/userMgmt?mode=login' />);
-    						})}
-    						
    
-// 	<Route path='/inventario/:id' component={RequireAuth(Inventario)}/>
-    								
+
 	return( 					<Switch>
       									<RequireAuthRoute exact path='/' component={Home} authenticated={authenticated}/>
       								 	<RequireAuthRoute exact path='/inventari' component={ElencoInventari} authenticated={authenticated}/>
-    									<Route path='/dettagli/:ean' component={RequireAuth(DettagliArticolo)}/>
+    									<RequireAuthRoute path='/dettagli/:ean' component={DettagliArticolo} authenticated={authenticated}/>
     								    <RequireAuthRoute path="/inventario/:id" component={Inventario} authenticated={authenticated}/>
 
     									<RequireAuthRoute path='/bolla/:anno/:mese/:id' component={GestioneBolla} authenticated={authenticated}/>
     									<RequireAuthRoute exact path='/acquisti/:anno/:mese' component={ElencoBolle} authenticated={authenticated}/>
     									<RequireAuthRoute exact path='/vendite/:anno/:mese' component={ElencoCasse} authenticated={authenticated}/>
-    										<Route exact path='/rese/:anno/:mese' component={RequireAuth(ElencoRese)}/>
-    								     <Route path='/resa/:anno/:mese/:id' component={RequireAuth(Resa)}/>
-    									<Route path='/resaLibera/:anno/:mese/:id' component={RequireAuth(ResaLibera)}/>
+    										<RequireAuthRoute exact path='/rese/:anno/:mese' component={ElencoRese} authenticated={authenticated}/>
+    								     <RequireAuthRoute path='/resa/:anno/:mese/:id' component={Resa} authenticated={authenticated}/>
+    									<RequireAuthRoute path='/resaLibera/:anno/:mese/:id' component={ResaLibera} authenticated={authenticated}/>
     									
 		        					     	<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa/:scontrino' component={Scontrino} authenticated={authenticated}/>
 		        							<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa' component={Scontrino} authenticated={authenticated}/>

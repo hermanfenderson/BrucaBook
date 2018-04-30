@@ -484,7 +484,7 @@ export default function cassa(state = initialState(), action) {
  export const getTestataCassa = (state) => {return state.testata};
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
- export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
+ //export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
  export const getMeasures = (state) => {return state.measures};
  export const getListeningTestataCassa = (state) => {return state.listeningTestata};

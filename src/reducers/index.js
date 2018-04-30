@@ -25,6 +25,8 @@ import UserMgmtReducer, * as fromUserMgmt from './userMgmt';
 import StatusReducer, * as fromStatus from './status';
 import ReadmeViewerReducer, * as fromReadmeViewer from './readmeViewer';
 
+import * as fromFormReducer from '../helpers/formReducer';
+
 const rootReducer = combineReducers({
   app: AppReducer,
   auth: AuthReducer,
@@ -274,7 +276,13 @@ export const s2s = (scene) => {
 
 export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return s.origin.listeningDataMagazzino(state[s.stato])};
 export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.origin.getDataMagazzino(state[s.stato])};
-export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return s.origin.getTableScrollByKey(state[s.stato])};
+//Tengo questa per ricordarmi strada alternativa...se ha senso...
+
+//export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return s.origin.getTableScrollByKey(state[s.stato])};
+
+//Questo che segue è l'uovo di Colombo...
+export const getItems = (state, scene) => {let s=s2s(scene); return fromFormReducer.getItems(state[s.stato])};
+export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getTableScrollByKey(state[s.stato])};
 
 
  

@@ -2,120 +2,45 @@
 // The Cloud Functions for Firebase SDK to create Cloud Functions and setup triggers.
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-
-
 const moment = require('moment');
-
-const {generateTop5thisYear} = require('./report');
-const {generateTop5lastYear} = require('./report');
-const {generateTop5lastMonth} = require('./report');
-
-const {getMatrixVenditeFromRegistroData} = require('./report');
-const {generateSerieIncassi} = require('./report');
-const {generateSerieIncassiMesi} = require('./report');
-const {generateSerieIncassiAnni} = require('./report');
-
+const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
+const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
 const equal = require('deep-equal');
-
-function areEqualShallow(a, b, debug=false) {
-    if (a===b) return true;
-    if ((!a && b) || (!b && a)) return false;
-    for(let key in a) {
-        if(!(key in b) || a[key] !== b[key]) {
-        	if (debug)
-        		{
-        			
-        			console.log(key);
-        			console.log(a);
-        			console.log(b);
-        			
-        		}
-            return false;
-        }
-    }
-    for(let key in b) {
-        if(!(key in a) || a[key] !== b[key]) {
-        	if (debug)
-        		{
-        			console.log(key);
-        			console.log(a);
-        			console.log(b);
-        		}
-            return false;
-        }
-    }
-    return true;
-}
-
-
-
-// The Firebase Admin SDK to access the Firebase Realtime Database. 
-//const admin = require('firebase-admin');
-
-//admin.initializeApp();
-
-//admin.initializeApp(functions.config().firebase);
-
-//Da catalogo generale a catalogo locale...
-
-
-admin.initializeApp();
-/*
-exports.sample = functions.https.onRequest((req, res) => {
-  cors(req, res, () => {
-    res.send('Passed.');
-  });
-});
-*/
 const cors = require('cors')({origin: true});
 
+admin.initializeApp();
 
 exports.report = functions.https.onRequest((req, res) => {
-
 cors(req, res, () => {
 let catena = req.query.catena;
 let libreria = req.query.libreria;
-
- let urlSource = catena + '/' + libreria + '/registroData'
- let urlDest = catena + '/' + libreria + '/report/bulk';
- //Questa cancellazione va cancellata!
- //admin.database().ref(urlDest).remove();
-  res.send('Passed.');    							 
- 
-  
-  
- admin.database().ref(urlSource).once("value").then(function(snapshot)
+let urlSource = catena + '/' + libreria + '/registroData'
+let urlDest = catena + '/' + libreria + '/report/bulk';
+res.send('Passed.');    							 
+admin.database().ref(urlSource).once("value").then(function(snapshot)
 								{ 	let year = moment().format('YYYY');
     								let lastYear = (parseInt(year,10) -1).toString(10);
     								let lastMonthArray = moment().subtract(1, 'months').format('YYYY/MM').split('/');
-      
-									let matrixVendite = getMatrixVenditeFromRegistroData(snapshot.val());
+      								let matrixVendite = getMatrixVenditeFromRegistroData(snapshot.val());
 									let serieIncassi = generateSerieIncassi(matrixVendite);
     								let serieIncassiMesi = generateSerieIncassiMesi(matrixVendite);
     								let serieIncassiAnni = generateSerieIncassiAnni(matrixVendite);
     								let top5thisYear = generateTop5thisYear(matrixVendite, year);
     								let top5lastYear = generateTop5lastYear(matrixVendite, lastYear);
     								let top5lastMonth = generateTop5lastMonth(matrixVendite, lastMonthArray);
-    							
-    							
     								admin.database().ref(urlDest).update({'serieIncassi': serieIncassi, 'serieIncassiMesi': serieIncassiMesi, 'serieIncassiAnni': serieIncassiAnni, 'top5thisYear': top5thisYear, 'top5lastYear': top5lastYear,  'top5lastMonth': top5lastMonth, 'createdAt': admin.database.ServerValue.TIMESTAMP });	
-									
-
 								})
-
-});
+	});
 });
 
 exports.aggiornaDaCatalogo = functions.database.ref('/catalogo/{ean}')
 //DA MODIFICARE 
-
    .onUpdate((change, context) =>
 			{
 			const ean = context.params.ean;
 			let newCatalogEntry = change.after.val();
 			//
 			let elencoLibrerieRef = change.after.ref.parent.parent.child('librerie').child('elencoLibrerie');
-			
 			elencoLibrerieRef.once("value").then(function(snapshot)
 				{
 				let elencoLibrerie = snapshot.val();
@@ -135,6 +60,7 @@ exports.aggiornaDaCatalogo = functions.database.ref('/catalogo/{ean}')
 			return true;	
 			}
 			);
+
 //Da catalogo locale alle righe di bolle, scontrini, ecc...
 exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/catalogo/{ean}')
 
@@ -166,8 +92,9 @@ exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/ca
 			}
 			);
 			
-exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}/totali')
-    .onWrite((change, context) => 
+exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}/totali')
+    .onWrite((change, context) => {return(calcolaTotali(change, context, 'elencoCasse'))});
+   /*
             {
              const cassa = context.params.idCassa;
              const anno = context.params.anno;
@@ -211,9 +138,11 @@ exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoSc
              return true;					   
         	 }
            );
+*/
 
-exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}/{idItem}')
-    .onWrite((change, context) => 
+exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{idItem}')
+    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoScontrini'))});
+           /*
             {
              //Da riscrivere....
              const key = context.params.idScontrino;	
@@ -255,12 +184,14 @@ exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scon
                 }	
         	   
            );
+          */ 
 
 //Modo "paraculo"... devo ragionare se crea problemi in transazione    
 //Aggiungo una info ai totali per determinare se ho un valore aggiornato da far vedere all'utente...
 
-exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}')
-    .onWrite((change, context) => 
+exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{idItem}')
+    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoBolle'))});
+      /*   
             {
              const key = context.params.idBolla;	
              const anno = context.params.anno;
@@ -278,7 +209,7 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
 		  		{
 		  		let newObj = righeSnapshot.after.child(propt).val();
 		  		let oldObj = righeSnapshot.before.child(propt).val();
-		  		if (!areEqualShallow(newObj, oldObj)) idItem = propt; //Prendo la riga cambiata...	
+		  		if (!equal(newObj, oldObj)) idItem = propt; //Prendo la riga cambiata...	
 		  		totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
 			    totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
 			    totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
@@ -319,9 +250,10 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
                 }	
         	   
            );
-           
-exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}')
-    .onWrite((change, context) => 
+           */
+exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}/{idItem}')
+    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoRese'))});
+       /*
             {
              const key = context.params.idResa;	
              const anno = context.params.anno;
@@ -339,7 +271,7 @@ exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{ann
 		  		{
 		  		let newObj = righeSnapshot.after.child(propt).val();
 		  		let oldObj = righeSnapshot.before.child(propt).val();
-		  		if (!areEqualShallow(newObj, oldObj)) idItem = propt; //Prendo la riga cambiata...	
+		  		if (!equal(newObj, oldObj)) idItem = propt; //Prendo la riga cambiata...	
 		  			
 		  		totalePezzi = parseInt(righe[propt].pezzi) + totalePezzi;
 			    totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
@@ -381,179 +313,38 @@ exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{ann
                 }	
         	   
            );
-                      
+  */
+  
 
 //Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...
 
-exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{idBolla}')
-    .onDelete((snap, context) => 
-            {
-            const key = context.params.idBolla;
-                const anno = context.params.anno;
-             const mese = context.params.mese;
-		
-            
-			console.info("Cancello bolla "+key);
-			return snap.ref.parent.parent.parent.parent.child('bolle').child(anno).child(mese).child(key).remove();
-    		}
-           );
+exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{id}')
+    .onDelete((snap, context) => {return(purge(snap,context,'bolle'))});
            
-exports.purgeResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{anno}/{mese}/{idResa}')
-    .onDelete((snap,context) => 
-            {
-            const key = context.params.idResa;
-                const anno = context.params.anno;
-             const mese = context.params.mese;
-		
-            
-			console.info("Cancello resa "+key);
-			return snap.ref.parent.parent.parent.parent.child('rese').child(anno).child(mese).child(key).remove();
-    		}
-           );      
+exports.purgeResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{anno}/{mese}/{id}')
+    .onDelete((snap, context) => {return(purge(snap,context,'rese'))});
            
-//Idem per gli scontrini...
-
-exports.purgeScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
-    .onDelete((snap,context) => 
-            {
-            const key = context.params.idScontrino;
-            const cassa = context.params.idCassa;
-                const anno = context.params.anno;
-             const mese = context.params.mese;
-		
-            
-			console.info("Cancello scontrino "+key);
-			return snap.ref.parent.parent.parent.parent.parent.child('scontrini').child(anno).child(mese).child(cassa).child(key).remove();
-    		}
-           );
-
-//Idem per le casse... cancello solo elencoScontrini che propaga l'effetto...
-exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{anno}/{mese}/{idCassa}')
-    .onDelete((snap, context) => 
-            {
-            const cassa = context.params.idCassa;
-                const anno = context.params.anno;
-             const mese = context.params.mese;
-		
-            
-			console.info("Cancello cassa "+cassa);
-			return snap.ref.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).remove();
-    		}
-           );
-
-exports.purgeInventario =  functions.database.ref('{catena}/{negozio}/elencoInventari/{idInventario}')
-    .onDelete((snap,context) => 
-            {
-            const inventario = context.params.idInventario;
-            
-			console.info("Cancello inventario "+inventario);
-			return snap.ref.parent.parent.child('inventari').child(inventario).remove();
-    		}
-           );
+exports.purgeScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}')
+    .onDelete((snap, context) => {return(purge(snap,context,'scontrini'))});  
+  
+exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{anno}/{mese}/{id}')
+    .onDelete((snap, context) => {return(purge(snap,context,'elencoscontrini'))});  
+  
+exports.purgeInventario =  functions.database.ref('{catena}/{negozio}/elencoInventari/{id}')
+	.onDelete((snap, context) => {return(purge(snap,context,'inventari'))}); 
 
 
 //Salvo la nuova data nelle righe già presenti...
-exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{idBolla}')
-    .onUpdate((change, context) => 
-            {
-            let oldTot = change.before.child('totali');
-            let newTot = change.after.child('totali');
-            
-            if (equal(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
-              {
-	            const key = context.params.idBolla;	
-	            const anno = context.params.anno;
-	            const mese = context.params.mese;
-	            var values = Object.assign({}, change.after.val());
-			    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
-			    delete values.createdBy;
-			    delete values.createdAt;
-			    delete values.changedBy;
-			    delete values.changedAt;
-			    delete values.key;
-			    values.data = values.dataCarico;
-				console.info("Aggiorno bolla "+key);
-				const ref = change.after.ref.parent.parent.parent.parent.child('bolle').child(anno).child(mese).child(key);
-				ref.once('value', function(snapshot) {
-					snapshot.forEach(function(childSnapshot) 
-						{
-				    	childSnapshot.ref.update(values);
-	    				})
-					})
-				}
-			  
-            	return true;	
-            }	
-    		);
+exports.updateBolla =  functions.database.ref('{catena}/{negozio}/elencoBolle/{anno}/{mese}/{id}')
+    .onUpdate((change, context) => {return(update(change,context,'bolle'))});
+          
  //Salvo la nuova data nelle righe già presenti...
-exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{anno}/{mese}/{idResa}')
-    .onUpdate((change, context) => 
-            {
-             let oldTot = change.before.child('totali');
-            let newTot = change.after.child('totali');
-            
-            if (equal(oldTot, newTot)) //Per discernere cambiamenti genuini in testata
-             {
-	            const key = context.params.idResa;	
-	            const anno = context.params.anno;
-	            const mese = context.params.mese;
-	            var values = Object.assign({}, change.after.val());
-			    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
-			    delete values.createdBy;
-			    delete values.createdAt;
-			    delete values.changedBy;
-			    delete values.changedAt;
-			    delete values.key;
-			    values.data = values.dataCarico;
-				console.info("Aggiorno bolla "+key);
-				const ref = change.after.ref.parent.parent.parent.parent.child('rese').child(anno).child(mese).child(key);
-				ref.once('value', function(snapshot) {
-					snapshot.forEach(function(childSnapshot) 
-						{
-				    	childSnapshot.ref.update(values);
-	    				})
-					})
-				}
-			 return true;	
-			  }	
-    		);   		
+exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{anno}/{mese}/{id}')
+    .onUpdate((change, context) => {return(update(change,context,'rese'))});
            
- exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{idCassa}/{idScontrino}')
-    .onUpdate((change, context) => 
-            {
-             let oldTot = change.before.child('totali').val();
-            let newTot = change.after.child('totali').val();
-            let oldSconto = change.before.child('sconto').val();
-            let newSconto = change.after.child('sconto').val();
-            
-            if ((oldSconto === newSconto) && (equal(oldTot, newTot))) //Per discernere cambiamenti genuini in testata
-            {	
-	            const key = context.params.idScontrino;	
-	            const anno = context.params.anno;
-	            const mese = context.params.mese;
-	            const cassa = context.params.idCassa;
-			    var values = Object.assign({}, change.after.val());
-			    delete values.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
-			    delete values.createdBy;
-			    delete values.createdAt;
-			    delete values.changedBy;
-			    delete values.changedAt;
-			    delete values.key;
-			    delete values.sconto; //Non devo persistere lo sconto se non è cambiato...
-			    values.data = values.dataCassa;
-				console.info("Aggiorno scontrino "+key);
-				const ref = change.after.ref.parent.parent.parent.parent.parent.child('scontrini').child(anno).child(mese).child(cassa).child(key);
-				ref.once('value', function(snapshot) {
-					snapshot.forEach(function(childSnapshot) 
-						{
-						childSnapshot.ref.update(values);
-	    				})
-					})
-              }	
-			return true;	
-            	
-            }	
-    		);
+ exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}')
+    .onUpdate((change, context) => {return(update(change,context,'scontrini'))});
+           
               
      
 //Il registroEAN è organizzato per catena -> Negozio -> EAN -> keyDocumento che origina il valore...
@@ -569,208 +360,48 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
 
 //Nel caso delle bolle...  
 
-exports.inserisciRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/{keyRiga}')
-    .onCreate((snap, context) =>
-    		{   const key =  context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-            	const newVal = Object.assign(snap.val(), {tipo: 'bolle', id: context.params.anno + '/'+ context.params.mese + '/'+context.params.idBolla});
-                snap.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-                 snap.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    		
-    		 return true;		
-    		}
-         
-          ); 
+exports.inserisciRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{keyRiga}')
+    .onCreate((snap, context) => {return(aggiornaRegistro(snap,context,'inserisci','bolle'))});
 
-exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/{keyRiga}')
-    .onUpdate((change, context) =>
-    		{
-    			const key =context.params.keyRiga;
-    			const ean = change.after.val().ean;	
-    			const oldData = change.before.val().data;
-    			const data = change.after.val().data;
-            	const newVal = Object.assign(change.after.val(), {tipo: 'bolle', id:  context.params.anno + '/'+ context.params.mese + '/'+ context.params.idBolla});
-//Se è cambiata la data devo cancellare la vecchia riga...
-                if (oldData !== data) 
-                	{
-                	change.after.ref.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
-                	change.after.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
-                		
-                	}
-                change.after.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-      
-                change.after.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    	  return true;	
-    		}
-          ); 
+exports.modificaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{keyRiga}')
+    .onUpdate((change, context) => {return(aggiornaRegistro(change,context,'modifica','bolle'))});
 
-exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{idBolla}/{keyRiga}')
-    .onDelete((snap, context) =>
-    		{
-    			const key = context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-    			snap.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
-                snap.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
-    	  return true;	
-    		}
-          ); 
+exports.eliminaRegistroDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{keyRiga}')
+    .onDelete((snap, context) => {return(aggiornaRegistro(snap,context,'elimina','bolle'))});
 
 //Nel caso delle rese...  
 
-exports.inserisciRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}/{keyRiga}')
-    .onCreate((snap, context) =>
-    		{
-    			const key =  context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-            	const newVal = Object.assign(snap.val(), {tipo: 'rese', id: context.params.anno + '/'+ context.params.mese + '/'+context.params.idResa});
-                snap.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-                 snap.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    		return true;	
-    			
-    		}
-          ); 
+exports.inserisciRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}/{keyRiga}')
+    .onCreate((snap, context) => {return(aggiornaRegistro(snap,context,'inserisci','rese'))});
 
-exports.modificaRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}/{keyRiga}')
-    .onUpdate((change,context) =>
-    		{
-    			const key =context.params.keyRiga;
-    			const ean = change.after.val().ean;	
-    			const oldData = change.before.val().data;
-    			const data = change.after.val().data;
-            	const newVal = Object.assign(change.after.val(), {tipo: 'rese', id:  context.params.anno + '/'+ context.params.mese + '/'+ context.params.idResa});
-//Se è cambiata la data devo cancellare la vecchia riga...
-                if (oldData !== data) 
-                	{
-                	change.after.ref.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
-                	change.after.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
-                		
-                	}
-                change.after.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-      
-                change.after.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    		return true;	
-    			
-    		}
-          ); 
+exports.modificaRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}/{keyRiga}')
+    .onUpdate((change,context) => {return(aggiornaRegistro(change,context,'modifica','rese'))});
+    		
 
-exports.eliminaRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{idResa}/{keyRiga}')
-    .onDelete((snap, context) =>
-    		{
-    			const key = context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-    			snap.ref.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
-                snap.ref.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
-    	return true;	
-    		}
-          ); 
+exports.eliminaRegistroDaResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}/{keyRiga}')
+    .onDelete((snap, context) => {return(aggiornaRegistro(snap,context,'elimina','rese'))});
 
 //Nel caso degli scontrini...  
 
-exports.inserisciRegistroDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}/{keyRiga}')
-    .onCreate((snap, context) =>
-    		{
-    			const key = context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-            	const newVal = Object.assign(snap.val(), {tipo: 'scontrini', id: context.params.anno + '/'+ context.params.mese + '/'+context.params.idCassa + '/'+context.params.idScontrino});
-                snap.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-                 snap.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    	return true;	
-    		}
-          ); 
+exports.inserisciRegistroDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{keyRiga}')
+    .onCreate((snap, context) => {return(aggiornaRegistro(snap,context,'inserisci','scontrini'))});
 
-exports.modificaRegistroDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}/{keyRiga}')
-    .onUpdate((change, context) =>
-    		{
-    			const key =context.params.keyRiga;
-    			const ean = change.after.val().ean;	
-    			const oldData = change.before.val().data;
-    			const data = change.after.val().data;
-            	const newVal = Object.assign(change.after.val(), {tipo: 'scontrini', id:  context.params.anno + '/'+ context.params.mese + '/'+context.params.idCassa + '/'+context.params.idScontrino});
-                //Se è cambiata la data devo cancellare la vecchia riga...
-                console.log(newVal);
-                if (oldData !== data) 
-                	{
-                	change.after.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
-                	change.after.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
-                		
-                	}
-                change.after.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-      
-                change.after.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    		return true;	
-    			
-    		}
-          ); 
+exports.modificaRegistroDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{keyRiga}')
+    .onUpdate((change, context) => {return(aggiornaRegistro(change,context,'modifica','scontrini'))});
 
-exports.eliminaRegistroDaScontrini = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{idCassa}/{idScontrino}/{keyRiga}')
-    .onDelete((snap, context) =>
-    		{
-    			const key = context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-    			snap.ref.parent.parent.parent.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
-                snap.ref.parent.parent.parent.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
-    		
-    		return true;		
-    		}
-          ); 
+exports.eliminaRegistroDaScontrini = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{keyRiga}')
+    .onDelete((snap, context) => {return(aggiornaRegistro(snap,context,'elimina','scontrini'))});
           
 
 //Nel caso dell'inventario
-exports.inserisciRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
-    .onCreate((snap, context) =>
-    		{
-    			const key =  context.params.keyRiga; //Corrisponde a EAN...
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-            	const newVal = Object.assign(snap.val(), {tipo: 'inventari', id: context.params.idInventario});
-                snap.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-                snap.ref.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-    		
-    		return true;		
-    		}
-          ); 
+exports.inserisciRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{id}/{keyRiga}')
+    .onCreate((snap, context) => {return(aggiornaRegistro(snap,context,'inserisci','inventari'))});
 
-exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
-    .onUpdate((change, context) =>
-    		{
-    			const key = context.params.keyRiga;
-    			const ean = change.after.val().ean;	
-    			const oldData = change.before.val().data;
-    			const data = change.after.val().data;
-            	const newVal = Object.assign(change.after.val(), {tipo: 'inventari', id:  context.params.idInventario});
-                 //Se è cambiata la data devo cancellare la vecchia riga...
-                if (oldData !== data) 
-                	{
-                	change.after.ref.parent.parent.parent.child('registroData/'+oldData+'/'+key).remove();
-                	change.after.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
-          		
-                	}
-                change.after.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-      
-                change.after.ref.parent.parent.parent.child('registroData/'+data+'/'+key).set(newVal);
-            return true;	
-    		}
-          ); 
-
-exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{idInventario}/{keyRiga}')
-    .onDelete((snap, context) =>
-    		{
-    			const key = context.params.keyRiga;
-    			const ean = snap.val().ean;	
-    			const data = snap.val().data;
-    			snap.ref.parent.parent.parent.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
-                snap.ref.parent.parent.parent.child('registroData/'+data+'/'+key).remove();
-    		
-    		return true;		
-    		}
-          ); 
-
+exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{id}/{keyRiga}')
+    .onUpdate((change, context) => {return(aggiornaRegistro(change,context,'modifica','inventari'))});
+    
+exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{id}/{keyRiga}')
+    .onDelete((snap, context) => {return(aggiornaRegistro(snap,context,'elimina','inventari'))});
 
 //Da modificare per storicizzarla e prevedere una full... 
 exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')

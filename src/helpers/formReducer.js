@@ -379,6 +379,9 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 }
 export default FormReducer
 
+export const getItems = (state) => {return state.itemsArray};  
+export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
+  
 
 
 
