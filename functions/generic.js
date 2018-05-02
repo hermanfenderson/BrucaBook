@@ -7,19 +7,18 @@ const purge = (snap, context, part) =>
             const anno = context.params.anno;
             const mese = context.params.mese;
 		
-			console.info("Cancello "+part+ " "+key);
 			switch(part)
 				{
 			 case 'bolle':
 			 case 'rese':
 			 case  'elencoScontrini':
-				return snap.ref.parent.parent.parent.parent.child(part).child(anno).child(mese).child(key).remove();
+				return snap.ref.parent.parent.parent.parent.child(part).child(anno).child(mese).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
 			 case 'scontrini':
-				return snap.ref.parent.parent.parent.parent.parent.child(part).child(anno).child(mese).child(prefixId).child(key).remove();
+				return snap.ref.parent.parent.parent.parent.parent.child(part).child(anno).child(mese).child(prefixId).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
      		 case 'inventari':
-				return snap.ref.parent.parent.child(part).child(key).remove();
+				return snap.ref.parent.parent.child(part).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
          	 default: 
-         		return false
+         		return false;
 				}
 };
 
@@ -52,28 +51,31 @@ const aggiornaRegistro = (snap, context, action, part) =>
      destRef = ref.parent.parent.parent.parent.parent.parent;
  break;
  case 'inventari':  
- 	 newVal = Object.assign(val, {tipo: 'inventari', id: context.params.idInventario});
+ 	 newVal = Object.assign(val, {tipo: 'inventari', id: context.params.id});
      destRef = ref.parent.parent.parent;
  break;
  default:
  break;
 }
+let updates = {}; //Qui metto tutti gli updates
  if (change && (oldData !== data))
 	{
-		destRef.child('registroData/'+oldData+'/'+key).remove();
-		destRef.child('registroEAN/'+ean+'/'+oldData+'/'+key).remove();
+		
+        updates['registroData/'+oldData+'/'+key] = null;
+        updates['registroEAN/'+ean+'/'+oldData+'/'+key] = null;
 	}
  if (action==='inserisci' || action==='modifica')
 	{
-		destRef.child('registroEAN/'+ean+'/'+data+'/'+key).set(newVal);
-        destRef.child('registroData/'+data+'/'+key).set(newVal);
-	}
+	     updates['registroData/'+data+'/'+key] = newVal;
+        updates['registroEAN/'+ean+'/'+data+'/'+key] = newVal;
+ 	}
 else 
 	{
-	 destRef.child('registroEAN/'+ean+'/'+data+'/'+key).remove();
-     destRef.child('registroData/'+data+'/'+key).remove();
+      updates['registroData/'+data+'/'+key] = null;
+        updates['registroEAN/'+ean+'/'+data+'/'+key] = null;
+        
 	}
-return true;	
+return (destRef.update(updates).then(()=>{console.info("Modifiche registro: "+key); console.info(updates);} ));
 };
 
 const update = (change, context, part) =>
@@ -96,8 +98,7 @@ const update = (change, context, part) =>
 			    delete values.changedAt;
 			    delete values.key;
 			    delete values.sconto; //Non devo persistere lo sconto se non è cambiato...
-			    console.info("Aggiorno " +part+ " "+key);
-				var ref;	
+			   	var ref;	
 			    switch(part)
 			    	{
 			    	case 'scontrini':	
@@ -116,15 +117,18 @@ const update = (change, context, part) =>
 			    	default: 
 			    	break;
 			    	}
-				ref.once('value', function(snapshot) {
+				return(ref.once('value').then(function(snapshot) {
+					let updates={};
 					snapshot.forEach(function(childSnapshot) 
 						{
-						childSnapshot.ref.update(values);
-	    				})
-					})
+						updates[childSnapshot.key] = values;
+						//childSnapshot.ref.update(values);
+	    				});
+	    			ref.update(updates).then( console.info("Aggiorno " +part+ " "+key));	
+					}));
               }	
-			return true;       
-}
+		else return false;       
+};
 
 const calcolaTotali = (change, context, part) =>
 {
@@ -138,7 +142,7 @@ const calcolaTotali = (change, context, part) =>
             //Se calcolo la somma di scontrini salgo di due (sto osservando i totali...)
             const refParent = (part === 'elencoCasse') ? change.after.ref.parent.parent : change.after.ref.parent;
               	
-            refParent.transaction(function(righe) {
+            return(refParent.transaction(function(righe) {
             	    var totalePezzi = 0;
 					var totaleImporto = 0.0;
 	                var scontrini = 0;
@@ -183,10 +187,9 @@ const calcolaTotali = (change, context, part) =>
 									 });
 				    		}
 		    		return righe;
-					});
+					}).then(console.info("aggiornati totali "+part+" chiave: "+key )));
             
         
-           return true;	      
                 }	
         	   
 

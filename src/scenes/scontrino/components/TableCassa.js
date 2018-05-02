@@ -135,38 +135,37 @@ const header = [{dataField: 'numero', label: '#', width: '30px'},
 			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: '55px'}
 			   ];
 
-var currentListenedIdCassa = null;
-   
+
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableCassa extends Component 
     {
     componentDidMount() {
-     	if (this.props.listeningItemCassa) currentListenedIdCassa = this.props.listeningItemCassa[2];   
-    		//Ascolto modifiche sulle righe della bolla
-    	if (currentListenedIdCassa !== this.props.cassa)
-    	   {
-    	   	if (currentListenedIdCassa) 
-    	   		{
-    	   		let params = [...this.props.period];
-    	   		params.push(currentListenedIdCassa);
-    
-    	   			this.props.offListenRigaCassa(params); 
-    	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = [...this.props.period];
-    	   	params.push(this.props.cassa);
-    	   	this.props.listenRigaCassa(params); 
-    	   	}
+     
+    let params = [...this.props.period];
+   	params.push(this.props.cassa);
+   	this.props.listenRigaCassa(params); 
+   	
+     //Non ho la minima idea di cosa faccia questa if!!!
        if ((this.props.scontrino && !this.props.selectedItem) || (this.props.scontrino && this.props.selectedItem && (this.props.scontrino !== this.props.selectedItem.key))) {
      	 	if (this.props.index.chiavi && (this.props.index.chiavi[this.props.scontrino]>=0) && this.props.data[this.props.index.chiavi[this.props.scontrino]]) 
     			{this.editRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
     			}
+       }	
      	
-     }		   	
+     		   	
 	}
 	
-	
+  componentWillUnmount() {
+  if (this.props.listeningItemCassa[2]) 
+    	   		{
+    	   		let params = [...this.props.period];
+    	   		params.push(this.props.listeningItemCassa[2]);
+    
+    	   		this.props.offListenRigaCassa(params, this.props.listenersItemCassa ); 
+    	   		}
+  }	
+  
 	deleteRow = (row) => {
 	   const deleteRigaCassa = () => {
 	   	    let params = [...this.props.period];

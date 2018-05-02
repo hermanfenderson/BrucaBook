@@ -7,6 +7,7 @@ export const GET_REPORT_DATA = 'GET_REPORT_DATA'
 export const GET_REPORT_DATA_INITIAL_LOAD = 'GET_REPORT_DATA_INITIAL_LOAD'
 
 export const REPORT_DATA_ASKED = 'REPORT_DATA_ASKED'
+export const REPORT_DATA_CALCULATED = 'REPORT_DATA_CALCULATED'
 //Questa va riscritta per usare invece una child_changed!!! 
 export const getReportData = () =>
 {
@@ -27,17 +28,20 @@ export const getReportData = () =>
 	      });    
 		 });
 		}
-    dispatch({
+		dispatch({
 	        type: REPORT_DATA_ASKED,
 	        	 });
-	request.get(url2).then(
-	                  (response) => {Firebase.database().ref(url3).once('child_changed', snapshot => {
+		request.get(url2).then(	
+    dispatch({
+	        type: REPORT_DATA_CALCULATED,
+	        	 }));
+	Firebase.database().ref(url3).once('child_changed', snapshot => {
 	
 		dispatch({
 	        type: GET_REPORT_DATA,
 	        payload: snapshot
 	      });      
-	})});
+	});
 	
 
 	

@@ -22,6 +22,7 @@ class TableBolla extends Component
 	}
 	
 	 componentWillUnmount() {
+	 	console.log("smonto");
 	 	let params = [...this.props.period];
     	params.push(this.props.idBolla);
     	this.props.offListenRigaBolla(params); 

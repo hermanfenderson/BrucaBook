@@ -34,6 +34,7 @@ export const initialState = (editedItemInitialState, extraInitialState) =>
 		    tableScrollByKey: null,
 			tableHeight:0,
 			listeningItem: null,
+			listenersItem: null,
 			messageBuffer: [],
 			 filters: {},
 		    totali: {},

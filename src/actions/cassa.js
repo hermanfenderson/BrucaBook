@@ -254,7 +254,8 @@ const offListenRigheScontrino = (cassaParams, scontrinoKey) =>
 	Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
 	dispatch({
 	   	type: typeUnlisten,
-	   	params: params
+	   	params: params,
+	   	scontrino: scontrinoKey,
 	   })
     }
 }
@@ -317,17 +318,20 @@ cassaFA.offListenItem = (params, listeners=null) =>
     const typeUnlisten = cassaFA.OFF_LISTEN_ITEM;
 	return function(dispatch, getState) {
 	if (listeners) 
-		{
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.added);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.changed);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off(listeners.removed);
+		{ 
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_added',listeners.added);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_changed',listeners.changed);
+			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_removed',listeners.removed);
 		}
 	else Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
-	//INSERIRE LA CANCELLAZIONE DI TUTTI I FIGLI!!!
 	dispatch({
 	   	type: typeUnlisten,
 	   	params: params
 	   })
+	for (let scontrino in listeners.scontrini)
+		{
+			dispatch(offListenRigheScontrino(params, scontrino));
+		}
     }
 }
 

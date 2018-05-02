@@ -1,6 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO} from '../actions/cassa';
+import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO, LISTEN_RIGASCONTRINO, OFF_LISTEN_RIGASCONTRINO} from '../actions/cassa';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import {isPositiveInteger, isPercentage} from '../helpers/validators'
@@ -70,7 +70,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-    const extraState = {
+    const extraState = {listenersItem: {scontrini: {}},
                   }
 	return initialStateHelper(eiis,extraState);
     }
@@ -465,7 +465,23 @@ export default function cassa(state = initialState(), action) {
 		    newState = {...subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
 			newState = aggiornaTotaliLocale(newState, state, action);
 	    
-	    	break;    
+	    	break;   
+	    	
+	case LISTEN_RIGASCONTRINO:
+			{
+			let listenersItem = {...state.listenersItem};
+			listenersItem.scontrini[action.params[3]] = action.listeners;
+			newState = {...state, listenersItem: listenersItem};
+			}
+			break;
+			
+	case OFF_LISTEN_RIGASCONTRINO:
+			{
+			let listenersItem = {...state.listenersItem};
+			delete listenersItem.scontrini[action.scontrino];
+			newState = {...state, listenersItem: listenersItem};
+			}
+			break;
 	    	
     default:
         newState = rigaCassaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaCassa);
@@ -489,6 +505,8 @@ export default function cassa(state = initialState(), action) {
  export const getMeasures = (state) => {return state.measures};
  export const getListeningTestataCassa = (state) => {return state.listeningTestata};
  export const getListeningItemCassa = (state) => {return state.listeningItem};
+ export const getListenersItemCassa = (state) => {return state.listenersItem};
+ 
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getFilters = (state) => {return state.filters};
   export const getTotaliCassa = (state) => {return state.totali};

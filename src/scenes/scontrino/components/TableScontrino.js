@@ -49,12 +49,10 @@ class TableScontrino extends Component
 		this.listenScontrino(oldProps, this.props);
 	}
 	
-	 componenWillUnmount() {
-    	   		
-    	if (this.props.listeningItemScontrino && this.props.listeningItemScontrino[3])
-    			{
-    				
-    			    let currentListenedIdScontrino = this.props.listeningItemScontrino[3];
+	 componentWillUnmount() {
+	 	if (this.props.listeningItemScontrino && this.props.listeningItemScontrino[3])
+    			{  
+    				let currentListenedIdScontrino = this.props.listeningItemScontrino[3];
     	   			let params = [...this.props.period];
     	   			params.push(this.props.cassa)
     	   			params.push(currentListenedIdScontrino);

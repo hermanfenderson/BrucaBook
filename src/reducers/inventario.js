@@ -187,6 +187,8 @@ export default function inventario(state = initialState(), action) {
 		 	let key = action.payload.key;
 		 	if (newState.estrattoStoricoMagazzino[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[ean];
 		 	}
+		 	newState.tableScrollByKey = action.payload.key;
+	    	
 	    	break;
 	  case rigaInventarioR.INITIAL_LOAD_ITEM:
 		 	
@@ -198,19 +200,20 @@ export default function inventario(state = initialState(), action) {
 		 			
 		 			if (newState.estrattoStoricoMagazzino && newState.estrattoStoricoMagazzino[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = newState.stock[ean];
 		 		}
-		 		
+		 	newState = {...newState, tableScroll: true};
 	    	break;     
 		case rigaInventarioR.DELETED_ITEM:
 			newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
-	    
-	    	break;
+	       	break;
 	   
 		case rigaInventarioR.CHANGED_ITEM:
 			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
 				//Se ho un dato migliore per stock lo metto qui...
 		 	let key = action.payload.key;
 		 	if (newState.estrattoStoricoMagazzino[key]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[key];
-		 
+		    newState.tableScrollByKey = action.payload.key;
+	    
+	    
 	    	break;	    
 	    	
 	    	

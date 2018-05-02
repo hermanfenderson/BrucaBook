@@ -1,4 +1,4 @@
-import {GET_REPORT_DATA,  GET_REPORT_DATA_INITIAL_LOAD, REPORT_DATA_ASKED} from '../actions/dashboard';
+import {GET_REPORT_DATA,  GET_REPORT_DATA_INITIAL_LOAD, REPORT_DATA_ASKED, REPORT_DATA_CALCULATED} from '../actions/dashboard';
 
 const initialState =  {
  serieIncassi: [],
@@ -48,6 +48,8 @@ export default function dashboard(state = initialState, action) {
         ...state, reportData: reportData, serieIncassi: serieIncassi, serieIncassiMesi: serieIncassiMesi, serieIncassiAnni: serieIncassiAnni, top5thisYear: top5thisYear, top5lastYear: top5lastYear, top5lastMonth: top5lastMonth
       };
 		}
+	case REPORT_DATA_CALCULATED:
+		return state;
     default:
       return state;
   }

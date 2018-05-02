@@ -185,10 +185,13 @@ export const getEditedRigaCassa = (state) => {return fromCassa.getEditedItem(sta
 export const getTestataCassa = (state) => {return fromCassa.getTestataCassa(state.cassa)};
 export const getTableHeightCassa = (state) => {return fromCassa.getTableHeight(state.cassa)};
 export const getTableScrollCassa = (state)  => {return fromCassa.getTableScroll(state.cassa)};
+
 //export const getTableScrollByKeyCassa = (state)  => {return fromCassa.getTableScrollByKey(state.cassa)};
 
 export const getListeningTestataCassa = (state) => {return fromCassa.getListeningTestataCassa(state.cassa)};
 export const getListeningItemCassa = (state) => {return fromCassa.getListeningItemCassa(state.cassa)};
+export const getListenersItemCassa = (state) => {return fromCassa.getListenersItemCassa(state.cassa)};
+
 export const isStaleTotaliCassa = (state) => {return fromCassa.isStaleTotali(state.cassa)};
 export const getFiltersCassa = (state) => { return fromCassa.getFilters(state.cassa)};
 export const getTotaliCassa = (state) => { return fromCassa.getTotaliCassa(state.cassa)};

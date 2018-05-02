@@ -261,7 +261,6 @@ const calcolaPezzi = (registro,data) =>
 		  					totalePezzi = totalePezzi + parseInt(righe[propt].pezzi);
 			    			}
 						}
-		  		   	}	
 	return(totalePezzi);
 }
 
@@ -271,16 +270,16 @@ exports.correggiMagazzino = functions.database.ref('{catena}/{negozio}/magazzino
               const ean = context.params.ean;	
               const pezzi = change.after.val() ? change.after.val().pezzi : 0;	
           	  return(
-          	  		change.after.ref.parent.parent.child("registroEAN").child(ean).once("value").then(
+          	  		change.after.parent.parent.child("registroEAN").child(ean).once("value").then(
           	  			function(snapshot) 
           	  				{
           	  				 let registro = snapshot.val();
           	  				 let truePezzi = calcolaPezzi(registro, null);
-          	  				 if (truePezzi === pezzi) return(console.info("Totale verificato "+ ean));
+          	  				 if (trueTotali === totali) return(console.info("Totale verificato "+ ean));
           	  				 else change.after.update({pezzi: truePezzi}).then(() => {console.info("Totale corretto "+ ean)});
           	  				}
           	  			)
-          	  		)
+ 
             });	
 
 
@@ -322,8 +321,8 @@ const aggiornaMagazzinoEANDiff = (ean, refRadix, values, diff) =>
 		stockEAN.prezzoListino = values.prezzoListino;
 		stockEAN.createdAt = admin.database.ServerValue.TIMESTAMP;
 		return(stockEAN);    
-		}).then(()=>{console.info('aggiornato EAN '+ean);}));
-};
+		})).then(()=>{console.info('aggiornato EAN '+ean);})
+}
 
 const aggiornaStoricoMagazzinoEANDiff = (ean, refRadix, dataChange, values, diff) =>
 {
@@ -349,11 +348,54 @@ return(refRadix.child('storicoMagazzino').transaction(function(storicoMagazzino)
 	    			storicoMagazzino[data][ean].pezzi = lastPezzi + diff;
 	    		}
 	    	}
+	    	
 		return(storicoMagazzino);    
-		}).then(()=>{console.info('aggiornato storico magazzino EAN '+ean);}));
-};		
+		})).then(()=>{console.info('aggiornato storico magazzino EAN '+ean);})
+
+		
+		
+/*
+return(refRadix.child('storicoMagazzino').child(data).transaction(function(stockData) {
+		return(
+			//Devo chiamare una promise che prende il valore dell'ultima data utile...
+			//In essa faccio le modifiche a quel record e lo passo come return della promise...
+			refRadix.child('storicoMagazzino').orderByKey().endAt(data).limitToLast(1).once("value").then(
+					function(snapshot)
+						{   
+							let lastStockData = snapshot.val() ? snapshot.val() : {};
+							let pezzi = lastStockData[ean] ? lastStockData[ean].pezzi : 0;
+							let stockEAN = {};
+							stockEAN.pezzi = pezzi + diff;
+							stockEAN.autore = values.autore;
+							stockEAN.imgFirebaseUrl = values.imgFirebaseUrl;
+							stockEAN.prezzoListino = values.prezzoListino;
+							stockEAN.createdAt = admin.database.ServerValue.TIMESTAMP;
+							lastStockData[ean] = stockEAN;
+							return(lastStockData);
+						}
+					)
+			);    
+		})).then(()=>{console.info('aggiornato storico magazzino EAN '+ean);})
+*/
+
+}
+
+
+
 
 /*
+exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')
+    .onWrite((change, context) => 
+            {
+            const ean = context.params.ean;	
+            const refBookStoreRadix = change.after.ref.parent.parent;
+            const date = change.after.val();	//Loop dalla prima all'ultima data...
+            const oldDate = change.before.val(); //Prendo il dato precedente
+            const emptyAfter = !change.after.exists();
+            return (aggiornaMagazzinoEAN(ean, refBookStoreRadix, date, oldDate, emptyAfter));
+            });
+*/
+
 exports.forzaAggiornaMagazzino = functions.https.onRequest((req, res) => {
 
 cors(req, res, () => {
@@ -468,4 +510,3 @@ const aggiornaMagazzinoEAN = (ean, refBookStoreRadix, date, oldDate, emptyAfter)
             };
 
 
-*/
