@@ -196,22 +196,7 @@ exports.modificaRegistroDaInventario = functions.database.ref('{catena}/{negozio
 exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}/inventari/{id}/{keyRiga}')
     .onDelete((snap, context) => {return(aggiornaRegistro(snap,context,'elimina','inventari'))});
 
-//Da modificare per storicizzarla e prevedere una full... 
-//Due strategie differenti... la prima è full
-//Ragiono sulla singola riga modificata sempre...
-//algoritmo full
-//Qualsiasi sia la riga cambiata.... calcolo i totali per somma di tutto ciò che c'e' in registroEAN/ean 
-//Mi metto in transaction su registroEAN/ean
-//Calcolo il totale e lo persisto con una set dentro la transazione su magazzino. Salvo in ogni caso l'esito del calcolo del totale...
-//Salvo anche la differenza "originale" (il delta)
-//Per lo storico magazzino... opero così
-//Mi metto in transazione su storicoMagazzino
-//Determinata la data alla quale è cambiato il totale...
-//Se la data è nuova... Mi faccio una copia dello stato alla data immediatamente precedente (empty se è la prima data).
-//Da quella data alla fine del registro applico il delta.
-//algoritmo delta
-//Mi metto in transaction su magazzino/EAN e applico direttamente il delta.
-//Aggiornamento storico magazzino è identico...
+
 //Il problema emptyAfter lo risolvo dopo...
 const getDiff = (value,oldValue) =>{
 let tipo = value ? value.tipo : oldValue.tipo;
@@ -277,14 +262,32 @@ exports.correggiMagazzino = functions.database.ref('{catena}/{negozio}/magazzino
           	  				 let registro = snapshot.val();
           	  				 let truePezzi = calcolaPezzi(registro, null);
           	  				 if (truePezzi === pezzi) return(console.info("Totale verificato "+ ean));
-          	  				 else change.after.update({pezzi: truePezzi}).then(() => {console.info("Totale corretto "+ ean)});
+          	  				 else change.after.ref.update({pezzi: truePezzi, createdAt: admin.database.ServerValue.TIMESTAMP}).then(() => {console.info("Totale corretto "+ ean)});
           	  				}
           	  			)
           	  		)
             });	
 
 
-
+exports.correggiStoricoMagazzino = functions.database.ref('{catena}/{negozio}/storicoMagazzino/{data}/{ean}')
+    .onWrite((change, context) => 
+            {
+              const ean = context.params.ean;
+              const data = context.params.data;
+              const pezzi = change.after.val() ? change.after.val().pezzi : 0;	
+          	  return(
+          	  		change.after.ref.parent.parent.parent.child("registroEAN").child(ean).once("value").then(
+          	  			function(snapshot) 
+          	  				{
+          	  				 let registro = snapshot.val();
+          	  				 let truePezzi = calcolaPezzi(registro, data);
+          	  				 if (truePezzi === pezzi) return(console.info("Totale storico magazzino verificato "+ ean));
+          	  				 else change.after.ref.update({pezzi: truePezzi, createdAt: admin.database.ServerValue.TIMESTAMP}).then(() => {console.info("Totale storico magazzino corretto "+ ean)});
+          	  				}
+          	  			)
+          	  		)
+            });	
+            
 exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}/{data}/{key}')
     .onWrite((change, context) => 
             {
@@ -353,119 +356,29 @@ return(refRadix.child('storicoMagazzino').transaction(function(storicoMagazzino)
 		}).then(()=>{console.info('aggiornato storico magazzino EAN '+ean);}));
 };		
 
-/*
 exports.forzaAggiornaMagazzino = functions.https.onRequest((req, res) => {
 
 cors(req, res, () => {
 let catena = req.query.catena;
 let libreria = req.query.libreria;
 let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
-res.send('Passed.');    							 
-refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
+let updates = {}; //Qui devo azzerare EAN e prima data in cui appare...	
+								
+return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
 								{
 								if (snapshot.val())
 									{
 									for (let ean in snapshot.val()) 
 										{
-											aggiornaMagazzinoEAN(ean, refBookStoreRadix, snapshot.val()[ean], null, false); //forzo l'aggiornamento massivo...
-									
-											
+										//Elenco dei trigger da scatenare	
+										let firstDate = Object.keys(snapshot.val()[ean])[0];
+										updates['magazzino/'+ean+'/pezzi'] = 0;
+										updates['storicoMagazzino/'+firstDate+'/'+ean+'/pezzi'] = 0;
 										}		
 									}
+								})).then(()=>{
+									refBookStoreRadix.update(updates).then(()=>{res.send('Passed.');console.info("avviato ricalcolo magazzino e storico")})
 								})
-  
 });
 });          
 
-const aggiornaMagazzinoEAN = (ean, refBookStoreRadix, date, oldDate, emptyAfter) =>
-{
-            //Caso riga cancellata....cancello semplicemente EAN ... e cancello la entry corrispondente 
-            if (emptyAfter) 
-                  {
-                  let lastDate = Object.keys(oldDate)[0]; //L'ultima data
-                  //refBookStoreRadix.child('storicoMagazzino/'+lastDate+'/'+ean).remove();
-                  //Qui aggiungere cancellazione per righe successive....
-                  refBookStoreRadix.child('dateStoricoMagazzino/').orderByKey().startAt(lastDate).once("value").then(function(snapshot)
-            				{
-            				 for (let dateLoop in snapshot.val()) refBookStoreRadix.child('storicoMagazzino/'+dateLoop+'/'+ean).remove();
- 
-            				})
-                  return refBookStoreRadix.child('magazzino/'+ean).remove();	
-                  }
-            else 
-            	  {
-            	  var totalePezzi = 0;
-        		  var righe;
-        		 // date = change.after.val();	//Loop dalla prima all'ultima data...
-            	 // oldDate = change.before.val(); //Prendo il dato precedente
-            	  var changed = false; //Da quando scopro che e' cambiato...mi va sempre bene...
-            	  for(var propt2 in date)
-		  		   	{
-		  		   	righe = date[propt2];
-		  		   	oldRighe = oldDate ? oldDate[propt2] : null
-		  		   	changed = (changed || !equal(oldRighe, righe));
-		  		   
-		  			   	for (var propt in righe)	
-		  				{
-		  				 if (righe[propt].tipo == "bolle")
-		  					{
-			    			totalePezzi = parseInt(righe[propt].pezzi) + parseInt(righe[propt].gratis)+ totalePezzi;
-			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-							}
-					    if (righe[propt].tipo == "rese")
-		  					{
-			    			totalePezzi = totalePezzi - (parseInt(righe[propt].pezzi) + parseInt(righe[propt].gratis));
-			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-							}	
-						if (righe[propt].tipo == "scontrini")
-		  					{
-		  					totalePezzi = totalePezzi - parseInt(righe[propt].pezzi);
-			    		
-			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-							}
-							
-						if (righe[propt].tipo == "inventari")
-		  					{
-		  					totalePezzi = totalePezzi + parseInt(righe[propt].pezzi);
-			    		
-			    			//parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
-							}
-						}
-						 //Se e' cambiato per una specifica data aggiorno il suo storico	
-				
-		  			 if (changed )
-		  				{
-		  				
-		  				let totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino, 'imgFirebaseUrl': righe[propt].imgFirebaseUrl, 'createdAt' : admin.database.ServerValue.TIMESTAMP } ; 
-            			refBookStoreRadix.child('storicoMagazzino/'+propt2+'/'+ean).set(totali);
-            			let dataStorico = {};
-            			dataStorico = {'createdAt': admin.database.ServerValue.TIMESTAMP};
-            			refBookStoreRadix.child('dateStoricoMagazzino/'+propt2).set(dataStorico);
-            			// Qui ci va qualcosa di complicato....una copia di tutti gli ean fino a questa data...non ho altra strada...
-            			let date2 = propt2;
-            			refBookStoreRadix.child('storicoMagazzino/').orderByKey().endAt(date2).once("value").then(function(snapshot)
-            				{
-            					let eans = {};
-            					let storico = snapshot.val();
-            					for (date in storico)
-            						for (ean in storico[date])
-            							{
-            								eans[ean] = storico[date][ean];
-            								eans[ean].createdAt = admin.database.ServerValue.TIMESTAMP;
-            							}
-            				refBookStoreRadix.child('storicoMagazzino/'+date2).set(eans); //Tutti gli ean... compresi gli ultimo....			
-            				});
-		  				}
-		  		     }	
-			      //Inserito un timestamp qui...
-			      const totali = {'pezzi' : totalePezzi, 'titolo' : righe[propt].titolo, 'autore' : righe[propt].autore, 'prezzoListino' : righe[propt].prezzoListino, 'imgFirebaseUrl': righe[propt].imgFirebaseUrl, 'createdAt': admin.database.ServerValue.TIMESTAMP } ; 
-            	  
-            	  return refBookStoreRadix.child('magazzino/'+ean).set(totali);
-            	  }
-               
-            //Caso riga inserita o modificata... la sostituisco integralmente. 
-            return true;	
-            };
-
-
-*/

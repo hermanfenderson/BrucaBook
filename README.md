@@ -1,4 +1,4 @@
-BrucaBook V.0.9.32
+BrucaBook V.0.9.33
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
@@ -6,7 +6,7 @@ Storia delle versioni
 ---------------------
 ### Versione 0.9.33
 * Nuovo rilascio inventari (collaudata)
-* Nuova strategia di calcolo magazzino
+* Nuova strategia di calcolo magazzino (compreso storico...ragiona delta ed effettua correzioni postume)
 * Functions sistemate per terminare correttamente (tranne catalogo)
 * Risolto un baco che non sganciava i listener in tableCassa (#282)
 
