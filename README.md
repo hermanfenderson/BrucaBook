@@ -4,6 +4,9 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.34
+* Fix di errori da deepscan 
+
 ### Versione 0.9.33
 * Nuovo rilascio inventari (collaudata)
 * Nuova strategia di calcolo magazzino (compreso storico...ragiona delta ed effettua correzioni postume)

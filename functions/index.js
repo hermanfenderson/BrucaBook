@@ -39,30 +39,21 @@ admin.database().ref(urlSource).once("value").then(function(snapshot)
 });
 
 exports.aggiornaDaCatalogo = functions.database.ref('/catalogo/{ean}')
-//DA MODIFICARE 
+//Modificato... propago su tutti anche quelli che non lo avevano... 
    .onUpdate((change, context) =>
 			{
 			const ean = context.params.ean;
 			let newCatalogEntry = change.after.val();
+			let updates = {};
 			//
 			let elencoLibrerieRef = change.after.ref.parent.parent.child('librerie').child('elencoLibrerie');
 			return(elencoLibrerieRef.once("value").then(function(snapshot)
 				{
 				let elencoLibrerie = snapshot.val();
 				for (var catena in elencoLibrerie)
-					{
-						for (var libreria in elencoLibrerie[catena].librerie)
-							{
-								//Per ciascuna libreria vedo se ho nel catalogo la riga... e se esiste la aggiorno...
-								let catalogoLocaleRef = change.after.ref.parent.parent.child(catena).child(libreria).child('catalogo').child(ean);
-								catalogoLocaleRef.once("value").then(function(snapshot)
-								{
-									if (snapshot.val()) catalogoLocaleRef.update(newCatalogEntry);	
-								});
-							}
-					}
+					for (var libreria in elencoLibrerie[catena].librerie) updates[catena+'/'+libreria+'/catalogo/'+ean] = newCatalogEntry;
+				change.after.ref.parent.parent.update(updates).then(()=>{console.info("Aggiornati cataloghi locali per codice "+ean)});	
 				}));
-				
 			}
 			);
 
@@ -76,22 +67,24 @@ exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/ca
 			const catena = context.params.catena;
 			const negozio = context.params.negozio;
 			let newCatalogEntry = change.after.val();
+			let updates = {};
+		
 			//Non aggiorno il prezzo di listino!
 			newCatalogEntry.prezzoListinoUltimo = newCatalogEntry.prezzoListino;
 			delete newCatalogEntry.prezzoListino;
 			return(eanDetailsRef.once("value").then(function(snapshot)
 				{
 				let dettagliEAN = snapshot.val();
-				console.log(dettagliEAN);
+				//console.log(dettagliEAN);
 				for (var date in dettagliEAN)
 					{
 						for (var riga in dettagliEAN[date])
 							{
 								let path =  dettagliEAN[date][riga].tipo + '/' +   dettagliEAN[date][riga].id + '/' + riga;
-								let refRiga = change.after.ref.parent.parent.child(path);
-								refRiga.update(newCatalogEntry);
+								updates[path] = newCatalogEntry;
 							}
 					}
+				change.after.ref.parent.parent.update(updates).then(()=>{console.info("Aggiornate righe per modifiche catalogo locale per codice "+ean)});	
 				}));
 			}
 			);
@@ -339,7 +332,7 @@ return(refRadix.child('storicoMagazzino').transaction(function(storicoMagazzino)
 		stockEAN.prezzoListino = values.prezzoListino;
 		stockEAN.createdAt = admin.database.ServerValue.TIMESTAMP;
 		let lastPezzi = 0;
-	    for (data in storicoMagazzino)
+	    for (let data in storicoMagazzino)
 	    	{
 	    	if (data >= dataChange)
 	    		{

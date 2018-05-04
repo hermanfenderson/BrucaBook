@@ -322,16 +322,16 @@ cassaFA.offListenItem = (params, listeners=null) =>
 			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_added',listeners.added);
 			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_changed',listeners.changed);
 			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_removed',listeners.removed);
+			for (let scontrino in listeners.scontrini)
+				{
+					dispatch(offListenRigheScontrino(params, scontrino));
+				}
 		}
 	else Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
 	dispatch({
 	   	type: typeUnlisten,
 	   	params: params
 	   })
-	for (let scontrino in listeners.scontrini)
-		{
-			dispatch(offListenRigheScontrino(params, scontrino));
-		}
     }
 }
 
