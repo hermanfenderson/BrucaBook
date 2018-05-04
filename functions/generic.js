@@ -43,15 +43,15 @@ const aggiornaRegistro = (snap, context, action, part) =>
 {	
  case 'bolle':
  case 'rese':
-	newVal = Object.assign(val, {tipo: part, id: context.params.anno + '/'+ context.params.mese + '/'+context.params.id});
+	newVal = Object.assign(val, {tipo: part, id: anno + '/'+ mese + '/'+id});
 	destRef = ref.parent.parent.parent.parent.parent;
  break;
  case 'scontrini':
- 	 newVal = Object.assign(val, {tipo: 'scontrini', id: context.params.anno + '/'+ context.params.mese + '/'+context.params.prefixId + '/'+context.params.id});
+ 	 newVal = Object.assign(val, {tipo: 'scontrini', id: anno + '/'+ mese + '/'+prefixId + '/'+id});
      destRef = ref.parent.parent.parent.parent.parent.parent;
  break;
  case 'inventari':  
- 	 newVal = Object.assign(val, {tipo: 'inventari', id: context.params.id});
+ 	 newVal = Object.assign(val, {tipo: 'inventari', id: id});
      destRef = ref.parent.parent.parent;
  break;
  default:

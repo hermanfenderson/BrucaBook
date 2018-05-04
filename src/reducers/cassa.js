@@ -463,7 +463,7 @@ export default function cassa(state = initialState(), action) {
 	case CHANGED_RIGASCONTRINO:
 		    
 		    newState = {...subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
-			newState = aggiornaTotaliLocale(newState, state, action);
+			newState = aggiornaTotaliLocale(newState);
 	    
 	    	break;   
 	    	

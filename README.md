@@ -6,6 +6,7 @@ Storia delle versioni
 ---------------------
 ### Versione 0.9.34
 * Fix di errori da deepscan 
+* Catalogo e catalogolocale ora viaggiano con le return corrette...
 
 ### Versione 0.9.33
 * Nuovo rilascio inventari (collaudata)

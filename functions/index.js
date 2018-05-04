@@ -5,7 +5,7 @@ const admin = require('firebase-admin');
 const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
-const equal = require('deep-equal');
+//const equal = require('deep-equal');
 const cors = require('cors')({origin: true});
 
 admin.initializeApp();
@@ -64,8 +64,6 @@ exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/ca
 			{
 			const ean = context.params.ean;
 			const eanDetailsRef =  change.after.ref.parent.parent.child('registroEAN').child(ean);
-			const catena = context.params.catena;
-			const negozio = context.params.negozio;
 			let newCatalogEntry = change.after.val();
 			let updates = {};
 		
@@ -285,8 +283,6 @@ exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroE
     .onWrite((change, context) => 
             {
             const ean = context.params.ean;	
-            const data = context.params.data;
-            const key = context.params.key;
             const refBookStoreRadix = change.after.ref.parent.parent.parent.parent;
             
             const value = change.after.val();	//Loop dalla prima all'ultima data...
@@ -299,7 +295,7 @@ exports.aggiornaStoricoMagazzino = functions.database.ref('{catena}/{negozio}/re
             {
             const ean = context.params.ean;	
             const data = context.params.data;
-            const key = context.params.key;
+           // const key = context.params.key;
             const refBookStoreRadix = change.after.ref.parent.parent.parent.parent;
             
             const value = change.after.val();	//Loop dalla prima all'ultima data...
