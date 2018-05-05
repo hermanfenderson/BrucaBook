@@ -1,8 +1,7 @@
 import Firebase from 'firebase';
 
 import {FormActions} from '../helpers/formActions';
-import {urlFactory, addCreatedStamp, addChangedStamp, getServerTime} from '../helpers/firebase';
-import {getDataMagazzino}  from '../reducers';
+import {urlFactory} from '../helpers/firebase';
 
 export const SCENE = 'INVENTARIO';
 export const GENERA_RIGHE_INVENTARIO = 'GENERA_RIGHE_INVENTARIO';

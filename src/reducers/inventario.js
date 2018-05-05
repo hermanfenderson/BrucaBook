@@ -1,8 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-import {GENERA_RIGHE_INVENTARIO,LISTEN_STORICO_MAGAZZINO_INVENTARIO, UNLISTEN_STORICO_MAGAZZINO_INVENTARIO,
-INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO, ADDED_STORICO_MAGAZZINO_INVENTARIO, CHANGED_STORICO_MAGAZZINO_INVENTARIO, DELETED_STORICO_MAGAZZINO_INVENTARIO, 
-DATA_MAGAZZINO_CHANGED} from '../actions/inventario';
+import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
 import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
 
 
@@ -119,65 +117,7 @@ export default function inventario(state = initialState(), action) {
    case GENERA_RIGHE_INVENTARIO:
    	    newState = state;
    	    break;
-   /*	
-   case LISTEN_STORICO_MAGAZZINO_INVENTARIO:
-   	    newState = {...state, listeningStoricoMagazzino: action.params[0]};
-   	    break;
-    
-    case INITIAL_LOAD_STORICO_MAGAZZINO_INVENTARIO:
-    	{
-   	   let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
-   	    let itemsArray = [...state.itemsArray];
-   	    let itemsArrayIndex = state.itemsArrayIndex;
-   	    let totaleOccorrenze = state.totaleOccorrenze;
-   	    let stock = {...state.stock};
-   	    	for (let ean in action.payload.val())
-   	    		{
-   	    		estrattoStoricoMagazzino[ean] = action.payload.val()[ean];
-		   		stock[ean] = parseInt(action.payload.val()[ean].pezzi,10);
-		   		if (stock[ean] !== 0) totaleOccorrenze++;
-		   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
-   	    		}
-		newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
-   		}
-   	    break;
-        
-    case ADDED_STORICO_MAGAZZINO_INVENTARIO:
-   	case CHANGED_STORICO_MAGAZZINO_INVENTARIO:
-   		{
-   	   let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
-   	    let itemsArray = [...state.itemsArray];
-   	    let itemsArrayIndex = state.itemsArrayIndex;
-   	    let totaleOccorrenze = state.totaleOccorrenze;
-   	    let stock = {...state.stock};
-   	    	let ean = action.payload.key;
-		let oldStock = stock[ean] ? stock[ean] : null;  
-   		estrattoStoricoMagazzino[ean] = action.payload.val();
-   		stock[ean] = action.payload.val().pezzi;
-   		
-   		if ((oldStock === null) || (oldStock === 0 && stock[ean] !== 0)) totaleOccorrenze++;
-   		else if (oldStock !== 0 && stock[ean] === 0) totaleOccorrenze--;
-   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
-   	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
-   		}
-   	    break;
-    
-    
-   	case DELETED_STORICO_MAGAZZINO_INVENTARIO:
-   	    {
-   	    let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
-   	
-   	    let stock = {...state.stock};
-   	     let totaleOccorrenze = state.totaleOccorrenze;
-   	   
-   		delete estrattoStoricoMagazzino[action.payload.key];
-   		delete stock[action.payload.key];
-   		totaleOccorrenze--;
-   	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, stock: stock, totaleOccorrenze: totaleOccorrenze};
-   		}
-   	    break;	        
-
-   	 */   
+  
    	 case rigaInventarioR.ADDED_ITEM:
 		 	{
 		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;
@@ -218,14 +158,7 @@ export default function inventario(state = initialState(), action) {
 	    	
 	    	
    	    	    
-   case UNLISTEN_STORICO_MAGAZZINO_INVENTARIO:
-   	    newState = {...state, listeningStoricoMagazzino: false, estrattoStoricoMagazzino: {}, stock: {}, totaleOccorrenze: 0};
-   	    break;        
-   	    
-    case DATA_MAGAZZINO_CHANGED:
-    	newState = {...state, dataMagazzino: action.dataMagazzino};
-    	break;
-    default:
+      default:
     
         newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
         //newState =  state;
