@@ -28,7 +28,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningStoricoMagazzino: null, dataMagazzino: null, estrattoStoricoMagazzino: null, stock: {}, totaleOccorrenze: 0});
+	return initialStateHelper(eiis,{totaleOccorrenze: 0});
     }
     
 
@@ -119,7 +119,7 @@ export default function inventario(state = initialState(), action) {
    case GENERA_RIGHE_INVENTARIO:
    	    newState = state;
    	    break;
-   	
+   /*	
    case LISTEN_STORICO_MAGAZZINO_INVENTARIO:
    	    newState = {...state, listeningStoricoMagazzino: action.params[0]};
    	    break;
@@ -177,7 +177,7 @@ export default function inventario(state = initialState(), action) {
    		}
    	    break;	        
 
-   	    
+   	 */   
    	 case rigaInventarioR.ADDED_ITEM:
 		 	{
 		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;

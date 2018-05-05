@@ -40,6 +40,12 @@ export const initialState = (editedItemInitialState, extraInitialState) =>
 		    totali: {},
 		    eanListeners: {}, //Qui metto gli EAN per cui devo ricevere notifica... nella forma ean: timestamp
 			editedItem: editedItemInitialState,
+			//Questa sezione serve a inventario e rese...
+			listeningStoricoMagazzino: null, 
+			dataMagazzino: null, 
+			estrattoStoricoMagazzino: null,
+			stock: {}, 
+			totaleOccorrenze: 0, //Non serve generalizzarla ma mi incasina inutilmente specificarla
 			...initOverrides
 	    	}
 	

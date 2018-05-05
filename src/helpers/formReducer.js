@@ -11,6 +11,7 @@ import React from 'react';
 //la funzione transformSelectedItem prende invece dalla riga in tabella e la porta verso il form...
 //KeepOnSubmit non resetta il form al submit... serve per le casse..
 function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState, keepOnSubmit) {
+this.scene = scene;
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
 this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+scene;
@@ -49,6 +50,14 @@ this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
 this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
 this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+scene;
+
+this.ADDED_STORICO_MAGAZZINO ='ADDED_STORICO_MAGAZZINO_'+scene;
+this.CHANGED_STORICO_MAGAZZINO ='CHANGED_STORICO_MAGAZZINO_'+scene;
+this.DELETED_STORICO_MAGAZZINO ='DELETED_STORICO_MAGAZZINO_'+scene;
+this.INITIAL_LOAD_STORICO_MAGAZZINO ='INITIAL_LOAD_STORICO_MAGAZZINO_'+scene;
+this.LISTEN_STORICO_MAGAZZINO ='LISTEN_STORICO_MAGAZZINO_'+scene;
+this.UNLISTEN_STORICO_MAGAZZINO ='UNLISTEN_STORICO_MAGAZZINO_'+scene;
+this.DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED_'+scene;
 
 this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
 this.RESET_TABLE = 'RESET_TABLE_'+scene;
@@ -369,7 +378,65 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
            break;
            
 
-	    	default:
+	    	
+	 case this.LISTEN_STORICO_MAGAZZINO:
+   	    newState = {...state, listeningStoricoMagazzino: action.params[0]};
+   	    break;
+    
+    case this.INITIAL_LOAD_STORICO_MAGAZZINO:
+    	{
+   	   let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
+   	    let itemsArray = [...state.itemsArray];
+   	    let itemsArrayIndex = state.itemsArrayIndex;
+   	    let totaleOccorrenze = state.totaleOccorrenze;
+   	    let stock = {...state.stock};
+   	    
+   	    	for (let ean in action.payload.val())
+   	    		{
+   	    		estrattoStoricoMagazzino[ean] = action.payload.val()[ean];
+		   		stock[ean] = parseInt(action.payload.val()[ean].pezzi,10);
+		   		if (stock[ean] !== 0) totaleOccorrenze++;
+		   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
+   	    		}
+		newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;
+        
+    case this.ADDED_STORICO_MAGAZZINO:
+   	case this.CHANGED_STORICO_MAGAZZINO:
+   		{
+   	   let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
+   	    let itemsArray = [...state.itemsArray];
+   	    let itemsArrayIndex = state.itemsArrayIndex;
+   	    let totaleOccorrenze = state.totaleOccorrenze;
+   	    let stock = {...state.stock};
+   	    	let ean = action.payload.key;
+		let oldStock = stock[ean] ? stock[ean] : null;  
+   		estrattoStoricoMagazzino[ean] = action.payload.val();
+   		stock[ean] = action.payload.val().pezzi;
+   		
+   		if ((oldStock === null) || (oldStock === 0 && stock[ean] !== 0)) totaleOccorrenze++;
+   		else if (oldStock !== 0 && stock[ean] === 0) totaleOccorrenze--;
+   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
+   	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;
+    
+    
+   	case this.DELETED_STORICO_MAGAZZINO:
+   	    {
+   	    let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
+   	
+   	    let stock = {...state.stock};
+   	     let totaleOccorrenze = state.totaleOccorrenze;
+   	   
+   		delete estrattoStoricoMagazzino[action.payload.key];
+   		delete stock[action.payload.key];
+   		totaleOccorrenze--;
+   	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;	        
+    default:
         		newState =  state;
     		break;
 			}

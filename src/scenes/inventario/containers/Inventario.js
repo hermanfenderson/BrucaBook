@@ -1,5 +1,5 @@
 import InventarioComponent from '../components/Inventario'
-import {rigaInventarioFA, generaRighe, searchDataMagazzino} from '../../../actions/inventario'
+import {rigaInventarioFA, generaRighe} from '../../../actions/inventario'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
@@ -10,7 +10,7 @@ const listenTestataInventario = rigaInventarioFA.listenTestata;
 const unlistenTestataInventario = rigaInventarioFA.unlistenTestata;
 const resetInventario = rigaInventarioFA.reset;
 const shiftMessage = rigaInventarioFA.shiftMessage;
-
+const searchDataMagazzino = rigaInventarioFA.searchDataMagazzino;
 
 
 const mapStateToProps = (state) => {

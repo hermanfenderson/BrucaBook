@@ -37,7 +37,7 @@ componentDidUpdate = (oldProps) => {
 	if (dataInventarioNew !== dataInventarioOld)
 		{
 		this.props.setHeaderInfo("Inventario del " + moment(dataInventarioNew).format("L"));
-		this.props.searchDataMagazzino(dataInventarioNew, this.props.match.params.id);		
+		this.props.searchDataMagazzino(dataInventarioNew);		
 		}
 		
 

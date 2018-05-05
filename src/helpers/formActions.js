@@ -9,7 +9,8 @@ import {isComplete} from './catalog';
 
 import {urlFactory, getServerTime} from './firebase';
 import {isInternalEAN} from './ean';
-import {getListeningMagazzino} from '../reducers'
+import {getListeningMagazzino, getDataMagazzino}  from '../reducers';
+
 import {magazzinoFA} from '../actions/magazzino'
 //3 modificatori...
 //stockMessageQueue aggiorna con la info dello stock
@@ -75,6 +76,13 @@ this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
 this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
 this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
 
+this.ADDED_STORICO_MAGAZZINO ='ADDED_STORICO_MAGAZZINO_'+scene;
+this.CHANGED_STORICO_MAGAZZINO ='CHANGED_STORICO_MAGAZZINO_'+scene;
+this.DELETED_STORICO_MAGAZZINO ='DELETED_STORICO_MAGAZZINO_'+scene;
+this.INITIAL_LOAD_STORICO_MAGAZZINO ='INITIAL_LOAD_STORICO_MAGAZZINO_'+scene;
+this.LISTEN_STORICO_MAGAZZINO ='LISTEN_STORICO_MAGAZZINO_'+scene;
+this.UNLISTEN_STORICO_MAGAZZINO ='UNLISTEN_STORICO_MAGAZZINO_'+scene;
+this.DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED_'+scene;
 
 this.itemsUrl = itemsUrl;
 this.preparaItem = preparaItem;
@@ -572,7 +580,8 @@ this.aggiungiItem = (params, valori) => {
    	}
    	)  	
    if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));	
- 
+   if (scene==='INVENTARIO') aggiornaRigheInventario(params, getState, ref.key);
+
    return(ref.key);
   }
   
@@ -599,7 +608,8 @@ this.aggiornaItem = (params,itemId, valori) => {
    	}
    	)  	 
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));
-   	
+   	if (scene==='INVENTARIO') aggiornaRigheInventario(params, getState, itemId);
+
    	 return(itemId); 
   }
  
@@ -614,7 +624,7 @@ const typeDelete = this.DELETE_ITEM;
 const itemsUrl = this.itemsUrl;
 const stockMessageQueue = this.stockMessageQueue;
  const stockMessageQueueListener = this.stockMessageQueueListener;
-  
+ const scene = this.scene;
 
   return function(dispatch, getState) {
     Firebase.database().ref(urlFactory(getState,itemsUrl,params, itemId)).remove();
@@ -624,7 +634,8 @@ const stockMessageQueue = this.stockMessageQueue;
    					key: itemId
    					}
    					)   
-   	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));				
+   	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));		
+    if (scene==='INVENTARIO') aggiornaRigheInventario(params, getState, itemId);
     };
   }
 	
@@ -698,10 +709,131 @@ this.submitEditedItem = (isValid,selectedItem,params,valori) => {
 	}
 	
 
+//Metodi per recuperare lo storico magazzino
+this.searchDataMagazzino = (dataOsservata) =>
+{
+	const type = this.DATA_MAGAZZINO_CHANGED;
+    const scene = this.scene;	
+    const listenStoricoMagazzino = this.listenStoricoMagazzino;
+    const unListenStoricoMagazzino = this.unListenStoricoMagazzino;
+    
+return function(dispatch, getState) {
+	const url = urlFactory(getState,'dateStoricoMagazzino', null);
+	const upto = (dataOsservata - 1).toString();
+	Firebase.database().ref(url).orderByKey().endAt(upto).limitToLast(1).on('value', snapshot => {
+	let dataMagazzino = Object.keys(snapshot.val())[0];
+	let oldDataMagazzino = getDataMagazzino(getState(), scene);
+	if (dataMagazzino !== oldDataMagazzino)
+		{dispatch({
+		        type: type,
+		        dataMagazzino: dataMagazzino
+		      })
+		 //Se stavo già ascoltando qualcosa...     
+		 if (oldDataMagazzino > 0) dispatch(unListenStoricoMagazzino(oldDataMagazzino));
+		 //Carico in tabella specifica tutti gli stock per quella data...
+		 
+		 dispatch(listenStoricoMagazzino(dataMagazzino));
+		}     
+	})
 	
+	}
+}
 
+this.listenStoricoMagazzino = (dataMagazzino) =>
+{
+	
+//Genero tre listener... come un'unica funzione...
+    const type1 = this.ADDED_STORICO_MAGAZZINO;
+	const type2 = this.CHANGED_STORICO_MAGAZZINO;
+	const type3 = this.DELETED_STORICO_MAGAZZINO;
+	const type4 = this.INITIAL_LOAD_STORICO_MAGAZZINO;
+	const type = this.LISTEN_STORICO_MAGAZZINO;
+	
+   
+   return function(dispatch, getState) {
+  	const url = urlFactory(getState,'storicoMagazzino', dataMagazzino);
+  	if (url)
+    {  
+       
+       
+       let now = getServerTime(Firebase.database().ref('/'))();
+      //Ragiono per timestamp
+      const listener_added = Firebase.database().ref(url).orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
+	      dispatch({
+	        type: type1,
+	        payload: snapshot
+	      })
+	      if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
+	      });
+	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
+	      dispatch({
+	        type: type2,
+	        payload: snapshot
+	      })
+	      if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
+	     
+	   });
+	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
+	      dispatch({
+	        type: type3,
+	        payload: snapshot
+	      })
+	       if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
+	     
+	   });
+	   Firebase.database().ref(url).once('value', snapshot => {
+	      dispatch({
+	        type: type4,
+	        payload: snapshot
+	      }) 
+	      if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
+	    });
+	   dispatch({
+	   	type: type,
+	   	params: dataMagazzino,
+	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
+	   })
+	}   
+	else dispatch({
+	   	type: type,
+	   	params: null,
+	   })   
+  }
+  
+}
+
+this.unListenStoricoMagazzino = (dataMagazzino) =>
+{
+const type = this.UNLISTEN_STORICO_MAGAZZINO;
+	
+return function(dispatch, getState) {	
+	Firebase.database().ref(urlFactory(getState,'storicoMagazzino', dataMagazzino)).off();
+	
+		dispatch({
+		   	type: type,
+		   	params: dataMagazzino
+		   })
+
+	}
+}
 
 }
+
+//Funzioni specifiche di scena..
+const aggiornaRigheInventario = (params, getState, itemId) =>
+    	{
+   		const idInventario = params;
+    	let updatedTotali = {righe: getState().inventario.itemsArray.length, lastActionKey: itemId};
+    	Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+    	};
+
+const aggiornaOccorrenzeInventario = (getState) =>
+    	{
+		let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
+		let idInventario = getState().inventario.listeningItem;
+	    if (idInventario) Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
+		}
+
 
 
 
