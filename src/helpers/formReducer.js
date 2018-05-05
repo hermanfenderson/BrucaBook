@@ -449,8 +449,18 @@ export default FormReducer
 
 export const getItems = (state) => {return state.itemsArray};  
 export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
-  
-
+ export const getEditedItem = (state) => {return state.editedItem};  
+ export const getTestata = (state) => {return state.testata};
+ export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
+ export const getTableHeight = (state) => {return state.tableHeight};
+ export const getTableScroll = (state)  => {return state.tableScroll};
+ export const getListeningTestata = (state) => {return state.listeningTestata};
+ export const getListeningItem = (state) => {return state.listeningItem};
+ export const isStaleTotali = (state) => {return state.staleTotali};
+ export const getMessageBuffer = (state) => {return state.messageBuffer};
+ export const listeningDataMagazzino = (state) => {return state.listeningDataMagazzino};
+ export const getDataMagazzino = (state) => {return state.dataMagazzino};
+ 
 
 
  

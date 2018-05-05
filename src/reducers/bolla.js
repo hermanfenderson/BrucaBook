@@ -200,7 +200,7 @@ export default function bolla(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -130;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -250;
    	    newState = {...state, tableHeight: height};
         break;
   	
@@ -225,6 +225,7 @@ export default function bolla(state = initialState(), action) {
  export const getListeningItemBolla = (state) => {return state.listeningItem};
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
+ export const getFiltersBolla = (state) => {return state.filters};
  
  export const getTotali = (state) => {return state.totali};
  //Questa per memoria storica

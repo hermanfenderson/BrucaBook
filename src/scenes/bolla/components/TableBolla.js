@@ -43,7 +43,13 @@ class TableBolla extends Component
 		this.props.setSelectedRigaBolla(row);
 	}
 	
-
+	sorterFunc = (header) => {
+	 if (header.dataField==='ean') 
+		return(function(b, a) { return(a.ean-b.ean)});
+	 if (header.dataField==='titolo') 
+		return(function(b, a) { return(a.titolo.localeCompare(b.titolo))});
+	return(false);
+	};
 
     
     	render() { 
@@ -55,7 +61,7 @@ class TableBolla extends Component
     	delete props['deleteRigaBolla']; //Non la passo liscia...
     	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} />
+			<WrappedTable {...props} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} />
 			)}
     }		
 	

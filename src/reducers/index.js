@@ -69,6 +69,8 @@ export const getListeningItemBolla = (state) => {return fromBolla.getListeningIt
 export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bolla)};
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
+export const getFiltersBolla = (state) => {return fromBolla.getFiltersBolla(state.bolla)};
+
 //export const getTableScrollByKeyBolla = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 
 //Scena Dashboard
@@ -274,6 +276,8 @@ export const s2s = (scene) => {
 	return(s);	
 }
 
+
+
 //Multi-scena (ragiono in modo diverso... passo esplicitamente la scena...con strato piccolino per disaccoppiamento...
 
 
@@ -284,6 +288,7 @@ export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.o
 //export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return s.origin.getTableScrollByKey(state[s.stato])};
 
 //Questo che segue è l'uovo di Colombo...
+
 export const getItems = (state, scene) => {let s=s2s(scene); return fromFormReducer.getItems(state[s.stato])};
 export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getTableScrollByKey(state[s.stato])};
 

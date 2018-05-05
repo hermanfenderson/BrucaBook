@@ -1,6 +1,8 @@
 import TableBolla from '../containers/TableBolla';
 import FormRigaBolla from '../containers/FormRigaBolla';
 import TotaliBolla from '../components/TotaliBolla';
+import FilterBolla from '../components/FilterBolla';
+
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
@@ -72,8 +74,12 @@ render()
       </Col>
  
        <Col span={20}>
-     <TableBolla  period={period} idBolla={this.props.match.params.id}/>
-      
+        <Row>
+      <FilterBolla filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      </Row>
+   <Row>
+     <TableBolla  period={period} idBolla={this.props.match.params.id} filters={this.props.filters}/>
+      </Row>
     	   </Col>
       </Row>
     
