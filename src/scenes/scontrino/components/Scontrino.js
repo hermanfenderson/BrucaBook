@@ -163,7 +163,10 @@ return (
 		<Row>
 			<FormCalcoloResto staleTotali={this.props.staleTotali} totaliScontrino={this.props.totaliScontrino} testataScontrino={this.props.testataScontrino}/>
 		</Row>
-		
+		<Row>
+		<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
+        </Row>
+	
 		</Col>
 		<Col span={18}>
 	    <Row>
@@ -182,14 +185,8 @@ return (
 	   
 	</Row>  
 	
-       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '200px'}}>
-    		<Col span={5}>
-
-				<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
-
-	
-		  </Col>
-		  <Col span={19}>
+       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '100px'}}>
+    	  <Col span={24}>
 
 
     		<FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />

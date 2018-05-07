@@ -3,7 +3,7 @@ import {TOGGLE_COLLAPSED, SET_MENU_SELECTED_KEYS} from '../actions';
 export const SET_HEADER_INFO='SET_HEADER_INFO';
 
 const initialState =  {
-  collapsed: false,
+  collapsed: true, //Default collapsed... mi manca spazio!
   headerInfo: '',
   menuSelectedKeys: [],
 };

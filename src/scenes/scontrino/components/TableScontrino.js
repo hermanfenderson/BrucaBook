@@ -87,7 +87,7 @@ class TableScontrino extends Component
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			)}
     }		
 	

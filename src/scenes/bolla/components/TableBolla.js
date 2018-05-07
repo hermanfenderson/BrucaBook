@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
-                {dataField: 'titolo', label: 'Titolo', width: '320px'},
+const header = [{dataField: 'ean', label: 'EAN', width: '120px'},
+                {dataField: 'titolo', label: 'Titolo', width: '360px'},
 			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '60px'},
-			    {dataField: 'pezzi', label: 'Quantità', width: '60px'},
+			    {dataField: 'pezzi', label: 'Q.tà', width: '60px'},
 			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
 			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
 			   ];
@@ -61,7 +61,7 @@ class TableBolla extends Component
     	delete props['deleteRigaBolla']; //Non la passo liscia...
     	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} />
+			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} />
 			)}
     }		
 	

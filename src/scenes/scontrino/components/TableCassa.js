@@ -62,9 +62,18 @@ actionRowRender = (cell, row) => {
  	
  } 
  
-ordinaryRowRender = (cell,row) => {
+ordinaryRowRender = (cell,row, index) => {
+//Il titolo lo tronco... se serve...
+ if (row.titolo === cell)
+	{
+if (row.key === this.props.highlightedRowKey) return(<div className={'tabella-cassa-div-titolo'} style={{width: '150px','color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ else  return(<div className={'tabella-cassa-div-titolo'} style={{width: '150px'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
+	}
+ else {
  if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
  else  return(<div onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ 	
+ }	
  
 } 
 
@@ -88,7 +97,7 @@ render ()
   	             	'title':  header.label,
   	             	'dataIndex': header.dataField,
   	             	 'width': header.width,
-  	             	'render': (text, record) => {return {children: this.ordinaryRowRender(text,record),
+  	             	'render': (text, record, index) => {return {children: this.ordinaryRowRender(text,record, index),
   	             					                     props: {colSpan: (record.tipo === 'scontrino' ? 1 : rigaScontrinoSpan)}}}
   	            		})
   	            	}
@@ -129,10 +138,10 @@ render ()
 
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'numero', label: '#', width: '30px'},
+const header = [{dataField: 'numero', label: '#', width: '40px'},
 				{dataField: 'oraScontrino', label: 'Ora', width: '45px'},		
                 {dataField: 'totali.pezzi', label: 'Q.tà', width: '35px'},
-			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: '55px'}
+			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: '40px'}
 			   ];
 
 

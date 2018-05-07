@@ -89,12 +89,10 @@ render ()
      {
     let columns = this.props.header.map((header) => 
   	            	{
-  	            	console.log(this.props.sorterFunc);
   	            		return({
   	            	'key': header.dataField,		
   	             	'title':  header.label,
   	             	'sorter': (this.props.sorterFunc) ? this.props.sorterFunc(header) : false,
-  	             	//'sorter': header.label==='EAN' ? function(a, b) { return(a.ean-b.ean)} : false,
   	             	'dataIndex': header.dataField,
   	             	 'width': header.width,
   	             	'render': (text, record, index) => 

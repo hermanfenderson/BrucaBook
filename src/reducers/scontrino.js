@@ -177,7 +177,7 @@ export default function scontrino(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaScontrinoHeight'] -130;
+   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaScontrinoHeight'] -120;
    	    newState = {...state, tableHeight: height};
         break;
   	case SET_SCONTO_SCONTRINO: 

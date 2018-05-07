@@ -70,7 +70,12 @@ render()
     </Modal>  
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
+         <Row>
     	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla} totaliBolla={	this.props.totaliBolla}/>
+    	</Row>
+    	<Row>
+    	  <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} imgUrl={this.props.editedRigaBolla.values.imgFirebaseUrl}/>
+		</Row>
       </Col>
  
        <Col span={20}>
@@ -83,13 +88,9 @@ render()
     	   </Col>
       </Row>
     
-      <Row type="flex" align="bottom" className='bottom-form' style={{height: '250px'}} ref='formRigaBolla'>
+      <Row type="flex" align="bottom" className='bottom-form' style={{height: '100px'}} ref='formRigaBolla'>
    
-     <Col span={4}>
-     <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} imgUrl={this.props.editedRigaBolla.values.imgFirebaseUrl}/>
-
-      </Col>
-       <Col span={20}>
+       <Col span={24}>
     
       <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} />
       </Col>
