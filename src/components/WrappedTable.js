@@ -11,6 +11,7 @@ Aggiunto il cocnetto di custom renderer... passo un oggetto customRowRender con 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Icon, Table } from 'antd';
+import classNames from 'classnames';
 
 var lastRowClicked = null; //Non posso aspettare che ritorni la modifica dallo stato...
 
@@ -69,8 +70,13 @@ actionRowRender = (cell, row, index) => {
 
 
 rowClassName = (record,index) => {
-	let rowClassName = (this.props.highlightedRowKey === record.key) ? 'ant-table-row ant-table-row-highlight ant-table-row-record-'+record.key : 'ant-table-row ant-table-row-record-'+record.key;
-	if (this.props.pinField && record[this.props.pinField]) rowClassName += ' ant-table-row-pinned ant-table-row-record-'+record.key;
+	let rowClassName = classNames('ant-table-row', 
+								  'ant-table-row-record-'+record.key,
+								  {'ant-table-row-highlight' : (this.props.highlightedRowKey === record.key)},
+								  {'ant-table-row-pinned' : (this.props.pinField && record[this.props.pinField])},
+								 )
+//	let rowClassName = (this.props.highlightedRowKey === record.key) ? 'ant-table-row ant-table-row-highlight ant-table-row-record-'+record.key : 'ant-table-row ant-table-row-record-'+record.key;
+//	if (this.props.pinField && record[this.props.pinField]) rowClassName += ' ant-table-row-pinned ant-table-row-record-'+record.key;
 	return(rowClassName);
 } 
 

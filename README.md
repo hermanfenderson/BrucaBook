@@ -5,7 +5,9 @@ gestionale per librerie indipendenti. Utilizza React e Firebase.
 Storia delle versioni
 ---------------------
 ### Versione 0.9.35
-* Shrink di tutte le maschere (prima versione)
+* Shrink di tutte le maschere (prima versione: scontrino)
+* Introdotta libreria per gestione più fluida delle classi
+* Introdotta libreria per hotkeys
 
 ### Versione 0.9.34
 * Fix di errori da deepscan 

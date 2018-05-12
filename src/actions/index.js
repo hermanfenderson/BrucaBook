@@ -15,7 +15,9 @@ import {urlFactory} from '../helpers/firebase';
 
 export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
 export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
-export const  STORE_MEASURE = 'STORE_MEASURE';
+export const SET_COLLAPSED = 'TOGGLE_COLLAPSED';
+
+export const STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
 export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
@@ -77,11 +79,16 @@ export function signOutUser() {
 }
 
 export function toggleCollapsed() {
-	return(
-		{
-			type: TOGGLE_COLLAPSED
-		}
-		)
+	 return ({
+  		type: TOGGLE_COLLAPSED,
+		});
+}
+
+export function setCollapsed(isCollapsed) {
+	return({
+  		type: SET_COLLAPSED,
+  		collapsed: isCollapsed,
+		});
 }
 
 export function storeMeasure(newMeasureName, newMeasureNumber) {

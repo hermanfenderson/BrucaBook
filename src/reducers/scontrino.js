@@ -46,7 +46,19 @@ const editedItemInitialState = () => {
 const initialState = () => {
     const eiis = editedItemInitialState();
     
-	return initialStateHelper(eiis,{defaultSconto: '', totali: {pezzi: 0, prezzoTotale: 0.00}});
+	return initialStateHelper(eiis,{geometry: {
+			                                  colonnaTestataScontrinoWidth: '180px',
+			                                  tableScontrinoCols: {
+			                                  		ean: 120,
+			                                  		prezzoUnitario: 50,
+			                                  		pezzi: 45,
+			                                  		sconto: 45,
+			                                  		prezzoTotale: 65,
+			                                  		titolo: 85,
+			                                						}
+											  },
+									defaultSconto: '', 
+									totali: {pezzi: 0, prezzoTotale: 0.00}});
     }
     
 
@@ -178,7 +190,13 @@ export default function scontrino(state = initialState(), action) {
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaScontrinoHeight'] -120;
-   	    newState = {...state, tableHeight: height};
+   	    let tableScontrinoWidth = measures['mainWidth'] * 3 / 4 - 180;
+   	    let tableScontrinoCols = {...state.geometry.tableScontrinoCols};
+   	    tableScontrinoCols.titolo = tableScontrinoWidth - 60 - (tableScontrinoCols.ean + tableScontrinoCols.prezzoUnitario + tableScontrinoCols.pezzi+ tableScontrinoCols.sconto + tableScontrinoCols.prezzoTotale); 
+   	    let geometry = {...state.geometry};
+   	    geometry.tableScontrinoWidth = tableScontrinoWidth;
+   	    geometry.tableScontrinoCols = tableScontrinoCols;
+   	    newState = {...state, tableHeight: height, geometry: geometry};
         break;
   	case SET_SCONTO_SCONTRINO: 
   		newState = {...state, defaultSconto: action.sconto};
@@ -210,7 +228,6 @@ export default function scontrino(state = initialState(), action) {
   	  	let cei = editedItemCopy(newState.editedItem);
 		cei.values.sconto = newState.defaultSconto;
 	    newState = {...newState, editedItem: cei};
-	    console.log(newState);
     	}
   	    break;
     default:

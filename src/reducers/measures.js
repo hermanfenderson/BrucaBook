@@ -1,7 +1,7 @@
 import { STORE_MEASURE, REMOVE_MEASURE } from '../actions';
 
 const initialState =  {
- measures: {}
+ measures: {siderWidth: 80}
 };
 
 export default function measures(state = initialState, action) {
@@ -19,6 +19,8 @@ export default function measures(state = initialState, action) {
       return {
         ...state, measures: newMeasures2
       };
+      
+      
     default:
       return state;
   }

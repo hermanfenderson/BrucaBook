@@ -4,20 +4,12 @@ import React, {Component} from 'react'
 
 import WrappedTable from '../../../components/WrappedTable'
 
-
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '165px'},
-                {dataField: 'titolo', label: 'Titolo', width: '290px'},
-			    {dataField: 'prezzoUnitario', label: 'Eur', width: '70px'},
-			    {dataField: 'pezzi', label: 'Q.tà', width: '60px'},
-			      {dataField: 'sconto', label: 'Sc.', width: '60px'},
-			     {dataField: 'prezzoTotale', label: 'Tot.', width: '70px'}
-			   ];
 //Per gestire in modo smmooth il ricaricamento!
 
 class TableScontrino extends Component 
     {
-    	
+
     listenScontrino = (oldProps, newProps) => 
     {
     		let newId = newProps.scontrino;
@@ -47,6 +39,7 @@ class TableScontrino extends Component
 	
 	componentDidUpdate = (oldProps) => {
 		this.listenScontrino(oldProps, this.props);
+	
 	}
 	
 	 componentWillUnmount() {
@@ -78,16 +71,33 @@ class TableScontrino extends Component
 		this.props.setSelectedRigaScontrino(row);
 	}
 
+	
+   
     
     	render() { 
       	let props = {...this.props};
     	let selectedItemKey = null;
+    	let colsW = this.props.geometry.tableScontrinoCols;
+        let header = [{dataField: 'ean', label: 'EAN', width: colsW.ean},
+                {dataField: 'titolo', label: 'Titolo', width: colsW.titolo - 10},
+			    {dataField: 'prezzoUnitario', label: 'Eur', width: colsW.prezzoUnitario},
+			    {dataField: 'pezzi', label: 'Q.tà', width: colsW.pezzi},
+			      {dataField: 'sconto', label: 'Sc.', width: colsW.sconto},
+			     {dataField: 'prezzoTotale', label: 'Tot.', width: colsW.prezzoTotale}
+			   ];
+    	let customRowRender = {
+    		     //'ean' : (text, record, index) => { return(<div style={{width: colsW.ean - 10}}> {text}</div>)},
+    			'titolo' : (text, record, index) => { return(<div style={{width: colsW.titolo - 10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
+//'titolo' : (text, record, index) => {let w=parseInt(colsW.titolo/6.9); let c=text.length; let txt=(c>w) ? text.substring(0,w-4)+"..." : text; return(<div> {txt}</div>)}}
+
+
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
+    	
     	
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
-			<WrappedTable {...props} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} customRowRender={customRowRender}/>
 			)}
     }		
 	

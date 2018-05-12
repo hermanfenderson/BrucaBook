@@ -7,7 +7,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { LocaleProvider, Layout,  Affix, Row, Col, Spin } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
-
+import Measure from 'react-measure';
 
 //import Header from '../components/Header';
 import Main from '../components/Main';
@@ -17,14 +17,26 @@ import { connect } from 'react-redux';
 import { bindActionCreators} from 'redux'
 
 import {signOutUser, listenAuthStateChanged, toggleCollapsed, storeMeasure, removeMeasure, setMenuSelectedKeys} from '../actions';
-import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo, getMenuSelectedKeys} from '../reducers';
+import {isAuthenticated, getUser, getCollapsed, getHeaderInfo, getInfo, getMenuSelectedKeys, getMeasures} from '../reducers';
 
 //Foglio di stile...
 import '../styles/app.css';
 
+
 const { Sider, Content } = Layout;
 
+function viewportSize(){
+	var test = document.createElement( "div" );
 
+	test.style.cssText = "position: fixed;top: 0;left: 0;bottom: 0;right: 0;";
+	document.documentElement.insertBefore( test, document.documentElement.firstChild );
+	
+	var dims = { width: test.offsetWidth, height: test.offsetHeight };
+	document.documentElement.removeChild( test );
+	
+	return dims;
+}
+ 
 class App extends React.Component {
 
   componentWillMount() {
@@ -37,35 +49,53 @@ class App extends React.Component {
  	
  	//this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
     this.handleResize(); //La prima volta...
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener('resize', this.handleResize,false);
     
   }
 
 
 
-componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  this.props.removeMeasure('viewPortHeight');
-  }
+
 
 handleResize = () => {
-  this.props.storeMeasure('viewPortHeight', window.innerHeight);
+  let dims = viewportSize(); 
+  this.props.storeMeasure('viewPortHeight', dims.height);
+  this.props.storeMeasure('viewPortWidth', dims.width);
 }
 
-
+handleAppResize = (obj) => {
+	 let dims = obj.dimensions; 
+  this.props.storeMeasure('appHeight', dims.height);
+  this.props.storeMeasure('appWidth', dims.width);
+	
+};
  
+
+handleMainResize = (obj) => {
+	 let dims = obj.dimensions; 
+  this.props.storeMeasure('mainHeight', dims.height);
+  this.props.storeMeasure('mainWidth', dims.width);
+	
+};
            
            
  
 
   render() {
   	return (
-     <LocaleProvider locale={itIT}>	
+  	  <Measure client onResize={(contentRect) => {
+          this.handleAppResize({ dimensions: contentRect.client })
+        }}>
+	  {({ measureRef }) =>
+	      <div ref={measureRef}>
+     <LocaleProvider  locale={itIT}>	
       {(this.props.authenticated === null)? 
       <Spin />
       :
       (this.props.authenticated === true) ?
-      (<Layout style={{height: '100vh'}}>
+      (
+      
+      <Layout style={{height: '100vh'}}>
         <Sider style={{height: '100vh'}}
           trigger={null}
           collapsible
@@ -73,7 +103,7 @@ handleResize = () => {
         >
         <Affix>
      
-           <SiderComponent signOutUser={this.props.signOutUser} authenticated={this.props.authenticated} setMenuSelectedKeys={this.props.setMenuSelectedKeys} menuSelectedKeys={this.props.menuSelectedKeys}/>
+           <SiderComponent  signOutUser={this.props.signOutUser} authenticated={this.props.authenticated} setMenuSelectedKeys={this.props.setMenuSelectedKeys} menuSelectedKeys={this.props.menuSelectedKeys}/>
           </Affix>
      
       </Sider>
@@ -81,12 +111,23 @@ handleResize = () => {
        
           <Layout >
            
-           <Header setMenuSelectedKeys={this.props.setMenuSelectedKeys} toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} path2url={this.props.path2url} storeMeasure = {this.props.storeMeasure} />
-     
+           <Header setMenuSelectedKeys={this.props.setMenuSelectedKeys} toggleCollapsed={this.props.toggleCollapsed} signOutUser={this.props.signOutUser} info={this.props.info} headerInfo = {this.props.headerInfo} path2url={this.props.path2url} storeMeasure = {this.props.storeMeasure} viewPortWidth={this.props.measures.viewPortWidth} collapsed={this.props.collapsed}/>
+          
            
-         
-           <Content style={{ margin: '12px 8px', padding: 12, background: '#fff', minHeight: '100vh-74', overflow: 'scroll', maxHeight: '100vh-74'  }}>
-          <Main authenticated={true} user={this.props.user}/>
+           
+           <Content style={{ margin: '0px 0px', padding: '8px', background: '#fff', overflow: 'scroll'  }}>
+        
+       <Measure client onResize={(contentRect) => {
+          this.handleMainResize({ dimensions: contentRect.client })
+        }}>
+	      {({ measureRef }) =>
+	      <div ref={measureRef}>
+	      <Main  authenticated={true} user={this.props.user}/>
+	      </div>
+          }
+          
+      </Measure>
+     
           </Content>
         </Layout>
       </Layout>) 
@@ -103,7 +144,12 @@ handleResize = () => {
       </div>
       )
       }
+      
       </LocaleProvider> 
+      </div>
+	  }
+	 </Measure> 
+     
     );
   }
 }
@@ -119,6 +165,7 @@ function mapStateToProps(state) {
     headerInfo: getHeaderInfo(state),
     info: getInfo(state),
     menuSelectedKeys: getMenuSelectedKeys(state),
+    measures: getMeasures(state)
   };
 }
 

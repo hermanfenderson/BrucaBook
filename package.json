@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "antd": "^3.4.0",
+    "classnames": "^2.2.5",
     "firebase": "^4.10.1",
     "html-docx-js": "^0.3.1",
     "js-file-download": "^0.4.1",
@@ -19,6 +20,7 @@
     "react": "^16.3.1",
     "react-dom": "^16.2.0",
     "react-markdown": "^3.1.4",
+    "react-measure": "^2.0.2",
     "react-redux": "^4.4.8",
     "react-responsive-modal": "^2.0.1",
     "react-router-dom": "^4.2.2",

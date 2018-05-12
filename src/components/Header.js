@@ -8,7 +8,7 @@ class Header extends React.Component {
 
 
 toggle = () => {
-    this.props.toggleCollapsed();
+    if (this.props.viewPortWidth > 1080) this.props.toggleCollapsed(); //Non consento di aprire il menu sotto i 1080 di larghezza
   }
   
 
@@ -26,6 +26,10 @@ back = () => {
  	
  	this.props.storeMeasure('headerHeight', ReactDOM.findDOMNode(this.refs.header).clientHeight);
  	 }
+ 	 
+ componentDidUpdate() {
+ if (this.props.viewPortWidth < 1080 && !this.props.collapsed) this.props.toggleCollapsed();
+ }	 
 
 onClick = (selection) => {
 	let link = '';
@@ -72,11 +76,12 @@ menu = (<Menu onClick={this.onClick} theme="light" >
            <Affix>
            <Row  style={{backgroundColor: 'white'}}>
            <Col span={18}>
+            {(this.props.viewPortWidth > 1080) ?
             <Icon
               className="trigger"
               type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
               onClick={this.toggle}
-            />
+            /> : null}
              <Button
               icon="arrow-left"
               onClick={this.back}>

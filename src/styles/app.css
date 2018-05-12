@@ -21,6 +21,9 @@ html, body {
 	padding-bottom: 0px;
 }
 
+
+
+
 .ant-table-row-highlight{
  background-color: #e6f7ff;
  color: #108ee9;
@@ -137,6 +140,7 @@ width: 75px;
 	font-size: 12px;
 }
 
+/*
 .tabella-cassa-div-titolo {
 	font-size: 12px;
     white-space: nowrap;
@@ -144,8 +148,12 @@ width: 75px;
     text-overflow: ellipsis;
 }
 
-
-
+.ant-table-row-div-titolo {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+*/
 /*Immagine libri*/
 .book-img {
 	margin: 30px;

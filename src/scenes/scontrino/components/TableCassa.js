@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { Icon, Table} from 'antd';
 import {period2month} from '../../../helpers/form'
 import {withRouter} from 'react-router-dom'
-
+import classNames from 'classnames'
 
 
 import {Modal} from 'antd';
@@ -57,9 +57,14 @@ actionRowRender = (cell, row) => {
  }
  
  rowClassName = (record,index) => {
-	if (record.tipo === 'scontrino') return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row tabella-cassa-record-'+record.key : 'ant-table-row ant-table-row-totale-cassa tabella-cassa-row tabella-cassa-record-'+record.key);
-	else return((record.key === this.props.highlightedRowKey) ? 'ant-table-row ant-table-row-cassa-highlight tabella-cassa-row tabella-cassa-record-'+record.key : 'ant-table-row  tabella-cassa-row tabella-cassa-record-'+record.key);
- 	
+ 	return(classNames('ant-table-row', 
+ 					  'tabella-cassa-row',
+ 					  'tabella-cassa-record-'+record.key, 
+ 					  {'ant-table-row-cassa-highlight': (record.key === this.props.highlightedRowKey)}, 
+ 					  {'ant-table-row-totale-cassa': (record.tipo === 'scontrino')}
+ 					  )
+	     )
+
  } 
  
 ordinaryRowRender = (cell,row, index) => {
@@ -67,7 +72,7 @@ ordinaryRowRender = (cell,row, index) => {
  if (row.titolo === cell)
 	{
 if (row.key === this.props.highlightedRowKey) return(<div className={'tabella-cassa-div-titolo'} style={{width: '150px','color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
- else  return(<div className={'tabella-cassa-div-titolo'} style={{width: '150px'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ else  return(<div className={'tabella-cassa-div-titolo'}  onClick={() => { this.selectRow(row)}}>{cell}</div>);
 	}
  else {
  if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);

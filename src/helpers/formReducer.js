@@ -339,9 +339,10 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
             break;
             
          case this.RESET:
-   	    //Trucchismo.... salvo l'altezza della tabella
+   	    //Trucchismo.... salvo l'altezza della tabella e le altre geometrie
    	    const tableHeight = state.tableHeight;
-      	newState =  {...initialState(), tableHeight: tableHeight};
+   	    const geometry = state.geometry;
+      	newState =  {...initialState(), tableHeight: tableHeight, geometry: geometry};
 		break;
 		
 	
@@ -460,7 +461,6 @@ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  export const listeningDataMagazzino = (state) => {return state.listeningDataMagazzino};
  export const getDataMagazzino = (state) => {return state.dataMagazzino};
- 
-
+ export const getGeometry = (state) => {return state.geometry};
 
  

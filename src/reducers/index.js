@@ -269,8 +269,13 @@ export const s2s = (scene) => {
 			case 'CASSA':
 				s.stato = 'cassa';
 				s.origin = fromCassa;
+			break;	
+		    case 'SCONTRINO':
+				s.stato = 'scontrino';
+				s.origin = fromCassa;
 			break;
 			default:
+		
 			
 		}
 	return(s);	
@@ -292,5 +297,6 @@ export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.o
 export const getItems = (state, scene) => {let s=s2s(scene); return fromFormReducer.getItems(state[s.stato])};
 export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getTableScrollByKey(state[s.stato])};
 
+export const getGeometry = (state, scene) => {let s=s2s(scene); return fromFormReducer.getGeometry(state[s.stato])};
 
  

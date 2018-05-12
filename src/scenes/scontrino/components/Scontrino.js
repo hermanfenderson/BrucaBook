@@ -19,6 +19,7 @@ import moment from 'moment';
 import 'moment/locale/it';
 import {withRouter} from 'react-router-dom'
 import {period2month} from '../../../helpers/form'
+import FixCol from '../../../components/FixCol'
 
 
 import { Row, Col,  Modal, Spin, Button} from 'antd'
@@ -107,8 +108,7 @@ submitRigaCassa = (e) => {
 render()
 {
 
-	
-  const period = [this.props.match.params.anno, this.props.match.params.mese];
+   const period = [this.props.match.params.anno, this.props.match.params.mese];
 
 return (
  	
@@ -116,7 +116,7 @@ return (
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
-  <Col  style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-48 : '100px', 'backgroundColor': '#F0F0F0'}} span={6}>
+  <Col  style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-34 : '100px', 'backgroundColor': '#F0F0F0'}} span={6}>
 	
     <Row>
     <Col className='header-cassa' span={6}>
@@ -124,7 +124,7 @@ return (
     Cassa {this.props.testataCassa ? this.props.testataCassa.cassa : ''}
     </Col>
     <Col span={18}>
-    	<Button type="primary" icon="plus" size={'small'} className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
+    	<Button type="primary" icon="plus" className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
      </Col>
    
     </Row>
@@ -138,12 +138,12 @@ return (
 	</Row>
 
   </Col>
-  <Col style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-48 : '100px'}} span={18} className='sezione-scontrino'>
+  <Col style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-34 : '100px'}} span={18} className='sezione-scontrino'>
   <Spin spinning={!this.props.match.params.scontrino}>
   <Row>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   
-    	<Col span={6}>
+    	<FixCol  width={this.props.geometry.colonnaTestataScontrinoWidth}>
     	<Row  className='header-scontrino'>
     	Scontrino
     	</Row>
@@ -167,21 +167,19 @@ return (
 		<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
         </Row>
 	
-		</Col>
-		<Col span={18}>
-	    <Row>
-	    	
-		</Row>
-		<Row>
+		</FixCol>
+	     <FixCol width={this.props.geometry.tableScontrinoWidth}>
+    
+		<Row >
    		
 		   <Spin spinning={!this.props.testataScontrino}>	
    	
 			
-					<TableScontrino  period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+					<TableScontrino geometry={this.props.geometry} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 		   </Spin>
 	   	</Row>
 			   
-	   </Col>
+	   </FixCol>
 	   
 	</Row>  
 	
