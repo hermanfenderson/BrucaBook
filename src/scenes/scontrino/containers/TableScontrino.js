@@ -16,7 +16,7 @@ const toggleTableScroll = rigaScontrinoFA.toggleTableScroll;
 
 const mapStateToProps = (state) => {
 	return ({data: getRigheScontrino(state), tableScroll: getTableScrollScontrino(state), 
-	height: getTableHeightScontrino(state),  
+	height: getTableHeightScontrino(state) - 100,  
 	selectedItem: getEditedRigaScontrino(state).selectedItem,
 	listeningItemScontrino: getListeningItemScontrino(state),
 	listenersItemScontrino: getListenersItemScontrino(state)

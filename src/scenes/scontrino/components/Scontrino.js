@@ -111,12 +111,12 @@ render()
    const period = [this.props.match.params.anno, this.props.match.params.mese];
 
 return (
- 	
+  <div style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight'] - 20 : '100px' }}>	
   <Row gutter={16}>
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
-  <Col  style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-34 : '100px', 'backgroundColor': '#F0F0F0'}} span={6}>
+  <Col  style={{'backgroundColor': '#F0F0F0'}} span={6}>
 	
     <Row>
     <Col className='header-cassa' span={6}>
@@ -138,7 +138,7 @@ return (
 	</Row>
 
   </Col>
-  <Col style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight']-34 : '100px'}} span={18} className='sezione-scontrino'>
+  <Col  span={18} className='sezione-scontrino'>
   <Spin spinning={!this.props.match.params.scontrino}>
   <Row>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
@@ -196,7 +196,7 @@ return (
  
    
   </Row>
-  
+  </div>
   )
   
 

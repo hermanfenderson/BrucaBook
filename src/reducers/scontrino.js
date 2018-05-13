@@ -47,14 +47,14 @@ const initialState = () => {
     const eiis = editedItemInitialState();
     
 	return initialStateHelper(eiis,{geometry: {
-			                                  colonnaTestataScontrinoWidth: '180px',
+			                                  colonnaTestataScontrinoWidth: 180,
 			                                  tableScontrinoCols: {
 			                                  		ean: 120,
 			                                  		prezzoUnitario: 50,
 			                                  		pezzi: 45,
 			                                  		sconto: 45,
 			                                  		prezzoTotale: 65,
-			                                  		titolo: 85,
+			                                  		titolo: 80,
 			                                						}
 											  },
 									defaultSconto: '', 
@@ -189,15 +189,31 @@ export default function scontrino(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaScontrinoHeight'] -120;
-   	    let tableScontrinoWidth = measures['mainWidth'] * 3 / 4 - 180;
-   	    let tableScontrinoCols = {...state.geometry.tableScontrinoCols};
-   	    tableScontrinoCols.titolo = tableScontrinoWidth - 60 - (tableScontrinoCols.ean + tableScontrinoCols.prezzoUnitario + tableScontrinoCols.pezzi+ tableScontrinoCols.sconto + tableScontrinoCols.prezzoTotale); 
-   	    let geometry = {...state.geometry};
-   	    geometry.tableScontrinoWidth = tableScontrinoWidth;
-   	    geometry.tableScontrinoCols = tableScontrinoCols;
-   	    newState = {...state, tableHeight: height, geometry: geometry};
-        break;
+   	    newState = {...state, measures: measures};
+   	    if (action.newMeasure.name==='viewPortHeight' || action.newMeasure.name==='headerHeight' || action.newMeasure.name==='formRigaScontrinoHeight' )
+   	    	{
+   	        let vPH = measures['viewPortHeight'] ? measures['viewPortHeight'] : 600;
+   	        let hH = measures['headerHeight'] ? measures['headerHeight'] : 64;
+   	        let fRSH = measures['formRigaScontrinoHeight'] ? measures['formRigaScontrinoHeight'] : 100;
+   	    	let height = vPH - hH -fRSH;
+   	    	console.log(height);
+   	    	newState = {...newState, tableHeight: height};
+			}
+   	    if (action.newMeasure.name==='mainWidth')
+   	    	{
+   	    	let tableScontrinoWidth = measures['mainWidth'] * 3 / 4 - state.geometry['colonnaTestataScontrinoWidth'];
+   		    let tableScontrinoCols = {...state.geometry.tableScontrinoCols};
+   	    	if (tableScontrinoCols && tableScontrinoWidth) 
+   	    		{
+   	    		tableScontrinoCols.titolo = tableScontrinoWidth - 60 - (tableScontrinoCols.ean + tableScontrinoCols.prezzoUnitario + tableScontrinoCols.pezzi+ tableScontrinoCols.sconto + tableScontrinoCols.prezzoTotale) - 10; 
+   				let geometry = {...state.geometry};
+   	    		geometry.tableScontrinoWidth = tableScontrinoWidth;
+   	    		geometry.tableScontrinoCols = tableScontrinoCols;
+   				newState = {...newState, geometry: geometry};
+   	    		}
+			}
+   	   	
+   	        break;
   	case SET_SCONTO_SCONTRINO: 
   		newState = {...state, defaultSconto: action.sconto};
   		break;
