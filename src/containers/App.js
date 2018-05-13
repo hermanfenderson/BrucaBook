@@ -7,7 +7,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { LocaleProvider, Layout,  Affix, Row, Col, Spin } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
-import Measure from 'react-measure';
+//import Measure from 'react-measure';
 
 //import Header from '../components/Header';
 import Main from '../components/Main';
@@ -26,6 +26,7 @@ import '../styles/app.css';
 const { Sider, Content } = Layout;
 
 function viewportSize(){
+	/*
 	var test = document.createElement( "div" );
 
 	test.style.cssText = "position: fixed;top: 0;left: 0;bottom: 0;right: 0;";
@@ -33,7 +34,8 @@ function viewportSize(){
 	
 	var dims = { width: test.offsetWidth, height: test.offsetHeight };
 	document.documentElement.removeChild( test );
-	
+	*/
+	var dims = {width: window.innerWidth, height: window.innerHeight};
 	return dims;
 }
  
@@ -62,33 +64,13 @@ handleResize = () => {
   this.props.storeMeasure('viewPortHeight', dims.height);
   this.props.storeMeasure('viewPortWidth', dims.width);
 }
-
-handleAppResize = (obj) => {
-	 let dims = obj.dimensions; 
-  this.props.storeMeasure('appHeight', dims.height);
-  this.props.storeMeasure('appWidth', dims.width);
-	
-};
- 
-
-handleMainResize = (obj) => {
-	 let dims = obj.dimensions; 
-  this.props.storeMeasure('mainHeight', dims.height);
-  this.props.storeMeasure('mainWidth', dims.width);
-	
-};
            
            
  
 
   render() {
   	return (
-  	  <Measure client onResize={(contentRect) => {
-          this.handleAppResize({ dimensions: contentRect.client })
-        }}>
-	  {({ measureRef }) =>
-	      <div ref={measureRef}>
-     <LocaleProvider  locale={itIT}>	
+  	  <LocaleProvider  locale={itIT}>	
       {(this.props.authenticated === null)? 
       <Spin />
       :
@@ -117,16 +99,8 @@ handleMainResize = (obj) => {
            
            <Content style={{ margin: '0px 0px', padding: '8px', background: '#fff', overflow: 'scroll'  }}>
         
-       <Measure client onResize={(contentRect) => {
-          this.handleMainResize({ dimensions: contentRect.client })
-        }}>
-	      {({ measureRef }) =>
-	      <div ref={measureRef}>
-	      <Main  authenticated={true} user={this.props.user}/>
-	      </div>
-          }
-          
-      </Measure>
+          <Main  authenticated={true} user={this.props.user}/>
+	      
      
           </Content>
         </Layout>
@@ -146,10 +120,7 @@ handleMainResize = (obj) => {
       }
       
       </LocaleProvider> 
-      </div>
-	  }
-	 </Measure> 
-     
+      
     );
   }
 }

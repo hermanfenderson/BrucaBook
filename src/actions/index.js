@@ -15,7 +15,6 @@ import {urlFactory} from '../helpers/firebase';
 
 export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
 export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
-export const SET_COLLAPSED = 'TOGGLE_COLLAPSED';
 
 export const STORE_MEASURE = 'STORE_MEASURE';
 export const REMOVE_MEASURE = 'REMOVE_MEASURE';
@@ -79,17 +78,16 @@ export function signOutUser() {
 }
 
 export function toggleCollapsed() {
-	 return ({
+  return function(dispatch, getState) {
+     let width = (getState().app.collapsed) ? 200 : 80;
+	 dispatch ({
   		type: TOGGLE_COLLAPSED,
 		});
+	dispatch(storeMeasure('siderWidth',width));	
+  }	
 }
 
-export function setCollapsed(isCollapsed) {
-	return({
-  		type: SET_COLLAPSED,
-  		collapsed: isCollapsed,
-		});
-}
+
 
 export function storeMeasure(newMeasureName, newMeasureNumber) {
   var newMeasure = {name: newMeasureName, number: newMeasureNumber};

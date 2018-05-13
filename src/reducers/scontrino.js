@@ -199,9 +199,9 @@ export default function scontrino(state = initialState(), action) {
    	    	console.log(height);
    	    	newState = {...newState, tableHeight: height};
 			}
-   	    if (action.newMeasure.name==='mainWidth')
+   	    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
    	    	{
-   	    	let tableScontrinoWidth = measures['mainWidth'] * 3 / 4 - state.geometry['colonnaTestataScontrinoWidth'];
+   	    	let tableScontrinoWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 3 / 4 - state.geometry['colonnaTestataScontrinoWidth'];
    		    let tableScontrinoCols = {...state.geometry.tableScontrinoCols};
    	    	if (tableScontrinoCols && tableScontrinoWidth) 
    	    		{
