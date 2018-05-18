@@ -196,8 +196,11 @@ export default function scontrino(state = initialState(), action) {
    	        let hH = measures['headerHeight'] ? measures['headerHeight'] : 64;
    	        let fRSH = measures['formRigaScontrinoHeight'] ? measures['formRigaScontrinoHeight'] : 100;
    	    	let height = vPH - hH -fRSH;
-   	    	console.log(height);
-   	    	newState = {...newState, tableHeight: height};
+   	    	let geometry = {...state.geometry};
+   	    	geometry.tableScontrinoHeight = height - 10; 
+   	    	geometry.sezioneScontrinoHeight = height - 70; 
+   	    	
+   	    	newState = {...newState, tableHeight: geometry.tableScontrinoHeight, geometry: geometry};
 			}
    	    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
    	    	{

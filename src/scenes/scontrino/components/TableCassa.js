@@ -72,7 +72,7 @@ ordinaryRowRender = (cell,row, index) => {
  if (row.titolo === cell)
 	{
 if (row.key === this.props.highlightedRowKey) return(<div className={'tabella-cassa-div-titolo'} style={{width: '150px','color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
- else  return(<div className={'tabella-cassa-div-titolo'}  onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ else  return(<div style={{width: this.props.titoloWidth, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}  onClick={() => { this.selectRow(row)}}>{cell}</div>);
 	}
  else {
  if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
@@ -94,7 +94,7 @@ render ()
   	            	{
   	            	var rigaScontrinoSpan = 0;
   	            	if (header.label === '#') rigaScontrinoSpan = 3;
-  	            	if (header.label === 'Q.tà') rigaScontrinoSpan = 1;
+  	            	if (header.label === 'Qtà') rigaScontrinoSpan = 1;
   	            	if (header.label === 'Tot.') rigaScontrinoSpan = 1;
   	            	
   	            		return({
@@ -143,11 +143,6 @@ render ()
 
 
 //E' un dato.... che passo come costante...
-const header = [{dataField: 'numero', label: '#', width: '40px'},
-				{dataField: 'oraScontrino', label: 'Ora', width: '45px'},		
-                {dataField: 'totali.pezzi', label: 'Q.tà', width: '35px'},
-			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: '40px'}
-			   ];
 
 
 //Per gestire in modo smmooth il ricaricamento!
@@ -218,14 +213,21 @@ class TableCassa extends Component
     	render() { 
         let props = {...this.props};
     	let selectedItemKey = null;
-    	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
+    	let colsW = this.props.geometry.tableCassaCols;
+    	let header = [{dataField: 'numero', label: '#', width: colsW.numero},
+				{dataField: 'oraScontrino', label: 'Ora', width: colsW.oraScontrino},		
+                {dataField: 'totali.pezzi', label: 'Qtà', width: colsW.pezzi},
+			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: colsW.prezzoTotale}
+			   ];
+
+       	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
     	  
     	  
-			<WrappedTable {...props} actionWidth={'30px'} actionFirst={true} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props} titoloWidth={this.props.geometry.tableCassaTitoloWidth} actionWidth={'30px'} actionFirst={true} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
 			
 			)}
     }		

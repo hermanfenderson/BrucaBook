@@ -6,7 +6,7 @@ import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
 import {getFiltersCassa, getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, getMeasures,
-		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa,  getMessageBufferScontrino, getTotaliScontrino, getTotaliCassa, getGeometry} from '../../../reducers'
+		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa,  getMessageBufferScontrino, getTotaliScontrino, getTotaliCassa, getGeometry, getTableHeightScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataScontrino = rigaScontrinoFA.listenTestata;
@@ -47,6 +47,8 @@ const mapStateToProps = (state) => {
 			 totaliScontrino: getTotaliScontrino(state),
 			 totaliCassa: getTotaliCassa(state),
 			 geometry: getGeometry(state,'SCONTRINO'),
+			 height: getTableHeightScontrino(state),  
+
 		
 	})
 }

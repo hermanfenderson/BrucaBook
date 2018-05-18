@@ -71,9 +71,20 @@ const editedItemInitialState = () => {
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {listenersItem: {scontrini: {}},
+    					geometry: {
+    						      tableCassaTitoloWidth: 87,
+    						      tableCassaCols: {
+			                                  		numero: 22,
+			                                  		oraScontrino: 35,
+			                                  		pezzi: 30,
+			                                  		prezzoTotale: 45,
+			        
+			                                						}
+    							  }
                   }
 	return initialStateHelper(eiis,extraState);
     }
+    
     
     
 const transformSelectedItem = (cei) =>
@@ -403,10 +414,31 @@ export default function cassa(state = initialState(), action) {
   var newState;
   switch (action.type) {
    case STORE_MEASURE:
+   	    
+   	    newState = state;
    	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] -  measures['testataCassaHeight'] -110;
-   	    newState = {...state, tableHeight: height};
+	    measures[action.newMeasure.name] = action.newMeasure.number;
+	   	  
+   	    if (action.newMeasure.name==='viewPortHeight')
+   	    	{
+   	   	    let height = measures['viewPortHeight'] - 235;
+	   	    newState = {...state, tableHeight: height};
+   	    	}
+   	    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
+   	    	{
+   	    	let tableCassaWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 1 / 4;
+   		    let tableCassaCols = {...state.geometry.tableCassaCols};
+   	    	if (tableCassaCols && tableCassaWidth) 
+   	    		{
+   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 60; 
+   				let geometry = {...state.geometry};
+   	    		geometry.tableCassaWidth = tableCassaWidth;
+   	    		geometry.tableCassaCols = tableCassaCols;
+   	    		geometry.tableCassaTitoloWidth = tableCassaCols.numero +tableCassaCols.oraScontrino + 30 ;
+   			
+   				newState = {...newState, geometry: geometry};
+   	    		}
+			}
         break;
    //Over-ride del reducer form... gestisco diversamente i totali...     
    case ADD_ITEM_CASSA:

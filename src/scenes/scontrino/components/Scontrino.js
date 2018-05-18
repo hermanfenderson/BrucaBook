@@ -13,7 +13,6 @@ import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
-import ReactDOM from 'react-dom';
 
 import moment from 'moment';
 import 'moment/locale/it';
@@ -28,11 +27,7 @@ class Scontrino extends Component {
 
 
  componentDidMount() {
-    if (ReactDOM.findDOMNode(this.refs.formRigaScontrino)) this.props.storeMeasure('formRigaScontrinoHeight', ReactDOM.findDOMNode(this.refs.formRigaScontrino).clientHeight);
-    	
-    if (ReactDOM.findDOMNode(this.refs.testataCassa)) 	this.props.storeMeasure('testataCassaHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
-    if (ReactDOM.findDOMNode(this.refs.formTestataScontrino)) 	this.props.storeMeasure('testataScontrinoHeight', ReactDOM.findDOMNode(this.refs.testataCassa).clientHeight);
-    this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
+     this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
 	if (this.props.match.params.scontrino) 
 			{this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
 			}
@@ -111,7 +106,6 @@ render()
    const period = [this.props.match.params.anno, this.props.match.params.mese];
 
 return (
-  <div style={{height: this.props.measures['headerHeight'] ? this.props.measures['viewPortHeight']-this.props.measures['headerHeight'] - 20 : '100px' }}>	
   <Row gutter={16}>
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
@@ -119,11 +113,11 @@ return (
   <Col  style={{'backgroundColor': '#F0F0F0'}} span={6}>
 	
     <Row>
-    <Col className='header-cassa' span={6}>
+    <Col className='header-cassa' span={8}>
   
     Cassa {this.props.testataCassa ? this.props.testataCassa.cassa : ''}
     </Col>
-    <Col span={18}>
+    <Col span={16}>
     	<Button type="primary" icon="plus" className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
      </Col>
    
@@ -138,9 +132,9 @@ return (
 	</Row>
 
   </Col>
-  <Col  span={18} className='sezione-scontrino'>
+  <Col   span={18} className='sezione-scontrino'>
   <Spin spinning={!this.props.match.params.scontrino}>
-  <Row>
+  <Row style={{height: this.props.geometry.sezioneScontrinoHeight}}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   
     	<FixCol  width={this.props.geometry.colonnaTestataScontrinoWidth}>
@@ -196,7 +190,6 @@ return (
  
    
   </Row>
-  </div>
   )
   
 

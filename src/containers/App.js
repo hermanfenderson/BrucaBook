@@ -26,8 +26,8 @@ import '../styles/app.css';
 const { Sider, Content } = Layout;
 
 function viewportSize(){
-	/*
-	var test = document.createElement( "div" );
+	
+	/*var test = document.createElement( "div" );
 
 	test.style.cssText = "position: fixed;top: 0;left: 0;bottom: 0;right: 0;";
 	document.documentElement.insertBefore( test, document.documentElement.firstChild );

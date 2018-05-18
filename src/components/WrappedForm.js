@@ -18,9 +18,13 @@ WrappedForm mappa uno a uno le caratteristiche di Form di antd.
 Se uso un elemento WrappedForm.Group viene inseria una row (con eventuale gutter...) e tante col per quante servono...
 
 La formattazione dell'elemento è a carico del chiamante. Utilizzando tre insiemi di oggetti
-formColumnLayout nel caso di definzione di formGroup consente di formattare la colonna che contiene l'elemento.
+formColumnLayout nel caso di definzione di formGroup consente di formattare la colonna che contiene l'elemento..
+Variante! Se passo una prop width all'elemento... non viene più creata una col ma una FixCol e formColumnLayout viene overridato...
 formItemLayout per definire il layout del singolo item (che a seconda se verticale o orizzontale è fatto di una o due colonne)
-buttonItemLayout idem per il bottone
+buttonItemLayout idem per il bottone 
+Questi ultimi due props li posso arricchire con style= e con wrappedCol ecc... Secondo quanto specificato da antd per il formItem
+
+Infine posso agire direttamente sul componente dentro formItem. Ma devo capire bene come usare itemStyle
 
 Ogni elemento ha la sua ref. In questo modo posso fare cose sul DOM.
 Primo superpotere... posso mettere a fuoco un campo... con la prop willFocus
@@ -34,7 +38,7 @@ import SelectList from './SelectList';
 import AutoCompleteList from './AutoCompleteList';
 import ImageUploaderWrapper from './ImageUploaderWrapper';
 import InputLookup from './InputLookup';
-
+import FixCol from './FixCol';
 
 import moment from 'moment';
 import 'moment/locale/it';
@@ -50,10 +54,18 @@ const FormItem = Form.Item; //Per semplicità
 //Gestisco pmChange separatamente per consentire l'over-ride della funzione onChange...
 const renderChildren = (props, hasColumns) => {
 let children = React.Children.map(props.children, child => {
-	    if(child) if (hasColumns)
+	    if(child) 
+	      if (hasColumns)
+	    	 {
+	    	 if (child.props.formColumnLayout && child.props.formColumnLayout.width)
+	    	 return <FixCol {...child.props.formColumnLayout} >
+	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
+			        </FixCol>
+	    	 else
 	         return <Col {...child.props.formColumnLayout} >
 	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </Col>
+	    	 }       
 	    else return React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})
 				}); 
    return(children);
@@ -68,8 +80,8 @@ const GeneralError = (props) => {
 
 const FormButton =  (props) => 
 				{ 
-				   const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
-                   return <FormItem   {...buttonItemLayout}> <Button  style={itemStyle} {...otherProps} /> </FormItem>
+				   const {style, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
+                   return <FormItem  {...{style:{paddingTop: '20px'},...buttonItemLayout}}> <Button  style={{width: '100%', ...style}} {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>
@@ -98,38 +110,7 @@ const WrapGeneric = (props) =>
 		
 	    if (InputComponent === InputLookup) inputProps.lookupElement = lookupElement;
 	    if (InputComponent === Checkbox) inputProps.checked = inputProps.value;
-	   /* 
-	    <FormItem {...formItemLayout}
-              	width={props.width} 
-        		required={props.required}
-        		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
-        		help={props.errorMessages[props.field]}
-        		label={props.label}
-        		style={itemStyle}>
-        	<InputComponent value={props.formValues[field]} 
-        	       onChange={onChangeInput} 
-        	       lookupElement={lookupElement}
-        	       ref={input => { input && setFocus && setFocus(input,props.field)}}
-        	       {...otherProps}
-        	        disabled={props.readOnlyForm || props.readOnly || props.disabled}
-        	       />
-         </FormItem>)
-        else return (
-         <FormItem {...formItemLayout}
-              	width={props.width} 
-        		required={props.required}
-        		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
-        		help={props.errorMessages[props.field]}
-        		label={props.label}
-        		style={itemStyle}>
-        	<InputComponent value={props.formValues[field]} 
-        	       onChange={onChangeInput} 
-        	       ref={input => { input && setFocus && setFocus(input,props.field)}}
-        	       {...otherProps}
-        	        disabled={props.readOnlyForm || props.readOnly || props.disabled}
-        	       />
-         </FormItem>
-         */
+	   
 	    return (
          <FormItem {...formItemLayout}
               	width={props.width} 
@@ -148,8 +129,8 @@ const WrapGeneric = (props) =>
 //formGroupLayout ha le props di row
 const FormGroup = (props) => {
   const hasColumns = true;
-    const {formGroupLayout, ...otherProps} = props
-    return  <Row type="flex" justify="space-between" align="bottom" {...formGroupLayout}>{renderChildren(otherProps, hasColumns)}</Row>
+    const {formGroupLayout} = props
+    return  <Row {...formGroupLayout}>{renderChildren(props, hasColumns)}</Row>
 }
 
 

@@ -44,15 +44,16 @@ onSubmit = (e) => {
   	const loading = this.props.editedCassa.loading;
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-        <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.InputNumber className='input-numero-scontrino' formColumnLayout={{span:7}} itemStyle={{marginRight: 10}} field='numero'  />
-        <WrappedForm.TimePicker className='input-ora-scontrino' formColumnLayout={{span:10}} itemStyle={{marginRight: 10}} field='oraScontrino'  format="HH:mm" allowEmpty={false}/>
+        <WrappedForm.Group formGroupLayout={{gutter:8}}>
+        <WrappedForm.InputNumber  className='input-numero-scontrino' formColumnLayout={{width:55}} field='numero'  />
+        <WrappedForm.TimePicker   className='input-ora-scontrino' formColumnLayout={{width:70}} field='oraScontrino'  format="HH:mm" allowEmpty={false}/>
         
-        <WrappedForm.Button  icon='edit' formColumnLayout={{span:7}} type="primary" htmlType="submit" />
+        <WrappedForm.Button  buttonItemLayout={{style:{paddingTop: '0px'}}} icon='edit' formColumnLayout={{width:40}} type="primary" htmlType="submit" />
         </WrappedForm.Group>
-          <WrappedForm.Group formGroupLayout={{gutter:0}}>
-       <WrappedForm.Input formColumnLayout={{span:7}} field='sconto'  />
-        <WrappedForm.Button  formColumnLayout={{span:14}} type="primary" htmlType="submit">Sconto </WrappedForm.Button>
+          <WrappedForm.Group formGroupLayout={{gutter:8}}>
+       <WrappedForm.Input  formColumnLayout={{width:92}} field='sconto'  />
+       
+        <WrappedForm.Button  buttonItemLayout={{style:{paddingTop: '0px'}}} formColumnLayout={{width:80}} type="primary" htmlType="submit">Sconto </WrappedForm.Button>
        
         </WrappedForm.Group>
        
