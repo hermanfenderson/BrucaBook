@@ -430,11 +430,11 @@ export default function cassa(state = initialState(), action) {
    		    let tableCassaCols = {...state.geometry.tableCassaCols};
    	    	if (tableCassaCols && tableCassaWidth) 
    	    		{
-   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 60; 
+   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 70; 
    				let geometry = {...state.geometry};
    	    		geometry.tableCassaWidth = tableCassaWidth;
    	    		geometry.tableCassaCols = tableCassaCols;
-   	    		geometry.tableCassaTitoloWidth = tableCassaCols.numero +tableCassaCols.oraScontrino + 30 ;
+   	    		geometry.tableCassaTitoloWidth = tableCassaCols.numero +tableCassaCols.oraScontrino + 30 + 10 ;
    			
    				newState = {...newState, geometry: geometry};
    	    		}

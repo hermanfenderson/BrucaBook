@@ -181,7 +181,7 @@ return (
     	  <Col span={24}>
 
 
-    		<FormRigaScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />
+    		<FormRigaScontrino   geometry={this.props.geometry} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />
     	  </Col>
 
      </Row>

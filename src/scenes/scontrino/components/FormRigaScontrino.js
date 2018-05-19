@@ -40,77 +40,30 @@ resetForm = () => {
   	const prezzoMan = formValues['manSconto'];
   	const loading = this.props.editedRigaScontrino.loading;
   	const readOnlyEAN = ((this.props.editedRigaScontrino.selectedItem !== null) || (this.props.editedRigaScontrino.eanState === 'PARTIAL'))
-  	/*
-  	  		<div>
-     
-       
-      <Form layout="horizontal" >
-      <Row gutter={16}>
-      <Col span={18}>
-    	 <Form.Item label="Sconto">
-    	   <Input />
-          </Form.Item>
-      </Col>    
-      <Col span={6}>
-   
-         <Form.Item style={{paddingTop: 22}}>
-          <Button
-            style={{width:'100%'}}
-            type="primary"
-            htmlType="submit"
-          >
-            Sconto
-          </Button>
-        </Form.Item>
-       </Col>    
-      
-      </Row>  
-         <Row gutter={16}>
-      <FixCol width={810}>
-    	 <Form.Item label="Sconto">
-    	   <Input />
-          </Form.Item>
-      </FixCol>    
-      <FixCol width={270}>
-   
-         <Form.Item style={{paddingTop: 22}}>
-          <Button
-            style={{width:'100%'}}
-            type="primary"
-            htmlType="submit"
-          >
-            Sconto
-          </Button>
-        </Form.Item>
-       </FixCol>    
-      
-      </Row> 
-      </Form>
-      </div> 
-  
-       */
-       
+  	const frsCols = this.props.geometry.formRigaScontrinoCols;
+  	const frsGutter = this.props.geometry.formRigaScontrinoGutter;
   	return (
-	 <WrappedForm  readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-         <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{span:6}} itemStyle={{marginRight: 10}}  disabled={readOnlyEAN}/>
-        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:8}} itemStyle={{marginRight: 10}} disabled/>
-        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:6}} itemStyle={{marginRight: 10}} disabled/>
-        <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{span:4}}  disabled/>
-     
+	 <WrappedForm  disableAllColon={true} readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+         <WrappedForm.Group formGroupLayout={{gutter:frsGutter}}>
+        <WrappedForm.InputLookup  lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:frsCols.ean}} style={{width:frsCols.ean}}  disabled={readOnlyEAN}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:frsCols.titolo}} disabled/>
+        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{width:frsCols.autore}} disabled/>
+        
        </WrappedForm.Group>
         
-        <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.Checkbox formColumnLayout={{span:2}} itemStyle={{marginRight: 10}} field='manSconto' label='Man.'/>
+        <WrappedForm.Group formGroupLayout={{gutter:frsGutter}}>
+       <WrappedForm.Input  field='prezzoListino' label='Listino'  formColumnLayout={{width:frsCols.listino}}  disabled/>
+     
+        <WrappedForm.Checkbox  formColumnLayout={{width:frsCols.man}}  field='manSconto' label='Man'/>
        
-        <WrappedForm.Input field='sconto' label='Sconto' itemStyle={{marginRight: 10}} disabled={prezzoMan} formColumnLayout={{span:2}}  />
+        <WrappedForm.Input  field='sconto' label='Sconto' disabled={prezzoMan} formColumnLayout={{width:frsCols.sconto}}  />
         
-        <WrappedForm.Input field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{span:4}}  itemStyle={{marginRight: 10}}/>
-        <WrappedForm.Input field='pezzi' label='Quantità' formColumnLayout={{span:4}} itemStyle={{marginRight: 10}}/>
-        <WrappedForm.Input field='prezzoTotale' label='Totale' readOnly formColumnLayout={{span:4}} itemStyle={{marginRight: 10}} formItemLayout={{wrapperCol: { offset: 2, span: 22 }}}/>
-    <WrappedForm.Button type={'button'}  buttonItemLayout={{className: 'button-horizontal-form'}} formColumnLayout={{span:4}} style={{width: '90%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.Input  field='prezzoUnitario'  readOnly={!prezzoMan} label='Prezzo' formColumnLayout={{width:frsCols.prezzoUnitario}}/>
+        <WrappedForm.Input  field='pezzi' label='Quantità' formColumnLayout={{width:frsCols.pezzi}}/>
+        <WrappedForm.Input  field='prezzoTotale' label='Totale' readOnly formColumnLayout={{width:frsCols.prezzoTotale}}/>
+    <WrappedForm.Button type={'button'} formColumnLayout={{width:frsCols.annulla}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" buttonItemLayout={{className: 'button-horizontal-form'}} htmlType="submit"  formColumnLayout={{span:4}} style={{width: '90%'}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary"  htmlType="submit"  formColumnLayout={{width:frsCols.aggiungi}}>{(this.props.editedRigaScontrino.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
         
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:0}} >

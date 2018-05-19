@@ -42,7 +42,20 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} ));
 }
 
-
+const formRigaScontrinoColsInitial = {
+			                                 	   ean: 160,
+			                                 	   titolo: 325,
+			                                 	   autore: 165,
+			                                 	   listino: 80,
+			                                 	   man: 10,
+			                                 	   sconto: 60,
+			                                 	   prezzoUnitario: 80,
+			                                 	   pezzi: 60,
+			                                 	   prezzoTotale: 90,
+			                                 	   annulla: 80,
+			                                 	   aggiungi: 115
+			                                 };
+			                                 
 const initialState = () => {
     const eiis = editedItemInitialState();
     
@@ -55,7 +68,9 @@ const initialState = () => {
 			                                  		sconto: 45,
 			                                  		prezzoTotale: 65,
 			                                  		titolo: 80,
-			                                						}
+			                                						},
+			                                 formRigaScontrinoGutter: 8,
+			                                 formRigaScontrinoCols: {...formRigaScontrinoColsInitial},
 											  },
 									defaultSconto: '', 
 									totali: {pezzi: 0, prezzoTotale: 0.00}});
@@ -204,6 +219,8 @@ export default function scontrino(state = initialState(), action) {
 			}
    	    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
    	    	{
+   	    	let formRigaScontrinoWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 3 / 4;
+   	    	let formRigaScontrinoSpread = formRigaScontrinoWidth - 660;
    	    	let tableScontrinoWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 3 / 4 - state.geometry['colonnaTestataScontrinoWidth'];
    		    let tableScontrinoCols = {...state.geometry.tableScontrinoCols};
    	    	if (tableScontrinoCols && tableScontrinoWidth) 
@@ -212,7 +229,20 @@ export default function scontrino(state = initialState(), action) {
    				let geometry = {...state.geometry};
    	    		geometry.tableScontrinoWidth = tableScontrinoWidth;
    	    		geometry.tableScontrinoCols = tableScontrinoCols;
-   				newState = {...newState, geometry: geometry};
+   	    		geometry.formRigaScontrinoGutter = 8 + formRigaScontrinoSpread / 14;
+   	    		//Quanto spazio ho per titolo e autore?
+   	    		let formRigaScontrinoSpread2 = formRigaScontrinoSpread - 2 * geometry.formRigaScontrinoGutter ;
+   	    		geometry.formRigaScontrinoCols.titolo = formRigaScontrinoColsInitial.titolo + formRigaScontrinoSpread2  * 2 / 3;
+   	    		geometry.formRigaScontrinoCols.autore = formRigaScontrinoColsInitial.autore + formRigaScontrinoSpread2 / 3;
+   	    		
+   	    		console.log(formRigaScontrinoSpread);
+   	    		console.log(formRigaScontrinoSpread2);
+   	    		for (let propt in {'man' : true,'sconto': true, 'prezzoUnitario': true, 'pezzi': true, 'prezzoTotale': true,'annulla': true,'aggiungi': true})
+   	    			{
+   	    				geometry.formRigaScontrinoCols[propt] = formRigaScontrinoColsInitial[propt] + formRigaScontrinoSpread / 14;
+   	    			}
+   	    			
+   	    		newState = {...newState, geometry: geometry};
    	    		}
 			}
    	   	

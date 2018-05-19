@@ -58,15 +58,18 @@ let children = React.Children.map(props.children, child => {
 	      if (hasColumns)
 	    	 {
 	    	 if (child.props.formColumnLayout && child.props.formColumnLayout.width)
-	    	 return <FixCol {...child.props.formColumnLayout} >
-	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
+	    	 {
+	    	 	let width=(props.formGroupLayout.gutter) ? props.formGroupLayout.gutter + child.props.formColumnLayout.width : child.props.formColumnLayout.width;
+	    	 return <FixCol width={width} >
+	                {React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </FixCol>
+	    	 }       
 	    	 else
 	         return <Col {...child.props.formColumnLayout} >
-	                {React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
+	                {React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </Col>
 	    	 }       
-	    else return React.cloneElement(child, {onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})
+	    else return React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})
 				}); 
    return(children);
 }
@@ -80,19 +83,19 @@ const GeneralError = (props) => {
 
 const FormButton =  (props) => 
 				{ 
-				   const {style, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
+				   const {disableAllColon, style, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
                    return <FormItem  {...{style:{paddingTop: '20px'},...buttonItemLayout}}> <Button  style={{width: '100%', ...style}} {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>
 				{ 
-					const {formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus,  ...otherProps} = props;
+					const {disableAllColon, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus,  ...otherProps} = props;
 					return(React.cloneElement(props.children, {...otherProps}));
 				}
 					
              	
   const InputDecorator = (InputComponent) => {return (props) => {
-  	     const {itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, lookupElement, disabled, ...otherProps} = props;
+  	     const {disableAllColon, disableColon, itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, lookupElement, disabled, ...otherProps} = props;
 	    const onChangeInput=(input) => {
 	    	//const value = input.target ? (('checked' in input.target) ? input.target.checked : input.target.value) : input;
 	    	const value = (input !==null) ? (input.target ? (input.target.type ==='checkbox' ? input.target.checked : input.target.value) : input) : null;
@@ -118,6 +121,7 @@ const WrapGeneric = (props) =>
         		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
         		help={props.errorMessages[props.field]}
         		label={props.label}
+        		colon={disableAllColon ? false : disableColon ? false : true }
         		style={itemStyle}>
         	<InputComponent {...inputProps}
         	       />
