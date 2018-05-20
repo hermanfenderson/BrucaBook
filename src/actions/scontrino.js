@@ -2,7 +2,7 @@ import {FormActions} from '../helpers/formActions';
 
 export const SCENE = 'SCONTRINO';
 export const SET_SCONTO_SCONTRINO = 'SET_SCONTO_SCONTRINO';
-
+export const SET_EAN_LOOKUP_OPEN = 'SET_EAN_LOOKUP_OPEN';
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
 function preparaItem(riga)
@@ -18,7 +18,10 @@ function preparaItem(riga)
     
    }
 
-   
+export const setEanLookupOpen = (bool) =>
+{
+ return({type: SET_EAN_LOOKUP_OPEN, value: bool});	
+}
 export const setSconto = (params, sconto, righe) =>
 //Modifico per tutte le righe in essere e cambio il default dello sconto 
 {

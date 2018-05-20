@@ -1,5 +1,5 @@
 import FormRigaScontrinoComponent from '../components/FormRigaScontrino'
-import {rigaScontrinoFA} from '../../../actions/scontrino'
+import {rigaScontrinoFA, setEanLookupOpen} from '../../../actions/scontrino'
 import {getEditedRigaScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -29,7 +29,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeEditedRigaScontrino, submitEditedRigaScontrino, resetEditedRigaScontrino, focusSet }, dispatch);
+  return bindActionCreators({ changeEditedRigaScontrino, submitEditedRigaScontrino, resetEditedRigaScontrino, focusSet, setEanLookupOpen }, dispatch);
 }
 
 

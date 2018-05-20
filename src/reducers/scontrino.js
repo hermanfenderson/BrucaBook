@@ -2,7 +2,7 @@
 
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-import {SET_SCONTO_SCONTRINO} from '../actions/scontrino';
+import {SET_SCONTO_SCONTRINO, SET_EAN_LOOKUP_OPEN} from '../actions/scontrino';
 
 import {isAmount, isNotZeroInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -73,6 +73,7 @@ const initialState = () => {
 			                                 formRigaScontrinoCols: {...formRigaScontrinoColsInitial},
 											  },
 									defaultSconto: '', 
+									eanLookupOpen: false,
 									totali: {pezzi: 0, prezzoTotale: 0.00}});
     }
     
@@ -250,6 +251,11 @@ export default function scontrino(state = initialState(), action) {
   	case SET_SCONTO_SCONTRINO: 
   		newState = {...state, defaultSconto: action.sconto};
   		break;
+  	 case SET_EAN_LOOKUP_OPEN: 
+  		newState = {...state, eanLookupOpen: action.value};
+  		break;
+ 	
+  		
   	case scontrinoR.SUBMIT_EDITED_ITEM:
   		newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
   		//Forzo qui lo stato dello sconto al valore di default se ho una form valida (e quindi un campo pulito)
@@ -301,7 +307,8 @@ export default function scontrino(state = initialState(), action) {
  export const getListeningTestataScontrino = (state) => {return state.listeningTestata};
  export const getListeningItemScontrino = (state) => {return state.listeningItem};
  export const getListenersItemScontrino = (state) => {return state.listenersItem};
-
+export const getEanLookupOpen = (state) => {return state.eanLookupOpen};  
+ 
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  //export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};

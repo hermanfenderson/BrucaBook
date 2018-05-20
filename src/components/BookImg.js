@@ -19,7 +19,7 @@ class BookImg extends React.Component {
 	//let url = (this.props.ean && this.props.ean2path[this.props.ean] && this.props.path2url[this.props.ean2path[this.props.ean]]) ? this.props.path2url[this.props.ean2path[this.props.ean]] : null;
 	let url = this.props.imgUrl ? this.props.imgUrl : null;
 	return(
-		<div className='book-img'>
+		<div className='book-img' style={this.props.style}>
 		{(this.props.eanState === 'COMPLETE' && url) ? <img alt={this.props.ean} src={url} /> : (this.props.eanState === 'COMPLETE') ? <img alt="notAvailable" src="/image.png" /> : ''}
         </div>
 

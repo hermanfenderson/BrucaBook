@@ -1,9 +1,16 @@
-BrucaBook V.0.9.36
+BrucaBook V.0.9.37
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+### Versione 0.9.37
+* Bottone nuovo scontrino anche in seconda colonna 
+* Hotkey 'n' per generare un nuovo scontrino
+* Immagine libro spostata
+* Risolto baco: crash su cancellazione scontrino
+* Risolto baco: totale stale in scontrino creando nuovo scontrino dopo cancellazione
+* Risolto baco: crash inserendo riga in nuovo scontrino dopo cancellazione
 
 ### Versione 0.9.36
 * Shrink delle maschere (seconda versione: scontrino)

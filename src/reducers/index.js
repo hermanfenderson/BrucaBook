@@ -213,6 +213,7 @@ export const getListenersItemScontrino = (state) => {return fromScontrino.getLis
 export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTotali(state.scontrino)};
 export const getMessageBufferScontrino = (state) => {return fromBolla.getMessageBuffer(state.scontrino)};
 export const getTotaliScontrino = (state) => {return fromScontrino.getTotali(state.scontrino)};
+export const getEanLookupOpen = (state) => {return fromScontrino.getEanLookupOpen(state.scontrino)};
 
 
 //Scene Catalogo

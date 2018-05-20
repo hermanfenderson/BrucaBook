@@ -30,6 +30,9 @@ resetForm = () => {
 	this.props.resetEditedRigaScontrino();
 }
 
+eanLookupOpen = () => {this.props.setEanLookupOpen(true)};
+eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
+
 
 
 
@@ -45,7 +48,7 @@ resetForm = () => {
   	return (
 	 <WrappedForm  disableAllColon={true} readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:frsGutter}}>
-        <WrappedForm.InputLookup  lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:frsCols.ean}} style={{width:frsCols.ean}}  disabled={readOnlyEAN}/>
+        <WrappedForm.InputLookup  lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:frsCols.ean}} style={{width:frsCols.ean}}  disabled={readOnlyEAN} onOpenModal={this.eanLookupOpen} onCloseModal={this.eanLookupClosed}/>
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:frsCols.titolo}} disabled/>
         <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{width:frsCols.autore}} disabled/>
         

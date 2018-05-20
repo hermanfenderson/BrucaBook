@@ -52,7 +52,7 @@ componentDidUpdate = (oldProps) => {
         let oldIdScontrino = (oldProps.match && oldProps.match.params) ? oldProps.match.params.scontrino : null;
         let idScontrino = this.props.match.params.scontrino;
         //Reset e reload scontrino? 
-	    if (oldIdScontrino !== idScontrino)
+        if (oldIdScontrino !== idScontrino)
 	    	{
 	    		if (oldIdScontrino)
 	    			{
@@ -60,7 +60,7 @@ componentDidUpdate = (oldProps) => {
 					 this.props.resetScontrino(oldIdScontrino);	
 					 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  oldIdScontrino);
 	    			}
-	    		this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+	    	 if (idScontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
 				
 	    	}
 	    var header = "Cassa ";
@@ -98,7 +98,8 @@ submitRigaCassa = (e) => {
     this.props.history.push('/scontrino/'+ period2month([this.props.match.params.anno, this.props.match.params.mese]) + '/' +this.props.match.params.cassa + '/'+key  );
 }  
 
- 
+handleKeyPress = (e) =>
+{if(!this.props.eanLookupOpen && e.key==='n') this.submitRigaCassa(e) };
 
 render()
 {
@@ -132,7 +133,7 @@ return (
 	</Row>
 
   </Col>
-  <Col   span={18} className='sezione-scontrino'>
+  <Col   span={18} className='sezione-scontrino' onKeyPress={this.handleKeyPress}>
   <Spin spinning={!this.props.match.params.scontrino}>
   <Row style={{height: this.props.geometry.sezioneScontrinoHeight}}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
@@ -158,7 +159,11 @@ return (
 			<FormCalcoloResto staleTotali={this.props.staleTotali} totaliScontrino={this.props.totaliScontrino} testataScontrino={this.props.testataScontrino}/>
 		</Row>
 		<Row>
-		<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
+			<Button type="primary" icon="plus" className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
+     
+		</Row>
+		<Row>
+		<BookImg style={{marginTop: this.props.geometry.sezioneScontrinoHeight - 120 - 250}} eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
         </Row>
 	
 		</FixCol>

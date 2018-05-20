@@ -3,7 +3,7 @@ import WrappedForm from '../../../components/WrappedForm'
 
 
 
-const getTotale = (props) => { return((props.testataScontrino && !props.staleTotali) ? props.testataScontrino.totali.prezzoTotale : props.totaliScontrino.prezzoTotale) } //Uso la copia calcolata in locale finchè non arriva quella calcolata al centro...
+const getTotale = (props) => { return((props.testataScontrino && props.testataScontrino.totali && !props.staleTotali) ? props.testataScontrino.totali.prezzoTotale : props.totaliScontrino? props.totaliScontrino.prezzoTotale : 0) } //Uso la copia calcolata in locale finchè non arriva quella calcolata al centro...
     
 
 class FormCalcoloResto extends Component {

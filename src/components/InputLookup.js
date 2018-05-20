@@ -1,6 +1,7 @@
 //estende input con la funzionalità di lookup in un altro componente
 //Premendo la lente di ingrandimento si apre il componente richiamato con LookupComponent 
 //Ad esso viene passata una function selectedCallback a cui il componente passa il valore...
+//Aggiunte 2 props onCloseModal e onOpenModal per fornire info al chiamante...
 
 import React from 'react';
 import { Input,Icon} from 'antd';
@@ -52,6 +53,7 @@ constructor(props) {
     		let newState = {...this.state, value: '', showModal:false};
     this.setState(newState);
     	this.props.onChange('');
+    	if (this.props.onCloseModal()) this.props.onCloseModal();
     }
     
 	render()
@@ -69,7 +71,7 @@ constructor(props) {
         
     	value={inputValue}
     	addonAfter={<Icon type="search"
-      onClick={value => {if (!this.props.disabled) {let newState = {...this.state, showModal:true}; this.setState(newState); }}} />}
+      onClick={value => {if (!this.props.disabled) {if (this.props.onOpenModal()) this.props.onOpenModal(); let newState = {...this.state, showModal:true}; this.setState(newState); }}} />}
     	> 
     	
     
