@@ -71,8 +71,8 @@ ordinaryRowRender = (cell,row, index) => {
 //Il titolo lo tronco... se serve...
  if (row.titolo === cell)
 	{
-if (row.key === this.props.highlightedRowKey) return(<div className={'tabella-cassa-div-titolo'} style={{width: '150px','color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
- else  return(<div style={{width: this.props.titoloWidth, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}  onClick={() => { this.selectRow(row)}}>{cell}</div>);
+if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);
+ else  return(<div style={{width: this.props.titoloWidth+10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}  onClick={() => { this.selectRow(row)}}>{cell}</div>);
 	}
  else {
  if (row.key === this.props.highlightedRowKey) return(<div style={{'color':'#108ee9','fontWeight':'bold'}} onClick={() => { this.selectRow(row)}}>{cell}</div>);

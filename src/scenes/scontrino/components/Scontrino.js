@@ -177,7 +177,7 @@ return (
 	   
 	</Row>  
 	
-       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '100px'}}>
+       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '120px'}}>
     	  <Col span={24}>
 
 

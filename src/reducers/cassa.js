@@ -74,7 +74,7 @@ const initialState = () => {
     					geometry: {
     						      tableCassaTitoloWidth: 87,
     						      tableCassaCols: {
-			                                  		numero: 22,
+			                                  		numero: 30,
 			                                  		oraScontrino: 35,
 			                                  		pezzi: 30,
 			                                  		prezzoTotale: 45,
@@ -397,8 +397,8 @@ function transformAndValidateEditedRigaCassa(cei, name, value)
 	cei.values[name] = value;
     //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
-    errMgmt(cei, 'oraScontrino','invalidTime','Ora non valida',  (!cei.values.oraScontrino.isValid()));
-    errMgmt(cei, 'numero','notPositive','Numero > 0',  (!isPositiveInteger(cei.values.numero)));
+    errMgmt(cei, 'oraScontrino','invalidTime','Ora',  (!cei.values.oraScontrino.isValid()));
+    errMgmt(cei, 'numero','notPositive','N.>0',  (!isPositiveInteger(cei.values.numero)));
    errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto));
   
   	
@@ -430,11 +430,11 @@ export default function cassa(state = initialState(), action) {
    		    let tableCassaCols = {...state.geometry.tableCassaCols};
    	    	if (tableCassaCols && tableCassaWidth) 
    	    		{
-   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 70; 
+   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 40 -16; 
    				let geometry = {...state.geometry};
    	    		geometry.tableCassaWidth = tableCassaWidth;
    	    		geometry.tableCassaCols = tableCassaCols;
-   	    		geometry.tableCassaTitoloWidth = tableCassaCols.numero +tableCassaCols.oraScontrino + 30 + 10 ;
+   	    		geometry.tableCassaTitoloWidth = 30 + tableCassaCols.numero +tableCassaCols.oraScontrino -8;
    			
    				newState = {...newState, geometry: geometry};
    	    		}

@@ -1,13 +1,16 @@
-BrucaBook V.0.9.35
+BrucaBook V.0.9.36
 ==================
 gestionale per librerie indipendenti. Utilizza React e Firebase.  
   
 Storia delle versioni
 ---------------------
+
+### Versione 0.9.36
+* Shrink delle maschere (seconda versione: scontrino)
+
 ### Versione 0.9.35
 * Shrink di tutte le maschere (prima versione: scontrino)
 * Introdotta libreria per gestione più fluida delle classi
-* Introdotta libreria per hotkeys
 
 ### Versione 0.9.34
 * Fix di errori da deepscan 

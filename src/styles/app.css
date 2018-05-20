@@ -220,7 +220,9 @@ font-weight: bold;
 
 
 }
+/* Gestione spazio sotto il form */
 
-
-
+.ant-form-item-control-wrapper{
+    margin-bottom: 10px;
+}
 
