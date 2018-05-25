@@ -5,7 +5,7 @@ Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in l
 
 Thankfully using BrowserStack to perform multi-browser testing and iPad development.
 <a href="https://www.browserstack.com">
-<img src="https://p14.zdusercontent.com/attachment/1015988/C3cHxb8CAg8Xmb25NraQ2aiIa?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..kxhtZ0EE4kT_hC87TfxU9Q.iGFLETTw4WN9hGbTi_1K-9IvghTHDCTZalKPFjRP82i3QUT38LVUH4d_-hAHB38ma4jxi3BzZGJ0nt1d6AIYA04n5iIsC0qTU3riIxDMtzNkyqH3JCYbj-SJlHpQCXBNoNz0D6QwxCYa84w_t9nYNP0t88B-SWDVr6RunBI6ul9gWf8V_pophEAx55zjqwF5-pMAKnIgGRHG2Q7NTtkRtKUDZd4Bu6j8uzJmT6zgzSh3YQ5_uNuuatFuyH3vvqdOcCugk6QptXZBD1E_BG0KePm8eL5lcFx9SWLtc6PhAk0.T3RdhNv0KLUZnc0IULD9PQ" width="400" heigth="100"> </a>
+<img src="https://p14.zdusercontent.com/attachment/1015988/C3cHxb8CAg8Xmb25NraQ2aiIa?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0..kxhtZ0EE4kT_hC87TfxU9Q.iGFLETTw4WN9hGbTi_1K-9IvghTHDCTZalKPFjRP82i3QUT38LVUH4d_-hAHB38ma4jxi3BzZGJ0nt1d6AIYA04n5iIsC0qTU3riIxDMtzNkyqH3JCYbj-SJlHpQCXBNoNz0D6QwxCYa84w_t9nYNP0t88B-SWDVr6RunBI6ul9gWf8V_pophEAx55zjqwF5-pMAKnIgGRHG2Q7NTtkRtKUDZd4Bu6j8uzJmT6zgzSh3YQ5_uNuuatFuyH3vvqdOcCugk6QptXZBD1E_BG0KePm8eL5lcFx9SWLtc6PhAk0.T3RdhNv0KLUZnc0IULD9PQ" width="200" heigth="50"> </a>
 
 Storia delle versioni
 ---------------------
