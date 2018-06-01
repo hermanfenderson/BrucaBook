@@ -26,6 +26,7 @@ componentDidMount() {
 
 render()
 {
+console.log(this.props.geometry);
 if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese])) 
 	{
 		
@@ -48,7 +49,7 @@ return (
        </Form.Item>
       </Col>
        <Col span={20}>
-      <TableElencoBolle listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
+      <TableElencoBolle geometry={this.props.geometry} listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
    
    	 	 </Col>
     </Row>
@@ -57,7 +58,7 @@ return (
      
       <Col span={20}>
      
-     <FormBolla period={this.props.period}/>
+     <FormBolla geometry={this.props.geometry}  period={this.props.period}/>
      </Col>
           </Row>
    

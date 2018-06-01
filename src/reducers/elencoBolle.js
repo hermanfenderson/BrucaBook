@@ -3,6 +3,7 @@ import FormReducer from '../helpers/formReducer'
 import moment from 'moment';
 import 'moment/locale/it';
 
+
 //import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, moment2period} from '../helpers/form';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem, nomeFornitoreById} from '../helpers/form';
 
@@ -34,7 +35,21 @@ const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 			//period: moment2period(moment())    	
-    		period: null
+    		period: null,
+    		geometry: {formWidth: (880 -16) * 4 / 5, formCols: {
+    															gutter1: 8,
+    															gutter2: 8,
+    															riferimento: 135,
+    															fornitore: 180,
+    															dataDocumento: 180,
+    															dataCarico: 180,
+    															tipo: 180,
+    															dataRendiconto: 180,
+    															annulla: 120,
+    															crea: 120
+    															
+    															} 
+    					}										
     				}
 	return initialStateHelper(eiis,extraState);
     }
@@ -94,10 +109,36 @@ export default function elencoBolle(state = initialState(), action) {
         
    
     case STORE_MEASURE:
+    	newState = state;
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -130;
-   	    newState = {...state, tableHeight: height};
+   	    if (action.newMeasure.name==='viewPortHeight')
+   			{
+   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -130;
+   	    	newState = {...newState, tableHeight: height};
+   			}
+   	if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
+   	   		{
+   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 4 / 5 ;	
+   			let geometry = {...newState.geometry};
+   			let spreadGutter = (formWidth - 688)/4;
+   			let spread = (formWidth - 688)*3/4
+   			let gutter1 = 8 + ((spreadGutter) / 3);
+   			let formCols = {
+    														    gutter1: gutter1,
+    															gutter2: gutter1,
+    															riferimento: 135+spread/2,
+    															fornitore: 180+spread/2,
+    															dataDocumento: 180,
+    															dataCarico: 180,
+    															tipo: 180,
+    															dataRendiconto: 180,
+    															annulla: 120,
+    															crea: 120
+    															
+    															} 
+   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols: formCols}};
+   			}
         break;  
      case SET_PERIOD_ELENCOBOLLE:
         newState = {...state, period: action.period};

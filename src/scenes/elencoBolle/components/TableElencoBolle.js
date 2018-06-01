@@ -10,15 +10,15 @@ import {period2month} from '../../../helpers/form'
 //E' un dato.... che passo come costante...
 const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
 			    {dataField: 'nomeFornitore', label: 'Fornitore', width: '300px'},
-			    {dataField: 'tipoBolla', label: 'Tipo', width: '70px'},
+			    {dataField: 'tipoBolla', label: 'Tipo', width: '80px'},
 			    
-			    {dataField: 'dataDocumento', label: 'Data Doc', width: '200px'},
-			    {dataField: 'dataCarico', label: 'Data Carico', width: '200px'},
-			    {dataField: 'dataRendiconto', label: 'Data Rend.', width: '200px'},
+			    {dataField: 'dataDocumento', label: 'Data Doc', width: '150px'},
+			    {dataField: 'dataCarico', label: 'Data Carico', width: '150px'},
+			    {dataField: 'dataRendiconto', label: 'Data Rend.', width: '150px'},
 			    
-			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '200px'},
-			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '100px'},
-			    {dataField: 'totali.gratis', label: 'Gratis', width: '100px'},
+			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '100px'},
+			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '80px'},
+			    {dataField: 'totali.gratis', label: 'Gratis', width: '80px'},
 			   ];
 
 

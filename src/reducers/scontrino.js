@@ -213,8 +213,8 @@ export default function scontrino(state = initialState(), action) {
    	        let fRSH = measures['formRigaScontrinoHeight'] ? measures['formRigaScontrinoHeight'] : 100;
    	    	let height = vPH - hH -fRSH;
    	    	let geometry = {...state.geometry};
-   	    	geometry.tableScontrinoHeight = height - 10; 
-   	    	geometry.sezioneScontrinoHeight = height - 70; 
+   	    	geometry.tableScontrinoHeight = height - 30; 
+   	    	geometry.sezioneScontrinoHeight = height - 85; 
    	    	
    	    	newState = {...newState, tableHeight: geometry.tableScontrinoHeight, geometry: geometry};
 			}
@@ -236,8 +236,6 @@ export default function scontrino(state = initialState(), action) {
    	    		geometry.formRigaScontrinoCols.titolo = formRigaScontrinoColsInitial.titolo + formRigaScontrinoSpread2  * 2 / 3;
    	    		geometry.formRigaScontrinoCols.autore = formRigaScontrinoColsInitial.autore + formRigaScontrinoSpread2 / 3;
    	    		
-   	    		console.log(formRigaScontrinoSpread);
-   	    		console.log(formRigaScontrinoSpread2);
    	    		for (let propt in {'man' : true,'sconto': true, 'prezzoUnitario': true, 'pezzi': true, 'prezzoTotale': true,'annulla': true,'aggiungi': true})
    	    			{
    	    				geometry.formRigaScontrinoCols[propt] = formRigaScontrinoColsInitial[propt] + formRigaScontrinoSpread / 14;

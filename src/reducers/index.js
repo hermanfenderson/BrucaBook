@@ -263,6 +263,10 @@ export const s2s = (scene) => {
 				s.stato = 'inventario';
 				s.origin = fromInventario;
 			break;
+			case 'ELENCOBOLLE':
+				s.stato = 'elencoBolle';
+				s.origin = fromBolla;
+			break;
 			case 'BOLLA':
 				s.stato = 'bolla';
 				s.origin = fromBolla;
@@ -274,6 +278,10 @@ export const s2s = (scene) => {
 		    case 'SCONTRINO':
 				s.stato = 'scontrino';
 				s.origin = fromCassa;
+			break;
+			case 'RESA':
+				s.stato = 'resa';
+				s.origin = fromResa;
 			break;
 			default:
 		
@@ -287,8 +295,8 @@ export const s2s = (scene) => {
 //Multi-scena (ragiono in modo diverso... passo esplicitamente la scena...con strato piccolino per disaccoppiamento...
 
 
-export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return s.origin.listeningDataMagazzino(state[s.stato])};
-export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.origin.getDataMagazzino(state[s.stato])};
+//export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return s.origin.listeningDataMagazzino(state[s.stato])};
+//export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return s.origin.getDataMagazzino(state[s.stato])};
 //Tengo questa per ricordarmi strada alternativa...se ha senso...
 
 //export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return s.origin.getTableScrollByKey(state[s.stato])};
@@ -299,5 +307,7 @@ export const getItems = (state, scene) => {let s=s2s(scene); return fromFormRedu
 export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getTableScrollByKey(state[s.stato])};
 
 export const getGeometry = (state, scene) => {let s=s2s(scene); return fromFormReducer.getGeometry(state[s.stato])};
+export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return fromFormReducer.listeningDataMagazzino(state[s.stato])};
+export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getDataMagazzino(state[s.stato])};
 
  

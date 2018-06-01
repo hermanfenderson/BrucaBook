@@ -83,8 +83,8 @@ const GeneralError = (props) => {
 
 const FormButton =  (props) => 
 				{ 
-				   const {disableAllColon, style, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
-                   return <FormItem  {...{style:{paddingTop: '20px'},...buttonItemLayout}}> <Button  style={{width: '100%', ...style}} {...otherProps} /> </FormItem>
+				   const {disableAllColon, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
+                   return <FormItem  {...{style:{paddingTop: '20px'},...buttonItemLayout}}> <Button  style={{width: '100%'}} {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>
@@ -95,7 +95,7 @@ const WrapGeneric = (props) =>
 					
              	
   const InputDecorator = (InputComponent) => {return (props) => {
-  	     const {disableAllColon, disableColon, itemStyle, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, lookupElement, disabled, ...otherProps} = props;
+  	     const {disableAllColon, disableColon, formValues, field, readOnly, errorMessages, readOnlyForm, onChange, formItemLayout, formColumnLayout, setFocus, lookupElement, disabled, ...otherProps} = props;
 	    const onChangeInput=(input) => {
 	    	//const value = input.target ? (('checked' in input.target) ? input.target.checked : input.target.value) : input;
 	    	const value = (input !==null) ? (input.target ? (input.target.type ==='checkbox' ? input.target.checked : input.target.value) : input) : null;
@@ -122,7 +122,7 @@ const WrapGeneric = (props) =>
         		help={props.errorMessages[props.field]}
         		label={props.label}
         		colon={disableAllColon ? false : disableColon ? false : true }
-        		style={itemStyle}>
+        	>
         	<InputComponent {...inputProps}
         	       />
          </FormItem>)

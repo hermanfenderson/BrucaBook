@@ -36,22 +36,24 @@ componentDidMount = () =>
   	const readOnlyForm = this.props.readOnlyForm; //Vado in read only form... perchè sono pronto per aggiungere libri...
   	const selectedItem = this.props.editedBolla.selectedItem;
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
+  	const  formCols = this.props.geometry.formCols;
+  	console.log(formCols);
     return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group >
-        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}}/>
-        <WrappedForm.AutoCompleteList field='fornitore' label='Fornitore' list={objSelector(this.props.fornitori,'nome')}  required={true} formColumnLayout={{span: 6, offset: 2}} itemStyle={{marginRight: 10}}/>
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.selectedItem!==null)}/>
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 20}}/>
+         <WrappedForm.Group formGroupLayout={{gutter: formCols.gutter1}} >
+        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{width:formCols.riferimento}} />
+        <WrappedForm.AutoCompleteList field='fornitore' label='Fornitore' list={objSelector(this.props.fornitori,'nome')}  required={true} formColumnLayout={{width:formCols.fornitore}} />
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols.dataDocumento}} style={{width:formCols.dataDocumento}}  disabled={(this.props.editedBolla.selectedItem!==null)}/>
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols.dataCarico}} style={{width:formCols.dataCarico}}/>
       </WrappedForm.Group>
-       <WrappedForm.Group>
+       <WrappedForm.Group formGroupLayout={{gutter: formCols.gutter2}}>
       
-       <WrappedForm.SelectList formColumnLayout={{span: 4}} field='tipoBolla' label='Tipo' list={this.props.tipiBolla} defaultValue = 'A' />
-        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4, offset: 2}} itemStyle={{marginRight: 10}} disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
+       <WrappedForm.SelectList field='tipoBolla' formColumnLayout={{width:formCols.tipo}} label='Tipo' list={this.props.tipiBolla} defaultValue = 'A' />
+        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto'formColumnLayout={{width:formCols.dataRendiconto}} allowClear={false} format = 'DD/MM/YYYY'  disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
        
-       <WrappedForm.Button   type={'button'} formColumnLayout={{offset: 6, span:4}} itemStyle={{width:'90%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Button   type={'button'}  formColumnLayout={{width:formCols.annulla}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit" itemStyle={{width:'90%'}} formColumnLayout={{span:4}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" htmlType="submit"  formColumnLayout={{width:formCols.crea}}>{submitLabel}</WrappedForm.Button>
      
        </WrappedForm.Group>
         

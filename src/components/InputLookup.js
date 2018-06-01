@@ -49,7 +49,8 @@ constructor(props) {
     	return element;
 	}
     
-    onCloseModal = () => {
+    onCloseModalInner = () => {
+    
     		let newState = {...this.state, value: '', showModal:false};
     this.setState(newState);
     	this.props.onChange('');
@@ -60,7 +61,7 @@ constructor(props) {
   {
  // ReactModal.setAppElement('#app');	
   //{this.LookupComponentDecorator(Modal)}	
-  let {lookupElement, value, ...otherProps} = this.props;
+  let {lookupElement, value, onOpenModal, onCloseModal,...otherProps} = this.props;
   let inputValue = value;
     return (
     	<div>
@@ -71,12 +72,12 @@ constructor(props) {
         
     	value={inputValue}
     	addonAfter={<Icon type="search"
-      onClick={value => {if (!this.props.disabled) {if (this.props.onOpenModal()) this.props.onOpenModal(); let newState = {...this.state, showModal:true}; this.setState(newState); }}} />}
+      onClick={value => {if (!this.props.disabled) {if (onOpenModal) onOpenModal(); let newState = {...this.state, showModal:true}; this.setState(newState); }}} />}
     	> 
     	
     
     </Input> : null}
-   	 <ReactModal open={this.state.showModal} onClose={this.onCloseModal}>
+   	 <ReactModal open={this.state.showModal} onClose={this.onCloseModalInner}>
     	   {this.lookupElementDecorator(this.props.lookupElement)}
     	</ReactModal>
     

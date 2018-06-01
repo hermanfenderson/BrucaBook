@@ -12,9 +12,6 @@ import {Redirect} from 'react-router-dom';
 
 import { Row, Col, Spin} from 'antd'
 
-var currentIdResa = null; 
-var currentFornitore = null;
-var riga = null; 
 
 
 class Resa extends Component {
@@ -26,68 +23,38 @@ class Resa extends Component {
    		{var node = ReactDOM.findDOMNode(this.refs.formRigaResa);
    		this.props.storeMeasure('formRigaResaHeight', node.clientHeight);
    		}
+   	this.props.listenTestataResa([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...
+	let params = [this.props.match.params.anno, this.props.match.params.mese];
+    params.push(this.props.match.params.id);
+    this.props.listenRigaResa(params);	
  }
  	   	
- 
-
-updateListeners = () => {
-	//Cosa dovrei controllare?
-//Devo stare ascoltando una resaId = a quella corrente...sia per testata che per riga e avere il fornitore della resa corrente...
-//if (this.props.listeningTestataResa) currentIdResa = this.props.listeningTestataResa.ResaId;
-//Se sto ascoltando una vecchia resa... oppure non sto ascoltando nulla...
-if (this.props.match.params.id !== currentIdResa)	
-	{   //Faccio reset... tranne la prima volta...
-		if (currentIdResa) 
-			{
-			this.props.resetResa(this.props.match.params.id);
+ componentWillUnmount() {
+ 	let currentIdResa = this.props.match.params.id;
+ 	this.props.resetResa(currentIdResa);
 			 this.props.unlistenTestataResa([this.props.match.params.anno, this.props.match.params.mese], currentIdResa);
 			 let params = [this.props.match.params.anno, this.props.match.params.mese];
     	   			params.push(currentIdResa);
     	   			this.props.offListenRigaResa(params); 
     	   			this.props.resetResa([this.props.match.params.anno, this.props.match.params.mese],currentIdResa);
-    	   	//E smetto anche di ascoltare il fornitore...
-    	   	if (currentFornitore) 
-    	   		{this.props.unlistenBollePerFornitore(currentFornitore);
-    	   		
-    	   		currentFornitore = null;
-    	   		}
-			} 
-		//if (currentFornitore) {this.props.unlistenBollePerFornitore(currentFornitore); currentFornitore = null}
-		this.props.listenTestataResa([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...
-		let params = [this.props.match.params.anno, this.props.match.params.mese];
-    	   	params.push(this.props.match.params.id);
-    	   	this.props.listenRigaResa(params); 
-    	currentIdResa =  this.props.match.params.id;  	
-	}
-else
-	{
-	if (this.props.testataResa)
-		{
-			if (currentFornitore !== this.props.testataResa.fornitore)
-				{
-				currentFornitore = this.props.testataResa.fornitore;
-				//Posso ascoltare... tanto ho smesso di ascoltare prima... al cambio resa...
-				this.props.listenBollePerFornitore(currentFornitore, this.props.testataResa.dataScarico);
-				}
-		//Leggo i dati di testata corretti... (qui so anche il fornitore)
-		if (riga !== this.props.testataResa) 
-			{
-			riga = this.props.testataResa;
-			this.props.setHeaderInfo("Rese - Doc. " + riga.riferimento + ' ' 
-					          						+ riga.nomeFornitore + ' del ' + moment(riga.dataDocumento).format("L"));
-			 }
-		}	 
-	}		
-}
+    	   	if (this.props.testataResa && this.props.testataResa.fornitore) this.props.unlistenBollePerFornitore(this.props.testataResa.fornitore);		
+ }
  
-componentWillMount() {
-this.updateListeners();	
-}
-    
-componentDidUpdate() {
-this.updateListeners();	
-	
+componentDidUpdate(oldProps) {
+	if (this.props.testataResa && (this.props.testataResa !== oldProps.testataResa))
+		{
+		this.props.listenBollePerFornitore(this.props.testataResa.fornitore, this.props.testataResa.dataScarico);
+		let riga = this.props.testataResa;
+		this.props.setHeaderInfo("Rese - Doc. " + riga.riferimento + ' ' 
+					          						+ riga.nomeFornitore + ' del ' + moment(riga.dataDocumento).format("L"));
+				 
+		}	 
+	 	
 }   
+
+
+
+
 
 render()
 {

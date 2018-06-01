@@ -9,6 +9,11 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.9.39
+* Altro piccolo ritocco a dimensione scontrino
+* Passaggio di rese a gestione react 16 (con i metodi mount e unmount)
+* Bug fixing per props mandate erroneamente in giro 
+
 ### Versione 0.9.38
 * Ridotta leggermente dimensione form di sinistra scontrino (spaginava su chrome per windows)
 * Inserita licenza MIT

@@ -436,7 +436,12 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
    		totaleOccorrenze--;
    	    newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, stock: stock, totaleOccorrenze: totaleOccorrenze};
    		}
-   	    break;	        
+   	    break;	   
+   	case this.DATA_MAGAZZINO_CHANGED:
+   		
+   		newState = {...state, dataMagazzino: action.dataMagazzino};	
+   		
+   		break;
     default:
         		newState =  state;
     		break;

@@ -11,7 +11,7 @@ const listenTestataResa = rigaResaFA.listenTestata;
 const unlistenTestataResa = rigaResaFA.unlistenTestata;
 const listenRigaResa = rigaResaFA.listenItem;
 const offListenRigaResa = rigaResaFA.offListenItem;
-
+const searchDataMagazzino = rigaResaFA.searchDataMagazzino;
 const resetResa = rigaResaFA.reset;
 const shiftMessage = rigaResaFA.shiftMessage;
 const resetTableResa = rigaResaFA.resetTable;
@@ -32,7 +32,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ shiftMessage, resetResa, listenBollePerFornitore, unlistenBollePerFornitore,
-  listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo, setStato, listenRigaResa, offListenRigaResa, resetTableResa}, dispatch);
+  listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo, setStato, listenRigaResa, offListenRigaResa, resetTableResa, searchDataMagazzino}, dispatch);
 }
 
 const Resa = connect(mapStateToProps, mapDispatchToProps)(ResaComponent)

@@ -247,6 +247,8 @@ export const setModalDetails = (matrixEAN, headerEAN) =>
 {
 	return({type: SET_MODAL_DETAILS, matrixEAN: matrixEAN, headerEAN: headerEAN})
 };
+
+
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
 export const rigaResaFA = new FormActions(SCENE, preparaItem, 'righeResa','righeElencoRese', true);

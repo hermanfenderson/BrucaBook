@@ -72,9 +72,9 @@ const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {listenersItem: {scontrini: {}},
     					geometry: {
-    						      tableCassaTitoloWidth: 87,
+    						      tableCassaTitoloWidth: 77,
     						      tableCassaCols: {
-			                                  		numero: 30,
+			                                  		numero: 20,
 			                                  		oraScontrino: 35,
 			                                  		pezzi: 30,
 			                                  		prezzoTotale: 45,
@@ -421,7 +421,7 @@ export default function cassa(state = initialState(), action) {
 	   	  
    	    if (action.newMeasure.name==='viewPortHeight')
    	    	{
-   	   	    let height = measures['viewPortHeight'] - 235;
+   	   	    let height = measures['viewPortHeight'] - 255;
 	   	    newState = {...state, tableHeight: height};
    	    	}
    	    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
@@ -430,11 +430,11 @@ export default function cassa(state = initialState(), action) {
    		    let tableCassaCols = {...state.geometry.tableCassaCols};
    	    	if (tableCassaCols && tableCassaWidth) 
    	    		{
-   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 40 -16; 
+   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 40 -16 -10; 
    				let geometry = {...state.geometry};
    	    		geometry.tableCassaWidth = tableCassaWidth;
    	    		geometry.tableCassaCols = tableCassaCols;
-   	    		geometry.tableCassaTitoloWidth = 30 + tableCassaCols.numero +tableCassaCols.oraScontrino -8;
+   	    		geometry.tableCassaTitoloWidth = 30 + tableCassaCols.numero +tableCassaCols.oraScontrino -18;
    			
    				newState = {...newState, geometry: geometry};
    	    		}

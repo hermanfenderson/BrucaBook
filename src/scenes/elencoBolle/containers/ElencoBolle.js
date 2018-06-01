@@ -1,7 +1,7 @@
 import ElencoBolleComponent from '../components/ElencoBolle'
 import {bollaFA, setPeriodElencoBolle} from '../../../actions/elencoBolle'
 import {storeMeasure, setHeaderInfo} from  '../../../actions'
-import {getPeriod, getListeningItem} from '../../../reducers'
+import {getPeriod, getListeningItem, getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -10,7 +10,8 @@ const resetElencoBolle = bollaFA.reset;
 
 const mapStateToProps = (state) => {
 	return ({period: getPeriod(state),
-	        listeningPeriod: getListeningItem(state)
+	        listeningPeriod: getListeningItem(state),
+	        geometry: getGeometry(state, 'ELENCOBOLLE')
 	})
 }
 
