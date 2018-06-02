@@ -10,7 +10,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
 import {STORE_MEASURE} from '../actions';
-
+import {calcFormCols, calcHeader} from '../helpers/geometry';
 
 moment.locale("it");
 
@@ -30,26 +30,44 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {} ));
 }
 
-
+const formWidth = (880 -16)  * 5 / 6 -8;
+const colParams1 = [
+	{name: 'riferimento', min: 135, max: 240},
+	{name: 'fornitore', min: 180, max: 240},
+	{name: 'dataDocumento', min: 180, max: 240},
+	{name: 'dataCarico', min: 180, max: 240}
+	
+	];
+	
+const colParams2 = [
+	{name: 'tipo', min: 180, max: 240},
+	{name: 'dataRendiconto', min: 180, max: 240},
+	{name: 'annulla', min: 120, max: 240},
+	{name: 'crea', min: 120, max: 240}
+	
+	];
+	
+const headerParams = [{name: 'riferimento', label: 'Rif.', min: 80, max: 150},
+			    {name: 'nomeFornitore', label: 'Fornitore', min: 135, max: 300},
+			    {name: 'tipoBolla', label: 'Tipo', min: 40, max: 80},
+			    
+			    {name: 'dataDocumento', shortLabel: 'Data Doc.', label: 'Data Documento', min: 85, max: 150, shortBreak: 120},
+			    {name: 'dataCarico', shortLabel: 'Data Car.', label: 'Data Carico', min: 85, max: 150, shortBreak: 120},
+			    {name: 'dataRendiconto', shortLabel: 'Data Rend.', label: 'Data Rendiconto', min: 85, max: 150, shortBreak: 120},
+			    
+			    {name: 'totali.prezzoTotale', label: 'Totale', min: 60, max: 100},
+			   {name: 'totali.pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+			    {name: 'totali.gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
+			   ];
+	
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 			//period: moment2period(moment())    	
     		period: null,
-    		geometry: {formWidth: (880 -16) * 4 / 5, formCols: {
-    															gutter1: 8,
-    															gutter2: 8,
-    															riferimento: 135,
-    															fornitore: 180,
-    															dataDocumento: 180,
-    															dataCarico: 180,
-    															tipo: 180,
-    															dataRendiconto: 180,
-    															annulla: 120,
-    															crea: 120
-    															
-    															} 
-    					}										
+    		
+    		geometry: {formWidth: formWidth, formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, formWidth - 60)
+    					}		
     				}
 	return initialStateHelper(eiis,extraState);
     }
@@ -119,25 +137,13 @@ export default function elencoBolle(state = initialState(), action) {
    			}
    	if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
    	   		{
-   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 4 / 5 ;	
+   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 -8 ;	
+   			let formCols1 = calcFormCols(colParams1,8,formWidth);
+   			let formCols2 = calcFormCols(colParams2,8,formWidth);
+   			let header = calcHeader(headerParams, formWidth - 60);
    			let geometry = {...newState.geometry};
-   			let spreadGutter = (formWidth - 688)/4;
-   			let spread = (formWidth - 688)*3/4
-   			let gutter1 = 8 + ((spreadGutter) / 3);
-   			let formCols = {
-    														    gutter1: gutter1,
-    															gutter2: gutter1,
-    															riferimento: 135+spread/2,
-    															fornitore: 180+spread/2,
-    															dataDocumento: 180,
-    															dataCarico: 180,
-    															tipo: 180,
-    															dataRendiconto: 180,
-    															annulla: 120,
-    															crea: 120
-    															
-    															} 
-   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols: formCols}};
+   			
+   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, header: header}};
    			}
         break;  
      case SET_PERIOD_ELENCOBOLLE:

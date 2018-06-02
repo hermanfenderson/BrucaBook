@@ -60,12 +60,12 @@ let children = React.Children.map(props.children, child => {
 	    	 if (child.props.formColumnLayout && child.props.formColumnLayout.width)
 	    	 {
 	    	 	let width=(props.formGroupLayout.gutter) ? props.formGroupLayout.gutter + child.props.formColumnLayout.width : child.props.formColumnLayout.width;
-	    	 return <FixCol width={width} >
+	    	 return <FixCol style={{verticalAlign: 'bottom'}} width={width}  >
 	                {React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </FixCol>
 	    	 }       
 	    	 else
-	         return <Col {...child.props.formColumnLayout} >
+	         return <Col {...child.props.formColumnLayout} style={{verticalAlign: 'bottom'}} >
 	                {React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </Col>
 	    	 }       
@@ -84,7 +84,7 @@ const GeneralError = (props) => {
 const FormButton =  (props) => 
 				{ 
 				   const {disableAllColon, formValues, field, readOnly, errorMessages, readOnlyForm, onChangeAction, buttonItemLayout, formColumnLayout, setFocus,...otherProps} = props;
-                   return <FormItem  {...{style:{paddingTop: '20px'},...buttonItemLayout}}> <Button  style={{width: '100%'}} {...otherProps} /> </FormItem>
+                   return <FormItem  {...{style:{verticalAlign: 'bottom'},...buttonItemLayout}}> <Button  style={{width: '100%'}} {...otherProps} /> </FormItem>
 				}
 				
 const WrapGeneric = (props) =>

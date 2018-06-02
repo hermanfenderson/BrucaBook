@@ -26,7 +26,6 @@ componentDidMount() {
 
 render()
 {
-console.log(this.props.geometry);
 if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese])) 
 	{
 		
