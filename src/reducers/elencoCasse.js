@@ -9,11 +9,18 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {SET_PERIOD_ELENCOCASSE, SAVE_CASSA} from '../actions/elencoCasse';
 import {STORE_MEASURE} from '../actions';
+import {calcFormCols, calcHeader} from '../helpers/geometry';
 
 
 moment.locale("it");
 
 //Metodi reducer per le Form
+const colParams = [
+	{name: 'cassa', min: 170, max: 170},
+	{name: 'data', min: 180, max: 360 },
+	{name: 'annulla', min: 130, max: 250 },
+	{name: 'crea', min: 130, max: 250 },
+	];
 
 const editedBollaValuesInitialState = 
 	  {			cassa: '1',
@@ -30,7 +37,8 @@ const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 			//period: moment2period(moment())    	
-    		period: null
+    		period: null,
+    		geometry: {formCols: calcFormCols(colParams, 8, (880 -16)  * 5 / 6 -8)},
     				}
 	return initialStateHelper(eiis,extraState);
     }
@@ -81,10 +89,23 @@ export default function elencoCasse(state = initialState(), action) {
         
    
     case STORE_MEASURE:
+    	newState = state;
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formCassaHeight'] -130;
-   	    newState = {...state, tableHeight: height};
+   	     if (action.newMeasure.name==='viewPortHeight')
+   			{
+   	   
+   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formCassaHeight'] -130;
+   	    	newState = {...state, tableHeight: height};
+   			}
+   		if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
+   	   		{
+   	   		let geometry = {...state.geometry};
+   	   		let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6- 8;	
+   			
+   	   		geometry.formCols = calcFormCols(colParams, 8, formWidth);
+   	   		newState = {...state, geometry: geometry};
+   	   		}
         break;  
      case SET_PERIOD_ELENCOCASSE:
         newState = {...state, period: action.period};

@@ -267,9 +267,18 @@ export const s2s = (scene) => {
 				s.stato = 'elencoBolle';
 				s.origin = fromBolla;
 			break;
+				case 'ELENCOCASSE':
+				s.stato = 'elencoCasse';
+				s.origin = fromBolla;
+			break;
+		
 			case 'BOLLA':
 				s.stato = 'bolla';
 				s.origin = fromBolla;
+			break;
+			case 'MAGAZZINO':
+				s.stato = 'magazzino';
+				s.origin = fromMagazzino;
 			break;
 			case 'CASSA':
 				s.stato = 'cassa';

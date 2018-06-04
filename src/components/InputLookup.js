@@ -54,7 +54,7 @@ constructor(props) {
     		let newState = {...this.state, value: '', showModal:false};
     this.setState(newState);
     	this.props.onChange('');
-    	if (this.props.onCloseModal()) this.props.onCloseModal();
+    	if (this.props.onCloseModal) this.props.onCloseModal();
     }
     
 	render()

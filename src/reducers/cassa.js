@@ -6,6 +6,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 import {isPositiveInteger, isPercentage} from '../helpers/validators'
 import moment from 'moment';
 
+
 const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
 const CHANGE_ITEM_CASSA = 'CHANGE_ITEM_CASSA';
 const DELETE_ITEM_CASSA = 'DELETE_ITEM_CASSA';
@@ -24,8 +25,8 @@ const DELETE_ITEM_SCONTRINO = 'DELETE_ITEM_SCONTRINO';
 const aggiornaTotaliLocale = (newState) =>
 {
 let righe = [...newState.itemsArray];
- let totalePezzi = 0;
-	let totaleImporto = 0.00;
+let totalePezzi = 0;
+let totaleImporto = 0.00;
 let totalePezziGen = 0;
 let totaleImportoGen = 0.00;
 let scontrini = 0;
@@ -55,7 +56,7 @@ return({...newState,  itemsArray: righe, totali: {'scontrini': scontrini, 'pezzi
 //return(newState);
 }
 
-
+	
 const editedRigaCassaValuesInitialState = 
 	  {			
 	            oraScontrino: null,
@@ -79,7 +80,8 @@ const initialState = () => {
 			                                  		pezzi: 30,
 			                                  		prezzoTotale: 45,
 			        
-			                                						}
+			                                						},
+			                      
     							  }
                   }
 	return initialStateHelper(eiis,extraState);
@@ -435,8 +437,7 @@ export default function cassa(state = initialState(), action) {
    	    		geometry.tableCassaWidth = tableCassaWidth;
    	    		geometry.tableCassaCols = tableCassaCols;
    	    		geometry.tableCassaTitoloWidth = 30 + tableCassaCols.numero +tableCassaCols.oraScontrino -18;
-   			
-   				newState = {...newState, geometry: geometry};
+   			   	newState = {...newState, geometry: geometry};
    	    		}
 			}
         break;

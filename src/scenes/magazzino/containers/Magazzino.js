@@ -1,7 +1,7 @@
 import MagazzinoComponent from '../components/Magazzino'
 import {setHeaderInfo} from  '../../../actions'
 import {magazzinoFA} from '../../../actions/magazzino'
-import {getFiltersMagazzino} from  '../../../reducers'
+import {getFiltersMagazzino, getGeometry} from  '../../../reducers'
 
 
 import { connect} from 'react-redux'
@@ -19,8 +19,12 @@ function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = (state) => {
 	return ({
-	         filters: getFiltersMagazzino(state)
-		
+	         filters: getFiltersMagazzino(state),
+	         formSearchCols: getGeometry(state,'MAGAZZINO').formSearchCols,
+	         formSearchFixedCols: getGeometry(state,'MAGAZZINO').formSearchFixedCols,
+		     header: getGeometry(state,'MAGAZZINO').header,
+		     fixedHeader: getGeometry(state,'MAGAZZINO').fixedHeader,
+		     
 	})
 }
 

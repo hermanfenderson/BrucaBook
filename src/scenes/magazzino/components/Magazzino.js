@@ -15,14 +15,15 @@ componentDidMount() {
   	
 render()
 {
+ const inModal = this.props.noHeader;
  return (
  <div>	
       <Row>
-      <FilterMagazzino filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      <FilterMagazzino formSearchCols={inModal ? this.props.formSearchFixedCols : this.props.formSearchCols} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
       <Row>
       
-         <TableMagazzino noDetails={this.props.noDetails} filters={this.props.filters} selectedCallback={this.props.selectedCallback}/>
+         <TableMagazzino header={inModal ? this.props.fixedHeader : this.props.header}  noDetails={this.props.noDetails} filters={this.props.filters} selectedCallback={this.props.selectedCallback}/>
       </Row>
    
   </div>

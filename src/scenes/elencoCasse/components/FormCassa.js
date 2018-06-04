@@ -34,14 +34,15 @@ componentDidMount = () =>
   	const readOnlyForm = this.props.readOnlyForm; //Vado in read only form... perchè sono pronto per aggiungere libri...
   	const selectedItem = this.props.editedCassa.selectedItem;
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
-    return (
+  	const formCols = this.props.geometry.formCols;
+   return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.Input field='cassa' label='Cassa'  required={true} formColumnLayout={{span: 3}} itemStyle={{marginRight: 10}} />
-        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 20}} disabled={(this.props.editedCassa.selectedItem!==null)}/>
-          <WrappedForm.Button type={'button'} formColumnLayout={{span:3, offset:10}} itemStyle={{width: '80%'}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+         <WrappedForm.Group formGroupLayout={{gutter:formCols.gutter}}>
+        <WrappedForm.Input field='cassa' label='Cassa'  required={true} formColumnLayout={{width: formCols.cassa}} />
+        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{width: formCols.data}}  disabled={(this.props.editedCassa.selectedItem!==null)}/>
+          <WrappedForm.Button type={'button'} formColumnLayout={{width: formCols.annulla}}   onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{span:3}} itemStyle={{width: '80%'}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{width: formCols.crea}} >{submitLabel}</WrappedForm.Button>
           </WrappedForm.Group>
         
      

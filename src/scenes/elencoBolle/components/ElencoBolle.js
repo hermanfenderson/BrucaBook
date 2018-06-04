@@ -52,7 +52,7 @@ return (
    
    	 	 </Col>
     </Row>
-  <Row className='bottom-form' style={{height: '200px'}} ref='formBolla'>
+  <Row className='bottom-form' style={{height: '150px'}} ref='formBolla'>
        <Col span={4} />
      
       <Col span={20}>

@@ -1,15 +1,6 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 
-//E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '120px'},
-                {dataField: 'titolo', label: 'Titolo', width: '360px'},
-			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '60px'},
-			    {dataField: 'pezzi', label: 'Q.tà', width: '60px'},
-			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
-			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
-			   ];
-
 
 //Per gestire in modo smmooth il ricaricamento!
 
@@ -56,12 +47,16 @@ class TableBolla extends Component
     
     	let props = {...this.props};
     	let selectedItemKey = null;
+    		let customRowRender = {
+    		
+    		 	'titolo' : (text, record, index) => { return(<div style={{width: this.props.geometry.header[1].width-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
+
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaBolla']; //Non la passo liscia...
     	delete props['setSelectedRigaBolla']; //Idem
     	  return(
-			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} />
+			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header} customRowRender={customRowRender}/>
 			)}
     }		
 	

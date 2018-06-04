@@ -80,19 +80,19 @@ render()
  
        <Col span={20}>
         <Row>
-      <FilterBolla filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      <FilterBolla geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
    <Row>
-     <TableBolla  period={period} idBolla={this.props.match.params.id} filters={this.props.filters}/>
+     <TableBolla  geometry={this.props.geometry} period={period} idBolla={this.props.match.params.id} filters={this.props.filters}/>
       </Row>
     	   </Col>
       </Row>
     
-      <Row type="flex" align="bottom" className='bottom-form' style={{height: '100px'}} ref='formRigaBolla'>
+      <Row type="flex" align="bottom" className='bottom-form' style={{height: '120px'}} ref='formRigaBolla'>
    
        <Col span={24}>
     
-      <FormRigaBolla idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} />
+      <FormRigaBolla geometry={this.props.geometry} idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} />
       </Col>
         
     </Row>

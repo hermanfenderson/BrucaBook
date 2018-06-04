@@ -6,12 +6,13 @@ import WrappedForm from '../../../components/WrappedForm'
 const FilterBolla = (props) =>
 {
 	const onChange = (field, value) => {props.setFilter(field,value)}
+	const frmCols = props.geometry.formSearchCols;
     return (
 	<WrappedForm  onChange={onChange} loading={false} formValues={props.filters} errorMessages={{}}>
-         <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.Input field='key' label='EAN' formColumnLayout={{span:6}} itemStyle={{marginRight: 10}} />
-        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:15}} itemStyle={{marginRight: 10}} />
-         <WrappedForm.Button itemStyle={{width:'90%'}} type={'button'} formColumnLayout={{span:3}} onClick={props.resetFilter}>Reset</WrappedForm.Button>
+         <WrappedForm.Group formGroupLayout={{gutter:frmCols.gutter}}>
+        <WrappedForm.Input field='key' label='EAN' formColumnLayout={{width:frmCols.ean}}  />
+        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:frmCols.titolo}}  />
+         <WrappedForm.Button  type={'button'} formColumnLayout={{width:frmCols.reset}} onClick={props.resetFilter}>Reset</WrappedForm.Button>
      
      </WrappedForm.Group>
      </WrappedForm>

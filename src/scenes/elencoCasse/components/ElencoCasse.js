@@ -51,7 +51,7 @@ return (
       </Col>
        <Col span={20}>
     
-   <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
+   <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} geometry={this.props.geometry}/>
   	 </Col>
     </Row>
     <Row type="flex" align="bottom" className='bottom-form'  ref='formCassa' style={{height: '100px'}} >
@@ -59,7 +59,7 @@ return (
      <Col span={4} />
          <Col span={20}>
     
-   	 <FormCassa period={this.props.period}/>
+   	 <FormCassa period={this.props.period} geometry={this.props.geometry}/>
    	 </Col>
  
              </Row>
