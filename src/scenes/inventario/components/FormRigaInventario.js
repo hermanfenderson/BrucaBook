@@ -34,25 +34,28 @@ resetForm = () => {
   	const errorMessages = this.props.editedRigaInventario.errorMessages;
   	const willFocus = this.props.editedRigaInventario.willFocus;
   	const loading = this.props.editedRigaInventario.loading;
+  	const cols1 = this.props.geometry.formCols1;
+  	const cols2 = this.props.geometry.formCols2;
+  	console.log(cols2);
   	const readOnlyEAN = ((this.props.editedRigaInventario.selectedItem !== null) || (this.props.editedRigaInventario.eanState === 'PARTIAL'))
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-         <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{span:4}} itemStyle={{marginRight: 10}} disabled={readOnlyEAN}/>
-        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{span:13}} itemStyle={{marginRight: 10}}  disabled/>
-        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{span:7}} itemStyle={{marginRight: 10}}disabled/>
+         <WrappedForm.Group formGroupLayout={{gutter:cols1.gutter}}>
+        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:cols1.ean}}  disabled={readOnlyEAN}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:cols1.titolo}}   disabled/>
+        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{width:cols1.autore}} disabled/>
      
        </WrappedForm.Group>
         
-        <WrappedForm.Group formGroupLayout={{gutter:0}}>
-          <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{span:3}}  disabled/>
+        <WrappedForm.Group formGroupLayout={{gutter:cols1.gutter}}>
+          <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{width:cols2.listino}}  disabled/>
      
-        <WrappedForm.Input field='stock' label='Stock' formColumnLayout={{span:4}} itemStyle={{marginRight: 10}} disabled/>
+        <WrappedForm.Input field='stock' label='Stock' formColumnLayout={{width:cols2.stock}} disabled/>
        
-        <WrappedForm.InputNumber field='pezzi' label='Variazione' formColumnLayout={{span:6}} itemStyle={{marginRight: 10}}/>
-       <WrappedForm.Button itemStyle={{width: '90%'}} type={'button'} formColumnLayout={{span:3, offset: 4}}  onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.InputNumber field='pezzi' label='Variazione' formColumnLayout={{width:cols2.delta}}/>
+       <WrappedForm.Button  type={'button'} formColumnLayout={{width: cols2.annulla}}  onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  formColumnLayout={{span:3}} itemStyle={{width: '90%'}} type="primary" htmlType="submit" >{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  formColumnLayout={{width:cols2.inserisci}}  type="primary" htmlType="submit" >{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
      
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:0}} >

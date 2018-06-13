@@ -58,9 +58,9 @@ onChange = (name, value) => {
   			  
   	return (
   		<WrappedForm formValues={this.state.formValues} errorMessages={{}} loading={false} onChange={this.onChange} >
-        <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.Input  formColumnLayout={{span:12}} itemStyle={{marginRight: 10}} disabled={!enableContanti} label='Contanti' field='contanti'  />
-        <WrappedForm.Input  formColumnLayout={{span:12}} itemStyle={{marginRight: 10}} disabled={true} label='Resto' field='resto'  />
+        <WrappedForm.Group formGroupLayout={{gutter:16}}>
+        <WrappedForm.Input  formColumnLayout={{width:86}}  disabled={!enableContanti} label='Contanti' field='contanti'  />
+        <WrappedForm.Input  formColumnLayout={{width:86}}  disabled={true} label='Resto' field='resto'  />
         </WrappedForm.Group>
        </WrappedForm>
     )

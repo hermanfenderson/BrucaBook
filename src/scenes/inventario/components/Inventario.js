@@ -76,19 +76,19 @@ render()
       </Col>
  
        <Col span={20}>
-     <TableInventario  idInventario={this.props.match.params.id}/>
+     <TableInventario  geometry={this.props.geometry} idInventario={this.props.match.params.id}/>
       
     	   </Col>
       </Row>
     
-    <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '250px'}}>
+    <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '150px'}}>
     <Col span={4}>
      <BookImg eanState={this.props.editedRigaInventario.eanState} ean={this.props.editedRigaInventario.values.ean} imgUrl={this.props.editedRigaInventario.values.imgFirebaseUrl} />
 
       </Col>
        <Col span={20}>
     
-      <FormRigaInventario idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} />
+      <FormRigaInventario geometry={this.props.geometry} idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} />
       </Col>
         
     </Row>

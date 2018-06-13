@@ -280,5 +280,36 @@ return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapsh
 									refBookStoreRadix.update(updates).then(()=>{res.send('Passed.');console.info("avviato ricalcolo magazzino e storico")})
 								})
 });
-});          
+});  
+
+exports.forzaAggiornaTitoli = functions.https.onRequest((req, res) => {
+
+cors(req, res, () => {
+let catena = req.query.catena;
+let libreria = req.query.libreria;
+let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
+let updates = {}; //Qui devo azzerare EAN e prima data in cui appare...	
+								
+return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
+								{
+								if (snapshot.val())
+									{
+									for (let ean in snapshot.val()) 
+										{
+										let record = snapshot.val()[ean];
+										//Scendo di due nella gerarchia
+										let firstDateRecord = record[Object.keys(record)[0]];
+										
+										let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
+										let titolo = firstKeyRecord.titolo;
+										//Elenco dei trigger da scatenare	
+										updates['magazzino/'+ean+'/titolo'] = titolo;
+										}		
+									}
+								})).then(()=>{
+									refBookStoreRadix.update(updates).then(()=>{res.send('Passed.');console.info("avviato aggiornamento titoli")})
+								})
+});
+});  
+
 

@@ -2,6 +2,7 @@ import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
 import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
+import {calcFormCols, calcHeader} from '../helpers/geometry';
 
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -23,10 +24,46 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedInventarioValuesInitialState, {willFocus: 'ean'} ));
 }
 
+const tableWidth = 880 / 6 * 5 -24;
+const colParams1 = [
+	{name: 'ean', min: 170, max: 170},
+	{name: 'titolo', min: 360},
+	{name: 'autore', min: 160},
+	];
+ 
+ const colParams2 = [
+	{name: 'listino', min: 65, max: 65},
+	{name: 'stock', min: 65, max: 65},
+	{name: 'delta', min: 404},
 
+	{name: 'annulla', min: 55, max: 55},
+	{name: 'inserisci', min: 55, max: 55},
+	
+
+	];
+	
+const headerParams = [
+	{name: 'ean', label: 'EAN', min: 120, max: 120},
+	{name: 'titolo', label: 'Titolo', min: 250},
+	{name: 'autore', label: 'Autore', min: 110},
+	{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},
+	{name: 'stock', label: 'Stock', min: 50, max: 50},
+	{name: 'pezzi', label: 'Delta', min: 50, max: 50},
+
+	] 
+
+ 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{totaleOccorrenze: 0});
+    const extraState = {
+		    totaleOccorrenze: 0,
+    		geometry: {header: calcHeader(headerParams, tableWidth - 60), 
+    				  formCols1: calcFormCols(colParams1,8,tableWidth), 
+    				  formCols2: calcFormCols(colParams2,8,tableWidth), 
+    				  
+    				  	}		
+    				}
+	return initialStateHelper(eiis, extraState);
     }
     
 
@@ -109,10 +146,29 @@ export default function inventario(state = initialState(), action) {
   switch (action.type) {
     
    case STORE_MEASURE:
+   	    newState = state;
+   	    
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaInventarioHeight'] -180;
-   	    newState = {...state, tableHeight: height};
+   	       if (action.newMeasure.name==='viewPortHeight')
+   			{
+   	  
+   			 let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaInventarioHeight'] -180;
+   	    	newState = {...state, tableHeight: height};
+   			}
+   		   
+   		    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
+   	   		{
+	   	   		let tableWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 - 8;	
+	   			let formCols1 = calcFormCols(colParams1,8,tableWidth);
+	   			let formCols2 = calcFormCols(colParams2,8,tableWidth);
+	   		
+	   			let header = calcHeader(headerParams, tableWidth - 60);
+	   			let geometry = {...newState.geometry};
+	   		newState = {...newState, geometry: {...geometry, formCols1: formCols1, formCols2: formCols2, header: header}};
+   		
+			}
+        	
         break;
    case GENERA_RIGHE_INVENTARIO:
    	    newState = state;

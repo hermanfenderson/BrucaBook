@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 
 //E' un dato.... che passo come costante...
+/*
 const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
                 {dataField: 'titolo', label: 'Titolo', width: '320px'},
                 {dataField: 'autore', label: 'Autore', width: '280px'},
@@ -14,7 +15,7 @@ const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
 			    {dataField: 'pezzi', label: 'Delta', width: '60px'},
 			   ];
 
-
+*/
 // Fixed ascoltatori ecc..
 
 class TableInventario extends Component 
@@ -54,7 +55,7 @@ class TableInventario extends Component
     	delete props['deleteRigaInventario']; //Non la passo liscia...
     	delete props['setSelectedRigaInventario']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} detailRow={this.detailRow} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} detailRow={this.detailRow} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header}/>
 			)}
     }		
 	

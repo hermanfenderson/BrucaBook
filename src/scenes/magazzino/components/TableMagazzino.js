@@ -4,14 +4,7 @@ import { withRouter } from 'react-router-dom';
 import {Spin} from 'antd';
 
 
-//E' un dato.... che passo come costante...
-/*
-const header = [{dataField: 'key', label: 'EAN', width: '150px'},
-			    {dataField: 'titolo', label: 'Titolo', width: '300px'},
-			    {dataField: 'autore', label: 'Autore', width: '300px'},
-			    {dataField: 'pezzi', label: 'Pezzi', width: '100px'},
-			   ];
-*/
+
 
 
 class TableMagazzino extends Component 

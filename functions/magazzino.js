@@ -56,6 +56,7 @@ const aggiornaMagazzinoEANDiff = (admin, ean, refRadix, values, diff) =>
 		if (!stockEAN) stockEAN={};
 		let pezzi = stockEAN.pezzi ? stockEAN.pezzi : 0;
 		stockEAN.pezzi = pezzi + diff;
+		stockEAN.titolo = values.titolo;
 		stockEAN.autore = values.autore;
 		stockEAN.imgFirebaseUrl = values.imgFirebaseUrl;
 		stockEAN.prezzoListino = values.prezzoListino;
@@ -70,6 +71,7 @@ return(refRadix.child('storicoMagazzino').transaction(function(storicoMagazzino)
 	    //Faccio loop su tutte le date...
 	    if (!storicoMagazzino) storicoMagazzino = {};
 	    let stockEAN = {};
+	     stockEAN.autore = values.titolo;
 	    stockEAN.autore = values.autore;
 		stockEAN.imgFirebaseUrl = values.imgFirebaseUrl;
 		stockEAN.prezzoListino = values.prezzoListino;

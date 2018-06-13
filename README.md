@@ -1,4 +1,4 @@
-BrucaBook V.0.9.37
+BrucaBook V.0.9.39
 ==================
 
 Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in licenza MIT. [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
