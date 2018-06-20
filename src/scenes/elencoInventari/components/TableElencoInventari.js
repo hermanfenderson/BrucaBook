@@ -56,6 +56,10 @@ class TableElencoInventari extends Component
 		this.props.setSelectedInventario(row);
 	}
 	
+	saveRow = (row) => {
+		this.props.saveInventario(row.key);
+	}
+	
 	selectRow = (row) => {
 		this.props.setSelectedInventario(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
@@ -70,7 +74,7 @@ class TableElencoInventari extends Component
     	delete props['deleteInventario']; //Non la passo liscia...
     	delete props['setSelectedInventario']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	

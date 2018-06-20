@@ -1,5 +1,5 @@
 import TableElencoInventariComponent from '../components/TableElencoInventari'
-import {inventarioFA} from '../../../actions/elencoInventari'
+import {inventarioFA, saveInventario} from '../../../actions/elencoInventari'
 
 import {getEditedInventario, getElencoInventari, getTableElencoInventariHeight, getTableElencoInventariScroll, getListeningItemElencoInventari} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -25,7 +25,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenElencoInventari, offListenElencoInventari, deleteInventario, setSelectedInventario, toggleTableScroll, setReadOnlyForm, resetTable }, dispatch);
+  return bindActionCreators({ listenElencoInventari, offListenElencoInventari, deleteInventario, setSelectedInventario, toggleTableScroll, setReadOnlyForm, resetTable, saveInventario }, dispatch);
 }
 
 

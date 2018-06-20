@@ -3,6 +3,7 @@ import FormReducer from '../helpers/formReducer'
 import moment from 'moment';
 import 'moment/locale/it';
 import {setDay} from '../helpers/form';
+import {SAVE_INVENTARIO} from '../actions/elencoInventari';
 
 //import {errMgmt, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, moment2period} from '../helpers/form';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
@@ -88,6 +89,10 @@ export default function elencoInventari(state = initialState(), action) {
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formInventarioHeight'] -130;
    	    newState = {...state, tableHeight: height};
         break;  
+   case SAVE_INVENTARIO:
+     	newState = state;
+     	break;
+    
      default:
         newState = inventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedInventario);
         //newState =  state;
