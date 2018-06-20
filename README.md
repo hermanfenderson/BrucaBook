@@ -1,4 +1,4 @@
-BrucaBook V.0.9.40
+BrucaBook V.0.9.41
 ==================
 
 Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in licenza MIT. [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
@@ -11,6 +11,9 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.9.41
+* Prima patch per performance
+
 ### Versione 0.9.40
 * Possibilità di esportare in excel l'inventario
 

@@ -468,8 +468,9 @@ this.listenItem = (params) => {
    const onEAN = this.onEAN
    const itemsUrl = this.itemsUrl;
    const scene = this.scene;
+   console.log(scene);
   return function(dispatch, getState) {
-  	if (!getListeningMagazzino(getState()) && scene !=='MAGAZZINO') //Ascolto il magazzino... serve a farlo al refresh...
+  	if (getListeningMagazzino(getState()) === null && scene !=='MAGAZZINO') //Ascolto il magazzino... serve a farlo al refresh...
 		{    
 				dispatch(magazzinoFA.listenItem());
 		}
