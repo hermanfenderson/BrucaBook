@@ -11,6 +11,11 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.9.42
+* Form inventario non veniva ridimensionata per stare nello schermo
+* Ottimizzazione prestazioni inventario (inefficiente fare loop nelle propt!)
+* Nuova libreria per gestione tabelle grandi (react-virtualized)
+
 ### Versione 0.9.41
 * Prima patch per performance
 

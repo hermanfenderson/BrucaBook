@@ -60,7 +60,7 @@ const initialState = () => {
     		geometry: {header: calcHeader(headerParams, tableWidth - 60), 
     				  formCols1: calcFormCols(colParams1,8,tableWidth), 
     				  formCols2: calcFormCols(colParams2,8,tableWidth), 
-    				  
+    				  tableWidth: tableWidth,
     				  	}		
     				}
 	return initialStateHelper(eiis, extraState);
@@ -74,9 +74,12 @@ const initialState = () => {
 const rigaInventarioR = new FormReducer('INVENTARIO', foundCompleteItem, null, null, initialState); 
 
 
-
-
-
+var stockMap = new Map();
+//Function per gestire lo stock... dallo storico magazzino
+function transformItem(value)
+{   let stock = stockMap.get(value.ean); 
+	if (stock !== undefined) value.stock = stock;
+}
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
@@ -150,11 +153,11 @@ export default function inventario(state = initialState(), action) {
    	    
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	       if (action.newMeasure.name==='viewPortHeight')
+   	       if (action.newMeasure.name==='viewPortHeight' || action.newMeasure.name==='headerHeight')
    			{
-   	  
-   			 let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaInventarioHeight'] -180;
-   	    	newState = {...state, tableHeight: height};
+   	      	 let height = measures['viewPortHeight'] - measures['headerHeight'] - 230;
+   	      	 if (!height) height = 100;
+   			newState = {...state, tableHeight: height};
    			}
    		   
    		    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
@@ -165,7 +168,7 @@ export default function inventario(state = initialState(), action) {
 	   		
 	   			let header = calcHeader(headerParams, tableWidth - 60);
 	   			let geometry = {...newState.geometry};
-	   		newState = {...newState, geometry: {...geometry, formCols1: formCols1, formCols2: formCols2, header: header}};
+	   		newState = {...newState, geometry: {...geometry, formCols1: formCols1, formCols2: formCols2, header: header, tableWidth: tableWidth}};
    		
 			}
         	
@@ -187,16 +190,29 @@ export default function inventario(state = initialState(), action) {
 	    	
 	    	break;
 	  case rigaInventarioR.INITIAL_LOAD_ITEM:
-		 	
+		 	console.log("dati freschi bis!")
+		 	 let obj = state.estrattoStoricoMagazzino;
+			if (obj)
+				{Object.keys(obj).forEach(key => {
+    				stockMap.set(key, obj[key].stock);
+					});
+				}	
+			console.log(obj);	
+		
 		    newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
+		    
 		 	//Se ho un dato migliore per stock lo metto qui...per ogni riga
+		 	/*
 		 	for (let key in action.payload.val())
 		 		{
 		 			let ean = action.payload.val()[key].ean;
 		 			
 		 			if (newState.estrattoStoricoMagazzino && newState.estrattoStoricoMagazzino[ean]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = newState.stock[ean];
 		 		}
+		 	*/
+		 	
 		 	newState = {...newState, tableScroll: true};
+		 	console.log("dati freschi pronti bis!")
 	    	break;     
 		case rigaInventarioR.DELETED_ITEM:
 			newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 

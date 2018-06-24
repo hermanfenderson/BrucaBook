@@ -11,6 +11,7 @@
   "dependencies": {
     "antd": "^3.4.0",
     "classnames": "^2.2.5",
+    "deep-equal": "^1.0.1",
     "firebase": "^4.10.1",
     "html-docx-js": "^0.3.1",
     "js-file-download": "^0.4.1",
@@ -25,6 +26,7 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "^1.0.14",
     "react-slick": "^0.16.0",
+    "react-virtualized": "^9.19.1",
     "react-youtube": "^7.5.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",

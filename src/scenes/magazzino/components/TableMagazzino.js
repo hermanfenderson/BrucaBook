@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import { withRouter } from 'react-router-dom';
 import {Spin} from 'antd';
@@ -7,7 +7,7 @@ import {Spin} from 'antd';
 
 
 
-class TableMagazzino extends Component 
+class TableMagazzino extends PureComponent 
     {
     	
     detailRow = (row) => {
@@ -23,9 +23,13 @@ class TableMagazzino extends Component
     		
 	}
 	
-
+componentWillReceiveProps()
+{
+	console.log("ho props nuove");
+}
     
     	render() { 
+    	console.log("Sto renderizzando");
     	let props = {...this.props};
         let detailRow = (props.noDetails) ? null : this.detailRow;
         let selectRow = (props.selectedCallback) ? this.selectRow : (props.noDetails) ? null : this.detailRow;

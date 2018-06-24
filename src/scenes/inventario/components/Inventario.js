@@ -76,7 +76,7 @@ render()
       </Col>
  
        <Col span={20}>
-     <TableInventario  geometry={this.props.geometry} idInventario={this.props.match.params.id}/>
+     <TableInventario  width={this.props.geometry.tableWidth} header={this.props.geometry.header} idInventario={this.props.match.params.id}/>
       
     	   </Col>
       </Row>

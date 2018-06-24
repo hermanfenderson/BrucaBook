@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import { withRouter } from 'react-router-dom';
-
+import equal from 'deep-equal';
 
 //E' un dato.... che passo come costante...
 /*
@@ -29,7 +29,18 @@ class TableInventario extends Component
 		  			this.props.offListenRigaInventario(this.props.listeningItemInventario); 
     	   			this.props.resetTableInventario();
 	}
-	
+/*	
+	shouldComponentUpdate(nextProps, nextState) {
+		let shouldUpdate = false;
+		let props = this.props;
+		if (!equal(props.height, nextProps.height)) shouldUpdate = true;
+		if (!equal(props.header, nextProps.header)) shouldUpdate = true;
+		if (!equal(props.data, nextProps.data)) shouldUpdate = true;
+		
+		 return shouldUpdate;
+	}
+*/
+
 	deleteRow = (row) => {
 	   this.props.deleteRigaInventario(this.props.idInventario,row.key,row);
 	}
@@ -48,14 +59,14 @@ class TableInventario extends Component
     }
     
     	render() { 
+    	console.log(this.props);
         let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
-    	
     	delete props['deleteRigaInventario']; //Non la passo liscia...
     	delete props['setSelectedRigaInventario']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} detailRow={this.detailRow} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header}/>
+			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} detailRow={this.detailRow} pinRow={this.pinRow} pinField={'pinned'} deleteRow={this.deleteRow} selectRow={this.editRow} width={this.props.width} header={this.props.header}/>
 			)}
     }		
 	

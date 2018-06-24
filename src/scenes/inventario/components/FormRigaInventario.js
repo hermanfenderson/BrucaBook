@@ -36,8 +36,7 @@ resetForm = () => {
   	const loading = this.props.editedRigaInventario.loading;
   	const cols1 = this.props.geometry.formCols1;
   	const cols2 = this.props.geometry.formCols2;
-  	console.log(cols2);
-  	const readOnlyEAN = ((this.props.editedRigaInventario.selectedItem !== null) || (this.props.editedRigaInventario.eanState === 'PARTIAL'))
+   	const readOnlyEAN = ((this.props.editedRigaInventario.selectedItem !== null) || (this.props.editedRigaInventario.eanState === 'PARTIAL'))
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:cols1.gutter}}>

@@ -118,7 +118,7 @@ export function childAdded(payload, state, dataArrayName, dataIndexName, transfo
    newState[dataIndexName] = dataIndexNew;                    
    return newState;
 }
-
+/*
 export function initialLoading(payload,state, dataArrayName, dataIndexName, transformItem, prefix)
 {
 	//Creo un array e un indice per copia degli attuali
@@ -128,6 +128,7 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 		{
 	    
 		//Aggiungo solo se non la ho già...
+		
 		if (dataIndexNew[propt] !== undefined)
 		  {
 		  	  var index = dataIndexNew[propt];
@@ -141,6 +142,8 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 			      }
 	  		  	 
 		  }		
+		  
+		  
 		  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
 		   var tmp = payload.val()[propt];
 		   tmp['key'] = propt;
@@ -166,6 +169,53 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
     newState[dataIndexName] = dataIndexNew;                    
 	return newState;
 }
+*/
+
+
+export function initialLoading(payload,state, dataArrayName, dataIndexName, transformItem, prefix)
+{
+ //Creo una copia del vecchio array (potrei avere righe arrivate in anticipo)
+   var dataArrayTmp = state[dataArrayName].slice();
+
+	//Creo un array a partire dall'oggetto
+  let values = payload.val();
+   let dataArrayNewTmp =  Object.values(values);
+   let tmpArray = Object.keys(values);
+   let dataArrayNew = dataArrayNewTmp.map((value,index) => 
+		{
+   			let valueOut = {};
+   			value.key = tmpArray[index];
+   			if (transformItem) transformItem(value);
+   			if (prefix) 
+   				{
+   				valueOut[prefix] = value;
+   				valueOut.key = value.key;
+   				}
+   			else 
+   			    valueOut = value;
+   			return valueOut;
+		})
+	let dataIndexNew = {};	
+    tmpArray.forEach((value,index) => {dataIndexNew[value] = index});
+    if (dataArrayTmp)
+    	{
+    	dataArrayTmp.forEach((value) => {
+    		if (dataIndexNew[value.key] === undefined)
+    			{
+    				//Se ho righe che mi sono perso le aggiungo di nuovo...
+    				dataArrayNew.push(value);
+    				dataIndexNew[value.key] = dataArrayNew.length - 1;
+    			}
+    	})	
+    	}
+    //Aggiorno lo stato passando nuovo array e nuovo indice
+    var newState = {...state};
+    newState[dataArrayName] = dataArrayNew;
+    newState[dataIndexName] = dataIndexNew;                    
+	return newState;
+}
+
+
 
 export function childDeleted(payload, state, dataArrayName, dataIndexName)
 {  //Creo un array e un indice per copia degli attuali

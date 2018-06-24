@@ -276,6 +276,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
 	     case this.LISTEN_ITEM:
 	     	let listenersItem = {...state.listenersItem, ...action.listeners};
 	     	newState = {...state, listeningItem: action.params, listenersItem: listenersItem}; 
+	     	
 	     	break;
 	     case this.OFF_LISTEN_ITEM:
 	     	newState = {...state, listeningItem: null};
@@ -313,10 +314,12 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
   
 	    	break;
 	    case this.INITIAL_LOAD_ITEM:
+	    	 console.log("dati freschi!");
+	    
 	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem);
 	    	newState = {...newState, tableScroll: true};
 	    	 if (calcolaTotali) newState = calcolaTotali(newState);
-  
+            console.log("dati freschi pronti!");
 	    
 	    	break;
 	  
