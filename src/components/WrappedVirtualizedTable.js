@@ -19,11 +19,6 @@ if (!bool)
 
 };
 
-rowGetter = ({index})	=> {
-							let data = this.props.data[index];
-							data.sel = index;
-							return(data);
-							};
 
 
 actionCellRenderer = ({rowData, rowIndex}) => {
@@ -60,6 +55,26 @@ render ()
 		     cellRenderer={this.actionCellRenderer}
 		     />
 			);
+	let data = (this.props.filters) ? 
+  		this.props.data.map((record) => 
+  			{
+  			//Il record è buono... se non esiste quel campo nel record oppure esiste e la regex è rispettata	
+  			let good = true;
+  			
+  			for (var prop in this.props.filters)
+  					
+  				{  let regex = new RegExp(this.props.filters[prop],'i');
+  					if ((record[prop]) && (!record[prop].match(regex))) good = false;
+  				}
+  			return (good ? {...record} : null) 
+  			}).filter((record => !!record)) :
+  			this.props.data;		
+	let rowGetter = ({index})	=> {
+							let row = data[index];
+							row.sel = index;
+							return(row);
+							};
+		
 	if (this.props.deleteRow || this.props.editRow || this.props.detailRow || this.props.pinRow || this.props.saveRow) 
   		{if (this.props.actionFirst)
   		    columns.unshift(actionColumn);
@@ -67,7 +82,7 @@ render ()
   		}
   	console.log(columns);	
     return(
-        	 <Table onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={this.props.data.length} rowGetter={this.rowGetter}>
+        	 <Table onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={data.length} rowGetter={rowGetter}>
 			{columns}
         	 </Table>);
      }

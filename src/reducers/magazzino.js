@@ -47,6 +47,7 @@ const initialState = () => {
     				  fixedHeader: calcHeader(headerParams, 700),  
     				  formSearchCols: calcFormCols(colSearchParams,8,tableWidth), 
     				  formSearchFixedCols: calcFormCols(colSearchFixedParams,8,700),
+    				  tableWidth: tableWidth
     					}		
     				}
 	return initialStateHelper(eiis,extraState);
@@ -71,9 +72,10 @@ export default function elencoBolle(state = initialState(), action) {
     	
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	     if (action.newMeasure.name==='viewPortHeight')
+   	     if (action.newMeasure.name==='viewPortHeight' || action.newMeasure.name==='headerHeight' )
    			{
-   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] -195;
+   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] -95;
+   	    	if (!height) height = 500;
    	    	newState = {...state, tableHeight: height};
    			}
    		 if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
@@ -83,7 +85,7 @@ export default function elencoBolle(state = initialState(), action) {
    		
    			let header = calcHeader(headerParams, tableWidth - 60);
    			let geometry = {...newState.geometry};
-   			newState = {...newState, geometry: {...geometry, formSearchCols: formSearchCols, header: header}};
+   			newState = {...newState, geometry: {...geometry, formSearchCols: formSearchCols, header: header, tableWidth: tableWidth}};
    		
 			}
         break;  	

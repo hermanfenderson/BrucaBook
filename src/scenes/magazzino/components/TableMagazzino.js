@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import { withRouter } from 'react-router-dom';
 import {Spin} from 'antd';
 
@@ -26,6 +26,7 @@ class TableMagazzino extends PureComponent
 componentWillReceiveProps()
 {
 	console.log("ho props nuove");
+	console.log(this.props.height);
 }
     
     	render() { 

@@ -24,6 +24,7 @@ const mapStateToProps = (state) => {
 	         formSearchFixedCols: getGeometry(state,'MAGAZZINO').formSearchFixedCols,
 		     header: getGeometry(state,'MAGAZZINO').header,
 		     fixedHeader: getGeometry(state,'MAGAZZINO').fixedHeader,
+		     width: getGeometry(state,'MAGAZZINO').tableWidth
 		     
 	})
 }

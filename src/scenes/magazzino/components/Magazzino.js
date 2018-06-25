@@ -23,7 +23,7 @@ render()
       </Row>
       <Row>
       
-         <TableMagazzino header={inModal ? this.props.fixedHeader : this.props.header}  noDetails={this.props.noDetails} filters={this.props.filters} selectedCallback={this.props.selectedCallback}/>
+         <TableMagazzino width={this.props.width} header={inModal ? this.props.fixedHeader : this.props.header}  noDetails={this.props.noDetails} filters={this.props.filters} selectedCallback={this.props.selectedCallback}/>
       </Row>
    
   </div>

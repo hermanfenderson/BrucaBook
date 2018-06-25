@@ -1,4 +1,4 @@
-BrucaBook V.0.9.41
+BrucaBook V.0.9.42
 ==================
 
 Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in licenza MIT. [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
@@ -15,6 +15,7 @@ Storia delle versioni
 * Form inventario non veniva ridimensionata per stare nello schermo
 * Ottimizzazione prestazioni inventario (inefficiente fare loop nelle propt!)
 * Nuova libreria per gestione tabelle grandi (react-virtualized)
+* Il tutto rilasciato in alpha (devo verificare parecchie cose ancora)
 
 ### Versione 0.9.41
 * Prima patch per performance
