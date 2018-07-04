@@ -2,21 +2,28 @@ import React from 'react';
 import {Table, Column } from 'react-virtualized'
 import { Icon } from 'antd';
 
-
+// Si appoggia alla react-virtualized table. Capace di filtrare e rortare 
+// Gestisco internamente le funzioni di sort e di filter
+// gestisco lo stato della ricerca internamente...
+// Penso di dover avere uno stato locale specifico per gestire la sort
 class WrappedVirtualizedTable extends React.Component {
-	
+constructor(props, context) {
+    super(props, context);
+    this.state = {
+      sortBy: null,
+      sortDirection: null,
+    }
+ }
 onRowClick = ({event, index, rowData}) => {
-var myRe = /<i.+class=.anticon/m;
-var element = event.target.outerHTML;
-
-var bool = myRe.test(element);
-//Eseguo se l'utente non ha fatto click su una icona
-if (!bool)
-	{
-	if (this.props.selectRow) this.props.selectRow(rowData);	
-	}
-
-
+	var myRe = /<i.+class=.anticon/m;
+	var element = event.target.outerHTML;
+	
+	var bool = myRe.test(element);
+	//Eseguo se l'utente non ha fatto click su una icona
+	if (!bool)
+		{
+		if (this.props.selectRow) this.props.selectRow(rowData);	
+		}
 };
 
 
@@ -33,7 +40,7 @@ actionCellRenderer = ({rowData, rowIndex}) => {
         </div>
         );
  }
- 
+
 
 render ()
      {
@@ -68,9 +75,30 @@ render ()
   				}
   			return (good ? {...record} : null) 
   			}).filter((record => !!record)) :
-  			this.props.data;		
+  			this.props.data;
+  	//Se devo sortare... applico una funzione di sort... altrimenti ritornoa sortedData... data...
+  	let sortedData = (this.state.sortBy) ? 
+  					  data.sort((a, b) => 
+  							{
+  							let sortBool = false;	
+  							if (typeof(a[this.state.sortBy]) === 'string') 
+  								{
+  									sortBool = a[this.state.sortBy].localeCompare(b[this.state.sortBy]);
+  									
+  								}
+  							else sortBool = a[this.state.sortBy] - b[this.state.sortBy];
+  							if (this.state.sortDirection==='DESC') sortBool = -sortBool;
+  							return sortBool;
+  							}) 
+  					  : data;
+  			
+  	let sort = ({defaultSortDirection, event, sortBy, sortDirection}) => {
+		let newState = {sortBy: sortBy, sortDirection: sortDirection};
+		this.setState(newState);
+	} 
+		
 	let rowGetter = ({index})	=> {
-							let row = data[index];
+							let row = sortedData[index];
 							row.sel = index;
 							return(row);
 							};
@@ -80,9 +108,8 @@ render ()
   		    columns.unshift(actionColumn);
 			else columns.push(actionColumn);
   		}
-  	console.log(columns);	
-    return(
-        	 <Table onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={data.length} rowGetter={rowGetter}>
+   return(
+        	 <Table sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} sort={sort} onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={data.length} rowGetter={rowGetter}>
 			{columns}
         	 </Table>);
      }

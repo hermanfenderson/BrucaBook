@@ -316,6 +316,8 @@ export const getItems = (state, scene) => {let s=s2s(scene); return fromFormRedu
 export const getTableScrollByKey = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getTableScrollByKey(state[s.stato])};
 
 export const getGeometry = (state, scene) => {let s=s2s(scene); return fromFormReducer.getGeometry(state[s.stato])};
+export const getFilters = (state, scene) => {let s=s2s(scene); return fromFormReducer.getFilters(state[s.stato])};
+
 export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return fromFormReducer.listeningDataMagazzino(state[s.stato])};
 export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getDataMagazzino(state[s.stato])};
 

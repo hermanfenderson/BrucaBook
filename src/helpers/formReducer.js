@@ -470,5 +470,5 @@ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  export const listeningDataMagazzino = (state) => {return state.listeningDataMagazzino};
  export const getDataMagazzino = (state) => {return state.dataMagazzino};
  export const getGeometry = (state) => {return state.geometry};
-
+ export const getFilters= (state) => {return state.filters};
  

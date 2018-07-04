@@ -18,7 +18,13 @@ const editedInventarioValuesInitialState =
 				imgUrl: ''	
 	};
 	
-	
+const colSearchParams = [
+	{name: 'ean', min: 120, max: 120},
+	{name: 'titolo', min: 250},
+	{name: 'autore', min: 110},
+	{name: 'reset', min: 150, max: 240},
+
+	]	
 
 const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedInventarioValuesInitialState, {willFocus: 'ean'} ));
@@ -61,6 +67,8 @@ const initialState = () => {
     				  formCols1: calcFormCols(colParams1,8,tableWidth), 
     				  formCols2: calcFormCols(colParams2,8,tableWidth), 
     				  tableWidth: tableWidth,
+    				  formSearchCols: calcFormCols(colSearchParams,8,tableWidth), 
+    				 
     				  	}		
     				}
 	return initialStateHelper(eiis, extraState);
@@ -165,10 +173,11 @@ export default function inventario(state = initialState(), action) {
 	   	   		let tableWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 - 8;	
 	   			let formCols1 = calcFormCols(colParams1,8,tableWidth);
 	   			let formCols2 = calcFormCols(colParams2,8,tableWidth);
-	   		
+	   		    let formSearchCols = calcFormCols(colSearchParams,8,tableWidth);
+   		
 	   			let header = calcHeader(headerParams, tableWidth - 60);
 	   			let geometry = {...newState.geometry};
-	   		newState = {...newState, geometry: {...geometry, formCols1: formCols1, formCols2: formCols2, header: header, tableWidth: tableWidth}};
+	   		newState = {...newState, geometry: {...geometry, formCols1: formCols1, formCols2: formCols2, header: header, tableWidth: tableWidth, formSearchCols: formSearchCols}};
    		
 			}
         	

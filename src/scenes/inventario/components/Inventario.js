@@ -3,6 +3,8 @@
 import TableInventario from '../containers/TableInventario';
 import FormRigaInventario from '../containers/FormRigaInventario';
 import TotaliInventario from '../components/TotaliInventario';
+import FilterInventario from '../components/FilterInventario';
+
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
@@ -76,6 +78,8 @@ render()
       </Col>
  
        <Col span={20}>
+     <FilterInventario formSearchCols={this.props.formSearchCols} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+   
      <TableInventario  width={this.props.geometry.tableWidth} header={this.props.geometry.header} idInventario={this.props.match.params.id}/>
       
     	   </Col>
