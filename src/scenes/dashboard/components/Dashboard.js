@@ -35,7 +35,7 @@ componentDidUpdate() {
 render()
 {
 let width =  (this.props.measures['dashboardWidth']) ? this.props.measures['dashboardWidth']-50 : 100; //Default a caso...
-if (isNaN(width) || this.props.serieIncassi.length===0) return (<Spin spinning={(true)} />)
+if (isNaN(width) || (this.props.serieIncassi && this.props.serieIncassi.length===0)) return (<Spin spinning={(true)} />)
 else  
 	return (
 <Spin spinning={(this.props.waitingForData)} >		

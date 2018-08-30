@@ -10,7 +10,8 @@ render()
 	let years = {};
 	let elencoAnni = [];
 	let legend = [];
- 	for (let i=0; i <this.props.serieIncassiAnni.length; i++)
+	let leng = this.props.serieIncassiAnni ? this.props.serieIncassiAnni.length : 0;
+ 	for (let i=0; i <leng; i++)
 				{
 				let anno = this.props.serieIncassiAnni[i].anno;
 				years[anno] = { value: anno, type: 'square', id: anno, color: year2color(anno,0) };
