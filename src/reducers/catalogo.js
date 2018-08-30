@@ -7,7 +7,7 @@ import {SUBMIT_EDITED_CATALOG_ITEM,  RESET_EDITED_CATALOG_ITEM} from '../actions
 
 import {isValidEAN, generateEAN} from '../helpers/ean';
 import {isValidBookCode, isAmount} from '../helpers/validators';
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem, noErrors, eanState, updateEANErrors, nomeCategoriaById} from '../helpers/form';
 const FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_CATALOGO';
 const NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_CATALOGO';
 const FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_CATALOGO';
@@ -94,7 +94,8 @@ function transformAndValidateEditedCatalogItem(changedEditedCatalogItem, name, v
 		//Rivaluto gli errori e cosa mostrare
 	    updateEANErrors(ceci);
 		}
-   
+    if (name === 'categoria') ceci.values.nomeCategoria = nomeCategoriaById(ceci.values.categoria);
+ 
     
    errMgmt(ceci, 'titolo','emptyField','Campo obbligatorio', ceci.values.titolo.length===0, false);
    errMgmt(ceci, 'autore','emptyField','Campo obbligatorio', ceci.values.autore.length===0, false);
@@ -201,6 +202,8 @@ export default function catalog(state = initialState(), action) {
     	else  tbc3EditedCatalogItem.values.prezzoListino = '';
     	if (action.item.imgFirebaseUrl) tbc3EditedCatalogItem.values.imgFirebaseUrl = action.item.imgFirebaseUrl; 
     	else  tbc3EditedCatalogItem.values.imgFirebaseUrl = '';
+        if (action.item.categoria) tbc3EditedCatalogItem.values.categoria = action.item.categoria; 
+        if (action.item.nomeCategoria) tbc3EditedCatalogItem.values.nomeCategoria = action.item.nomeCategoria; 
     
     	tbc3EditedCatalogItem.values.iva = 'a0'; //Eventualmente la cambi in anagrafica...
     	

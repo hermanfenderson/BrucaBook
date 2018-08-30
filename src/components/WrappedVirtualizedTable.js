@@ -1,11 +1,13 @@
 import React from 'react';
 import {Table, Column } from 'react-virtualized'
 import { Icon } from 'antd';
+import classNames from 'classnames';
 
 // Si appoggia alla react-virtualized table. Capace di filtrare e rortare 
 // Gestisco internamente le funzioni di sort e di filter
 // gestisco lo stato della ricerca internamente...
-// Penso di dover avere uno stato locale specifico per gestire la sort
+//disableSort disabilita il sort
+//disableSortColumns disabilita il sort per una o più colonne
 class WrappedVirtualizedTable extends React.Component {
 constructor(props, context) {
     super(props, context);
@@ -50,6 +52,7 @@ render ()
 		       dataKey = {col.dataField}
 		       width = {col.width}
 		       key = {index}
+		       disableSort = {this.props.disableSortColumns && this.props.disableSortColumns[col.dataField]}
 		    />
 		);
 	let actionColumn = 
@@ -60,6 +63,8 @@ render ()
 		     width = {60}
 		     key={-1}
 		     cellRenderer={this.actionCellRenderer}
+		     disableSort = {true}
+		  
 		     />
 			);
 	let data = (this.props.filters) ? 
@@ -71,7 +76,9 @@ render ()
   			for (var prop in this.props.filters)
   					
   				{  let regex = new RegExp(this.props.filters[prop],'i');
-  					if ((record[prop]) && (!record[prop].match(regex))) good = false;
+  				
+  					if (this.props.filters[prop] && (record[prop]!==undefined) && (!record[prop].match(regex))) good = false;
+  					if (this.props.filters[prop] && ((record[prop]===undefined) || record[prop].length===0)) good = false;
   				}
   			return (good ? {...record} : null) 
   			}).filter((record => !!record)) :
@@ -102,6 +109,15 @@ render ()
 							row.sel = index;
 							return(row);
 							};
+	let rowClassName = ({index})	=> {
+							if (index===-1) return("ReactVirtualized__Table__headerRow");
+							let row = sortedData[index];
+							let selected = (this.props.highlightedRowKey===row.key);
+							let pinned = (this.props.pinField && row[this.props.pinField])
+							return (classNames({ReactVirtualized__Table__Row: true, ReactVirtualized__Table__Selected: selected, ReactVirtualized__Table__Pinned: pinned}))
+							};
+		
+	
 		
 	if (this.props.deleteRow || this.props.editRow || this.props.detailRow || this.props.pinRow || this.props.saveRow) 
   		{if (this.props.actionFirst)
@@ -109,7 +125,7 @@ render ()
 			else columns.push(actionColumn);
   		}
    return(
-        	 <Table sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} sort={sort} onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={data.length} rowGetter={rowGetter}>
+        	 <Table rowClassName={rowClassName} sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} sort={this.props.disableSort ? null: sort} onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={data.length} rowGetter={rowGetter}>
 			{columns}
         	 </Table>);
      }

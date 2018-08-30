@@ -23,7 +23,7 @@ html, body {
 
 
 
-
+.ReactVirtualized__Table__Selected,
 .ant-table-row-highlight{
  background-color: #e6f7ff;
  color: #108ee9;
@@ -41,6 +41,7 @@ html, body {
  color: #108ee9;
 }
 
+.ReactVirtualized__Table__Pinned,
 .ant-table-row-pinned{
  font-weight: bold;
 }

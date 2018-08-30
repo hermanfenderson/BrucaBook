@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
+import {objSelector} from '../../../helpers/form'
 
 
 class FormCatalogo extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
+
 onChange = (name, value) => {
 	   	this.props.changeEditedCatalogItem(name, value)};
 		
@@ -16,6 +18,9 @@ resetForm = () => {
 	this.props.resetEditedCatalogItem(this.props.scene);
 }
     
+componentDidMount = () => {
+	if (this.props.ean) this.props.changeEditedCatalogItem('ean', this.props.ean);
+}
 
   render() {
   	const formValues = this.props.editedCatalogItem.values;
@@ -30,12 +35,13 @@ resetForm = () => {
         <WrappedForm.Input field='prezzoListino'   label='Listino'/>
         <WrappedForm.SelectList field='iva' label='IVA' list={this.props.aliquoteIVA} defaultValue="a0"/>
          <WrappedForm.ImageUploader label='Copertina' field='imgFirebaseUrl' fullName={(this.props.editedCatalogItem.eanState ==='PARTIAL') ? this.props.saveGeneral ? 'images/books/'+this.props.editedCatalogItem.values.ean+'.jpg' : 'images/books/'+this.props.catena+'/'+this.props.libreria+'/'+this.props.editedCatalogItem.values.ean+'.jpg' : ''} />
-        
+         <WrappedForm.AutoCompleteList field='categoria' label='Categoria' list={objSelector(this.props.categorie,'nome')}  />
+      
         {this.props.isModal ? <WrappedForm.Group></WrappedForm.Group> :
-        <WrappedForm.Group formGroupLayout={{gutter:0}}>
+        <WrappedForm.Group formGroupLayout={{gutter:8}}>
          <WrappedForm.GeneralError  formColumnLayout={{span:14}}/>
-         <WrappedForm.Button itemStyle={{width: '90%'}} type={'button'} formColumnLayout={{span:5}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
-       	 <WrappedForm.Button itemStyle={{width: '90%'}} type="primary" htmlType="submit" formColumnLayout={{span:5}}>OK</WrappedForm.Button>
+         <WrappedForm.Button formColumnLayout={{width:60}} type={'button'} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       	 <WrappedForm.Button formColumnLayout={{width:60}} type="primary" htmlType="submit">OK</WrappedForm.Button>
         </WrappedForm.Group>
         }
        

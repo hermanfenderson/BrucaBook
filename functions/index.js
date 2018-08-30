@@ -81,10 +81,14 @@ exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/ca
 						for (var riga in dettagliEAN[date])
 							{
 								let path =  dettagliEAN[date][riga].tipo + '/' +   dettagliEAN[date][riga].id + '/' + riga;
+								change.after.ref.parent.parent.child(path).update(newCatalogEntry);
 								updates[path] = newCatalogEntry;
 							}
 					}
-				change.after.ref.parent.parent.update(updates).then(()=>{console.info("Aggiornate righe per modifiche catalogo locale per codice "+ean)});	
+			//	console.log(newCatalogEntry);
+			//	change.after.ref.parent.parent.child(path)
+			//	change.after.ref.parent.parent.update(updates).then(()=>{console.info("Aggiornate righe per modifiche catalogo locale per codice "+ean)});	
+			console.info("Aggiornate righe per modifiche catalogo locale per codice "+ean);
 				}));
 			}
 			);
@@ -212,6 +216,7 @@ exports.correggiMagazzino = functions.database.ref('{catena}/{negozio}/magazzino
             });	
 
 
+
 exports.correggiStoricoMagazzino = functions.database.ref('{catena}/{negozio}/storicoMagazzino/{data}/{ean}')
     .onWrite((change, context) => 
             {
@@ -281,17 +286,21 @@ return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapsh
 								})
 });
 });  
-
+/*
 exports.forzaAggiornaTitoli = functions.https.onRequest((req, res) => {
 
 cors(req, res, () => {
 let catena = req.query.catena;
 let libreria = req.query.libreria;
 let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
+
+
+
 let updates = {}; //Qui devo azzerare EAN e prima data in cui appare...	
-								
+console.log("sono qua");								
 return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
 								{
+								console.log("sono qui");
 								if (snapshot.val())
 									{
 									for (let ean in snapshot.val()) 
@@ -301,15 +310,100 @@ return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapsh
 										let firstDateRecord = record[Object.keys(record)[0]];
 										
 										let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
+										console.log(firstKeyRecord);
 										let titolo = firstKeyRecord.titolo;
+										let editore = firstKeyRecord.editore;
 										//Elenco dei trigger da scatenare	
 										updates['magazzino/'+ean+'/titolo'] = titolo;
+										updates['magazzino/'+ean+'/editore'] = editore;
+										
 										}		
 									}
-								})).then(()=>{
+								},
+								function(error) {
+  // The Promise was rejected.
+  console.log(error);
+}
+								
+								)).then(()=>{
 									refBookStoreRadix.update(updates).then(()=>{res.send('Passed.');console.info("avviato aggiornamento titoli")})
-								})
+								}, function(error) {
+  // The Promise was rejected.
+  console.log(error);
+})
 });
 });  
+*/
+
+exports.forzaAggiornaTitoli = functions.https.onRequest((req, res) => {
+
+cors(req, res, () => {
+let catena = req.query.catena;
+let libreria = req.query.libreria;
+let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
 
 
+
+let updates = {}; //Qui devo azzerare EAN e prima data in cui appare...	
+let promise = refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
+								{
+								if (snapshot.val())
+									{
+									let records = snapshot.val();
+									let eans = Object.keys(records);
+									//let values = Object.values(records);
+									eans.forEach(
+										(ean) => {
+										//console.log(records[ean]);
+										let record = records[ean];
+										let firstDateRecord = record[Object.keys(record)[0]];
+										let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
+										//console.log(firstKeyRecord);
+										updates['magazzino/'+ean+'/titolo'] = firstKeyRecord.titolo;
+										updates['magazzino/'+ean+'/editore'] = firstKeyRecord.editore ? firstKeyRecord.editore : 'nd';
+										
+										})
+								    console.log(updates);
+								    /*
+									for (let i=0; i< eans.length; i++)
+										{
+										console.log(eans[i]);
+										//console.log(eans[i]);
+										//console.log(snapshot.val()[eans[i]]);
+										//let firstDateRecord = record[Object.keys(record)[0]];
+										//let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
+										//console.log(firstKeyRecord);
+										}
+									/*	
+									for (let ean in snapshot.val()) 
+										{
+										console.log(ean);
+											
+										let record = snapshot.val()[ean];
+										//Scendo di due nella gerarchia
+										let firstDateRecord = record[Object.keys(record)[0]];
+										
+										let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
+										console.log(firstKeyRecord);
+										/*
+										let titolo = firstKeyRecord.titolo;
+										let editore = firstKeyRecord.editore;
+										//Elenco dei trigger da scatenare	
+										updates['magazzino/'+ean+'/titolo'] = titolo;
+										updates['magazzino/'+ean+'/editore'] = editore;
+										*/
+									
+									
+										
+									}
+								
+								
+								return(refBookStoreRadix.update(updates));
+								
+								
+								
+									
+								});
+return(promise.then(() => {res.send('Passed.');console.info("avviato aggiornamento titoli")}));
+});  
+});

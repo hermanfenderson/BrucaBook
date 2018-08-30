@@ -51,15 +51,30 @@ handleSelect = (value, option) => {
  let label = option.props.children;
  this.setState({value: label, options: []})
 }
+
+//Gestione del valore nullo
+onChange = (value) => {
+ if (value===undefined || value.length===0) this.props.onChange('');
+ /*
+ 
+ if (false) 
+	{this.props.onChange(value);
+	let label = option.props.children;
+	this.setState({value: label, options: []})
+	}
+	*/
+}
   
   render()
   {
    var {options, value} = this.state;
    
-   
+   console.log(this.state);
     return (<AutoComplete 
      onSelect={this.handleSelect}
      onSearch={this.handleSearch}
+     onChange={this.onChange}
+     allowClear={true}
      value={value}
   >
   {options}

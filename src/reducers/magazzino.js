@@ -8,23 +8,29 @@ import {calcFormCols, calcHeader} from '../helpers/geometry';
 
 const colSearchParams = [
 	{name: 'ean', min: 120, max: 120},
-	{name: 'titolo', min: 350},
-	{name: 'autore', min: 150},
+	{name: 'titolo', min: 300},
+	{name: 'autore', min: 100},
+	{name: 'nomeCategoria', min: 100},
+
 	{name: 'reset', min: 120, max: 120},
 
 	]
 const colSearchFixedParams = [
 	{name: 'ean', min: 120, max: 120},
-	{name: 'titolo', min: 350},
-	{name: 'autore', min: 150},
+	{name: 'titolo', min: 300},
+	{name: 'autore', min: 100},
+	{name: 'nomeCategoria', min: 100},
+
 	{name: 'reset', min: 60, max: 60},
 
 	]
  
 const headerParams = [
 	{name: 'key', label: 'EAN', min: 124, max: 124},
-	{name: 'titolo', label: 'Titolo', min: 358},
-	{name: 'autore', label: 'Autore', min: 158},
+	{name: 'titolo', label: 'Titolo', min: 308},
+	{name: 'autore', label: 'Autore', min: 108},
+	{name: 'nomeCategoria', label: 'Categoria', min: 100},
+
 	{name: 'pezzi', label: 'Pezzi', min: 60, max: 60},
 
 	] 

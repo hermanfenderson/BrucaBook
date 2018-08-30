@@ -12,7 +12,10 @@ const FilterMagazzino = (props) =>
         <WrappedForm.Input field='key' label='EAN' formColumnLayout={{width:cols.ean}}  />
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:cols.titolo}}  />
         <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{width:cols.autore}} />
+         <WrappedForm.Input field='nomeCategoria' label='Categoria'  formColumnLayout={{width:cols.autore}} />
+      
          <WrappedForm.Button type={'button'} formColumnLayout={{width:cols.reset}} onClick={props.resetFilter}>Reset</WrappedForm.Button>
+       <WrappedForm.Button type={'button'} formColumnLayout={{width:cols.reset}} onClick={props.saveMagazzino}>Salva</WrappedForm.Button>
      
      </WrappedForm.Group>
      </WrappedForm>

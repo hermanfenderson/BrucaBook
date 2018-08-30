@@ -16,6 +16,8 @@ import ElencoReseReducer, * as fromElencoRese from './elencoRese';
 
 import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
 import FornitoriReducer, * as fromFornitori from './fornitori';
+import CategorieReducer, * as fromCategorie from './categorie';
+
 import InventarioReducer, * as fromInventario from './inventario';
 import DettagliArticoloReducer, * as fromDettagliArticolo from './dettagliArticolo';
 import MagazzinoReducer, * as fromMagazzino from './magazzino';
@@ -41,6 +43,8 @@ const rootReducer = combineReducers({
   elencoInventari: ElencoInventariReducer,
   elencoRese: ElencoReseReducer,
   fornitori: FornitoriReducer,
+  categorie: CategorieReducer,
+  
   inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
@@ -179,6 +183,14 @@ export const getEditedFornitore = (state) => {return fromFornitori.getEditedItem
 export const getTableFornitoriHeight = (state) => {return fromFornitori.getTableHeight(state.fornitori)};
 export const getTableFornitoriScroll = (state)  => {return fromFornitori.getTableScroll(state.fornitori)};
 export const getListeningItemFornitori = (state) => {return fromFornitori.getListeningItem(state.fornitori)};
+
+//Scene Categorie
+export const getCategorie = (state) => {return fromCategorie.getItems(state.categorie)};
+export const getEditedCategoria = (state) => {return fromCategorie.getEditedItem(state.categorie)};
+export const getTableCategorieHeight = (state) => {return fromCategorie.getTableHeight(state.categorie)};
+export const getTableCategorieScroll = (state)  => {return fromCategorie.getTableScroll(state.categorie)};
+export const getListeningItemCategorie = (state) => {return fromCategorie.getListeningItem(state.categorie)};
+
 
 //Scene Cassa
 export const getRigheCassa = (state) => {return fromCassa.getItems(state.cassa)};

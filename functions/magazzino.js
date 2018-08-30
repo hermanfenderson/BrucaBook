@@ -12,9 +12,12 @@ return diff;
 const getValues = (value,oldValue) =>{
 let autore = value ? value.autore : oldValue.autore;
 let titolo = value ? value.titolo : oldValue.titolo;
+let editore = value ? value.editore : oldValue.editore;
+
 let imgFirebaseUrl = value ? value.imgFirebaseUrl : oldValue.imgFirebaseUrl;
 let prezzoListino = value ? value.prezzoListino : oldValue.prezzoListino;
-return {autore: autore, titolo: titolo, imgFirebaseUrl: imgFirebaseUrl, prezzoListino: prezzoListino};
+let nomeCategoria = value ? value.nomeCategoria : oldValue.nomeCategoria;
+return {autore: autore, titolo: titolo, editore: editore, imgFirebaseUrl: imgFirebaseUrl, prezzoListino: prezzoListino, nomeCategoria: nomeCategoria};
 } 
 
 const calcolaPezzi = (registro,data) =>
@@ -58,6 +61,11 @@ const aggiornaMagazzinoEANDiff = (admin, ean, refRadix, values, diff) =>
 		stockEAN.pezzi = pezzi + diff;
 		stockEAN.titolo = values.titolo;
 		stockEAN.autore = values.autore;
+	    stockEAN.editore = values.editore;
+	    
+	    if (values.categoria) stockEAN.categoria = values.categoria;
+	     stockEAN.nomeCategoria = (values.nomeCategoria) ? values.nomeCategoria : null;
+	    
 		stockEAN.imgFirebaseUrl = values.imgFirebaseUrl;
 		stockEAN.prezzoListino = values.prezzoListino;
 		stockEAN.createdAt = admin.database.ServerValue.TIMESTAMP;
@@ -71,8 +79,10 @@ return(refRadix.child('storicoMagazzino').transaction(function(storicoMagazzino)
 	    //Faccio loop su tutte le date...
 	    if (!storicoMagazzino) storicoMagazzino = {};
 	    let stockEAN = {};
-	     stockEAN.autore = values.titolo;
+	     stockEAN.titolo = values.titolo;
 	    stockEAN.autore = values.autore;
+	    stockEAN.editore = values.editore;
+	    
 		stockEAN.imgFirebaseUrl = values.imgFirebaseUrl;
 		stockEAN.prezzoListino = values.prezzoListino;
 		stockEAN.createdAt = admin.database.ServerValue.TIMESTAMP;
@@ -85,6 +95,10 @@ return(refRadix.child('storicoMagazzino').transaction(function(storicoMagazzino)
 	                if (!storicoMagazzino[data][ean]) storicoMagazzino[data][ean] = {};
 	  
 	    			storicoMagazzino[data][ean].autore = values.autore;
+	    			storicoMagazzino[data][ean].titolo = values.titolo;
+	    		//	storicoMagazzino[data][ean].editore = values.editore;
+	    			
+				
 					storicoMagazzino[data][ean].imgFirebaseUrl = values.imgFirebaseUrl;
 					storicoMagazzino[data][ean].prezzoListino = values.prezzoListino;
 					storicoMagazzino[data][ean].createdAt = admin.database.ServerValue.TIMESTAMP;

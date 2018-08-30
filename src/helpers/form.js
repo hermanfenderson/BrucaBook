@@ -266,6 +266,13 @@ export const nomeFornitoreById = (id) =>
 
 }
 
+export const nomeCategoriaById = (id) =>
+{
+	return(id ? store.getState().status.localMasterData.categorie[id].nome : ''); //Sporchissima ma me ne fotto!
+
+}
+
+
 
 //Metodi per inserire in un array sulla base di un indice... e rimuovere...
 //L'array ha un sotto-oggetto... valori per avere anche errors e riportarsi al caso noto della gestione delle righe...

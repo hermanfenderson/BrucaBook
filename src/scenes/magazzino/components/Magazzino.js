@@ -19,7 +19,7 @@ render()
  return (
  <div>	
       <Row>
-      <FilterMagazzino formSearchCols={inModal ? this.props.formSearchFixedCols : this.props.formSearchCols} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      <FilterMagazzino saveMagazzino={this.props.saveMagazzino} formSearchCols={inModal ? this.props.formSearchFixedCols : this.props.formSearchCols} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
       <Row>
       

@@ -123,7 +123,9 @@ render ()
   			for (var prop in this.props.filters)
   					
   				{  let regex = new RegExp(this.props.filters[prop],'i');
-  					if ((record[prop]) && (!record[prop].match(regex))) good = false;
+  					if (this.props.filters[prop] && (record[prop]!==undefined) && (!record[prop].match(regex))) good = false;
+	  				if (this.props.filters[prop] && ((record[prop]===undefined) || record[prop].length===0)) good = false;
+  					
   				}
   			return (good ? {...record} : null) 
   			}).filter((record => !!record)) :

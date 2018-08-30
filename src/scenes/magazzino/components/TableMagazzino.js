@@ -13,6 +13,11 @@ class TableMagazzino extends PureComponent
     detailRow = (row) => {
     	this.props.history.push('/dettagli/'+row.key);
     }
+    
+    editRow = (row) => {
+    	this.props.history.push('/catalogo/'+row.key);
+    }
+    
 	selectRow = (row) => {
 		this.props.selectedCallback(row.key);
 	}
@@ -33,11 +38,13 @@ componentWillReceiveProps()
     	console.log("Sto renderizzando");
     	let props = {...this.props};
         let detailRow = (props.noDetails) ? null : this.detailRow;
+        let editRow = (props.noDetails) ? null : this.editRow;
+        
         let selectRow = (props.selectedCallback) ? this.selectRow : (props.noDetails) ? null : this.detailRow;
         
     	  return(
     	  	<Spin spinning={(this.props.data.length===0)}>
-			<WrappedTable {...props} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
+			<WrappedTable {...props}  disableSortColumns={{ean: true}} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
 			</Spin>
 			)}
     }		

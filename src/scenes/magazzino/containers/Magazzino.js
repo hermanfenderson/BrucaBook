@@ -1,6 +1,6 @@
 import MagazzinoComponent from '../components/Magazzino'
 import {setHeaderInfo} from  '../../../actions'
-import {magazzinoFA} from '../../../actions/magazzino'
+import {magazzinoFA, saveMagazzino} from '../../../actions/magazzino'
 import {getFiltersMagazzino, getGeometry} from  '../../../reducers'
 
 
@@ -14,7 +14,7 @@ const resetFilter = magazzinoFA.resetFilter;
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setHeaderInfo, setFilter, resetFilter}, dispatch);
+  return bindActionCreators({ setHeaderInfo, setFilter, resetFilter, saveMagazzino}, dispatch);
 }
 
 const mapStateToProps = (state) => {

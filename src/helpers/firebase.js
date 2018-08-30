@@ -75,6 +75,8 @@ export function urlFactory(getState, destination, params, itemId)
 		
 				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
 			     case "fornitori": url = prefissoNegozio(getState)+'anagrafiche/fornitori'; break;
+			      case "categorie": url = prefissoNegozio(getState)+'anagrafiche/categorie'; break;
+			    
 			      case "report": url = prefissoNegozio(getState)+'report'; break;
 			    case "dateStoricoMagazzino": url = prefissoNegozio(getState)+'dateStoricoMagazzino'; break;
 			    case "storicoMagazzino": url = prefissoNegozio(getState)+'storicoMagazzino/'+params[0]; break;
@@ -179,8 +181,9 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 
 	//Creo un array a partire dall'oggetto
   let values = payload.val();
-   let dataArrayNewTmp =  Object.values(values);
-   let tmpArray = Object.keys(values);
+  console.log(values);
+   let dataArrayNewTmp =  values ? Object.values(values) : [];
+   let tmpArray = values? Object.keys(values) : [];
    let dataArrayNew = dataArrayNewTmp.map((value,index) => 
 		{
    			let valueOut = {};
