@@ -17,6 +17,8 @@ import ElencoReseReducer, * as fromElencoRese from './elencoRese';
 import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
 import FornitoriReducer, * as fromFornitori from './fornitori';
 import CategorieReducer, * as fromCategorie from './categorie';
+import ClientiReducer, * as fromClienti from './clienti';
+
 
 import InventarioReducer, * as fromInventario from './inventario';
 import DettagliArticoloReducer, * as fromDettagliArticolo from './dettagliArticolo';
@@ -44,6 +46,7 @@ const rootReducer = combineReducers({
   elencoRese: ElencoReseReducer,
   fornitori: FornitoriReducer,
   categorie: CategorieReducer,
+  clienti: ClientiReducer,
   
   inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
@@ -184,6 +187,14 @@ export const getTableFornitoriHeight = (state) => {return fromFornitori.getTable
 export const getTableFornitoriScroll = (state)  => {return fromFornitori.getTableScroll(state.fornitori)};
 export const getListeningItemFornitori = (state) => {return fromFornitori.getListeningItem(state.fornitori)};
 
+//Scene Clienti
+export const getClienti = (state) => {return fromClienti.getItems(state.clienti)};
+export const getEditedCliente = (state) => {return fromClienti.getEditedItem(state.clienti)};
+export const getTableClientiHeight = (state) => {return fromClienti.getTableHeight(state.clienti)};
+export const getTableClientiScroll = (state)  => {return fromClienti.getTableScroll(state.clienti)};
+export const getListeningItemClienti = (state) => {return fromClienti.getListeningItem(state.clienti)};
+export const getFiltersClienti = (state) => {return fromClienti.getFiltersClienti(state.clienti)};
+
 //Scene Categorie
 export const getCategorie = (state) => {return fromCategorie.getItems(state.categorie)};
 export const getEditedCategoria = (state) => {return fromCategorie.getEditedItem(state.categorie)};
@@ -304,6 +315,9 @@ export const s2s = (scene) => {
 				s.stato = 'resa';
 				s.origin = fromResa;
 			break;
+			case 'CLIENTI':
+				s.stato = 'clienti';
+				s.origin = fromClienti;
 			default:
 		
 			

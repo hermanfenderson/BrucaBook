@@ -21,6 +21,7 @@ class Sider extends React.Component {
 			case 'catalogo': link='/catalogo'; break;
 				case 'fornitori': link='/fornitori'; break;
 					case 'categorie': link='/categorie'; break;
+				case 'clienti': link='/clienti'; break;
 		
 		    case 'dashboard': link='/dashboard'; break;
 		    case 'magazzino': link='/magazzino'; break;
@@ -67,6 +68,10 @@ class Sider extends React.Component {
             <Menu.Item key="catalogo">
               <Icon type="book" />
               <span>Catalogo</span>
+            </Menu.Item>
+             <Menu.Item key="clienti">
+              <Icon type="contacts" />
+              <span>Clienti</span>
             </Menu.Item>
             <Menu.Item key="fornitori">
               <Icon type="coffee" />

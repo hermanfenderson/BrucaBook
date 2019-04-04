@@ -22,6 +22,8 @@ import ElencoInventari from '../scenes/elencoInventari';
 import DettagliArticolo from '../scenes/dettagliArticolo';
 import ReadmeViewer from '../scenes/readmeViewer';
 import Fornitori from '../scenes/fornitori';
+import Clienti from '../scenes/clienti';
+
 import Categorie from '../scenes/categorie';
 
 import Dashboard from '../scenes/dashboard';
@@ -69,6 +71,8 @@ const Main= (props) =>
 		        							<RequireAuthRoute exact path='/scontrino/:anno/:mese/:cassa' component={Scontrino} authenticated={authenticated}/>
 		        					    <Route path="/userMgmt" render={(props) => <UserMgmt {...props}/>} />
     					      		     <RequireAuthRoute path="/fornitori" component={Fornitori} authenticated={authenticated}/>
+    					      		      <RequireAuthRoute path="/clienti" component={Clienti} authenticated={authenticated}/>
+    					      			
     					      			  <RequireAuthRoute path="/categorie" component={Categorie} authenticated={authenticated}/>
     					      			  	<RequireAuthRoute path="/catalogo/:ean" component={GestioneItemCatalog} authenticated={authenticated}/>
 		        					

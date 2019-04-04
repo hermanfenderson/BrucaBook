@@ -76,7 +76,14 @@ export function urlFactory(getState, destination, params, itemId)
 				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
 			     case "fornitori": url = prefissoNegozio(getState)+'anagrafiche/fornitori'; break;
 			      case "categorie": url = prefissoNegozio(getState)+'anagrafiche/categorie'; break;
-			    
+			      case "clienti": url = prefissoNegozio(getState)+'anagrafiche/clienti'; break;
+			      //Gli ordini sono per cliente e basta
+			     	case "righeElencoOrdini": url = prefissoNegozio(getState)+'elencoOrdini/'+params[0]; break;
+			     	case "righeOrdini": url = prefissoNegozio(getState)+'ordini/'+params[0]+'/'+params[1]; break;
+			     	//Ordinate per EAN...me le tiro tutte dentro
+			     	case "righeOrdiniAperti": url = prefissoNegozio(getState)+'ordiniAperti'; break;
+			     	
+			
 			      case "report": url = prefissoNegozio(getState)+'report'; break;
 			    case "dateStoricoMagazzino": url = prefissoNegozio(getState)+'dateStoricoMagazzino'; break;
 			    case "storicoMagazzino": url = prefissoNegozio(getState)+'storicoMagazzino/'+params[0]; break;
