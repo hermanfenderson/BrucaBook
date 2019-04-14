@@ -1,5 +1,5 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
-import {USER_INFO_CHANGED, MASTER_DATA_LOADED, LOCAL_MASTER_DATA_LOADED } from '../actions';
+import {USER_INFO_CHANGED, MASTER_DATA_LOADED, LOCAL_MASTER_DATA_LOADED, ORDINI_APERTI_ADDED, ORDINI_APERTI_CHANGED, ORDINI_APERTI_DELETED } from '../actions';
 import {USER_CONFIGURATION_CHANGED} from '../actions/userMgmt'
 import moment from 'moment';
 
@@ -41,7 +41,7 @@ export default function status(state = initialState, action) {
      
      case LOCAL_MASTER_DATA_LOADED:
      	return {...state, localMasterData: action.payload}
-     
+    //TO DO: scrivere reducers che trasformano gli ordini aperti ordinati per cliente in ordini aperti ordinati per EAN
      
     default:
       return state;

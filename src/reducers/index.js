@@ -13,7 +13,7 @@ import DashboardReducer, * as fromDashboard from './dashboard';
 import ElencoBolleReducer, * as fromElencoBolle from './elencoBolle';
 import ElencoCasseReducer, * as fromElencoCasse from './elencoCasse';
 import ElencoReseReducer, * as fromElencoRese from './elencoRese';
-
+import ElencoOrdiniReducer, * as fromElencoOrdini from './elencoOrdini';
 import ElencoInventariReducer, * as fromElencoInventari from './elencoInventari';
 import FornitoriReducer, * as fromFornitori from './fornitori';
 import CategorieReducer, * as fromCategorie from './categorie';
@@ -43,6 +43,7 @@ const rootReducer = combineReducers({
   elencoBolle: ElencoBolleReducer,
   elencoCasse: ElencoCasseReducer,
   elencoInventari: ElencoInventariReducer,
+  elencoOrdini: ElencoOrdiniReducer,
   elencoRese: ElencoReseReducer,
   fornitori: FornitoriReducer,
   categorie: CategorieReducer,
@@ -105,6 +106,15 @@ export const getTableElencoBolleScroll = (state)  => {return fromElencoBolle.get
 export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
 export const getPeriod = (state) => {return fromElencoBolle.getPeriod(state.elencoBolle)};
 export const getListeningItem = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
+
+
+//Scene ElencoOrdini
+export const getElencoOrdini = (state) => {return fromElencoOrdini.getItems(state.elencoBolle)};
+export const getEditedOrdine = (state) => {return fromElencoOrdini.getEditedItem(state.elencoBolle)};
+export const getTableElencoOrdiniHeight = (state) => {return fromElencoOrdini.getTableHeight(state.elencoBolle)};
+export const getTableElencoOrdiniScroll = (state)  => {return fromElencoBolle.getTableScroll(state.elencoBolle)};
+export const getReadOnlyFormOrdine = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
+export const getListeningItemElencoOrdini = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
 
 //Scene ElencoRese
 export const getElencoRese = (state) => {return fromElencoRese.getItems(state.elencoRese)};
@@ -318,6 +328,7 @@ export const s2s = (scene) => {
 			case 'CLIENTI':
 				s.stato = 'clienti';
 				s.origin = fromClienti;
+			break;
 			default:
 		
 			

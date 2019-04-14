@@ -22,6 +22,9 @@ export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
 export const MASTER_DATA_LOADED = 'MASTER_DATA_LOADED';
 export const LOCAL_MASTER_DATA_LOADED = 'LOCAL_MASTER_DATA_LOADED';
+export const ORDINI_APERTI_ADDED = 'ORDINI_APERTI_ADDED';
+export const ORDINI_APERTI_CHANGED = 'ORDINI_APERTI_CHANGED';
+export const ORDINI_APERTI_DELETED = 'ORDINI_APERTI_DELETED';
 
 
 
@@ -132,6 +135,22 @@ export function caricaAnagrafiche() {
 	 		
 	 		dispatch ({type: LOCAL_MASTER_DATA_LOADED, payload: snapshot.val()})	
 	 		})
+	 		
+	 		Firebase.database().ref(urlFactory(getState, 'ordiniAperti')).on('child_added', snapshot => {
+	 		
+	 		dispatch ({type: ORDINI_APERTI_ADDED, payload: snapshot})	
+	 		})
+	 		
+	 		Firebase.database().ref(urlFactory(getState, 'ordiniAperti')).on('child_changed', snapshot => {
+	 		
+	 		dispatch ({type: ORDINI_APERTI_CHANGED, payload: snapshot})	
+	 		})
+	 		
+	 		Firebase.database().ref(urlFactory(getState, 'ordiniAperti')).on('child_removed', snapshot => {
+	 		
+	 		dispatch ({type: ORDINI_APERTI_DELETED, payload: snapshot})	
+	 		})
+	 		
 	 		
 	  }	
 }

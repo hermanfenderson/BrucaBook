@@ -74,9 +74,15 @@ export function urlFactory(getState, destination, params, itemId)
 				case "totaliInventario": url = prefissoNegozio(getState)+'elencoInventari/' +params[0] +'/totali'; break;
 		
 				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
+				 
+				 //La tabella persistita.... è ordinata per idCliente. In memoria avrò gli ordini aperti ordinati per EAN
+				 case "ordiniAperti": url = prefissoNegozio(getState)+'ordiniAperti'; break;
+			    
 			     case "fornitori": url = prefissoNegozio(getState)+'anagrafiche/fornitori'; break;
 			      case "categorie": url = prefissoNegozio(getState)+'anagrafiche/categorie'; break;
 			      case "clienti": url = prefissoNegozio(getState)+'anagrafiche/clienti'; break;
+			      case "cliente": url = prefissoNegozio(getState)+'anagrafiche/clienti/'+params[0]; break;
+			      
 			      //Gli ordini sono per cliente e basta
 			     	case "righeElencoOrdini": url = prefissoNegozio(getState)+'elencoOrdini/'+params[0]; break;
 			     	case "righeOrdini": url = prefissoNegozio(getState)+'ordini/'+params[0]+'/'+params[1]; break;
