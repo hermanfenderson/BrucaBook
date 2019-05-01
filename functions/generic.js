@@ -17,6 +17,8 @@ const purge = (snap, context, part) =>
 				return snap.ref.parent.parent.parent.parent.parent.child(part).child(anno).child(mese).child(prefixId).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
      		 case 'inventari':
 				return snap.ref.parent.parent.child(part).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
+			case 'ordini':
+				return snap.ref.parent.parent.parent.child(part).child(context.params.cliente).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
          	 default: 
          		return false;
 				}
@@ -172,6 +174,10 @@ const calcolaTotali = (change, context, part) =>
 		    				totali = {'pezzi' : totalePezzi, 'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem};
 		    				ref = change.after.ref.parent.parent.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).child(key);
 		    			break;
+		    			case 'elencoOrdini': 
+		    				totali = {'pezzi' : totalePezzi,  'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem}; 
+		    			    ref = change.after.ref.parent.parent.parent.parent.child(part).child(context.params.cliente).child(key);
+		
 		    			default:
 		    			break;
 		    			}

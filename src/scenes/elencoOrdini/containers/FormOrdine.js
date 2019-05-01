@@ -13,7 +13,7 @@ const resetEditedOrdine = ordineFA.resetEditedItem;
 const mapStateToProps = (state) => { 
 	return ({editedOrdine: getEditedOrdine(state), 
 	readOnlyForm: getReadOnlyFormOrdine(state), 
-	statoOrdine: getAnagrafiche(state).StatoOrdine, 
+	statoOrdine: getAnagrafiche(state).StatiOrdine, 
 	})
 }
  

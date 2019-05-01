@@ -7,16 +7,16 @@ import {Redirect} from 'react-router-dom';
 
 
 
-import { Row, Col} from 'antd'
+import { Row, Col, Spin} from 'antd'
 
 
 class ElencoOrdini extends Component {
 componentDidMount() {
-    	if (ReactDOM.findDOMNode(this.refs.formOrdine)) this.props.storeMeasure('formOrdineHeight', ReactDOM.findDOMNode(this.refs.formOrdine).clientHeight);
+	  	if (ReactDOM.findDOMNode(this.refs.formOrdine)) this.props.storeMeasure('formOrdineHeight', ReactDOM.findDOMNode(this.refs.formOrdine).clientHeight);
     	let cliente =  this.props.clienti[this.props.match.params.cliente];
     	if (cliente !== null) 
     		{
-    			this.props.setHeaderInfo('Ordini cliente - '+ this.props.clienti[cliente].nome + ' ' + this.props.clienti[cliente].cognome );
+    			this.props.setHeaderInfo('Ordini cliente - '+ cliente.nome + ' ' + cliente.cognome );
     		}	
  }
  

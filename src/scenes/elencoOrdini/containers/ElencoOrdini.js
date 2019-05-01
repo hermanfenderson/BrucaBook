@@ -15,7 +15,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ resetElencoOrdini, setSelectedOrdini, storeMeasure, setHeaderInfo}, dispatch);
+  return bindActionCreators({ resetElencoOrdini, setSelectedOrdine, storeMeasure, setHeaderInfo}, dispatch);
 }
 
 const ElencoOrdini = connect(mapStateToProps, mapDispatchToProps)(ElencoOrdiniComponent)

@@ -18,7 +18,7 @@ moment.locale("it");
 const editedOrdineValuesInitialState = 
 	  {			riferimento: '',
 				dataOrdine: moment(),
-				dataChiusura: moment(),
+				dataChiusura: null,
 				stato: 'A'
 	};
 
@@ -44,7 +44,7 @@ const colParams2 = [
 const headerParams = [{name: 'riferimento', label: 'Rif.', min: 80, max: 150},
 			    {name: 'dataOrdine', shortLabel: 'Data Ord.', label: 'Data Ordine', min: 85, max: 150, shortBreak: 120},
 			    {name: 'dataChiusura', shortLabel: 'Data Chiu.', label: 'Data Chiusura', min: 85, max: 150, shortBreak: 120},
-			    {name: 'stato', shortLabel: 'Data Rend.', label: 'Stato', min: 85, max: 150, shortBreak: 120},
+			    {name: 'stato', shortLabel: 'Stato', label: 'Stato', min: 85, max: 150, shortBreak: 120},
 			    ];
 	
 const initialState = () => {

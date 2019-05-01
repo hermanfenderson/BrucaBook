@@ -3,7 +3,6 @@ import React from 'react';
 import {Menu, Icon} from 'antd';
 import { withRouter } from 'react-router-dom';
 import moment from 'moment';
-
 const SubMenu = Menu.SubMenu;
 
 class Sider extends React.Component {
@@ -40,7 +39,7 @@ class Sider extends React.Component {
     render() {
     	return (
     	 <div>
-    	 <div onClick= {() => {this.props.setMenuSelectedKeys([]); this.props.history.push('/')}} className="logo"/>
+    	 <div onClick= {() => {this.props.setMenuSelectedKeys([]); this.props.history.push('/'); }} className="logo"/>
         
     	<Menu onClick={this.onClick} theme="dark" mode="inline" selectedKeys={this.props.menuSelectedKeys}>
             <Menu.Item key="acquisti">

@@ -85,7 +85,7 @@ export function urlFactory(getState, destination, params, itemId)
 			      
 			      //Gli ordini sono per cliente e basta
 			     	case "righeElencoOrdini": url = prefissoNegozio(getState)+'elencoOrdini/'+params[0]; break;
-			     	case "righeOrdini": url = prefissoNegozio(getState)+'ordini/'+params[0]+'/'+params[1]; break;
+			     	case "righeOrdine": url = prefissoNegozio(getState)+'ordini/'+params[0]+'/'+params[1]; break;
 			     	//Ordinate per EAN...me le tiro tutte dentro
 			     	case "righeOrdiniAperti": url = prefissoNegozio(getState)+'ordiniAperti'; break;
 			     	

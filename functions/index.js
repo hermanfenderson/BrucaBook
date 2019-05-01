@@ -105,6 +105,9 @@ exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{a
      
 exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}/{idItem}')
     .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoRese'))});
+
+exports.calcolaTotaleOrdine = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
+    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoOrdini'))});
        
 //Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...
 
@@ -122,6 +125,9 @@ exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{an
   
 exports.purgeInventario =  functions.database.ref('{catena}/{negozio}/elencoInventari/{id}')
 	.onDelete((snap, context) => {return(purge(snap,context,'inventari'))}); 
+
+exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
+    .onDelete((snap, context) => {return(purge(snap,context,'ordini'))});
 
 
 //Salvo la nuova data nelle righe già presenti...
@@ -334,6 +340,28 @@ return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapsh
 });
 });  
 */
+
+
+exports.aggiornaOrdiniAperti = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
+    .onWrite((change, context) => 
+            {
+            let cliente = context.params.cliente;
+            let id = context.params.id;
+            let idItem = context.params.idItem;
+            //Caso inserimento o aggiornamento... se ho lo stato after non in 'Z' ho un ordine aperto...e semplicemente lo aggiorno...
+            if (change.after.val())
+            {
+            	if (change.after.val().stato !== 'Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(cliente).child(id).child(idItem).update(change.after.val()).then(console.info("Aggiornata riga ordine aperto "+idItem)));
+            	// E' in stato Z... e non era in stato Z prima...
+            	else if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(cliente).child(id).child(idItem).remove().then(console.info("Chiusa riga ordine aperto "+idItem)));
+            }
+            else //Se ho cancellato una riga che era in stato aperto... cancello anche la riga ordine aperto corrispondente...
+            {
+                if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(cliente).child(id).child(idItem).remove().then(console.info("Cancellata riga ordine aperto "+idItem)));
+            }
+            });	
+
+
 
 exports.forzaAggiornaTitoli = functions.https.onRequest((req, res) => {
 

@@ -4,81 +4,53 @@ import {withRouter} from 'react-router-dom'
 
 import {isEqual} from '../../../helpers/form';
 import {Modal} from 'antd';
-import {period2month} from '../../../helpers/form'
 
 
 
 
 
 
-class TableElencoBolle extends Component 
+class TableElencoOrdini extends Component 
     {
-    periodMount = () => {
-  if (this.props.period)
-    {
-     	var currentListened = this.props.listeningPeriod;
-    		//Ascolto modifiche sulle bolle... devo passare anno (voglio sentire un anno intero per ora. Ma sono pronto ad ascoltare di nuovo se non ci sono riuscito prima...
-    	if (!currentListened) 
-    		{   	
-    			this.props.listenBolla(this.props.period);
-    		}
-    	else 
-    		{
-    			if (!isEqual(currentListened,this.props.period))
-    				{
-    				    this.props.offListenBolla(currentListened);
-    				    this.props.resetTable();
-    					this.props.listenBolla(this.props.period);
- 
-    				}
-    		}
-    }		
-    }
+    	
     
     componentDidMount = () => {
-       let oldProps = null;
-       this.periodMount(oldProps);
-    
+      if (this.props.match.params.cliente) this.props.listenOrdine(this.props.match.params.cliente);
 	}
 	
-	componentDidUpdate = (oldProps) => {
-	   this.periodMount(oldProps);
-	}
 	
 	componentWillUnmount = () => {
-		if (this.props.period) this.props.offListenBolla(this.props.period);
+		if (this.props.match.params.cliente) this.props.offListenOrdine(this.props.match.params.cliente);
     	this.props.resetTable();
     					
 	}
 	
 	
 	deleteRow = (row) => {
-	   const deleteBolla = () => {this.props.deleteBolla(this.props.period, row.key, row);};
-	   if(row.totali && row.totali.pezzi + row.totali.gratis > 0)	Modal.confirm({
-    		title: 'La bolla non è vuota. Vuoi elminarla?',
-    		content: 'La bolla non è vuota: se premi OK cancelli anche tutti i libri che contiene.',
+	   const deleteOrdine = () => {this.props.deleteOrdine(this.props.match.params.cliente, row.key, row);};
+	   Modal.confirm({
+    		title: 'Conferma cancellazione ordine?',
+    		content: 'Se premi OK cancelli anche tutte le righe.',
     		okText: 'Si',
     		okType: 'danger',
     		cancelText: 'No',
-    		onOk() {deleteBolla()
+    		onOk() {deleteOrdine()
     			
     		},
     		onCancel() {
     		},});
     		
 		//Gestisco la situazione che non sia vuota la bolla...
-		else deleteBolla();
-	}
+		}
 	
 	editRow = (row) => {
-		row.oldFornitore = row.fornitore; //Per gestire un eventuale cambiamento...
-		this.props.setSelectedBolla(row);
+		this.props.setSelectedOrdine(row);
 	}
 	
 	selectRow = (row) => {
-		this.props.setSelectedBolla(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
+		this.props.setSelectedOrdine(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
-		this.props.history.push('/bolla/' + period2month(this.props.period) + '/' + row.key);
+		this.props.history.push('/ordine/' + this.props.match.params.cliente + '/' + row.key);
 	}
 
     
@@ -86,12 +58,12 @@ class TableElencoBolle extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
-    	delete props['deleteBolla']; //Non la passo liscia...
-    	delete props['setSelectedBolla']; //Idem
+    	delete props['deleteOrdine']; //Non la passo liscia...
+    	delete props['setSelectedOrdine']; //Idem
     	  return(
 			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
 			)}
     }		
 	
-export default withRouter(TableElencoBolle);
+export default withRouter(TableElencoOrdini);
 

@@ -3,6 +3,7 @@ import AppReducer, * as fromApp from './app';
 import AuthReducer, * as fromAuth from './auth';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
+import OrdineReducer, * as fromOrdine from './ordine';
 import CassaReducer, * as fromCassa from './cassa';
 import ResaReducer, * as fromResa from './resa';
 import ResaLiberaReducer, * as fromResaLibera from './resaLibera';
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
   app: AppReducer,
   auth: AuthReducer,
   bolla: BollaReducer,
+  ordine: OrdineReducer,
   cassa: CassaReducer,
   resa: ResaReducer,
   resaLibera: ResaLiberaReducer,
@@ -79,7 +81,20 @@ export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuff
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
 export const getFiltersBolla = (state) => {return fromBolla.getFiltersBolla(state.bolla)};
 
-//export const getTableScrollByKeyBolla = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
+//Scene Ordine
+export const getRigheOrdine = (state) => {return fromOrdine.getItems(state.ordine)};
+export const getEditedRigaOrdine = (state) => {return fromOrdine.getEditedItem(state.ordine)};
+export const getTestataOrdine = (state) => {return fromOrdine.getTestataOrdine(state.ordine)};
+export const getShowCatalogModalOrdine = (state) => {return fromOrdine.getShowCatalogModal(state.ordine)};
+export const getTableHeightOrdine = (state) => {return fromOrdine.getTableHeight(state.ordine)};
+export const getTableScrollOrdine = (state)  => {return fromOrdine.getTableScroll(state.ordine)};
+export const getListeningTestataOrdine = (state) => {return fromOrdine.getListeningTestataOrdine(state.ordine)};
+export const getListeningItemOrdine = (state) => {return fromOrdine.getListeningItemOrdine(state.ordine)};
+export const isStaleTotaliOrdine = (state) => {return fromOrdine.isStaleTotali(state.ordine)};
+export const getTotaliOrdine = (state) => {return fromOrdine.getTotali(state.ordine)};
+export const getFiltersOrdine = (state) => {return fromOrdine.getFiltersOrdine(state.ordine)};
+
+//export const getTableScrollByKeyordine = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 
 //Scena Dashboard
 export const isWaitingForData = (state) => {return fromDashboard.isWaitingForData(state.dashboard)};
@@ -109,12 +124,12 @@ export const getListeningItem = (state) => {return fromElencoBolle.getListeningI
 
 
 //Scene ElencoOrdini
-export const getElencoOrdini = (state) => {return fromElencoOrdini.getItems(state.elencoBolle)};
-export const getEditedOrdine = (state) => {return fromElencoOrdini.getEditedItem(state.elencoBolle)};
-export const getTableElencoOrdiniHeight = (state) => {return fromElencoOrdini.getTableHeight(state.elencoBolle)};
-export const getTableElencoOrdiniScroll = (state)  => {return fromElencoBolle.getTableScroll(state.elencoBolle)};
-export const getReadOnlyFormOrdine = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
-export const getListeningItemElencoOrdini = (state) => {return fromElencoBolle.getListeningItem(state.elencoBolle)};
+export const getElencoOrdini = (state) => {return fromElencoOrdini.getItems(state.elencoOrdini)};
+export const getEditedOrdine = (state) => {return fromElencoOrdini.getEditedItem(state.elencoOrdini)};
+export const getTableElencoOrdiniHeight = (state) => {return fromElencoOrdini.getTableHeight(state.elencoOrdini)};
+export const getTableElencoOrdiniScroll = (state)  => {return fromElencoOrdini.getTableScroll(state.elencoOrdini)};
+export const getReadOnlyFormOrdine = (state)  => {return fromElencoOrdini.getReadOnlyForm(state.elencoOrdini)};
+export const getListeningItemElencoOrdini = (state) => {return fromElencoOrdini.getListeningItem(state.elencoOrdini)};
 
 //Scene ElencoRese
 export const getElencoRese = (state) => {return fromElencoRese.getItems(state.elencoRese)};
@@ -300,14 +315,23 @@ export const s2s = (scene) => {
 				s.stato = 'elencoBolle';
 				s.origin = fromBolla;
 			break;
-				case 'ELENCOCASSE':
+			case 'ELENCOORDINI':
+				s.stato = 'elencoOrdini';
+				s.origin = fromElencoOrdini;
+			break;
+		
+			case 'ELENCOCASSE':
 				s.stato = 'elencoCasse';
-				s.origin = fromBolla;
+				s.origin = fromElencoCasse;
 			break;
 		
 			case 'BOLLA':
 				s.stato = 'bolla';
 				s.origin = fromBolla;
+			break;
+			case 'ORDINE':
+				s.stato = 'ordine';
+				s.origin = fromOrdine;
 			break;
 			case 'MAGAZZINO':
 				s.stato = 'magazzino';

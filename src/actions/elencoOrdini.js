@@ -11,11 +11,7 @@ export const SCENE = 'ELENCOORDINI';
 //Prepara riga con zeri ai fini della persistenza... resta così. Gestisco le date...
 function preparaItem(riga)
    {
-   	riga['dataDocumento'] = setDay(riga['dataDocumento']);
-   	riga['dataCarico'] = setDay(riga['dataCarico']);
-   	if (riga['dataRendiconto']) riga['dataRendiconto'] = setDay(riga['dataRendiconto']);
-   	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
-   	if ('totali' in riga) {delete riga.totali}
+   	riga['dataOrdine'] = setDay(riga['dataOrdine']);
    	
     
      }
@@ -41,7 +37,7 @@ return function(dispatch, getState) {
 							          	const riga = (snapshot.val()) ? {...snapshot.val(), 'key': itemId} : null//Per discernere la cancellazione...
 							          	dispatch(
 							          			{
-							          			type: typeClientehanged,
+							          			type: typeClienteChanged,
 							          			payload: riga
 							          			}
 							          			)

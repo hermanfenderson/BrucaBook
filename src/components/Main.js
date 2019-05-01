@@ -14,6 +14,7 @@ import Scontrino from '../scenes/scontrino';
 import ElencoRese from '../scenes/elencoRese';
 
 import GestioneBolla from '../scenes/bolla';
+import Ordine from '../scenes/ordine';
 import Resa from '../scenes/resa';
 import ResaLibera from '../scenes/resaLibera';
 
@@ -29,6 +30,7 @@ import Categorie from '../scenes/categorie';
 import Dashboard from '../scenes/dashboard';
 import Magazzino from '../scenes/magazzino';
 import Help from '../scenes/help';
+import ElencoOrdini from '../scenes/elencoOrdini';
 
 
 //import GestioneScontrino from '../containers/GestioneScontrino';
@@ -81,7 +83,9 @@ const Main= (props) =>
 		        							<RequireAuthRoute path="/dashboard" component={Dashboard} authenticated={authenticated} />
 		        								<RequireAuthRoute path="/magazzino" component={Magazzino} authenticated={authenticated}/>
     					      		
-    					      		
+    					      		    	<RequireAuthRoute exact path='/ordine/:cliente' component={ElencoOrdini} authenticated={authenticated}/>
+    									<RequireAuthRoute exact path='/ordine/:cliente/:id' component={Ordine} authenticated={authenticated}/>
+    								
     					      			<RequireAuthRoute exact path='/version' component={ReadmeViewer} authenticated={authenticated}/>
 		        					 
     					      			<Route exact path='/help' component={Help}/>
