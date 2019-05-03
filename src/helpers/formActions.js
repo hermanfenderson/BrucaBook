@@ -599,7 +599,6 @@ this.aggiornaItem = (params,itemId, valori) => {
       return function(dispatch,getState) {
 
     const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
-    
     ref.update(nuovoItem);
     dispatch(
    	{

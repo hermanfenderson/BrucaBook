@@ -134,7 +134,7 @@ const update = (change, context, part) =>
 
 const calcolaTotali = (change, context, part) =>
 {
-             console.info("sono qui");
+           
              var key = context.params.id;	
              if (part==='elencoCasse' && change.after.val() && change.after.val().lastActionKey) key = change.after.val().lastActionKey;
              const cassa = context.params.prefixId;

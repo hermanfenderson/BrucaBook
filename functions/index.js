@@ -108,6 +108,29 @@ exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{ann
 
 exports.calcolaTotaleOrdine = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
     .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoOrdini'))});
+
+//Chiusura ordine...se ha tutte le righe consegnate
+exports.chiudiOrdine = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
+    .onWrite((change, context) =>  {
+     var key = context.params.id;	
+            const refParent = change.after.ref.parent;
+              	
+            return(refParent.transaction(function(righe) {
+            	    var len = 0;
+            	    var stato = (righe===null || Object.keys(righe).length === 0) ? 'A': 'C';
+            	    console.info(righe);
+					for(var propt in righe)
+		    			{
+		    			if (righe[propt].stato !== 'Z') stato = 'A';
+		    			}
+		    	    ref = change.after.ref.parent.parent.parent.parent.child('elencoOrdini').child(context.params.cliente).child(key);
+		   	       	var dataChiusura = (stato ==='C') ? moment().format("L") : null;
+		   	       	console.info("stato "+stato);
+		   	       	ref.update({stato: stato, dataChiusura: dataChiusura}); 
+					return righe;
+					}).then(console.info("aggiornato stato ordine "+key )));
+    });
+					
        
 //Cancello tutti i figli di una bolla...se l'ho cancellata dall'elenco. Chiedo prima conferma ovviamente...
 
@@ -351,13 +374,13 @@ exports.aggiornaOrdiniAperti = functions.database.ref('{catena}/{negozio}/ordini
             //Caso inserimento o aggiornamento... se ho lo stato after non in 'Z' ho un ordine aperto...e semplicemente lo aggiorno...
             if (change.after.val())
             {
-            	if (change.after.val().stato !== 'Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(cliente).child(id).child(idItem).update(change.after.val()).then(console.info("Aggiornata riga ordine aperto "+idItem)));
+            	if (change.after.val().stato !== 'Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(idItem).update(change.after.val()).then(console.info("Aggiornata riga ordine aperto "+idItem)));
             	// E' in stato Z... e non era in stato Z prima...
-            	else if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(cliente).child(id).child(idItem).remove().then(console.info("Chiusa riga ordine aperto "+idItem)));
+            	else if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(idItem).remove().then(console.info("Chiusa riga ordine aperto "+idItem)));
             }
             else //Se ho cancellato una riga che era in stato aperto... cancello anche la riga ordine aperto corrispondente...
             {
-                if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(cliente).child(id).child(idItem).remove().then(console.info("Cancellata riga ordine aperto "+idItem)));
+                if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(idItem).remove().then(console.info("Cancellata riga ordine aperto "+idItem)));
             }
             });	
 

@@ -23,7 +23,7 @@ const editedOrdineValuesInitialState =
 	};
 
 const editedItemInitialState = () => {
-	return(editedItemInitialStateHelper(editedOrdineValuesInitialState, {} ));
+	return(editedItemInitialStateHelper(editedOrdineValuesInitialState, {isValid:true} ));
 }
 
 const formWidth = (880 -16)  * 5 / 6 -8;
@@ -64,13 +64,13 @@ const initialState = () => {
 
 const transformEditedOrdine = (row) =>
 {   row.dataOrdine = moment(row.dataOrdine).format("L");
-	row.dataChiusura = moment(row.dataChiusura).format("L");
+	if (row.dataChiusura) row.dataChiusura = moment(row.dataChiusura).format("L");
 }	
 
 const transformSelectedItem = (cei) =>
 {
 	cei.dataOrdine = moment(cei.dataOrdine,"DD/MM/YYYY");
-	cei.dataChiusura = moment(cei.dataChiusura,"DD/MM/YYYY");
+		if (cei.dataChiusura) cei.dataChiusura = moment(cei.dataChiusura,"DD/MM/YYYY");
 }
 
 const ordineR = new FormReducer('ELENCOORDINI',null, transformEditedOrdine, transformSelectedItem, initialState, false); 

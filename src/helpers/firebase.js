@@ -76,8 +76,7 @@ export function urlFactory(getState, destination, params, itemId)
 				 case "anagraficheLocali": url = prefissoNegozio(getState)+'anagrafiche'; break;
 				 
 				 //La tabella persistita.... è ordinata per idCliente. In memoria avrò gli ordini aperti ordinati per EAN
-				 case "ordiniAperti": url = prefissoNegozio(getState)+'ordiniAperti'; break;
-			    
+				  
 			     case "fornitori": url = prefissoNegozio(getState)+'anagrafiche/fornitori'; break;
 			      case "categorie": url = prefissoNegozio(getState)+'anagrafiche/categorie'; break;
 			      case "clienti": url = prefissoNegozio(getState)+'anagrafiche/clienti'; break;
@@ -85,10 +84,14 @@ export function urlFactory(getState, destination, params, itemId)
 			      
 			      //Gli ordini sono per cliente e basta
 			     	case "righeElencoOrdini": url = prefissoNegozio(getState)+'elencoOrdini/'+params[0]; break;
-			     	case "righeOrdine": url = prefissoNegozio(getState)+'ordini/'+params[0]+'/'+params[1]; break;
-			     	//Ordinate per EAN...me le tiro tutte dentro
-			     	case "righeOrdiniAperti": url = prefissoNegozio(getState)+'ordiniAperti'; break;
+			       
+			       //Se non ho parametri... restituisco tutti gli ordini aperti...	
+			     	case "righeOrdine": 
+			     		url = (params[0] && params[1]) ?  prefissoNegozio(getState)+'ordini/'+params[0]+'/'+params[1] : prefissoNegozio(getState)+'ordiniAperti'; 
+			     		
+			     		break;
 			     	
+			     	case 'ordiniAperti': url = prefissoNegozio(getState)+'ordiniAperti'; break;
 			
 			      case "report": url = prefissoNegozio(getState)+'report'; break;
 			    case "dateStoricoMagazzino": url = prefissoNegozio(getState)+'dateStoricoMagazzino'; break;

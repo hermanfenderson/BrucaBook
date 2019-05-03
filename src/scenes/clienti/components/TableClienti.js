@@ -38,7 +38,7 @@ class TableClienti extends Component
 selectRow = (row) => {
 		this.props.setSelectedCliente(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
-		this.props.history.push('/ordine/' + row.key);
+		this.props.history.push('/ordini/' + row.key);
 	}
 
 

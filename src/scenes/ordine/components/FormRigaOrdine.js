@@ -9,9 +9,11 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
-   const values =  {...this.props.editedRigaOrdine.values, cliente: this.props.cliente}; //Utile avere il cliente nel record per lista ordini aperti
-    let params = [this.props.cliente];
-    params.push(this.props.idOrdine);
+	let cliente = (this.props.ordiniAperti) ? this.props.editedRigaOrdine.values.cliente : this.props.cliente;
+	let idOrdine = (this.props.ordiniAperti) ? this.props.editedRigaOrdine.values.ordine : this.props.idOrdine;
+   const values = (this.props.ordiniAperti) ? {...this.props.editedRigaOrdine.values} : {...this.props.editedRigaOrdine.values, cliente: this.props.cliente, ordine: this.props.idOrdine}; //Utile avere il cliente nel record per lista ordini aperti
+    let params = [cliente];
+    params.push(idOrdine);
     	   
 	this.props.submitEditedRigaOrdine(this.props.editedRigaOrdine.isValid, this.props.editedRigaOrdine.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
@@ -34,7 +36,7 @@ resetForm = () => {
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:formCols1.gutter}}>
-        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:formCols1.ean}}   disabled={readOnlyEAN}/>
+        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:formCols1.ean}}   disabled={readOnlyEAN || this.props.ordiniAperti}/>
         <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:formCols1.titolo}}  disabled/>
         <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{width:formCols1.autore}}  disabled/>
         <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{width:formCols1.listino}}   disabled/>
@@ -53,7 +55,7 @@ resetForm = () => {
      
        <WrappedForm.Button type={'button'} formColumnLayout={{width:formCols2.annulla}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" formColumnLayout={{width:formCols2.crea}} htmlType="submit" >{(this.props.editedRigaOrdine.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  type="primary" disabled={this.props.ordiniAperti && !this.props.editedRigaOrdine.selectedItem } formColumnLayout={{width:formCols2.crea}} htmlType="submit" >{(this.props.editedRigaOrdine.selectedItem || this.props.ordiniAperti) ?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
      
       </WrappedForm.Group>
        <WrappedForm.Group formGroupLayout={{gutter:0}} >

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
+import { withRouter } from 'react-router-dom';
 
 
 //Per gestire in modo smmooth il ricaricamento!
@@ -14,19 +15,33 @@ class TableOrdine extends Component
 	}
 	
 	 componentWillUnmount() {
-	 	console.log("smonto");
 	  let params = [];
       params.push(this.props.cliente);
+      	params.push(this.props.idOrdine);
       this.props.offListenRigaOrdine(params); 
     	this.props.resetTableOrdine();
 	 }
    
+	componentDidUpdate(oldProps) {
+    if (oldProps.idOrdine !== this.props.idOrdine)
+    	{
+    		 let oldParams = [];
+      oldParams.push(oldProps.cliente);
+      	oldParams.push(oldProps.idOrdine);
+      this.props.offListenRigaOrdine(oldParams); 
+    	this.props.resetTableOrdine();
+    	let params = [];
+    	    params.push(this.props.cliente);
+    	  	params.push(this.props.idOrdine);
+    	   	this.props.listenRigaOrdine(params); 
+    	}
+	}
 	
 	
 	deleteRow = (row) => {
 		 let params = [];
-    	    params.push(this.props.cliente);
-		params.push(this.props.idOrdine);
+    	    params.push(row.cliente);
+		params.push(row.ordine);
 		this.props.deleteRigaOrdine(params,row.key,row);
 	}
 	
@@ -36,6 +51,10 @@ class TableOrdine extends Component
     	  params.push(this.props.idOrdine);
 		this.props.setSelectedRigaOrdine(row);
 	}
+	
+	detailRow = (row) => {
+    	this.props.history.push('/ordine/'+row.cliente+'/'+row.ordine);
+    }
 	
 	sorterFunc = (header) => {
 	 if (header.dataField==='ean') 
@@ -64,9 +83,9 @@ class TableOrdine extends Component
     	delete props['deleteRigaOrdine']; //Non la passo liscia...
     	delete props['setSelectedRigaOrdine']; //Idem
     	  return(
-			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header} customRowRender={customRowRender}/>
+			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} detailRow={(this.props.ordiniAperti) ? this.detailRow : null} header={this.props.geometry.header} customRowRender={customRowRender}/>
 			)}
     }		
 	
-export default TableOrdine;
+export default withRouter(TableOrdine);
 

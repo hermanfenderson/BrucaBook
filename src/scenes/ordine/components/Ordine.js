@@ -24,7 +24,9 @@ class Ordine extends Component {
    		{var node = ReactDOM.findDOMNode(this.refs.formRigaOrdine);
    		this.props.storeMeasure('formRigaOrdineHeight', node.clientHeight);
    		}
-   	this.props.listenTestataOrdine(this.props.match.params.cliente, this.props.match.params.id); //In modo da acoltare il valore giusto...	
+   	if (!this.props.ordiniAperti) this.props.listenTestataOrdine(this.props.match.params.cliente, this.props.match.params.id); //In modo da acoltare il valore giusto...se sto lavorando sulla lista degli ordini aperti... non devo ascoltare nulla qui...	
+    else if (this.props.ordiniAperti)  	this.props.setHeaderInfo("Ordini aperti"); 
+ 	
  }
  
  
@@ -32,20 +34,31 @@ class Ordine extends Component {
 componentDidUpdate(oldProps) {
 	let oldTestataOrdine = oldProps.testataOrdine ? oldProps.testataOrdine : null
     let riga = this.props.testataOrdine ?  this.props.testataOrdine : null
-   if (riga !== oldTestataOrdine) 
+   if (riga !== oldTestataOrdine || this.props.ordiniAperti !== oldProps.ordiniAperti) 
 	{
 	let cliente =  this.props.clienti[this.props.match.params.cliente];
 	if (riga && cliente) 
 	    {
 		this.props.setHeaderInfo("Ordini -  Cliente " + cliente.nome + ' ' 
 				          						+ cliente.cognome + ' del ' + moment(riga.dataOrdine).format("L"));
-	    }		          						
+	    }		    
+	else if (this.props.ordiniAperti)  	
+		{
+	//	this.props.resetOrdine(oldProps.match.params.cliente, oldProps.match.params.id);
+		this.props.unlistenTestataOrdine( oldProps.match.params.cliente, oldProps.match.params.id);	
+		this.props.setHeaderInfo("Ordini aperti"); 
+		}
+	
+	else this.props.listenTestataOrdine(this.props.match.params.cliente, this.props.match.params.id);
 	}	
 }
 
 componentWillUnmount() {
-	this.props.resetOrdine(this.props.match.params.id);
+	if (!this.props.ordiniAperti) 
+	{
+//	this.props.resetOrdine(this.props.match.params.cliente, this.props.match.params.id);
 	this.props.unlistenTestataOrdine( this.props.match.params.cliente, this.props.match.params.id);
+	}
 }
 
 resetEditedCatalogItem = () => {
@@ -64,7 +77,7 @@ render()
   const period = [this.props.match.params.anno, this.props.match.params.mese];
  return (
  
-  <Spin spinning={!this.props.testataOrdine}>
+  <Spin spinning={!this.props.testataOrdine && !this.props.ordiniAperti}>
   <div>
   
     <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
@@ -73,8 +86,10 @@ render()
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
          <Row>
-    	 <TotaliOrdine staleTotali={this.props.staleTotali} testataOrdine={this.props.testataOrdine} totaliOrdine={	this.props.totaliOrdine}/>
-    	</Row>
+    	 {!this.props.ordiniAperti ? (
+        <TotaliOrdine staleTotali={this.props.staleTotali} testataOrdine={this.props.testataOrdine} totaliOrdine={	this.props.totaliOrdine}/>
+      ) : ( <div> </div>
+         )}	</Row>
     	<Row>
     	  <BookImg eanState={this.props.editedRigaOrdine.eanState} ean={this.props.editedRigaOrdine.values.ean} imgUrl={this.props.editedRigaOrdine.values.imgFirebaseUrl}/>
 		</Row>
@@ -85,7 +100,7 @@ render()
       <FilterOrdine geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
    <Row>
-     <TableOrdine  geometry={this.props.geometry} cliente={this.props.match.params.cliente} idOrdine={this.props.match.params.id} filters={this.props.filters}/>
+     <TableOrdine ordiniAperti={this.props.ordiniAperti}  geometry={this.props.geometry} cliente={this.props.match.params.cliente} idOrdine={this.props.match.params.id} filters={this.props.filters}/>
       </Row>
     	   </Col>
       </Row>
@@ -94,7 +109,7 @@ render()
    
        <Col span={24}>
     
-      <FormRigaOrdine geometry={this.props.geometry} cliente={this.props.match.params.cliente} idOrdine={this.props.match.params.id} period={period} testataOrdine={this.props.testataOrdine} />
+      <FormRigaOrdine ordiniAperti={this.props.ordiniAperti} geometry={this.props.geometry} cliente={this.props.match.params.cliente} idOrdine={this.props.match.params.id} period={period} testataOrdine={this.props.testataOrdine} />
       </Col>
         
     </Row>

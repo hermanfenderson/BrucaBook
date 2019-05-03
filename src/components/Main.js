@@ -42,11 +42,11 @@ import ElencoOrdini from '../scenes/elencoOrdini';
 import GestioneItemCatalog from '../scenes/catalogo';
 
 
- const RequireAuthRoute = ({ component: Component, ...rest }) => 
+ const RequireAuthRoute = ({ component: Component, otherProps: otherProps, ...rest }) => 
 			{
 			  return(
 			  <Route {...rest} render={props => (
-			    rest.authenticated?  <Component {...props}/>:  <Redirect to='/userMgmt?mode=login' />
+			    rest.authenticated?  <Component {...props} {...otherProps}/>:  <Redirect to='/userMgmt?mode=login' />
 			  )}/>)
 			}
 			
@@ -83,9 +83,11 @@ const Main= (props) =>
 		        							<RequireAuthRoute path="/dashboard" component={Dashboard} authenticated={authenticated} />
 		        								<RequireAuthRoute path="/magazzino" component={Magazzino} authenticated={authenticated}/>
     					      		
-    					      		    	<RequireAuthRoute exact path='/ordine/:cliente' component={ElencoOrdini} authenticated={authenticated}/>
+    					      		    	<RequireAuthRoute exact path='/ordini/:cliente' component={ElencoOrdini} authenticated={authenticated}/>
     									<RequireAuthRoute exact path='/ordine/:cliente/:id' component={Ordine} authenticated={authenticated}/>
-    								
+    									
+    										<RequireAuthRoute exact path='/ordiniAperti' component={Ordine} otherProps={{ordiniAperti:true}} authenticated={authenticated}/>
+    							
     					      			<RequireAuthRoute exact path='/version' component={ReadmeViewer} authenticated={authenticated}/>
 		        					 
     					      			<Route exact path='/help' component={Help}/>
