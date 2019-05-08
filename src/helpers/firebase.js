@@ -197,7 +197,6 @@ export function initialLoading(payload,state, dataArrayName, dataIndexName, tran
 
 	//Creo un array a partire dall'oggetto
   let values = payload.val();
-  console.log(values);
    let dataArrayNewTmp =  values ? Object.values(values) : [];
    let tmpArray = values? Object.keys(values) : [];
    let dataArrayNew = dataArrayNewTmp.map((value,index) => 

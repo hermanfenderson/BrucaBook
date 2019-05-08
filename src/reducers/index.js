@@ -4,6 +4,8 @@ import AuthReducer, * as fromAuth from './auth';
 import CatalogoReducer, * as fromCatalog from './catalogo';
 import BollaReducer, * as fromBolla from './bolla';
 import OrdineReducer, * as fromOrdine from './ordine';
+import OrdiniApertiReducer, * as fromOrdiniAperti from './ordiniAperti';
+
 import CassaReducer, * as fromCassa from './cassa';
 import ResaReducer, * as fromResa from './resa';
 import ResaLiberaReducer, * as fromResaLibera from './resaLibera';
@@ -50,7 +52,7 @@ const rootReducer = combineReducers({
   fornitori: FornitoriReducer,
   categorie: CategorieReducer,
   clienti: ClientiReducer,
-  
+  ordiniAperti: OrdiniApertiReducer,
   inventario: InventarioReducer,
   magazzino: MagazzinoReducer,
   measures: MeasuresReducer,
@@ -93,6 +95,12 @@ export const getListeningItemOrdine = (state) => {return fromOrdine.getListening
 export const isStaleTotaliOrdine = (state) => {return fromOrdine.isStaleTotali(state.ordine)};
 export const getTotaliOrdine = (state) => {return fromOrdine.getTotali(state.ordine)};
 export const getFiltersOrdine = (state) => {return fromOrdine.getFiltersOrdine(state.ordine)};
+export const getListenersItemOrdine = (state) => {return fromOrdine.getListenersItemOrdine(state.ordine)};
+
+
+//Scene OrdiniAperti
+export const getRigheOrdiniAperti = (state) => {return fromOrdiniAperti.getItems(state.ordiniAperti)};
+export const getListeningItemOrdiniAperti = (state) => {return fromOrdiniAperti.getListeningItemOrdine(state.ordiniAperti)};
 
 //export const getTableScrollByKeyordine = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 

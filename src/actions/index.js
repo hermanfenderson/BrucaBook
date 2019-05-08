@@ -11,7 +11,7 @@ Se user è null chiamo anche in questo caso userInfoChanged con type USER_INFO_C
 */
 import Firebase from 'firebase';
 import {urlFactory} from '../helpers/firebase';
-
+import {ordiniApertiFA} from './ordiniAperti';
 
 export const USER_INFO_CHANGED = 'USER_INFO_CHANGED';
 export const TOGGLE_COLLAPSED = 'TOGGLE_COLLAPSED';
@@ -22,9 +22,6 @@ export const SET_HEADER_INFO = 'SET_HEADER_INFO';
 export const SET_MENU_SELECTED_KEYS = 'SET_MENU_SELECTED_KEYS';
 export const MASTER_DATA_LOADED = 'MASTER_DATA_LOADED';
 export const LOCAL_MASTER_DATA_LOADED = 'LOCAL_MASTER_DATA_LOADED';
-export const ORDINI_APERTI_ADDED = 'ORDINI_APERTI_ADDED';
-export const ORDINI_APERTI_CHANGED = 'ORDINI_APERTI_CHANGED';
-export const ORDINI_APERTI_DELETED = 'ORDINI_APERTI_DELETED';
 
 
 
@@ -135,7 +132,8 @@ export function caricaAnagrafiche() {
 	 		
 	 		dispatch ({type: LOCAL_MASTER_DATA_LOADED, payload: snapshot.val()})	
 	 		})
-	 		
+	 		dispatch(ordiniApertiFA.listenItem());
+	 		/*
 	 		Firebase.database().ref(urlFactory(getState, 'ordiniAperti')).on('child_added', snapshot => {
 	 		
 	 		dispatch ({type: ORDINI_APERTI_ADDED, payload: snapshot})	
@@ -150,6 +148,7 @@ export function caricaAnagrafiche() {
 	 		
 	 		dispatch ({type: ORDINI_APERTI_DELETED, payload: snapshot})	
 	 		})
+	 		*/
 	 		
 	 		
 	  }	

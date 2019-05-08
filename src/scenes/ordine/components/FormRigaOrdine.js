@@ -11,7 +11,7 @@ onSubmit = (e) => {
 	e.preventDefault();
 	let cliente = (this.props.ordiniAperti) ? this.props.editedRigaOrdine.values.cliente : this.props.cliente;
 	let idOrdine = (this.props.ordiniAperti) ? this.props.editedRigaOrdine.values.ordine : this.props.idOrdine;
-   const values = (this.props.ordiniAperti) ? {...this.props.editedRigaOrdine.values} : {...this.props.editedRigaOrdine.values, cliente: this.props.cliente, ordine: this.props.idOrdine}; //Utile avere il cliente nel record per lista ordini aperti
+   const values = (this.props.ordiniAperti) ? {...this.props.editedRigaOrdine.values} : {...this.props.editedRigaOrdine.values, cliente: this.props.cliente, ordine: this.props.idOrdine, dataOrdine: this.props.testataOrdine.dataOrdine}; //Utile avere il cliente nel record per lista ordini aperti
     let params = [cliente];
     params.push(idOrdine);
     	   

@@ -314,13 +314,11 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
   
 	    	break;
 	    case this.INITIAL_LOAD_ITEM:
-	    	 console.log("dati freschi!");
 	    
 	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem);
 	    	newState = {...newState, tableScroll: true};
 	    	 if (calcolaTotali) newState = calcolaTotali(newState);
-            console.log("dati freschi pronti!");
-	    
+        
 	    	break;
 	  
 	   case this.TOTALI_CHANGED:

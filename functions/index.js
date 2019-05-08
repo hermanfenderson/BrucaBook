@@ -163,9 +163,28 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
            
  exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}')
     .onUpdate((change, context) => {return(update(change,context,'scontrini'))});
-           
+//NON SERVE! NON CONSENTO DI MODIFICARE LA DATA DELL'ORDINE...           
+/*
+exports.updateOrdine =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
+    .onUpdate((change, context) => {
+    	let key = context.params.id;
+    	let ref = change.after.ref.parent.parent.parent.child('ordini').child(context.params.cliente).child(key);
+    	let values = {dataOrdine : change.after.val().dataOrdine};
+    	return(ref.once('value').then(function(snapshot) {
+					let updates={};
+					snapshot.forEach(function(childSnapshot) 
+						{
+						updates[childSnapshot.key] = values;
+						//childSnapshot.ref.update(values);
+	    				});
+	    			ref.update(updates).then( console.info("Aggiorno riga ordine" +key));	
+					}));
+         }
+    	
+    	);
               
-     
+    */
+    
 //Il registroEAN è organizzato per catena -> Negozio -> EAN -> keyDocumento che origina il valore...
 //Caso insert o modify si limita a creare una copia dell'oggetto nel registro. 
 //Caso delete cerca nel passato quello che era...

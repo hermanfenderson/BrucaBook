@@ -58,10 +58,18 @@ class TableElencoOrdini extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
+    	let customRowRender = {
+    		
+    		 	'stato' : (text, record, index) => { return(<div> {this.props.statoOrdine[text]}</div>)},
+    		 	
+    			
+    			
+    		}
+
     	delete props['deleteOrdine']; //Non la passo liscia...
     	delete props['setSelectedOrdine']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
+			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header} customRowRender={customRowRender}/>
 			)}
     }		
 	

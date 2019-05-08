@@ -1,7 +1,7 @@
 import TableElencoOrdiniComponent from '../components/TableElencoOrdini'
 import {ordineFA} from '../../../actions/elencoOrdini'
 
-import {getEditedOrdine, getElencoOrdini, getTableElencoOrdiniHeight, getTableElencoOrdiniScroll} from '../../../reducers'
+import {getEditedOrdine, getElencoOrdini, getTableElencoOrdiniHeight, getTableElencoOrdiniScroll, getAnagrafiche} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -14,7 +14,13 @@ const resetTable = ordineFA.resetTable;
 const setReadOnlyForm = ordineFA.setReadOnlyForm;
 
 const mapStateToProps = (state) => {
-	return ({data: getElencoOrdini(state), tableScroll: getTableElencoOrdiniScroll(state), height: getTableElencoOrdiniHeight(state), selectedItem: getEditedOrdine(state).selectedItem})
+	return ({data: getElencoOrdini(state), 
+	tableScroll: getTableElencoOrdiniScroll(state), 
+	height: getTableElencoOrdiniHeight(state), 
+	selectedItem: getEditedOrdine(state).selectedItem,
+	statoOrdine: getAnagrafiche(state).StatiOrdine, }
+	
+	)
 }
  
 

@@ -44,6 +44,9 @@ const colParams2 = [
 const headerParams = [{name: 'riferimento', label: 'Rif.', min: 80, max: 150},
 			    {name: 'dataOrdine', shortLabel: 'Data Ord.', label: 'Data Ordine', min: 85, max: 150, shortBreak: 120},
 			    {name: 'dataChiusura', shortLabel: 'Data Chiu.', label: 'Data Chiusura', min: 85, max: 150, shortBreak: 120},
+			    {name: 'totali.pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+			     {name: 'totali.prezzoTotale', label: 'Totale', min: 60, max: 100},
+			  
 			    {name: 'stato', shortLabel: 'Stato', label: 'Stato', min: 85, max: 150, shortBreak: 120},
 			    ];
 	

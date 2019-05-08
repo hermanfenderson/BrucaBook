@@ -12,8 +12,8 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 Storia delle versioni
 ---------------------
 ### Versione 0.10.3
-* Debug da dispositivi mobili
-* Gestione righe ordni clienti
+* Gestione righe ordni clienti 
+* Risolto baco update testate
 
 ### Versione 0.10.2
 * Inserimento testata ordini clienti

@@ -123,7 +123,8 @@ const update = (change, context, part) =>
 					let updates={};
 					snapshot.forEach(function(childSnapshot) 
 						{
-						updates[childSnapshot.key] = values;
+						let mergedValues = Object.assign({}. childSnapshot.val(), values);
+						updates[childSnapshot.key] = mergedValues;
 						//childSnapshot.ref.update(values);
 	    				});
 	    			ref.update(updates).then( console.info("Aggiorno " +part+ " "+key));	

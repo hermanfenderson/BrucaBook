@@ -100,7 +100,7 @@ render()
       <FilterOrdine geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </Row>
    <Row>
-     <TableOrdine ordiniAperti={this.props.ordiniAperti}  geometry={this.props.geometry} cliente={this.props.match.params.cliente} idOrdine={this.props.match.params.id} filters={this.props.filters}/>
+     <TableOrdine ordiniAperti={this.props.ordiniAperti}  geometry={this.props.geometry} cliente={this.props.match.params.cliente} idOrdine={this.props.match.params.id} filters={this.props.filters} clienti={this.props.clienti}/>
       </Row>
     	   </Col>
       </Row>

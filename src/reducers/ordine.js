@@ -5,8 +5,9 @@ import {STORE_MEASURE} from '../actions';
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 import {calcFormCols, calcHeader} from '../helpers/geometry';
-
-
+import {getAnagraficheLocali} from '../reducers';
+//Mi servono i clienti!
+import {store} from '../';
 
 const editedRigaOrdineValuesInitialState = 
 	  {			ean: '',
@@ -66,9 +67,19 @@ const headerParams = [{name: 'ean', label: 'EAN', min: 120, max: 120},
 			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
 			    {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
 			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
-			    {name: 'stato', shortLabel: 'St.', label: 'Stato', shortBreak: 50, min: 40, max: 80},
+			    {name: 'stato', label: 'Stato', min: 140},
+			     
 			   ];
-	
+			   
+const headerParamsOA = [{name: 'ean', label: 'EAN', min: 120, max: 120},
+			    {name: 'titolo', label: 'Titolo', min: 312},
+			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
+			    {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
+			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+			    {name: 'stato', shortLabel: 'St.', label: 'Stato', min: 140},
+			    {name: 'cliente',  label: 'Cliente', min: 160},
+			    
+			   ];	
 
 const initialState = () => {
     const eiis = editedItemInitialState();
@@ -244,9 +255,11 @@ export default function Ordine(state = initialState(), action) {
    			let formCols1 = calcFormCols(colParams1,8,formWidth);
    			let formCols2 = calcFormCols(colParams2,8,formWidth);
    			let header = calcHeader(headerParams, tableWidth - 60);
+   				let headerOA = calcHeader(headerParamsOA, tableWidth - 60);
+   		
    			let geometry = {...newState.geometry};
    			
-   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, formSearchCols: formSearchCols, header: header}};
+   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, formSearchCols: formSearchCols, header: header, headerOA: headerOA}};
    			}
    	
         break;
@@ -270,6 +283,8 @@ export default function Ordine(state = initialState(), action) {
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getListeningTestataOrdine = (state) => {return state.listeningTestata};
  export const getListeningItemOrdine = (state) => {return state.listeningItem};
+  export const getListenersItemOrdine = (state) => {return state.listenersItem};
+ 
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  export const getFiltersOrdine = (state) => {return state.filters};

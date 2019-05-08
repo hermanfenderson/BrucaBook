@@ -2,7 +2,7 @@ import TableOrdineComponent from '../components/TableOrdine'
 import {rigaOrdineFA} from '../../../actions/ordine'
 //import {listenRigaOrdine, offListenRigaOrdine, deleteRigaOrdine, rigaOrdineFA} from '../../../actions/Ordine'
 
-import {getEditedRigaOrdine, getTableHeightOrdine, getTableScrollOrdine,  getListeningItemOrdine, getTableScrollByKey, getItems, getAnagrafiche} from '../../../reducers'
+import {getEditedRigaOrdine, getTableHeightOrdine, getTableScrollOrdine,  getListeningItemOrdine, getListenersItemOrdine, getTableScrollByKey, getItems, getAnagrafiche} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -23,6 +23,7 @@ const mapStateToProps = (state) => {
 	height: getTableHeightOrdine(state), 
 	selectedItem: getEditedRigaOrdine(state).selectedItem,
 	listeningItemOrdine: getListeningItemOrdine(state),
+	listenersItemOrdine: getListenersItemOrdine(state),
 	tableScroll: getTableScrollOrdine(state),
 	tableScrollByKey: getTableScrollByKey(state,'ORDINE'), 
 	statoRigaOrdine: getAnagrafiche(state).StatiRigheOrdine

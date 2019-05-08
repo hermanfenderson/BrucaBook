@@ -1,5 +1,5 @@
 //Gestione dello stato della applicazione (componente da persistere in caso di refresh della pagina)
-import {USER_INFO_CHANGED, MASTER_DATA_LOADED, LOCAL_MASTER_DATA_LOADED, ORDINI_APERTI_ADDED, ORDINI_APERTI_CHANGED, ORDINI_APERTI_DELETED } from '../actions';
+import {USER_INFO_CHANGED, MASTER_DATA_LOADED, LOCAL_MASTER_DATA_LOADED} from '../actions';
 import {USER_CONFIGURATION_CHANGED} from '../actions/userMgmt'
 import moment from 'moment';
 
