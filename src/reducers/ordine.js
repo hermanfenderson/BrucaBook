@@ -5,9 +5,7 @@ import {STORE_MEASURE} from '../actions';
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 import {calcFormCols, calcHeader} from '../helpers/geometry';
-import {getAnagraficheLocali} from '../reducers';
 //Mi servono i clienti!
-import {store} from '../';
 
 const editedRigaOrdineValuesInitialState = 
 	  {			ean: '',
@@ -21,7 +19,8 @@ const editedRigaOrdineValuesInitialState =
 				prezzoTotale: '',
 				imgUrl: '',
 				imgFirebaseUrl: '', 
-				stato: 'D'
+				stato: 'D',
+				history: {},
 	};
 	
 	

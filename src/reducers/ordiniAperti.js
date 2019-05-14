@@ -1,6 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper} from '../helpers/form';
-
+import {SET_ORDINIAPERTI_PER_EAN} from '../actions/ordiniAperti';
 const editedRigaOrdineValuesInitialState = 
 	  {			
 	};
@@ -14,7 +14,7 @@ const editedItemInitialState = () => {
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
-		
+		              eanTree: {}
     							
     				}
 
@@ -25,10 +25,12 @@ const ordiniApertiR = new FormReducer('ORDINIAPERTI', null, null, null, initialS
 
 export default function Ordine(state = initialState(), action) {
   var newState;
-  switch (action.type) {
-    
    
-    default:
+  switch (action.type) {
+     case SET_ORDINIAPERTI_PER_EAN:
+     	newState = {...state, eanArray: action.eanArray};
+     	break;
+     default:
         newState = ordiniApertiR.updateState(state,action,editedItemInitialState, null, null);
         //newState =  state;
     	break;

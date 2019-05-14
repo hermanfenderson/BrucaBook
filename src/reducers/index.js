@@ -82,6 +82,8 @@ export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bo
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
 export const getFiltersBolla = (state) => {return fromBolla.getFiltersBolla(state.bolla)};
+export const getEanTreeBolla = (state) => {return fromBolla.getEanTree(state.bolla)};
+
 
 //Scene Ordine
 export const getRigheOrdine = (state) => {return fromOrdine.getItems(state.ordine)};
@@ -270,6 +272,7 @@ export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTo
 export const getMessageBufferScontrino = (state) => {return fromBolla.getMessageBuffer(state.scontrino)};
 export const getTotaliScontrino = (state) => {return fromScontrino.getTotali(state.scontrino)};
 export const getEanLookupOpen = (state) => {return fromScontrino.getEanLookupOpen(state.scontrino)};
+export const getEanTreeScontrino = (state) => {return fromScontrino.getEanTree(state.scontrino)};
 
 
 //Scene Catalogo
@@ -389,5 +392,7 @@ export const getFilters = (state, scene) => {let s=s2s(scene); return fromFormRe
 
 export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return fromFormReducer.listeningDataMagazzino(state[s.stato])};
 export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getDataMagazzino(state[s.stato])};
+
+//Per bolle e scontrini mi da gli EAN corrispondenti a ordini aperti...
 
  

@@ -1,12 +1,20 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
 import Magazzino from '../../magazzino'
+import {Modal} from 'antd';
+
 class FormRigaBolla extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
 onChange = (name, value) => {
 	   	this.props.changeEditedRigaBolla(name, value)};
+
 		
 onSubmit = (e) => {
+	const resetFunc = () => {
+			this.props.resetEditedRigaBolla();
+	}
+	
+
 	e.preventDefault();
 	var valuesTestata = {...this.props.testataBolla};
 	delete valuesTestata.totali; //Porto giù tutto meno i totali...e i timestamp (mi servono quelli dei figli)
@@ -19,10 +27,33 @@ onSubmit = (e) => {
     const values =  {...this.props.editedRigaBolla.values, ...valuesTestata};
     let params = [...this.props.period];
     params.push(this.props.idBolla);
-    	   
-	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values); //Per sapere cosa fare... dopo
+    const submitFunc = () => {
+        this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, params, values);
+    }; 
+
+  	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean]) 
+	 {
+	 Modal.confirm({
+    		title: 'Ci sono ordini per questo libro.',
+    		content: 'Se premi SI applico gli ingressi standard.',
+    		okText: 'Si',
+    		okType: 'danger',
+    		cancelText: 'No',
+    		onOk() {submitFunc();
+    			
+    		},
+    		onCancel() {resetFunc();
+    			
+    		},});
+	 	
+	 }
+    		
+	else submitFunc(); //Per sapere cosa fare... dopo
+	
   }
- 
+  
+
+
 resetForm = () => {
 	this.props.resetEditedRigaBolla();
 }

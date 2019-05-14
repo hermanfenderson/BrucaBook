@@ -1,6 +1,6 @@
 import FormRigaScontrinoComponent from '../components/FormRigaScontrino'
 import {rigaScontrinoFA, setEanLookupOpen} from '../../../actions/scontrino'
-import {getEditedRigaScontrino} from '../../../reducers'
+import {getEditedRigaScontrino, getEanTreeScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -24,7 +24,7 @@ const getEditedRigaScontrinoSideEffects= (state) => {
 
 
 const mapStateToProps = (state) => { 
-	return ({editedRigaScontrino: getEditedRigaScontrinoSideEffects(state)})
+	return ({editedRigaScontrino: getEditedRigaScontrinoSideEffects(state), eanTree: getEanTreeScontrino(state)})
 }
  
 

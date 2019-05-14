@@ -37,6 +37,7 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
 
 
   render() {
+  	console.log(this.props.eanTree);
   	const formValues = this.props.editedRigaScontrino.values;
   	const errorMessages = this.props.editedRigaScontrino.errorMessages;
   	const willFocus = this.props.editedRigaScontrino.willFocus;

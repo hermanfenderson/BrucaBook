@@ -185,7 +185,6 @@ export default function Resa(state = initialState(), action) {
    case STORE_MEASURE:
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    console.log(measures);
    	    let height = measures['viewPortHeight'] - measures['headerHeight'] -330;
    	    newState = {...state, tableHeight: height};
         break;

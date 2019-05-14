@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Firebase from 'firebase';
 
 import WrappedForm from '../../../components/WrappedForm'
 import Magazzino from '../../magazzino'
@@ -14,7 +15,8 @@ onSubmit = (e) => {
    const values = (this.props.ordiniAperti) ? {...this.props.editedRigaOrdine.values} : {...this.props.editedRigaOrdine.values, cliente: this.props.cliente, ordine: this.props.idOrdine, dataOrdine: this.props.testataOrdine.dataOrdine}; //Utile avere il cliente nel record per lista ordini aperti
     let params = [cliente];
     params.push(idOrdine);
-    	   
+    //Storicizzo l'ordine...
+    values.history[Firebase.database().ref().push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, stato: values.stato, source: 'user'};
 	this.props.submitEditedRigaOrdine(this.props.editedRigaOrdine.isValid, this.props.editedRigaOrdine.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
  
