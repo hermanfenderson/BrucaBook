@@ -87,12 +87,12 @@ export const eanArrayWithDefault = (eanArray, qty) => {
 	}
   }
   //Adesso predisoongo la riga per la vendita libera...
-  let rigaVenditaLibera = {pezziDelta : qty, key : null };
+  let rigaVenditaLibera = {pezziDelta : qty, key : 'venditaLibera' }; //23 Skidoo...a parte gli scherzi... qualsiasi numero che non sia una key valida... 
   eanArray.push(rigaVenditaLibera);
   return eanArray;
 }
 
 //Va usata solo questa
 export const eanArrayFromSubEanTree = (subEanTree, qty) => {
-	return(eanArray(subEanTree), qty);
+	return(eanArrayWithDefault(eanArray(subEanTree), qty));
 }

@@ -103,6 +103,8 @@ export const getListenersItemOrdine = (state) => {return fromOrdine.getListeners
 //Scene OrdiniAperti
 export const getRigheOrdiniAperti = (state) => {return fromOrdiniAperti.getItems(state.ordiniAperti)};
 export const getListeningItemOrdiniAperti = (state) => {return fromOrdiniAperti.getListeningItemOrdine(state.ordiniAperti)};
+export const getEanArray = (state) => {return fromOrdiniAperti.getEanArray(state.ordiniAperti)};
+export const getShowOrdiniApertiModal = (state) => {return fromOrdiniAperti.getShowOrdiniApertiModal(state.ordiniAperti)};
 
 //export const getTableScrollByKeyordine = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 
@@ -329,6 +331,11 @@ export const s2s = (scene) => {
 			case 'ELENCOORDINI':
 				s.stato = 'elencoOrdini';
 				s.origin = fromElencoOrdini;
+			break;
+		
+		case 'ORDINIAPERTI':
+				s.stato = 'ordiniAperti';
+				s.origin = fromOrdiniAperti;
 			break;
 		
 			case 'ELENCOCASSE':

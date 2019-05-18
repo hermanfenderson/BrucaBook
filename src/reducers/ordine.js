@@ -75,6 +75,8 @@ const headerParamsOA = [{name: 'ean', label: 'EAN', min: 120, max: 120},
 			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
 			    {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
 			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+			   {name: 'dataOrdine',  label: 'Data',  min: 80, max: 80},
+			   
 			    {name: 'stato', shortLabel: 'St.', label: 'Stato', min: 140},
 			    {name: 'cliente',  label: 'Cliente', min: 160},
 			    

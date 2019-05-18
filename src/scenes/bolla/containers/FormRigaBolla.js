@@ -1,6 +1,7 @@
 import FormRigaBollaComponent from '../components/FormRigaBolla'
 import {rigaBollaFA} from '../../../actions/bolla'
-import {getEditedRigaBolla, getEanTreeBolla} from '../../../reducers'
+import {setOrdiniApertiperEAN, setShowOrdiniApertiModal} from '../../../actions/ordiniAperti'
+import {getEditedRigaBolla, getEanTreeBolla, getShowOrdiniApertiModal} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -24,12 +25,12 @@ const getEditedRigaBollaSideEffects= (state) => {
 
 
 const mapStateToProps = (state) => { 
-	return ({editedRigaBolla: getEditedRigaBollaSideEffects(state), eanTree: getEanTreeBolla(state)})
+	return ({editedRigaBolla: getEditedRigaBollaSideEffects(state), eanTree: getEanTreeBolla(state), showOrdiniApertiModal: getShowOrdiniApertiModal(state)})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeEditedRigaBolla, submitEditedRigaBolla, resetEditedRigaBolla, focusSet }, dispatch);
+  return bindActionCreators({ changeEditedRigaBolla, submitEditedRigaBolla, resetEditedRigaBolla, focusSet, setOrdiniApertiperEAN, setShowOrdiniApertiModal }, dispatch);
 }
 
 
