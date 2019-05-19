@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 import { withRouter } from 'react-router-dom';
 import {Icon, Popover} from 'antd';
+import moment from 'moment';
 
 //Per gestire in modo smmooth il ricaricamento!
 
@@ -71,7 +72,7 @@ class TableOrdine extends Component
     	let selectedItemKey = null;
     	let header = this.props.ordiniAperti? this.props.geometry.headerOA: this.props.geometry.header;
     		let customRowRender = {
-    		
+    		    'dataOrdine' : (text, record, index) => { return(<div> {moment(text).format("DD/MM/YYYY")}</div>)},
     		 	'titolo' : (text, record, index) => { return(<div style={{width: header[1].width-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)},
     		 	'stato' : (text, record, index) => { return(<div> {this.props.statoRigaOrdine[text]}</div>)},
     		 		'cliente' : (text, record, index) => 

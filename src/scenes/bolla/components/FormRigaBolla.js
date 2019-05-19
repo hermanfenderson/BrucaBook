@@ -37,7 +37,7 @@ onSubmit = (e) => {
    
   	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean]) 
 	 {
-	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaBolla.values.ean], this.values.pezzi + this.values.gratis);	
+	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaBolla.values.ean], parseInt(this.values.pezzi,10) + parseInt(this.values.gratis,10));	
 	 
 	  this.props.setShowOrdiniApertiModal(true);
 	 	
@@ -69,7 +69,7 @@ resetForm = () => {
   <div>
   		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFunc} onCancel={this.resetForm}>
 		<OrdiniAperti></OrdiniAperti>
-		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {formValues.pezzi + formValues.gratis})</p></div>
+		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {parseInt(formValues.pezzi, 10) + parseInt(formValues.gratis,10)})</p></div>
     </Modal>  	
    
      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
