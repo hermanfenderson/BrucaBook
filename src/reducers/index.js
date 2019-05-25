@@ -82,7 +82,6 @@ export const isStaleTotali = (state) => {return fromBolla.isStaleTotali(state.bo
 export const getMessageBufferBolla = (state) => {return fromBolla.getMessageBuffer(state.bolla)};
 export const getTotaliBolla = (state) => {return fromBolla.getTotali(state.bolla)};
 export const getFiltersBolla = (state) => {return fromBolla.getFiltersBolla(state.bolla)};
-export const getEanTreeBolla = (state) => {return fromBolla.getEanTree(state.bolla)};
 
 
 //Scene Ordine
@@ -105,6 +104,9 @@ export const getRigheOrdiniAperti = (state) => {return fromOrdiniAperti.getItems
 export const getListeningItemOrdiniAperti = (state) => {return fromOrdiniAperti.getListeningItemOrdine(state.ordiniAperti)};
 export const getEanArray = (state) => {return fromOrdiniAperti.getEanArray(state.ordiniAperti)};
 export const getShowOrdiniApertiModal = (state) => {return fromOrdiniAperti.getShowOrdiniApertiModal(state.ordiniAperti)};
+export const getEanTreeBolla = (state) => {return fromOrdiniAperti.getEanTreeBolla(state.ordiniAperti)};
+export const getEanTreeScontrino = (state) => {return fromOrdiniAperti.getEanTreeScontrino(state.ordiniAperti)};
+
 
 //export const getTableScrollByKeyordine = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 
@@ -274,7 +276,6 @@ export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTo
 export const getMessageBufferScontrino = (state) => {return fromBolla.getMessageBuffer(state.scontrino)};
 export const getTotaliScontrino = (state) => {return fromScontrino.getTotali(state.scontrino)};
 export const getEanLookupOpen = (state) => {return fromScontrino.getEanLookupOpen(state.scontrino)};
-export const getEanTreeScontrino = (state) => {return fromScontrino.getEanTree(state.scontrino)};
 
 
 //Scene Catalogo

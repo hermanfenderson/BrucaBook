@@ -8,7 +8,6 @@ import {SET_SCONTO_SCONTRINO, SET_EAN_LOOKUP_OPEN} from '../actions/scontrino';
 
 import {isAmount, isNotZeroInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
-import {ADDED_ITEM_ORDINIAPERTI,  CHANGED_ITEM_ORDINIAPERTI, DELETED_ITEM_ORDINIAPERTI,  INITIAL_LOAD_ITEM_ORDINIAPERTI,  deltaOrdiniAperti} from '../helpers/ordiniAperti';
 
 
 const editedRigaBollaValuesInitialState = 
@@ -77,7 +76,6 @@ const initialState = () => {
 											  },
 									defaultSconto: '', 
 									eanLookupOpen: false,
-									eanTree: {},
 									totali: {pezzi: 0, prezzoTotale: 0.00}});
     }
     
@@ -287,15 +285,7 @@ export default function scontrino(state = initialState(), action) {
 	    newState = {...newState, editedItem: cei};
     	}
   	    break;
-  	 case ADDED_ITEM_ORDINIAPERTI:
-  	 case CHANGED_ITEM_ORDINIAPERTI:
-  	 case	DELETED_ITEM_ORDINIAPERTI:
-  	 case INITIAL_LOAD_ITEM_ORDINIAPERTI:
-  	 	//Mi vanno bene tutti gli ordini aperti...
-  	 	
-  	 	newState = {...state, eanTree: deltaOrdiniAperti(state.eanTree, action.payload, action.type, 'Z' )};
-        break;
-    default:
+      default:
         newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino, calcolaTotali);
         //newState =  state;
     	break;
@@ -323,8 +313,7 @@ export const getEanLookupOpen = (state) => {return state.eanLookupOpen};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  //export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
- export const getEanTree = (state) => {return state.eanTree};
- 
+
  
  
       

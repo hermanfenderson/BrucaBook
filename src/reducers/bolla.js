@@ -6,7 +6,6 @@ import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validato
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 import {calcFormCols, calcHeader} from '../helpers/geometry';
 
-import {ADDED_ITEM_ORDINIAPERTI,  CHANGED_ITEM_ORDINIAPERTI, DELETED_ITEM_ORDINIAPERTI,  INITIAL_LOAD_ITEM_ORDINIAPERTI,  deltaOrdiniAperti} from '../helpers/ordiniAperti';
 
 
 const editedRigaBollaValuesInitialState = 
@@ -81,8 +80,7 @@ const initialState = () => {
 		
     		geometry: {formSearchCols: calcFormCols(colSearchParams,8,tableWidth), formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, tableWidth - 60)
     					},
-    		eanTree: {}
-    				}
+     				}
 
 	return initialStateHelper(eiis,extraState);
     }
@@ -274,13 +272,6 @@ export default function bolla(state = initialState(), action) {
    			}
    	
         break;
-  	 case ADDED_ITEM_ORDINIAPERTI:
-  	 case CHANGED_ITEM_ORDINIAPERTI:
-  	 case	DELETED_ITEM_ORDINIAPERTI:
-  	 case	INITIAL_LOAD_ITEM_ORDINIAPERTI:
-  	 	//Solo gli ordini fino a R
-  	 	newState = {...state, eanTree: deltaOrdiniAperti(state.eanTree, action.payload, action.type, 'R' )};
-        break;
   
     default:
         newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla, calcolaTotali);
@@ -306,7 +297,6 @@ export default function bolla(state = initialState(), action) {
  export const getFiltersBolla = (state) => {return state.filters};
  
  export const getTotali = (state) => {return state.totali};
- export const getEanTree = (state) => {return state.eanTree};
  //Questa per memoria storica
  //export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  

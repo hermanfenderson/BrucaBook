@@ -1,13 +1,30 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
 import Magazzino from '../../magazzino'
+import {Modal} from 'antd';
+
+import OrdiniAperti from '../../ordiniAperti';
 
 class FormRigaScontrino extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
 
 onChange = (name, value) => {
 	   	this.props.changeEditedRigaScontrino(name, value)};
-		
+
+submitFunc = () => {
+         	if (this.props.editedRigaScontrino.isValid && this.props.eanTree[this.props.editedRigaScontrino.values.ean])
+        		{
+        		//Qui devo copiare lo stato degli ordini salvati... quindi mi conviene persisterlo...
+        		let savedLines = this.props.saveOrdiniApertiDiff('scontrino',this.params);
+        		this.props.setShowOrdiniApertiModal(false);
+        		//Troppo semplice...
+        		this.values.ordini = savedLines;
+        		}
+        	    this.props.submitEditedRigaScontrino(this.props.editedRigaScontrino.isValid, this.props.editedRigaScontrino.selectedItem, this.params, this.values); //Per sapere cosa fare... dopo
+        	    
+	    
+}; 
+
 onSubmit = (e) => {
 	e.preventDefault();
 	var valuesTestata = {...this.props.testataScontrino};
@@ -19,11 +36,20 @@ onSubmit = (e) => {
     delete valuesTestata.key;
     delete valuesTestata.sconto;
 	valuesTestata.data = valuesTestata.dataCassa;
-    const values =  {...this.props.editedRigaScontrino.values, ...valuesTestata};
-    let params = [...this.props.period];
-    params.push(this.props.cassa);
-    params.push(this.props.scontrino);
-    this.props.submitEditedRigaScontrino(this.props.editedRigaScontrino.isValid, this.props.editedRigaScontrino.selectedItem, params, values); //Per sapere cosa fare... dopo
+    this.values =  {...this.props.editedRigaScontrino.values, ...valuesTestata};
+    this.params = [...this.props.period];
+    this.params.push(this.props.cassa);
+    this.params.push(this.props.scontrino);
+    if (this.props.editedRigaScontrino.isValid && this.props.eanTree[this.props.editedRigaScontrino.values.ean]) 
+	 {
+	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaScontrino.values.ean], (parseInt(this.values.pezzi,10) || 0 ));	
+	 
+	  this.props.setShowOrdiniApertiModal(true);
+	 	
+	 }
+    		
+	else this.submitFunc(); //Per sapere cosa fare... dopo
+
   }
  
 resetForm = () => {
@@ -47,6 +73,12 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
   	const frsCols = this.props.geometry.formRigaScontrinoCols;
   	const frsGutter = this.props.geometry.formRigaScontrinoGutter;
   	return (
+  	<div>
+  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFunc} onCancel={this.resetForm}>
+		<OrdiniAperti></OrdiniAperti>
+		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {(parseInt(formValues.pezzi, 10) || 0 )})</p></div>
+    </Modal>  	
+	
 	 <WrappedForm  disableAllColon={true} readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:frsGutter}}>
         <WrappedForm.InputLookup  lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:frsCols.ean}} style={{width:frsCols.ean}}  disabled={readOnlyEAN} onOpenModal={this.eanLookupOpen} onCloseModal={this.eanLookupClosed}/>
@@ -78,6 +110,7 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
        
         </WrappedForm.Group >
        </WrappedForm>
+       </div>
     )
   }
 }

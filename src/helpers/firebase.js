@@ -366,6 +366,13 @@ export const getServerTime = (ref) => {
 };
 
 
+export const encodeSlash = (path) => {
+	return(path.replace(/\//g, ","))
+}
 
+
+export const decodeSlash = (key) => {
+	return(key.replace(/,/g, "/"));
+}
 
 

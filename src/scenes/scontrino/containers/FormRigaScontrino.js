@@ -1,6 +1,8 @@
 import FormRigaScontrinoComponent from '../components/FormRigaScontrino'
 import {rigaScontrinoFA, setEanLookupOpen} from '../../../actions/scontrino'
-import {getEditedRigaScontrino, getEanTreeScontrino} from '../../../reducers'
+import {setOrdiniApertiperEAN, setShowOrdiniApertiModal, saveOrdiniApertiDiff} from '../../../actions/ordiniAperti'
+
+import {getEditedRigaScontrino, getEanTreeScontrino, getShowOrdiniApertiModal} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -24,12 +26,12 @@ const getEditedRigaScontrinoSideEffects= (state) => {
 
 
 const mapStateToProps = (state) => { 
-	return ({editedRigaScontrino: getEditedRigaScontrinoSideEffects(state), eanTree: getEanTreeScontrino(state)})
+	return ({editedRigaScontrino: getEditedRigaScontrinoSideEffects(state), eanTree: getEanTreeScontrino(state), showOrdiniApertiModal: getShowOrdiniApertiModal(state)})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ changeEditedRigaScontrino, submitEditedRigaScontrino, resetEditedRigaScontrino, focusSet, setEanLookupOpen }, dispatch);
+  return bindActionCreators({ changeEditedRigaScontrino, submitEditedRigaScontrino, resetEditedRigaScontrino, focusSet, setEanLookupOpen,setOrdiniApertiperEAN, setShowOrdiniApertiModal, saveOrdiniApertiDiff }, dispatch);
 }
 
 

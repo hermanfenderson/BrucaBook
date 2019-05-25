@@ -13,12 +13,22 @@ onChange = (name, value) => {
 
 
 submitFunc = () => {
-        this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, this.params, this.values);
-    }; 
+         	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean])
+        		{
+        		//Qui devo copiare lo stato degli ordini salvati... quindi mi conviene persisterlo...
+        		let savedLines = this.props.saveOrdiniApertiDiff('bolla',this.params);
+        		this.props.setShowOrdiniApertiModal(false);
+        		//Troppo semplice...
+        		this.values.ordini = savedLines;
+        		}
+        	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, this.params, this.values);
+       	
+	    
+}; 
 		
 onSubmit = (e) => {
 	const resetFunc = () => {
-			this.props.resetEditedRigaBolla();
+	      this.props.resetEditedRigaBolla();
 	}
 	
 
@@ -37,7 +47,7 @@ onSubmit = (e) => {
    
   	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean]) 
 	 {
-	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaBolla.values.ean], parseInt(this.values.pezzi,10) + parseInt(this.values.gratis,10));	
+	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaBolla.values.ean], (parseInt(this.values.pezzi,10) || 0 )+ (parseInt(this.values.gratis,10)|| 0));	
 	 
 	  this.props.setShowOrdiniApertiModal(true);
 	 	
@@ -69,7 +79,7 @@ resetForm = () => {
   <div>
   		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFunc} onCancel={this.resetForm}>
 		<OrdiniAperti></OrdiniAperti>
-		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {parseInt(formValues.pezzi, 10) + parseInt(formValues.gratis,10)})</p></div>
+		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {(parseInt(formValues.pezzi, 10) || 0 ) + (parseInt(formValues.gratis,10) || 0)})</p></div>
     </Modal>  	
    
      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
