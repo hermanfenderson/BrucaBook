@@ -114,9 +114,10 @@ exports.chiudiOrdine = functions.database.ref('{catena}/{negozio}/ordini/{client
     .onWrite((change, context) =>  {
      var key = context.params.id;	
             const refParent = change.after.ref.parent;
-              	
-            return(refParent.transaction(function(righe) {
-            	    var len = 0;
+            return(refParent.once("value")
+					.then(function(snapshot) {
+				  	let righe = snapshot.val();
+        			var len = 0;
             	    var stato = (righe===null || Object.keys(righe).length === 0) ? 'A': 'C';
             	    console.info(righe);
 					for(var propt in righe)
@@ -124,11 +125,20 @@ exports.chiudiOrdine = functions.database.ref('{catena}/{negozio}/ordini/{client
 		    			if (righe[propt].stato !== 'Z') stato = 'A';
 		    			}
 		    	    ref = change.after.ref.parent.parent.parent.parent.child('elencoOrdini').child(context.params.cliente).child(key);
-		   	       	var dataChiusura = (stato ==='C') ? moment().format("L") : null;
-		   	       	console.info("stato "+stato);
-		   	       	ref.update({stato: stato, dataChiusura: dataChiusura}); 
-					return righe;
-					}).then(console.info("aggiornato stato ordine "+key )));
+		    	    ref.once("value")
+								.then(function(snapshot) {
+									var notEmpty = snapshot.hasChildren(); 
+				    				if (notEmpty) 
+				    					{
+				    				     var dataChiusura = (stato ==='C') ? moment().format("L") : null;
+		   	       						console.info("stato "+stato);
+		   	       						ref.update({stato: stato, dataChiusura: dataChiusura}).then(console.info("aggiornato stato ordine "+key )); 
+		   	       						return(stato);
+				    					}	
+				    				else return false;		
+				    				  });
+				    				 })
+		   	      );
     });
 					
        

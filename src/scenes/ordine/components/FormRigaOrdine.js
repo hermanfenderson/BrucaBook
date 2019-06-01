@@ -16,7 +16,12 @@ onSubmit = (e) => {
     let params = [cliente];
     params.push(idOrdine);
     //Storicizzo l'ordine...se sto per persistere...
-    if (this.props.editedRigaOrdine.isValid) values.history[Firebase.database().ref().push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, stato: values.stato, source: 'user'};
+    if (this.props.editedRigaOrdine.isValid) 
+    
+		{   let oldStato = (this.props.editedRigaOrdine.selectedItem) ? this.props.editedRigaOrdine.selectedItem.stato : null;
+		   if (oldStato !== values.stato) values.oldStato = oldStato;
+			values.history[Firebase.database().ref().push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, oldStato: oldStato, stato: values.stato, source: 'user'};
+		}	
 	this.props.submitEditedRigaOrdine(this.props.editedRigaOrdine.isValid, this.props.editedRigaOrdine.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
  

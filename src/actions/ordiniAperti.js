@@ -28,7 +28,7 @@ export function saveOrdiniApertiDiff(source, params) {
 	  	     console.log(ordiniApertiDiff);
   	        if (ordiniApertiDiff.length > 0) //Altrimenti non devo fare assolutamente nulla
   	        {
-  	             let path = source + "/"+params.join("/");
+  	             let path = params.join("/");
   	             //Dove vado ad aggiornare gli ordini...
 	  	        let ref = Firebase.database().ref(getCatena(getState()) + '/' + getLibreria(getState()) + '/ordini');
 	  	        let nextState = (source === 'bolla') ? 'R' : 'Z'; //Se è una bolla vado ad arrivato altrimenti a consegnato
@@ -38,6 +38,9 @@ export function saveOrdiniApertiDiff(source, params) {
 	  	        let pezzi = element.pezzi;
 	  	        delete element.key;
 	  	        delete element.pezziDelta;
+	  	        console.log(path);
+	  	        if (source === 'bolla') element.bolla = path;
+	  	        else element.scontrino = path;
 	  	        if (pezziDelta > 0) {
 	  	        	 if (pezziDelta !== pezzi) 
 	  	        	     {element.pezzi = pezziDelta;
@@ -52,10 +55,12 @@ export function saveOrdiniApertiDiff(source, params) {
 	  	        	      let subpath2 = element.cliente+'/'+element.ordine+'/'+ref.push().key;	
 	  	                  ordiniApertiUpdate[subpath2] = clonedElement; 
 	  	        	     }
+	  	        	     
+	  	        	 let oldStato = (element.stato) ? element.stato : null;   
 	  	        	 element.stato = nextState;
-	  	          
+	  	             if (oldStato) element.oldStato = oldStato;
 	  	        	 //Qui ci metto l'aggiornamento della storia...
-	  	        	 element.history[ref.push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, stato: nextState, source: source, path: path};
+	  	        	 element.history[ref.push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, oldStato: oldStato, stato: nextState, source: source, path: path};
 	  	        	ordiniApertiUpdate[subpath] = element;	
 	  	           
 	  	           //Finalmente posso fare l'update...
