@@ -4,6 +4,8 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
+const {deletedRigaOrdine} = require('./ordini');
+
 const {calcolaPezzi,getValues,getDiff,aggiornaMagazzinoEANDiff,aggiornaStoricoMagazzinoEANDiff} = require('./magazzino');
 
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
@@ -159,8 +161,23 @@ exports.purgeCassa =  functions.database.ref('{catena}/{negozio}/elencoCasse/{an
 exports.purgeInventario =  functions.database.ref('{catena}/{negozio}/elencoInventari/{id}')
 	.onDelete((snap, context) => {return(purge(snap,context,'inventari'))}); 
 
-exports.purgeBolla =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
+exports.purgeOrdine =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
     .onDelete((snap, context) => {return(purge(snap,context,'ordini'))});
+
+//Vado a ripulire anche scontrini e bolle...
+exports.deletedRigaOrdineSideEffectBolla =  functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{ordine}/{id}')
+    .onDelete((snap, context) => {
+    	             let path = snap.val().bolla
+    	             if (path) return(deletedRigaOrdine(snap,context,"bolle",path));
+    	             else return null;
+    });
+    
+exports.deletedRigaOrdineSideEffectScontrino =  functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{ordine}/{id}')
+    .onDelete((snap, context) => {
+    	let path = snap.val().scontrino;
+    	if (path) return(deletedRigaOrdine(snap,context,"scontrini", path));
+    	else return null;
+    });
 
 
 //Salvo la nuova data nelle righe già presenti...
