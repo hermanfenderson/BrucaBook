@@ -4,7 +4,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
-const {deletedRigaOrdine} = require('./ordini');
+const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
 const {calcolaPezzi,getValues,getDiff,aggiornaMagazzinoEANDiff,aggiornaStoricoMagazzinoEANDiff} = require('./magazzino');
 
@@ -190,6 +190,23 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
            
  exports.updateScontrino =  functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}')
     .onUpdate((change, context) => {return(update(change,context,'scontrini'))});
+    
+    
+    
+exports.eliminaOrdineDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{keyRiga}')
+    .onDelete((snap, context) => {
+    	
+    							if (snap.val().ordini) return(deletedRiga(context, snap.val().ordini,'bolle'));
+    							else return(null);
+    							});
+
+exports.eliminaOrdineDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{keyRiga}')
+    .onDelete((snap, context) => {
+    							if (snap.val().ordini) return(deletedRiga(context, snap.val().ordini,'scontrini'));
+    							else return(null);
+    });
+
+    
 //NON SERVE! NON CONSENTO DI MODIFICARE LA DATA DELL'ORDINE...           
 /*
 exports.updateOrdine =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
