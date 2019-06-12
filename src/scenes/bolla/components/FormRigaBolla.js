@@ -13,7 +13,7 @@ onChange = (name, value) => {
 
 
 submitFunc = () => {
-         	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean])
+         	if (this.props.editedRigaBolla.isValid && !this.props.editedRigaBolla.selectedItem && this.props.eanTree[this.props.editedRigaBolla.values.ean])
         		{
         		//Qui devo copiare lo stato degli ordini salvati... quindi mi conviene persisterlo...
         		let savedLines = this.props.saveOrdiniApertiDiff('bolla',this.params);
@@ -21,6 +21,8 @@ submitFunc = () => {
         		//Troppo semplice...
         		this.values.ordini = savedLines;
         		}
+        	    
+	
         	this.props.submitEditedRigaBolla(this.props.editedRigaBolla.isValid, this.props.editedRigaBolla.selectedItem, this.params, this.values);
        	
 	    
@@ -44,17 +46,22 @@ onSubmit = (e) => {
     this.values =  {...this.props.editedRigaBolla.values, ...valuesTestata};
     this.params = [...this.props.period];
     this.params.push(this.props.idBolla);
-   
-  	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean]) 
+   //Controllo se la riga è valida, se c'e' nella lista degli EAN e se non è in modifica 
+  	if (this.props.editedRigaBolla.isValid && this.props.eanTree[this.props.editedRigaBolla.values.ean] && !this.props.editedRigaBolla.selectedItem) 
 	 {
 	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaBolla.values.ean], (parseInt(this.values.pezzi,10) || 0 )+ (parseInt(this.values.gratis,10)|| 0));	
 	 
 	  this.props.setShowOrdiniApertiModal(true);
 	 	
 	 }
-    		
-	else this.submitFunc(); //Per sapere cosa fare... dopo
-	
+	else 
+		{
+		 if (this.props.editedRigaBolla.selectedItem && this.props.editedRigaBolla.selectedItem.ordini && ((parseInt(this.props.editedRigaBolla.selectedItem.pezzi,10) !== parseInt(this.values.pezzi,10)) || (parseInt(this.props.editedRigaBolla.selectedItem.gratis,10) !== parseInt(this.values.gratis,10))) ) 
+				 Modal.error(
+		    	{title: 'Impossibile modificare', content: 'Questa riga ha ordini associati: impossibile cambiare le quantità'}
+		    	);		
+		 else this.submitFunc(); //Per sapere cosa fare... dopo
+		}
   }
   
 

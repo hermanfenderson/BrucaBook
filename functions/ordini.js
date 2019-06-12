@@ -51,7 +51,7 @@ const deletedRigaOrdine = (snap, context, source, path) =>
 	
 }
 
-const deletedRiga = (context, ordini, source) =>
+const deletedRiga = (admin, snap, context, ordini, source) =>
 {
 	//Creo un oggetto con tutte le righe ordine che devo modificare
 	//Qui metto tutte le rpomises relative agli ordini
@@ -76,22 +76,28 @@ const deletedRiga = (context, ordini, source) =>
 									ordine.stato = (ordine.oldStato) ? ordine.oldStato : 'Z';
 									ordine.oldStato = 'Z';
 									}
-							    if (ordine.scontrino === path) ordine.scontrino = null;
+							    if (ordine.scontrino === path) {
+							    								ordine.scontrino = null;
+							    								//ordine.scontrinoDetails = null;
+							    							   }	
 									
-								ordine.history[ordineBaseRef.push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, oldStato: ordine.oldStato, stato: ordine.stato, source: 'scontrinoCancellato', path: path};
+								ordine.history[ordineBaseRef.push().key] = {at: admin.database.ServerValue.TIMESTAMP, oldStato: ordine.oldStato, stato: ordine.stato, source: 'scontrinoCancellato', path: path};
 	  	        		
 								}
 							//Eì una bolla
 							else
 								{
-								if (ordine.bolla === path && ordine.stato === 'C')
+								if (ordine.bolla === path && ordine.stato === 'R')
 									{
-									ordine.stato = (ordine.oldStato) ? ordine.oldStato : 'C';
-									ordine.oldStato = 'C';
+									ordine.stato = (ordine.oldStato) ? ordine.oldStato : 'R';
+									ordine.oldStato = 'R';
 									}
-								if (ordine.bolla === path) ordine.bolla = null;
+								if (ordine.bolla === path) 
+														{ordine.bolla = null;
+														//ordine.bollaDetails = null;
+														}
 								
-								ordine.history[ordineBaseRef.push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, oldStato: ordine.oldStato, stato: ordine.stato, source: 'bollaCancellata', path: path};
+								ordine.history[ordineBaseRef.push().key] = {at: admin.database.ServerValue.TIMESTAMP, oldStato: ordine.oldStato, stato: ordine.stato, source: 'bollaCancellata', path: path};
 	  	        			
 								}
 							updatedOrders[decodedOrder] = ordine;	
@@ -101,6 +107,9 @@ const deletedRiga = (context, ordini, source) =>
 					)
 				)	
 		}
+	return(Promise.all(allOrderPromises).then(
+		   () => {console.log(updatedOrders); ordineBaseRef.update(updatedOrders)}
+		))	
 }
 
 module.exports = {

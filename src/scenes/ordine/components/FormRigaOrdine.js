@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Firebase from 'firebase';
+import {Modal} from 'antd';
 
 import WrappedForm from '../../../components/WrappedForm'
 import Magazzino from '../../magazzino'
@@ -21,8 +22,12 @@ onSubmit = (e) => {
 		{   let oldStato = (this.props.editedRigaOrdine.selectedItem) ? this.props.editedRigaOrdine.selectedItem.stato : null;
 		   if (oldStato !== values.stato) values.oldStato = oldStato;
 			values.history[Firebase.database().ref().push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, oldStato: oldStato, stato: values.stato, source: 'user'};
-		}	
-	this.props.submitEditedRigaOrdine(this.props.editedRigaOrdine.isValid, this.props.editedRigaOrdine.selectedItem, params, values); //Per sapere cosa fare... dopo
+		}
+    if (this.props.editedRigaOrdine.selectedItem && (this.props.editedRigaOrdine.selectedItem.bolla || this.props.editedRigaOrdine.selectedItem.scontrino) && ((this.props.editedRigaOrdine.selectedItem.stato > values.stato) || (parseInt(this.props.editedRigaOrdine.selectedItem.pezzi,10) !== parseInt(values.pezzi,10))) ) 
+				 Modal.error(
+		    	{title: 'Impossibile modificare', content: 'Questa riga ha bolle/scontrini associati: impossibile cambiare le quantità o arretrare lo stato'}
+		    	);			
+	else this.props.submitEditedRigaOrdine(this.props.editedRigaOrdine.isValid, this.props.editedRigaOrdine.selectedItem, params, values); //Per sapere cosa fare... dopo
   }
  
 resetForm = () => {

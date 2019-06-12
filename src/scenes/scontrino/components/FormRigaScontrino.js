@@ -12,7 +12,7 @@ onChange = (name, value) => {
 	   	this.props.changeEditedRigaScontrino(name, value)};
 
 submitFunc = () => {
-         	if (this.props.editedRigaScontrino.isValid && this.props.eanTree[this.props.editedRigaScontrino.values.ean])
+         	if (this.props.editedRigaScontrino.isValid && !this.props.editedRigaScontrino.selectedItem && this.props.eanTree[this.props.editedRigaScontrino.values.ean])
         		{
         		//Qui devo copiare lo stato degli ordini salvati... quindi mi conviene persisterlo...
         		let savedLines = this.props.saveOrdiniApertiDiff('scontrino',this.params);
@@ -40,7 +40,7 @@ onSubmit = (e) => {
     this.params = [...this.props.period];
     this.params.push(this.props.cassa);
     this.params.push(this.props.scontrino);
-    if (this.props.editedRigaScontrino.isValid && this.props.eanTree[this.props.editedRigaScontrino.values.ean]) 
+    if (this.props.editedRigaScontrino.isValid && !this.props.editedRigaScontrino.selectedItem && this.props.eanTree[this.props.editedRigaScontrino.values.ean]) 
 	 {
 	 this.props.setOrdiniApertiperEAN(this.props.eanTree[this.props.editedRigaScontrino.values.ean], (parseInt(this.values.pezzi,10) || 0 ));	
 	 
@@ -48,12 +48,21 @@ onSubmit = (e) => {
 	 	
 	 }
     		
-	else this.submitFunc(); //Per sapere cosa fare... dopo
+	else 
+		{
+		 if (this.props.editedRigaScontrino.selectedItem && this.props.editedRigaScontrino.selectedItem.ordini && (parseInt(this.props.editedRigaScontrino.selectedItem.pezzi,10) !== parseInt(this.values.pezzi,10)) ) 
+				 Modal.error(
+		    	{title: 'Impossibile modificare', content: 'Questa riga ha ordini associati: impossibile cambiare le quantità'}
+		    	);		
+	
+		else this.submitFunc(); //Per sapere cosa fare... dopo
+		}
 
   }
  
 resetForm = () => {
 	this.props.resetEditedRigaScontrino();
+	this.props.setShowOrdiniApertiModal(false);
 }
 
 eanLookupOpen = () => {this.props.setEanLookupOpen(true)};

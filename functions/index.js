@@ -196,13 +196,13 @@ exports.updateResa =  functions.database.ref('{catena}/{negozio}/elencoRese/{ann
 exports.eliminaOrdineDaBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{keyRiga}')
     .onDelete((snap, context) => {
     	
-    							if (snap.val().ordini) return(deletedRiga(context, snap.val().ordini,'bolle'));
+    							if (snap.val().ordini) return(deletedRiga(admin, snap, context, snap.val().ordini,'bolle'));
     							else return(null);
     							});
 
 exports.eliminaOrdineDaScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{keyRiga}')
     .onDelete((snap, context) => {
-    							if (snap.val().ordini) return(deletedRiga(context, snap.val().ordini,'scontrini'));
+    							if (snap.val().ordini) return(deletedRiga(admin, snap, context, snap.val().ordini,'scontrini'));
     							else return(null);
     });
 
