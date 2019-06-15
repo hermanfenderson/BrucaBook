@@ -106,7 +106,8 @@ export const getEanArray = (state) => {return fromOrdiniAperti.getEanArray(state
 export const getShowOrdiniApertiModal = (state) => {return fromOrdiniAperti.getShowOrdiniApertiModal(state.ordiniAperti)};
 export const getEanTreeBolla = (state) => {return fromOrdiniAperti.getEanTreeBolla(state.ordiniAperti)};
 export const getEanTreeScontrino = (state) => {return fromOrdiniAperti.getEanTreeScontrino(state.ordiniAperti)};
-
+export const getOrdiniApertiErrors = (state) => {return fromOrdiniAperti.getErrors(state.ordiniAperti)};
+export const getOrdiniApertiQty = (state) => {return fromOrdiniAperti.getQty(state.ordiniAperti)};
 
 //export const getTableScrollByKeyordine = (state)  => {return fromBolla.getTableScrollByKey(state.bolla)};
 

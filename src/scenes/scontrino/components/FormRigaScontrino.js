@@ -25,6 +25,12 @@ submitFunc = () => {
 	    
 }; 
 
+submitFuncFromOrdiniAperti = () => {
+	//Se ho errori... non faccio ulla
+	if (!this.props.ordiniApertiErrors.hasErrors) this.submitFunc();
+}
+
+
 onSubmit = (e) => {
 	e.preventDefault();
 	var valuesTestata = {...this.props.testataScontrino};
@@ -72,7 +78,6 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
 
 
   render() {
-  	console.log(this.props.eanTree);
   	const formValues = this.props.editedRigaScontrino.values;
   	const errorMessages = this.props.editedRigaScontrino.errorMessages;
   	const willFocus = this.props.editedRigaScontrino.willFocus;
@@ -83,10 +88,10 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
   	const frsGutter = this.props.geometry.formRigaScontrinoGutter;
   	return (
   	<div>
-  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFunc} onCancel={this.resetForm}>
-		<OrdiniAperti></OrdiniAperti>
-		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {(parseInt(formValues.pezzi, 10) || 0 )})</p></div>
-    </Modal>  	
+  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}>
+	<OrdiniAperti onSubmit={this.submitFuncFromOrdiniAperti}></OrdiniAperti>
+	
+	 </Modal>  	
 	
 	 <WrappedForm  disableAllColon={true} readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:frsGutter}}>

@@ -27,6 +27,11 @@ submitFunc = () => {
        	
 	    
 }; 
+
+submitFuncFromOrdiniAperti = () => {
+	//Se ho errori... non faccio ulla
+	if (!this.props.ordiniApertiErrors.hasErrors) this.submitFunc();
+}
 		
 onSubmit = (e) => {
 	const resetFunc = () => {
@@ -84,10 +89,10 @@ resetForm = () => {
   		const formCols2 = this.props.geometry.formCols2;
   	return (
   <div>
-  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFunc} onCancel={this.resetForm}>
-		<OrdiniAperti></OrdiniAperti>
-		<div> <p>Premi OK per confermare l'associazione cliente-quantità (totale pezzi {(parseInt(formValues.pezzi, 10) || 0 ) + (parseInt(formValues.gratis,10) || 0)})</p></div>
-    </Modal>  	
+  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}
+ >
+		<OrdiniAperti onSubmit={this.submitFuncFromOrdiniAperti}></OrdiniAperti>
+	  </Modal>  	
    
      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:formCols1.gutter}}>

@@ -11,6 +11,8 @@ export const SET_SHOW_ORDINIAPERTI_MODAL = 'SET_SHOW_ORDINIAPERTI_MODAL';
 
 export const SAVE_ORDINI_APERTI_DIFF = 'SAVE_ORDINI_APERTI_DIFF';
 
+export const CHANGE_DELTA_PEZZI = 'CHANGE_DELTA_PEZZI';
+
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così. Gestisco le date...
 function preparaItem(riga)
@@ -91,7 +93,7 @@ export function setOrdiniApertiperEAN(subEanTree, qty) {
 	let eanArray = eanArrayFromSubEanTree(subEanTree,qty);
 	return {
 		type: SET_ORDINIAPERTI_PER_EAN,
-      
+        qty: qty,
 		eanArray: eanArray
 	}	
 }
@@ -103,5 +105,15 @@ export function setShowOrdiniApertiModal(showBool) {
 		showOrdiniApertiModal: showBool
 	}	
 }
+
+export function changeDeltaPezzi(index, value) {
+	return {
+		type: CHANGE_DELTA_PEZZI,
+      
+		index: index,
+		value: value,
+	}	
+}
+
 //METODI DEL FORM
 export const ordiniApertiFA = new FormActions(SCENE, preparaItem, 'ordiniAperti');

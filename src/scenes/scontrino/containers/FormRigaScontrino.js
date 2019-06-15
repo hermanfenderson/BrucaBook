@@ -2,7 +2,7 @@ import FormRigaScontrinoComponent from '../components/FormRigaScontrino'
 import {rigaScontrinoFA, setEanLookupOpen} from '../../../actions/scontrino'
 import {setOrdiniApertiperEAN, setShowOrdiniApertiModal, saveOrdiniApertiDiff} from '../../../actions/ordiniAperti'
 
-import {getEditedRigaScontrino, getEanTreeScontrino, getShowOrdiniApertiModal} from '../../../reducers'
+import {getEditedRigaScontrino, getEanTreeScontrino, getShowOrdiniApertiModal, getOrdiniApertiErrors} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -26,7 +26,7 @@ const getEditedRigaScontrinoSideEffects= (state) => {
 
 
 const mapStateToProps = (state) => { 
-	return ({editedRigaScontrino: getEditedRigaScontrinoSideEffects(state), eanTree: getEanTreeScontrino(state), showOrdiniApertiModal: getShowOrdiniApertiModal(state)})
+	return ({editedRigaScontrino: getEditedRigaScontrinoSideEffects(state), eanTree: getEanTreeScontrino(state), showOrdiniApertiModal: getShowOrdiniApertiModal(state), ordiniApertiErrors:getOrdiniApertiErrors(state)})
 }
  
 
