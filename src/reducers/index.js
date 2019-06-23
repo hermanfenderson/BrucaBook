@@ -97,6 +97,8 @@ export const isStaleTotaliOrdine = (state) => {return fromOrdine.isStaleTotali(s
 export const getTotaliOrdine = (state) => {return fromOrdine.getTotali(state.ordine)};
 export const getFiltersOrdine = (state) => {return fromOrdine.getFiltersOrdine(state.ordine)};
 export const getListenersItemOrdine = (state) => {return fromOrdine.getListenersItemOrdine(state.ordine)};
+export const getOrdiniModalVisible = (state) => {return fromOrdine.getOrdiniModalVisible(state.ordine)};
+
 
 
 //Scene OrdiniAperti
@@ -189,6 +191,7 @@ export const getListeningTestataResaLibera = (state) => {return fromResaLibera.g
 export const getListeningItemResaLibera = (state) => {return fromResaLibera.getListeningItemResa(state.resaLibera)};
 export const isStaleTotaliResaLibera = (state) => {return fromResaLibera.isStaleTotali(state.resaLibera)};
 export const getMessageBufferResaLibera = (state) => {return fromResaLibera.getMessageBuffer(state.resaLibera)};
+export const getFiltersResaLibera = (state) => {return fromResaLibera.getFiltersResaLibera(state.resaLibera)};
 
 
 //Scene Inventario
@@ -369,6 +372,11 @@ export const s2s = (scene) => {
 				s.stato = 'resa';
 				s.origin = fromResa;
 			break;
+			case 'RESA_LIBERA':
+				s.stato = 'resaLibera';
+				s.origin = fromResa;
+			break;
+			
 			case 'CLIENTI':
 				s.stato = 'clienti';
 				s.origin = fromClienti;

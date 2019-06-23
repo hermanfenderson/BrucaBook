@@ -12,8 +12,9 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 Storia delle versioni
 ---------------------
 ### Versione 0.10.3
-* Gestione righe ordni clienti 
+* Gestione righe ordini clienti (alpha! non usare) 
 * Risolto baco update testate
+* Inserito editore nelle rese libere, filtri e ordinamenti
 
 ### Versione 0.10.2
 * Inserimento testata ordini clienti

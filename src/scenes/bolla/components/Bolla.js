@@ -6,6 +6,8 @@ import FilterBolla from '../components/FilterBolla';
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
+import OrdiniModalTable from '../../ordine/containers/OrdiniModalTable'
+
 
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom';
@@ -64,10 +66,16 @@ render()
   <Spin spinning={!this.props.testataBolla}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   <div>
-  
-    <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
+  <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='BOLLA'/>
     </Modal>  
+    <OrdiniModalTable visible={this.props.ordiniModalVisible} data={this.props.ordiniModalVisible}/>
+
+    	<Modal visibile={(this.props.ordiniModalVisible!==null)}>
+    		
+    	   	<div>Ciao!</div>
+    	   	</Modal>
+		
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>
          <Row>

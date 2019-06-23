@@ -3,6 +3,7 @@ import WrappedForm from '../../../components/WrappedForm'
 import Magazzino from '../../magazzino'
 import {Modal} from 'antd';
 import OrdiniAperti from '../../ordiniAperti';
+import OrdiniModalTable from '../../ordine/containers/OrdiniModalTable';
 
 
 class FormRigaBolla extends Component {
@@ -89,11 +90,11 @@ resetForm = () => {
   		const formCols2 = this.props.geometry.formCols2;
   	return (
   <div>
-  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}
+  		<Modal width={880} title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}
  >
 		<OrdiniAperti onSubmit={this.submitFuncFromOrdiniAperti}></OrdiniAperti>
 	  </Modal>  	
-   
+	
      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.Group formGroupLayout={{gutter:formCols1.gutter}}>
         <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:formCols1.ean}}   disabled={readOnlyEAN}/>

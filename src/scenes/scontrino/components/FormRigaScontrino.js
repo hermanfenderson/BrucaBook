@@ -88,7 +88,7 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
   	const frsGutter = this.props.geometry.formRigaScontrinoGutter;
   	return (
   	<div>
-  		<Modal title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}>
+  		<Modal width={880} title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}>
 	<OrdiniAperti onSubmit={this.submitFuncFromOrdiniAperti}></OrdiniAperti>
 	
 	 </Modal>  	

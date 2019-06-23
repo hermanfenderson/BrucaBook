@@ -3,13 +3,16 @@ import {rigaResaFA} from '../../../actions/resaLibera'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getMessageBufferResaLibera, getShowCatalogModalResaLibera, getEditedCatalogItem, getTestataResaLibera, getListeningTestataResaLibera, isStaleTotaliResaLibera, getEditedRigaResaLibera} from '../../../reducers'
+import {getMessageBufferResaLibera, getShowCatalogModalResaLibera, getEditedCatalogItem, getTestataResaLibera, getFiltersResaLibera, getGeometry, getListeningTestataResaLibera, isStaleTotaliResaLibera, getEditedRigaResaLibera} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataResa = rigaResaFA.listenTestata;
 const unlistenTestataResa = rigaResaFA.unlistenTestata;
 const resetResa = rigaResaFA.reset;
 const shiftMessage = rigaResaFA.shiftMessage;
+const setFilter = rigaResaFA.setFilter;
+const resetFilter = rigaResaFA.resetFilter;
+
 
 
 const mapStateToProps = (state) => {
@@ -19,8 +22,10 @@ const mapStateToProps = (state) => {
 	         listeningTestataBolla: getListeningTestataResaLibera(state),
 	         staleTotali: isStaleTotaliResaLibera(state),
 	         editedRigaResa: getEditedRigaResaLibera(state),
-	         messageBuffer: getMessageBufferResaLibera(state)
-	         
+	         messageBuffer: getMessageBufferResaLibera(state),
+	           geometry: getGeometry(state,'RESA_LIBERA'),
+		     filters: getFiltersResaLibera(state),
+		            
 		
 		
 	})
@@ -28,7 +33,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ shiftMessage, resetResa, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo}, dispatch);
+  listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo, setFilter, resetFilter}, dispatch);
 }
 
 const ResaLibera= connect(mapStateToProps, mapDispatchToProps)(ResaLiberaComponent)

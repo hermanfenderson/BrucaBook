@@ -56,6 +56,21 @@ class TableOrdine extends Component
 	detailRow = (row) => {
     	this.props.history.push('/ordine/'+row.cliente+'/'+row.ordine);
     }
+    
+   
+	bollaRow = (row, go=false) => {
+	if (!go) return(row.bolla);
+	this.props.history.push('/bolla/'+row.bolla);
+	}
+	
+
+	scontrinoRow = (row, go=false) => {
+	if (!go) return(row.scontrino);
+		
+	this.props.history.push('/scontrino/'+row.scontrino);
+	}
+	
+
 	
 	sorterFunc = (header) => {
 	 if (header.dataField==='ean') 
@@ -86,7 +101,7 @@ class TableOrdine extends Component
     	delete props['deleteRigaOrdine']; //Non la passo liscia...
     	delete props['setSelectedRigaOrdine']; //Idem
     	  return(
-			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} detailRow={(this.props.ordiniAperti) ? this.detailRow : null} header={header} customRowRender={customRowRender}/>
+			<WrappedTable {...props} size={'small'} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} bollaRow={this.bollaRow} scontrinoRow={this.scontrinoRow} detailRow={(this.props.ordiniAperti) ? this.detailRow : null} header={header} actionWidth={120} customRowRender={customRowRender}/>
 			)}
     }		
 	

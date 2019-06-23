@@ -1,14 +1,7 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedTable'
 
-//E' un dato.... che passo come costante...
-const header = [{dataField: 'ean', label: 'EAN', width: '160px'},
-                {dataField: 'titolo', label: 'Titolo', width: '320px'},
-			    {dataField: 'prezzoUnitario', label: 'Prezzo', width: '60px'},
-			    {dataField: 'pezzi', label: 'Quantità', width: '60px'},
-			    {dataField: 'gratis', label: 'Gratis', width: '60px'},
-			    {dataField: 'prezzoTotale', label: 'Totale', width: '70px'}
-			   ];
+
 
 var currentListenedIdResa = null;
 
@@ -52,6 +45,17 @@ class TableResaLibera extends Component
 		this.props.setSelectedRigaResa(row);
 	}
 	
+	
+	sorterFunc = (header) => {
+	 if (header.dataField==='ean') 
+		return(function(b, a) { return(a.ean-b.ean)});
+	 if (header.dataField==='titolo') 
+		return(function(b, a) { return(a.titolo.localeCompare(b.titolo))});
+	 if (header.dataField==='editore') 
+		return(function(b, a) { return(a.editore.localeCompare(b.editore))});
+	
+	return(false);
+	};
 
 
     
@@ -60,11 +64,14 @@ class TableResaLibera extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
-    	
+    	let customRowRender = {
+
+    		 	'titolo' : (text, record, index) => { return(<div style={{width: this.props.geometry.header[1].width-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
+
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
     	  return(
-			<WrappedTable {...props}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header}/>
+			<WrappedTable {...props} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header} customRowRender={customRowRender}/>
 			)}
     }		
 	

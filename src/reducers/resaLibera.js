@@ -4,8 +4,57 @@ import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
+import {calcFormCols, calcHeader} from '../helpers/geometry';
 
+const formWidth = (880 -16) - 8;
+const tableWidth = (880 -16)  * 5 / 6 -8;
 
+const colSearchParams = [
+	{name: 'ean', min: 110, max: 110},
+	{name: 'titolo', min: 292},
+	{name: 'editore', min: 212},
+
+	{name: 'reset', min: 250, max: 290},
+
+	]
+	
+const colParams1 = [
+	{name: 'ean', min: 170, max: 170},
+	{name: 'titolo', min: 446 },
+	{name: 'autore', min: 180 },
+	{name: 'listino', min: 60, max: 60}
+	
+	];
+	
+const colParams2 = [
+	{name: 'man', min: 30, max: 30},
+	{name: 'sconto1', min: 60, max: 70},
+	{name: 'sconto2', min: 60, max: 70},
+	{name: 'sconto3', min: 60, max: 70},
+	{name: 'prezzo', min: 80, max: 90},
+	{name: 'pezzi', min: 70, max: 80},
+	{name: 'gratis', min: 70, max: 80},
+	{name: 'totale', min: 90, max: 100},
+
+	{name: 'annulla', min: 120, max: 240},
+	{name: 'crea', min: 120, max: 240}
+	
+	];
+		
+
+	
+const headerParams = [{name: 'ean', label: 'EAN', min: 120, max: 120},
+			    {name: 'titolo', label: 'Titolo', min: 312},
+			     {name: 'editore', label: 'Editore', min: 212},
+			   
+			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
+			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+			    {name: 'gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
+			      {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
+			  
+			   ];
+			   
+			   
 const editedRigaResaValuesInitialState = 
 	  {			ean: '',
 				titolo: '',
@@ -30,14 +79,19 @@ const editedItemInitialState = () => {
 }
 
 
+
+
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{});
-    }
-    
+    const extraState = {
+		
+    	geometry: {formSearchCols: calcFormCols(colSearchParams,8,tableWidth), formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, tableWidth - 60)
+    					},
+     		
+     				}
 
-
- 
+	return initialStateHelper(eiis,extraState);
+    } 
     
 //Metodi reducer per le Form
 const rigaResaR = new FormReducer('RESA_LIBERA', foundCompleteItem, null, null, initialState); 
@@ -182,13 +236,32 @@ export default function Resa(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
-   case STORE_MEASURE:
+   
+  case STORE_MEASURE:
+   	    newState = state;
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] -330;
-   	    newState = {...state, tableHeight: height};
-        break;
-  	
+   	    measures[action.newMeasure.name] = action.newMeasure.number;
+   	    if (action.newMeasure.name==='viewPortHeight' ||  action.newMeasure.name==='headerHeight' )
+   			{
+   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - 270;
+   	    	newState = {...state, tableHeight: height};
+   			}
+   		if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
+   	   		{
+   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) - 8;	
+   			let tableWidth = formWidth * 5 / 6 -8 ;
+   			let formSearchCols = calcFormCols(colSearchParams,8,tableWidth);
+   		
+   			let formCols1 = calcFormCols(colParams1,8,formWidth);
+   			let formCols2 = calcFormCols(colParams2,8,formWidth);
+   			let header = calcHeader(headerParams, tableWidth - 60);
+   			let geometry = {...newState.geometry};
+   			
+   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, formSearchCols: formSearchCols, header: header}};
+   			}
+   	
+        break;	
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;
@@ -211,6 +284,7 @@ export default function Resa(state = initialState(), action) {
  export const isStaleTotali = (state) => {return state.staleTotali};
  export const getMessageBuffer = (state) => {return state.messageBuffer};
  export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
+ export const getFiltersResaLibera = (state) => {return state.filters};
  
  
  

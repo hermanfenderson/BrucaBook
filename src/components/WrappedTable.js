@@ -62,7 +62,10 @@ actionRowRender = (cell, row, index) => {
        	{(this.props.pinRow) && <Icon type={(row[this.props.pinField]) ? "pushpin" : "pushpin-o" } onClick={() => { lastRowClicked = row.key;  this.props.pinRow(row)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => { lastRowClicked = row.key;  this.props.detailRow(row)}}/>}  
        {(this.props.saveRow) && <Icon type={"save"} onClick={() => { lastRowClicked = row.key;  this.props.saveRow(row, index)}}/>}  
-       
+       {(this.props.ordiniRow) && (this.props.ordiniRow(row)) && <Icon type="team" onClick={() => { lastRowClicked = row.key;  this.props.ordiniRow(row,true)}}/>}  
+       {(this.props.bollaRow) && (this.props.bollaRow(row)) && <Icon type="shopping-cart" onClick={() => { lastRowClicked = row.key;  this.props.bollaRow(row,true)}}/>}  
+       {(this.props.scontrinoRow) && (this.props.scontrinoRow(row)) && <Icon type="smile-o" onClick={() => { lastRowClicked = row.key;  this.props.scontrinoRow(row,true)}}/>}  
+       	
         </div>
         );
  }

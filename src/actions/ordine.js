@@ -1,7 +1,7 @@
 import {FormActions} from '../helpers/formActions';
 
 export const SCENE = 'ORDINE';
-
+export const SET_ORDINI_MODAL_VISIBLE = 'SET_ORDINI_MODAL_VISIBLE';
 
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
@@ -14,6 +14,10 @@ function preparaItem(riga)
    }
 
    
+export function setOrdiniModalVisible(visible) 
+	{
+		return ({type: SET_ORDINI_MODAL_VISIBLE, visible: visible})
+	}
 
 
 

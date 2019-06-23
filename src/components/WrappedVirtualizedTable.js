@@ -38,6 +38,9 @@ actionCellRenderer = ({rowData, rowIndex}) => {
        	{(this.props.pinRow) && <Icon type={(rowData[this.props.pinField]) ? "pushpin" : "pushpin-o" } onClick={() => { this.props.pinRow(rowData)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => {this.props.detailRow(rowData)}}/>}  
        {(this.props.saveRow) && <Icon type={"save"} onClick={() => { this.props.saveRow(rowData, rowIndex)}}/>}  
+       {(this.props.ordiniRow) && (this.props.ordiniRow(rowData)) && <Icon type="team" onClick={() => { this.props.ordiniRow(rowData,true)}}/>}  
+       {(this.props.bollaRow) && (this.props.bollaRow(rowData)) && <Icon type="shopping-cart" onClick={() => { this.props.bollaRow(rowData,true)}}/>}  
+       {(this.props.scontrinoRow) && (this.props.scontrinoRow(rowData)) && <Icon type="smile-o" onClick={() => { this.props.scontrinoRow(rowData,true)}}/>}  
        
         </div>
         );

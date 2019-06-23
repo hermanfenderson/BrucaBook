@@ -72,7 +72,11 @@ class TableScontrino extends Component
 	}
 
 	
-   
+   ordiniRow = (row) => {
+		
+		return(row.ordini);
+	}
+	
     
     	render() { 
       	let props = {...this.props};
@@ -98,7 +102,7 @@ class TableScontrino extends Component
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
-			<WrappedTable {...props} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={header} customRowRender={customRowRender}/>
+			<WrappedTable {...props} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow}  ordiniRow={this.ordiniRow} selectRow={this.editRow} header={header} customRowRender={customRowRender}/>
 			)}
     }		
 	

@@ -40,11 +40,11 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedRigaOrdineValuesInitialState, {} ));
 }
 
-const headerParams = [{name: 'cliente', label: 'Cliente', min: 200, max: 200},
-			    {name: 'dataOrdine', label: 'Data', min: 100, max:100},
+const headerParams = [{name: 'cliente', label: 'Cliente', min: 250, max: 250},
+			    {name: 'dataOrdine', label: 'Data', min: 130, max:130},
 			    {name: 'stato', label: 'Stato', min: 150, max: 150},
-			    {name: 'pezzi', label: 'Ord.', min: 60, max: 60},
-			   {name: 'pezziDelta', label: 'Ass.', min: 60, max: 60},
+			    {name: 'pezzi', label: 'Ordinato', min: 100, max: 100},
+			   {name: 'pezziDelta', label: 'Assegnato', min: 100, max: 100},
 			     
 			   ];
 

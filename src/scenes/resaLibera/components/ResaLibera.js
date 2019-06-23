@@ -1,6 +1,8 @@
 import TableResa from '../containers/TableResaLibera';
 import FormRigaResa from '../containers/FormRigaResaLibera';
 import TotaliResa from '../components/TotaliResaLibera';
+import FilterResaLibera from '../components/FilterResaLibera';
+
 import FormCatalogo from '../../catalogo/containers/FormCatalogo';
 import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
@@ -84,12 +86,16 @@ else return (
       </Col>
  
        <Col span={20}>
-     <TableResa  period={period} idResa={this.props.match.params.id}/>
+               <Row>
+      <FilterResaLibera geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      </Row>
+
+     <TableResa  period={period} idResa={this.props.match.params.id} filters={this.props.filters} geometry={this.props.geometry}/>
       
     	   </Col>
       </Row>
     
-      <Row type="flex" align="bottom" className='bottom-form' style={{height: '250px'}} ref='formRigaResaLibera'>
+      <Row type="flex" align="bottom" className='bottom-form' style={{height: '120px'}} ref='formRigaResaLibera'>
    
      <Col span={4}>
      <BookImg eanState={this.props.editedRigaResa.eanState} ean={this.props.editedRigaResa.values.ean} imgUrl={this.props.editedRigaResa.values.imgFirebaseUrl}/>
@@ -97,7 +103,7 @@ else return (
       </Col>
        <Col span={20}>
     
-      <FormRigaResa idResa={this.props.match.params.id} period={period} testataResa={this.props.testataResa} />
+      <FormRigaResa idResa={this.props.match.params.id} period={period} testataResa={this.props.testataResa} geometry={this.props.geometry}/>
       </Col>
         
     </Row>

@@ -2,10 +2,10 @@ import TableBollaComponent from '../components/TableBolla'
 import {rigaBollaFA} from '../../../actions/bolla'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaBolla, getTableHeight, getTableScroll,  getListeningItemBolla, getTableScrollByKey, getItems} from '../../../reducers'
+import {getEditedRigaBolla, getTableHeight, getTableScroll,  getListeningItemBolla, getTableScrollByKey, getItems, getOrdiniModalVisible} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
-
+import {setOrdiniModalVisible} from '../../../actions/ordine'
 const setSelectedRigaBolla = rigaBollaFA.setSelectedItem;
 const setTableWindowHeight = rigaBollaFA.setTableWindowHeight;
 const listenRigaBolla = rigaBollaFA.listenItem;
@@ -24,13 +24,13 @@ const mapStateToProps = (state) => {
 	selectedItem: getEditedRigaBolla(state).selectedItem,
 	listeningItemBolla: getListeningItemBolla(state),
 	tableScroll: getTableScroll(state),
-	tableScrollByKey: getTableScrollByKey(state,'BOLLA')	
+	tableScrollByKey: getTableScrollByKey(state,'BOLLA'),
 	})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenRigaBolla, offListenRigaBolla, resetTableBolla, deleteRigaBolla, setSelectedRigaBolla,  setTableWindowHeight, setTableScrollByKey, toggleTableScroll}, dispatch);
+  return bindActionCreators({ listenRigaBolla, offListenRigaBolla, resetTableBolla, deleteRigaBolla, setSelectedRigaBolla,  setTableWindowHeight, setTableScrollByKey, toggleTableScroll, setOrdiniModalVisible}, dispatch);
 }
 
 

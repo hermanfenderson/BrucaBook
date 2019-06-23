@@ -1,6 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
-
+import {SET_ORDINI_MODAL_VISIBLE} from '../actions/ordine';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -61,33 +61,40 @@ const colParams2 = [
 	
 
 	
-const headerParams = [{name: 'ean', label: 'EAN', min: 120, max: 120},
+const headerParams = [{name: 'ean', label: 'EAN', min: 130, max: 130},
 			    {name: 'titolo', label: 'Titolo', min: 312},
 			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
 			    {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
 			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
-			    {name: 'stato', label: 'Stato', min: 140},
+			    {name: 'stato', label: 'Stato', min: 110},
 			     
 			   ];
 			   
-const headerParamsOA = [{name: 'ean', label: 'EAN', min: 120, max: 120},
-			    {name: 'titolo', label: 'Titolo', min: 312},
+const headerParamsOA = [{name: 'ean', label: 'EAN', min: 130, max: 130},
+			    {name: 'titolo', label: 'Titolo', min: 252},
 			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
 			    {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
 			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
-			   {name: 'dataOrdine',  label: 'Data',  min: 80, max: 80},
+			   {name: 'dataOrdine',  label: 'Data',  min: 120, max: 120},
 			   
 			    {name: 'stato', shortLabel: 'St.', label: 'Stato', min: 140},
 			    {name: 'cliente',  label: 'Cliente', min: 160},
-			    
-			   ];	
+			    ];	
+const ordiniModalHeader = [
+	  {dataField: 'cliente',  label: 'Cliente', width: 160},
+			  
+			     {dataField: 'pezzi', label: 'Pezzi',  width: 80},
+			   {dataField: 'dataOrdine',  label: 'Data',  width: 120},
+			     
+			   ];			   
 
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 		
-    		geometry: {formSearchCols: calcFormCols(colSearchParams,8,tableWidth), formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, tableWidth - 60)
-    					}		
+    		geometry: {ordiniModalHeader: ordiniModalHeader, formSearchCols: calcFormCols(colSearchParams,8,tableWidth), formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, tableWidth - 60)
+    					},	
+    		ordiniModalVisible: false,			
     				}
 
 	return initialStateHelper(eiis,extraState);
@@ -236,7 +243,10 @@ function foundCompleteItem(editedItem, action)
 export default function Ordine(state = initialState(), action) {
   var newState;
   switch (action.type) {
-    
+   case  SET_ORDINI_MODAL_VISIBLE:
+   	 newState = state;
+   	 newState = {...newState, ordiniModalVisible: action.visible};
+   	 break;
    case STORE_MEASURE:
    	    newState = state;
    	    var measures = {...action.allMeasures};
@@ -291,6 +301,7 @@ export default function Ordine(state = initialState(), action) {
  export const getFiltersOrdine = (state) => {return state.filters};
  
  export const getTotali = (state) => {return state.totali};
+ export const getOrdiniModalVisible = (state) => {return state.ordiniModalVisible};
  //Questa per memoria storica
  //export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
