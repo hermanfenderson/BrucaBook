@@ -94,7 +94,7 @@ const initialState = () => {
 		
     		geometry: {ordiniModalHeader: ordiniModalHeader, formSearchCols: calcFormCols(colSearchParams,8,tableWidth), formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, tableWidth - 60)
     					},	
-    		ordiniModalVisible: false,			
+    		ordiniModalVisible: null,			
     				}
 
 	return initialStateHelper(eiis,extraState);
@@ -245,7 +245,14 @@ export default function Ordine(state = initialState(), action) {
   switch (action.type) {
    case  SET_ORDINI_MODAL_VISIBLE:
    	 newState = state;
-   	 newState = {...newState, ordiniModalVisible: action.visible};
+   	 let array = action.visible ? Object.entries(action.visible) : null;
+   	 let arrayWithKey = null;
+   	 if (array) 
+   		{   function addKey(inp) {let out=inp[1]; out['key'] = inp[0]; return(out)};
+   			arrayWithKey = array.map(addKey);
+   		}
+   		
+   	 newState = {...newState, ordiniModalVisible: arrayWithKey};
    	 break;
    case STORE_MEASURE:
    	    newState = state;

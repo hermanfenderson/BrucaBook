@@ -19,6 +19,9 @@ const purge = (snap, context, part) =>
 				return snap.ref.parent.parent.child(part).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
 			case 'ordini':
 				return snap.ref.parent.parent.parent.child(part).child(context.params.cliente).child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
+			case 'clienti':
+				return snap.ref.parent.parent.parent.child('elencoOrdini').child(key).remove().then(()=>{console.info("Cancellato "+part+ " "+key);});
+         	
          	 default: 
          		return false;
 				}

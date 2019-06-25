@@ -5,6 +5,7 @@ import {rigaScontrinoFA} from '../../../actions/scontrino'
 import {getEditedRigaScontrino, getRigheScontrino, getTableHeightScontrino, getTableScrollScontrino, getListeningItemScontrino, getListenersItemScontrino} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
+import {setOrdiniModalVisible} from '../../../actions/ordine'
 
 const setSelectedRigaScontrino = rigaScontrinoFA.setSelectedItem;
 const setTableWindowHeight = rigaScontrinoFA.setTableWindowHeight;
@@ -26,7 +27,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenRigaScontrino, offListenRigaScontrino, deleteRigaScontrino, setSelectedRigaScontrino, toggleTableScroll, setTableWindowHeight }, dispatch);
+  return bindActionCreators({ listenRigaScontrino, offListenRigaScontrino, deleteRigaScontrino, setSelectedRigaScontrino, toggleTableScroll, setTableWindowHeight, setOrdiniModalVisible }, dispatch);
 }
 
 

@@ -12,6 +12,8 @@ import TestataCassa from '../components/TestataCassa';
 import BookImg from '../../../components/BookImg'
 import MessageQueue from '../../../components/MessageQueue'
 
+import OrdiniModalTable from '../../ordine/containers/OrdiniModalTable'
+
 import React, {Component} from 'react'
 
 import moment from 'moment';
@@ -29,7 +31,8 @@ class Scontrino extends Component {
  componentDidMount() {
      this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
 	if (this.props.match.params.scontrino) 
-			{this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+			{
+				this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
 			}
  	
     }
@@ -111,6 +114,8 @@ return (
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
+     <OrdiniModalTable visible={this.props.ordiniModalVisible} data={this.props.ordiniModalVisible}/>
+
   <Col  style={{'backgroundColor': '#F0F0F0'}} span={6}>
 	
     <Row>

@@ -53,6 +53,7 @@ export const deltaOrdiniAperti = (eanTree, payload, type, status) => {
 			let value = payload.val();
 			let key = payload.key;
 			if (eanTree[value.ean] && eanTree[value.ean][key]) delete eanTree[value.ean][key]; 
+			if (Object.keys(eanTree[value.ean]).length === 0) delete eanTree[value.ean];
 			}
 		
 		break;
@@ -70,6 +71,8 @@ export const eanArray = (subEanTree) => {
 			(item) => {item[1].key = item[0]; return(item[1])}).sort(
 				(a,b) => {
 						let order = (a.stato > b.stato) ? -1 : (a.stato < b.stato) ? 1 : 0; //In ordine decrescente di lettera....
+						if (order === 0) order = a.dataOrdine - b.dataOrdine; //In ordine crescente di data ordine...
+						
 						if (order === 0) order = a.createdAt - b.createdAt; //In ordine crescente di tempo...
 						return(order);
 						})

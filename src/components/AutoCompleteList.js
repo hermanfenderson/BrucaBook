@@ -69,7 +69,6 @@ onChange = (value) => {
   {
    var {options, value} = this.state;
    
-   console.log(this.state);
     return (<AutoComplete 
      onSelect={this.handleSelect}
      onSearch={this.handleSearch}

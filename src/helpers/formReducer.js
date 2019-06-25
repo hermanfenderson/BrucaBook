@@ -118,7 +118,7 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
   		}
   		break;
 	case this.TESTATA_CHANGED:
-   	   if (action.payload) 
+	 if (action.payload) 
    		{   
    			newState = {...state, testata: action.payload};
    			if ((!state.lastActionKey) || (action.payload.totali && (action.payload.totali.lastActionKey === state.lastActionKey))) 

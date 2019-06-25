@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import WrappedTable from '../../../components/WrappedTable';
+import {Modal} from 'antd' 
 import {withRouter} from 'react-router-dom'
 
 
@@ -25,11 +26,23 @@ class TableClienti extends Component
     
    
 	
-	
-	
 	deleteRow = (row) => {
-	  this.props.deleteCliente(null, row.key);
+	   const deleteCli = () => {this.props.deleteCliente(null, row.key);};
+	   Modal.confirm({
+    		title: 'Confermi cancellazione cliente?',
+    		content: 'Se premi OK cancelli anche tutti gli ordini di questo cliente.',
+    		okText: 'Si',
+    		okType: 'danger',
+    		cancelText: 'No',
+    		onOk() {deleteCli()
+    			
+    		},
+    		onCancel() {
+    		},});
+    		
 	}
+	
+
 	
 	editRow = (row) => {
 		this.props.setSelectedCliente(row);

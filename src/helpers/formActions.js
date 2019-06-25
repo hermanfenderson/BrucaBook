@@ -110,7 +110,7 @@ return function(dispatch, getState) {
 			      			 if (url)
 							      {
 							      Firebase.database().ref(url).on('value', snapshot =>
-							          {
+							          { 
 							          	const riga = (snapshot.val()) ? {...snapshot.val(), 'key': itemId} : null//Per discernere la cancellazione...
 							          	dispatch(
 							          			{

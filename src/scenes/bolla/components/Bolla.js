@@ -71,10 +71,7 @@ render()
     </Modal>  
     <OrdiniModalTable visible={this.props.ordiniModalVisible} data={this.props.ordiniModalVisible}/>
 
-    	<Modal visibile={(this.props.ordiniModalVisible!==null)}>
-    		
-    	   	<div>Ciao!</div>
-    	   	</Modal>
+    
 		
     <Row style={{'backgroundColor': 'white'}}>
    <Col span={4}>

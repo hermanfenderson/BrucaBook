@@ -72,11 +72,11 @@ class TableScontrino extends Component
 	}
 
 	
-   ordiniRow = (row) => {
+   ordiniRow = (row,action=false) => {
+		if (!action) return(row.ordini);
+		this.props.setOrdiniModalVisible(row.ordini);
 		
-		return(row.ordini);
-	}
-	
+	}	
     
     	render() { 
       	let props = {...this.props};

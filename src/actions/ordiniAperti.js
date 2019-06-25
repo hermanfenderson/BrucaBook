@@ -27,6 +27,7 @@ export function saveOrdiniApertiDiff(source, params) {
   	        let ordiniApertiDiff = getEanArray(getState());
   	        ordiniApertiDiff.pop();//Non mi serve la riga della vendita libera...
   	         let ordiniApertiUpdate = {}; //Tutti gli ordini che devo aggiornare
+  	         let ordiniApertiSource = {}; //Gli ordini che devo salvare
 	  	     console.log(ordiniApertiDiff);
   	        if (ordiniApertiDiff.length > 0) //Altrimenti non devo fare assolutamente nulla
   	        {
@@ -41,9 +42,7 @@ export function saveOrdiniApertiDiff(source, params) {
 	  	        delete element.key;
 	  	        delete element.pezziDelta;
 	  	        console.log(path);
-	  	        if (source === 'bolla') element.bolla = path;
-	  	        else element.scontrino = path;
-	  	        if (pezziDelta > 0) {
+	  	          if (pezziDelta > 0) {
 	  	        	 if (pezziDelta !== pezzi) 
 	  	        	     {element.pezzi = pezziDelta;
 	  	        	      let clonedElement = {...element};
@@ -63,7 +62,13 @@ export function saveOrdiniApertiDiff(source, params) {
 	  	             if (oldStato) element.oldStato = oldStato;
 	  	        	 //Qui ci metto l'aggiornamento della storia...
 	  	        	 element.history[ref.push().key] = {at: Firebase.database.ServerValue.TIMESTAMP, oldStato: oldStato, stato: nextState, source: source, path: path};
-	  	        	ordiniApertiUpdate[subpath] = element;	
+	  	        	 if (source === 'bolla') element.bolla = path;
+	  	    		  else element.scontrino = path;
+	  	      
+	  	        	ordiniApertiUpdate[subpath] = element;
+	  	        	//escludo gli ordini che sono stati clonati...
+	  	        	ordiniApertiSource[subpath] = element;	
+	  	        	
 	  	           
 	  	           //Finalmente posso fare l'update...
 	  	           ref.update(ordiniApertiUpdate);
@@ -73,13 +78,14 @@ export function saveOrdiniApertiDiff(source, params) {
 	  	        });
 	  	       
   	        }  
-  	        else ordiniApertiUpdate = null;
+  	        else {ordiniApertiUpdate = null; ordiniApertiSource = null;}
 	 		//Firebase.database().ref(urlFactory(getState, 'ordini')).update(ordiniApertiUpdate);
 	 		dispatch ({type: SAVE_ORDINI_APERTI_DIFF});	
 	 		//Devo fare encoding di questa informazione per farla persistere al chiamante...
 	 		let ordiniApertiUpdateEncoded = {};
-	 		let ordiniApertiUpdateMatrix = (ordiniApertiUpdate) ? Object.entries(ordiniApertiUpdate) : {};
+	 		let ordiniApertiUpdateMatrix = (ordiniApertiSource) ? Object.entries(ordiniApertiSource) : {};
 	 		for (const [key, value] of ordiniApertiUpdateMatrix) {
+	 			    
 					ordiniApertiUpdateEncoded[encodeSlash(key)] = value;
 				}
 			return(ordiniApertiUpdateEncoded);

@@ -163,6 +163,9 @@ exports.purgeInventario =  functions.database.ref('{catena}/{negozio}/elencoInve
 
 exports.purgeOrdine =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
     .onDelete((snap, context) => {return(purge(snap,context,'ordini'))});
+    
+exports.purgeCliente =  functions.database.ref('{catena}/{negozio}/anagrafiche/clienti/{id}')
+    .onDelete((snap, context) => {return(purge(snap,context,'clienti'))});    
 
 //Vado a ripulire anche scontrini e bolle...
 exports.deletedRigaOrdineSideEffectBolla =  functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{ordine}/{id}')

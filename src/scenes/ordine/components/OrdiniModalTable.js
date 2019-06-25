@@ -10,16 +10,18 @@ class OrdiniModalTable extends Component
     {
     
 	
-	
+	closeOrdiniModal = () => {this.props.setOrdiniModalVisible(null)}
+   
 	detailRow = (row) => {
-    	console.log(row);
+		    this.closeOrdiniModal();
+    		this.props.history.push('/ordine/' + row.cliente + '/' + row.ordine);
+
     }
     
    
 
 	
-	
-    
+	 
     	render() { 
     
     	let props = {...this.props};
@@ -32,11 +34,16 @@ class OrdiniModalTable extends Component
 							return(<Popover title="Contatto" content={contatto}><Icon type="user" />{cliente.nome} {cliente.cognome}</Popover>)},
     		 	}
     		return(
-    	   	<Modal visibile={(this.props.ordiniModalVisible!==null)}>
-    	   	<WrappedTable {...props} size={'small'}    detailRow={ this.detailRow } header={header} customRowRender={customRowRender}/>
-			
-    	   	<div>Ciao!</div>
-    	   	</Modal>
+    		<Modal
+    		onCancel={this.closeOrdiniModal}
+          title="Ordini cliente"
+          footer={null}
+        visible={(this.props.ordiniModalVisible!==null)}
+        >
+           	<WrappedTable {...props} size={'small'}   detailRow={ this.detailRow } header={header} customRowRender={customRowRender}/>
+		
+        </Modal>	
+    	   
 			)}
     }		
 	
