@@ -215,7 +215,7 @@ export default function catalog(state = initialState(), action) {
     	
     	//Se sono qui... EAN è sicuramente valido...
         
-    	errMgmt(tbc3EditedCatalogItem, 'ean', 'invalidEAN': 'EAN non valido', false, false);
+    	errMgmt(tbc3EditedCatalogItem, 'ean', 'invalidEAN', 'EAN non valido', false, false);
     	//E ho anche il prezzo
     
     	errMgmt(tbc3EditedCatalogItem, 'prezzoListino','invalidAmount', 'Importo (19.99)',((value) => {return !isAmount(value)})(tbc3EditedCatalogItem.values.prezzoListino),  false);

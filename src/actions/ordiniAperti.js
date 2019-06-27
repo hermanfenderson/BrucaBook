@@ -1,5 +1,5 @@
 import {FormActions} from '../helpers/formActions';
-import {urlFactory, encodeSlash} from '../helpers/firebase';
+import {encodeSlash} from '../helpers/firebase';
 import {eanArrayFromSubEanTree} from '../helpers/ordiniAperti';
 import {getEanArray, getCatena, getLibreria} from '../reducers';
 import Firebase from 'firebase';

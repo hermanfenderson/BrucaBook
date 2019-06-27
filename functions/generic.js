@@ -126,7 +126,7 @@ const update = (change, context, part) =>
 					let updates={};
 					snapshot.forEach(function(childSnapshot) 
 						{
-						let mergedValues = Object.assign({}. childSnapshot.val(), values);
+						let mergedValues = Object.assign({}, childSnapshot.val(), values);
 						updates[childSnapshot.key] = mergedValues;
 						//childSnapshot.ref.update(values);
 	    				});
