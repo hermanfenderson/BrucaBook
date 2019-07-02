@@ -1,4 +1,6 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+//Non serve più col passaggio a Node 8
+//var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 const moment = require('moment');
 
 const generateTop5thisYear = (matrixVendite, year) => {return matrixVendite.anno[year] ? firstX(topList(matrixVendite.anno[year].ean),5) : []};
@@ -21,7 +23,6 @@ const generateSerieIncassi = (matrixVendite) => {
 			ts[i].period = moment(ts[i].period, 'YYYY/MM/DD').format('DD/MM/YY');
 			ts[i].incasso = ts[i].ricavoTotale;
 			}
-		console.log(ts);	
 		return ts;
 };
 
@@ -40,7 +41,9 @@ const generateSerieIncassiAnni = (matrixVendite) => {
 			    obj[ytd] = ts[j].ricavoTotaleYTD;
 				obj[dty] = ts[j].ricavoTotaleDTY;
 				obj[year] = ts[j].ricavoTotale;
-			    tsOut.push(_extends({}, obj));
+				//Usato lo spread...
+				tsOut.push({...obj});
+			    //tsOut.push(_extends({}, obj));
 				
 			};	
 		return tsOut;	
@@ -81,10 +84,15 @@ let period = '';
 //Array from formato anno/mese/giorno... o comunque i livelli che mi servono
 const branchExplorer = (branch, depth) =>
 {
-	for (let propt in branch)
+	let branchArray = Object.entries(branch);
+	let branchArrayLen = branchArray.length
+	//Al solito in posizione 0 la chiave...
+	for (let i=0; i<branchArrayLen; i++)
+	//for (let propt in branch)
 	   {
-	   	tag[depth] = propt;
-	    let subbranch = branch[propt];
+	   	//tag[depth] = propt;
+	   	tag[depth] = branchArray[i][0];
+	    let subbranch = branchArray[i][1];
 	   if (depth+1 === count) 
 			{
 			period = tag.join('/');
@@ -189,34 +197,39 @@ const getMatrixVenditeFromRegistroData = (registroData, today=setDay(moment())) 
 		 }
 		
 	let matrix = {anno: {}, totale: {ean: {}, totalePezzi: 0, ricavoTotale: parseFloat(0.0), listinoTotale: parseFloat(0.0) }};
-	 
-	 let date = registroData;	
-            	  for(var propt2 in date)
-		  			{
-		  			  let righe = date[propt2];
-		  				for (var propt in righe)	
-		  				{
-		  				 	if (righe[propt].tipo === "scontrini")
+	let registroArray = Object.entries(registroData);
+	let registroArrayLen =registroArray.lenght;
+	//In 0 c'è la data, in 1 ci sono le righe...
+	for (let i=0; i<registroArrayLen; i++) 
+			{
+		     let data = Object.values(registroArray[i][0]);
+		     
+		     let righeArray = Object.values(registroArray[i][1]);
+		     let righeArrayLen = righeArray.length;
+		     
+	         for (let j=0; j<righeArrayLen; j++) 
+	        			{
+		    		 	if (righeArray[j].tipo === "scontrini")
 		  					{
-		  					let ean = righe[propt].ean;
-		  					let totalePezzi =  parseInt(righe[propt].pezzi,10);
-			    		    let ricavoTotale = parseFloat(righe[propt].prezzoTotale);
-			    		    let listinoTotale = totalePezzi * (parseFloat(righe[propt].prezzoListino));
-			    		     let dettagli = {
-			    		    	titolo: righe[propt].titolo, 
-			    		    	autore: righe[propt].autore, 
-			    		    	editore: righe[propt].editore,
-			    		    	imgFirebaseUrl: righe[propt].imgFirebaseUrl,
+		  					let ean = righeArray[j].ean;
+		  					let totalePezzi =  parseInt(righeArray[j].pezzi,10);
+			    		    let ricavoTotale = parseFloat(righeArray[j].prezzoTotale);
+			    		    let listinoTotale = totalePezzi * (parseFloat(righeArray[j].prezzoListino));
+			    		    let dettagli = {
+			    		    	titolo: righeArray[j].titolo, 
+			    		    	autore: righeArray[j].autore, 
+			    		    	editore: righeArray[j].editore,
+			    		    	imgFirebaseUrl: righeArray[j].imgFirebaseUrl,
 			    		    	ean: ean,
 			    		    	totalePezzi: totalePezzi,
 			    		    	ricavoTotale: ricavoTotale,
 			    		    	listinoTotale: listinoTotale
 			    		    	}
-			    		    	updateCell(matrix,propt2, dettagli, isYTD(propt2,today));
+			    		    	updateCell(matrix,data, dettagli, isYTD(data,today));
 		  					}
-							
-		  				}
-		  			}	
+	        			}
+			}			
+		    	
     return matrix;		  			
 }
 
@@ -224,11 +237,7 @@ const getMatrixVenditeFromRegistroData = (registroData, today=setDay(moment())) 
 const topList = (eanObj) =>
 {  if (eanObj)
 		{
-		//let eanArray = Object.values(eanObj);
-		var eanArray = [];
-    	for (const prop in eanObj) {
-        	eanArray.push(eanObj[prop]);
-    	}
+		let eanArray = Object.values(eanObj);
 		eanArray.sort((a,b) => {return ((a.totalePezzi !== b.totalePezzi) ? b.totalePezzi - a.totalePezzi : (a.listinoTotale !== b.listinoTotale) ? b.listinoTotale - a.listinoTotale : 0) })
 		return eanArray;
 		}

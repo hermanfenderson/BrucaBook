@@ -27,6 +27,7 @@ admin.database().ref(urlSource).once("value").then(function(snapshot)
     								let lastMonthArray = moment().subtract(1, 'months').format('YYYY/MM').split('/');
       								let matrixVendite = getMatrixVenditeFromRegistroData(snapshot.val());
 									let serieIncassi = generateSerieIncassi(matrixVendite);
+									console.log(serieIncassi);
     								let serieIncassiMesi = generateSerieIncassiMesi(matrixVendite);
     								let serieIncassiAnni = generateSerieIncassiAnni(matrixVendite);
     								let top5thisYear = generateTop5thisYear(matrixVendite, year);

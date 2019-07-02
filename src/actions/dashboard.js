@@ -18,7 +18,7 @@ export const getReportData = () =>
 	let catena = getState().status.catena;
 	let url2 = 'https://brucabook.com/report?id=bulk&catena='+catena+'&libreria='+libreria;
 	//Se non ho nulla in memoria... carico ultimo report disponibile...
-	if (getSerieIncassi(getState()).length===0)
+	if (getSerieIncassi(getState()) && getSerieIncassi(getState()).length===0)
 		{
 	    Firebase.database().ref(url3).once('child_added', snapshot => {
 	
