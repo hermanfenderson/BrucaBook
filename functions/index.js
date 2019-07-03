@@ -21,7 +21,7 @@ let libreria = req.query.libreria;
 let urlSource = catena + '/' + libreria + '/registroData'
 let urlDest = catena + '/' + libreria + '/report/bulk';
 //res.send('Passed.');    							 
-admin.database().ref(urlSource).once("value").then(function(snapshot)
+return(admin.database().ref(urlSource).once("value").then(function(snapshot)
 								{ 	let year = moment().format('YYYY');
     								let lastYear = (parseInt(year,10) -1).toString(10);
     								let lastMonthArray = moment().subtract(1, 'months').format('YYYY/MM').split('/');
@@ -39,7 +39,7 @@ admin.database().ref(urlSource).once("value").then(function(snapshot)
     										  res.send('Passed.');    							 
     										  }
     									);	
-								})
+								}));
 	});
 });
 

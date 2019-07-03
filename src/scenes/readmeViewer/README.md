@@ -11,6 +11,9 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.11.2
+* Bug fixing inventario (campo ricerca, selezione libri controllati)
+
 ### Versione 0.11.1
 * Gestione ordini clienti (in beta utente)
 

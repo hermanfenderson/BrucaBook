@@ -163,7 +163,7 @@ export default function inventario(state = initialState(), action) {
    	    measures[action.newMeasure.name] = action.newMeasure.number;
    	       if (action.newMeasure.name==='viewPortHeight' || action.newMeasure.name==='headerHeight')
    			{
-   	      	 let height = measures['viewPortHeight'] - measures['headerHeight'] - 230;
+   	      	 let height = measures['viewPortHeight'] - measures['headerHeight'] - 260;
    	      	 if (!height) height = 100;
    			newState = {...state, tableHeight: height};
    			}
