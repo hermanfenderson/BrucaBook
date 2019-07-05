@@ -231,3 +231,39 @@ font-weight: bold;
 	text-transform: none;
 	
 }
+
+
+.vtHeadCell {
+    /* font-style: italic; */
+    font-weight: bold;
+     border-top: 1px solid #e8e8e8;
+       border-bottom: 1px solid #e8e8e8;
+  padding-left: 5px;
+     vertical-align: middle;
+    border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  display: table-cell;
+   /*background-color: #e8e8e8;*/
+}
+
+
+.vtCell {
+    border-bottom: 1px solid #e8e8e8;
+    border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+  
+   display: table;
+}
+
+.vtCellSelected {
+	font-weight: bold;
+   background-color: #e8e8e8;
+	
+}
+.vtCellValue {
+	padding-left: 5px;
+    display: table-cell;
+    vertical-align: middle;
+   
+}
+

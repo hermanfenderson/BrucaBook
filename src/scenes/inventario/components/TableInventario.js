@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedVirtualizedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable2'
 import { withRouter } from 'react-router-dom';
 import equal from 'deep-equal';
 
@@ -59,8 +59,7 @@ class TableInventario extends Component
     }
     
     	render() { 
-    	console.log(this.props);
-        let props = {...this.props};
+    	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	delete props['deleteRigaInventario']; //Non la passo liscia...
