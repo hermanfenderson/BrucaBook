@@ -4,16 +4,18 @@
   "private": true,
   "devDependencies": {
     "babel-plugin-import": "^1.6.2",
+    "less": "^2.7.2",
     "less-vars-to-js": "^1.2.1",
     "react-app-rewire-less": "^2.1.1",
-    "react-app-rewired": "^1.5.2"
+    "react-app-rewired": "^1.5.2",
+    "webpack": "^3.12.0"
   },
   "dependencies": {
+    "ajv": "^6.10.1",
     "antd": "^3.4.0",
     "classnames": "^2.2.5",
     "deep-equal": "^1.0.1",
-    "firebase": "^4.10.1",
-    "firebase-admin": "^8.2.0",
+    "firebase": "^4.13.1",
     "html-docx-js": "^0.3.1",
     "js-file-download": "^0.4.1",
     "moment": "^2.19.1",

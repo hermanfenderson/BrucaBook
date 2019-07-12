@@ -6,7 +6,7 @@ const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
-const {calcolaPezzi,getValues,getDiff,aggiornaMagazzinoEANDiff,aggiornaStoricoMagazzinoEANDiff} = require('./magazzino');
+const {calcolaPezzi,getValues,getDiff,aggiornaMagazzinoEANDiff,aggiornaStoricoMagazzinoEANDiff, aggiornaMagazzinoEANFull, aggiornaMagazzinoFull} = require('./magazzino');
 
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
 //const equal = require('deep-equal');
@@ -292,7 +292,7 @@ exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}
 
 //Il problema emptyAfter lo risolvo dopo...
 
-
+/*
 exports.correggiMagazzino = functions.database.ref('{catena}/{negozio}/magazzino/{ean}')
     .onWrite((change, context) => 
             {
@@ -311,6 +311,16 @@ exports.correggiMagazzino = functions.database.ref('{catena}/{negozio}/magazzino
           	  		)
             });	
 
+exports.aggiornaDateStoricoMagazzino = functions.database.ref('{catena}/{negozio}/storicoMagazzino/{data}')
+    .onWrite((change, context) => 
+            {
+              const data = context.params.data;
+          	  return(
+          	  		change.after.ref.parent.parent.child("dateStoricoMagazzino").child(data).update({createdAt: admin.database.ServerValue.TIMESTAMP}).then(
+          	  			() => {return(console.info("Aggiunta data "+ data));}                )
+          	  		)
+            });	
+  
 
 
 exports.correggiStoricoMagazzino = functions.database.ref('{catena}/{negozio}/storicoMagazzino/{data}/{ean}')
@@ -332,6 +342,17 @@ exports.correggiStoricoMagazzino = functions.database.ref('{catena}/{negozio}/st
           	  		)
             });	
             
+*/
+
+exports.aggiornaMagazzinoNew = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')
+    .onWrite((change, context) => 
+            {
+            const ean = context.params.ean;	
+            const refBookStoreRadix = change.after.ref.parent.parent;
+            return (aggiornaMagazzinoEANFull(admin, ean, refBookStoreRadix, change.after.val() ));
+            });
+
+/*
 exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}/{data}/{key}')
     .onWrite((change, context) => 
             {
@@ -355,33 +376,60 @@ exports.aggiornaStoricoMagazzino = functions.database.ref('{catena}/{negozio}/re
             const oldValue = change.before.val(); //Prendo il dato precedente
              return (aggiornaStoricoMagazzinoEANDiff(admin, ean, refBookStoreRadix, data, getValues(value,oldValue), getDiff(value, oldValue)));
             });
-            
-
+           
+           
+*/
 exports.forzaAggiornaMagazzino = functions.https.onRequest((req, res) => {
 
 cors(req, res, () => {
+			
+						
 let catena = req.query.catena;
 let libreria = req.query.libreria;
 let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
-let updates = {}; //Qui devo azzerare EAN e prima data in cui appare...	
-								
-return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
+/*
+let updates = []; //Qui devo azzerare EAN e prima data in cui appare...	gestisco un array...per aggirare il problema dei 1000 record... a botte di 450 (che per 2 fa 900)
+let updates_dim	= 0;					
+let promises = [];
+									
+	return(refBookStoreRadix.child('registroEAN').once("value").then
+				(
+				function(snapshot)
 								{
-								if (snapshot.val())
+  								if (snapshot.val())
 									{
-									for (let ean in snapshot.val()) 
+									let eans = Object.entries(snapshot.val());
+									updates_dim = eans.length / 450;
+									for (let j = 0; j < updates_dim + 1; j++) updates.push({});
+										for (let i=0; i<eans.length; i++ ) 
 										{
+										let ean = eans[i][0];
 										//Elenco dei trigger da scatenare	
-										let firstDate = Object.keys(snapshot.val()[ean])[0];
-										updates['magazzino/'+ean+'/pezzi'] = 0;
-										updates['storicoMagazzino/'+firstDate+'/'+ean+'/pezzi'] = 0;
-										}		
+										let firstDate = Object.keys(eans[i][1])[0];
+										let idx = Math.floor(i / 450);
+										updates[idx]['magazzino/'+ean+'/pezzi'] = 0;
+										updates[idx]['storicoMagazzino/'+firstDate+'/'+ean+'/pezzi'] = 0;
+										}	
+
 									}
-								})).then(()=>{
-									refBookStoreRadix.update(updates).then(()=>{res.send('Passed.');console.info("avviato ricalcolo magazzino e storico")})
-								})
+								}
+			    ).then(()=>{
+						    for (let j = 0; j < updates_dim + 1; j++)  promises.push(refBookStoreRadix.update(updates[j]));
+			    	        Promise.all(promises).then(()=>{
+			    	        							   res.send('Passed.');
+			    	        							   console.info("avviato ricalcolo magazzino e storico");
+			    	        	
+			    	        							   }
+			    	        						   );
+			    	        			
+			    		   })
+		 )
+	*/
+	return(aggiornaMagazzinoFull(admin,refBookStoreRadix));
+	});
 });
-});  
+
+
 /*
 exports.forzaAggiornaTitoli = functions.https.onRequest((req, res) => {
 

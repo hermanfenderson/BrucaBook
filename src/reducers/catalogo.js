@@ -128,7 +128,6 @@ export default function catalog(state = initialState(), action) {
   
    case SUBMIT_EDITED_CATALOG_ITEM:
 	    //Posso sottomettere il form se lo stato della riga è valido
-		console.log("Sono qui");	
 		if (state.editedItem.isValid)
 	    	{
 	        
@@ -205,7 +204,7 @@ export default function catalog(state = initialState(), action) {
         if (action.item.categoria) tbc3EditedCatalogItem.values.categoria = action.item.categoria; 
         if (action.item.nomeCategoria) tbc3EditedCatalogItem.values.nomeCategoria = action.item.nomeCategoria; 
     
-    	tbc3EditedCatalogItem.values.iva = 'a0'; //Eventualmente la cambi in anagrafica...
+    	 tbc3EditedCatalogItem.values.iva = (action.item.iva) ? action.item.iva : 'a0'; //Eventualmente la cambi in anagrafica...
     	
      	
     	//Il form e' potenzialmente valido... valuto gli errori...

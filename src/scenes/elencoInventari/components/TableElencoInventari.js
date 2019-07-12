@@ -5,15 +5,6 @@ import {Modal} from 'antd';
 import {withRouter} from 'react-router-dom'
 
 
-//E' un dato.... che passo come costante...
-const header = [
-				{dataField: 'dataInventario', label: 'Data inventario', width: '200px'},
-				{dataField: 'note', label: 'Note', width: '400px'},
-				
-			   {dataField: 'totali.righe', label: 'Inventario', width: '100px'},
-			    {dataField: 'totali.magazzino', label: 'Magazzino', width: '100px'},
-			   
-			    ];
 
 
 
@@ -74,7 +65,7 @@ class TableElencoInventari extends Component
     	delete props['deleteInventario']; //Non la passo liscia...
     	delete props['setSelectedInventario']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.header}/>
 			)}
     }		
 	

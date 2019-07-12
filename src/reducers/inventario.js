@@ -49,7 +49,7 @@ const colParams1 = [
 	];
 	
 const headerParams = [
-	{name: 'ean', label: 'EAN', min: 120, max: 120},
+	{name: 'ean', label: 'EAN', min: 130, max: 130},
 	{name: 'titolo', label: 'Titolo', min: 250},
 	{name: 'autore', label: 'Autore', min: 110},
 	{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},

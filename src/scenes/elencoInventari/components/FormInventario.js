@@ -28,6 +28,8 @@ componentWillMount = () =>
 }
 
   render() {
+  	const  formCols1 = this.props.geometry.formCols1;
+  
   	const formValues = this.props.editedInventario.values;
   	const errorMessages = this.props.editedInventario.errorMessages;
   	const readOnlyForm = this.props.readOnlyForm; //Vado in read only form... perchè sono pronto per aggiungere libri...
@@ -35,13 +37,13 @@ componentWillMount = () =>
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
     return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter:0}}>
-         <WrappedForm.DatePicker field='dataInventario' label='Data Inventario'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{span: 4}} itemStyle={{marginRight: 10}} disabled={(this.props.editedInventario.selectedItem!==null)} />
-         <WrappedForm.Input field='note' label='Note'   formColumnLayout={{span: 14}} itemStyle={{marginRight: 10}} />
+         <WrappedForm.Group formGroupLayout={{gutter: formCols1.gutter}}>
+         <WrappedForm.DatePicker field='dataInventario' label='Data Inventario'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataInventario}} disabled={(this.props.editedInventario.selectedItem!==null)} />
+         <WrappedForm.Input field='note' label='Note'   formColumnLayout={{width:formCols1.note}} />
      
-       <WrappedForm.Button itemStyle={{width: '90%',  marginTop: 40}} type={'button'} formColumnLayout={{span:3}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Button  type={'button'} formColumnLayout={{width:formCols1.annulla}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button itemStyle={{width: '90%',  marginTop: 40}} type="primary" htmlType="submit" formColumnLayout={{span:3}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button type="primary" htmlType="submit" formColumnLayout={{width:formCols1.crea}}>{submitLabel}</WrappedForm.Button>
      
        </WrappedForm.Group>
         

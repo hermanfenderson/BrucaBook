@@ -30,7 +30,7 @@ return (
       <Col style={{'marginTop': '30px'}} span={4}>
       </Col>
       <Col span={20}>
-      <TableElencoInventari/>
+      <TableElencoInventari header={this.props.geometry.header}/>
    
    	 	 </Col>
     </Row>
@@ -39,7 +39,7 @@ return (
      
       <Col span={20}>
      
-     <FormInventario  />
+     <FormInventario geometry={this.props.geometry} />
      </Col>
           </Row>
    

@@ -331,8 +331,13 @@ export const s2s = (scene) => {
 			break;
 			case 'ELENCOBOLLE':
 				s.stato = 'elencoBolle';
-				s.origin = fromBolla;
+				s.origin = fromElencoBolle;
 			break;
+			case 'ELENCOINVENTARI':
+				s.stato = 'elencoInventari';
+				s.origin = fromElencoInventari;
+			break;
+		
 			case 'ELENCOORDINI':
 				s.stato = 'elencoOrdini';
 				s.origin = fromElencoOrdini;

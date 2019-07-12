@@ -11,6 +11,8 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {STORE_MEASURE} from '../actions';
 
+import {calcFormCols, calcHeader} from '../helpers/geometry';
+
 
 moment.locale("it");
 
@@ -25,11 +27,30 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {isValid: true} ));
 }
 
+const formWidth = (880 -16)  * 5 / 6 -8;
 
+//E' un dato.... che passo come costante...
+const headerParams = [
+				{name: 'dataInventario', label: 'Data inventario', min: '200px', max: '200px'},
+				{name: 'note', label: 'Note', min: '400px', max: '400px'},
+				
+			   {name: 'totali.righe', label: 'Inventario', min: '100px', max: '100px'},
+			    {name: 'totali.magazzino', label: 'Magazzino', min: '100px', max: '100px'},
+			   
+			    ];
+			    
+const colParams1 = [
+	{name: 'dataInventario', min: 200, max: 200},
+	{name: 'note', min: 400, max: 400},
+	{name: 'annulla', min: 100, max: 100},
+	{name: 'crea', min: 100, max: 100}
+	
+	];
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
-			
+			geometry: {formWidth: formWidth, formCols1: calcFormCols(colParams1,8,formWidth), header: calcHeader(headerParams, formWidth - 60)
+    					}		
     				}
 	return initialStateHelper(eiis,extraState);
     }

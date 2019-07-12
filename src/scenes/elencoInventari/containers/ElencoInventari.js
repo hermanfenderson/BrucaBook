@@ -1,6 +1,8 @@
 import ElencoInventariComponent from '../components/ElencoInventari'
 import {inventarioFA} from '../../../actions/elencoInventari'
 import {storeMeasure, setHeaderInfo} from  '../../../actions'
+import {getGeometry} from '../../../reducers'
+
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -9,6 +11,7 @@ const resetElencoInventari = inventarioFA.reset;
 
 const mapStateToProps = (state) => {
 	return ({
+		geometry: getGeometry(state, 'ELENCOINVENTARI')
 	        })
 }
 

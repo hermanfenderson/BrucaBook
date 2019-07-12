@@ -1,4 +1,4 @@
-BrucaBook V.0.11.1
+BrucaBook V.0.12.0
 ==================
 
 Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in licenza MIT. [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
@@ -11,6 +11,13 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.12.0
+* Bug fixing catalogo (non mostrava l'iva)
+* Aggiornate librerie a ultime versioni (in particolare antd a 3.20)
+* Migrata tabella inventario a react-window
+* Campo IVA in magazzino
+* Riscritta routine aggiornamento magazzino e storico magazzino
+
 ### Versione 0.11.2
 * Bug fixing inventario (campo ricerca, selezione libri controllati)
 

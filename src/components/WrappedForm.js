@@ -60,7 +60,8 @@ let children = React.Children.map(props.children, child => {
 	    	 if (child.props.formColumnLayout && child.props.formColumnLayout.width)
 	    	 {
 	    	 	let width=(props.formGroupLayout.gutter) ? props.formGroupLayout.gutter + child.props.formColumnLayout.width : child.props.formColumnLayout.width;
-	    	 return <FixCol style={{verticalAlign: 'bottom'}} width={width}  >
+	    	    let style = (props.formGroupLayout.gutter) ? {verticalAlign: 'bottom', paddingLeft: props.formGroupLayout.gutter/2, paddingRight: props.formGroupLayout.gutter/2} :{verticalAlign: 'bottom'};
+	    	 return <FixCol style={style} width={width}  >
 	                {React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
 			        </FixCol>
 	    	 }       
