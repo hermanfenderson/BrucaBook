@@ -85,7 +85,7 @@ render()
     	   </Col>
       </Row>
     
-    <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '150px'}}>
+    <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '200px'}}>
     <Col span={4}>
      <BookImg eanState={this.props.editedRigaInventario.eanState} ean={this.props.editedRigaInventario.values.ean} imgUrl={this.props.editedRigaInventario.values.imgFirebaseUrl} />
 

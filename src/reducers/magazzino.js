@@ -30,14 +30,14 @@ const colSearchFixedParams = [
 	]
  
 const headerParams = [
-	{name: 'key', label: 'EAN', min: 124, max: 124},
-	{name: 'titolo', label: 'Titolo', min: 258},
-	{name: 'autore', label: 'Autore', min: 128},
-	{name: 'editore', label: 'Editore', min: 90},
+	{name: 'key', label: 'EAN', min: 124, max: 124, sort:'number'},
+	{name: 'titolo', label: 'Titolo', min: 258, sort:'string', ellipsis: true},
+	{name: 'autore', label: 'Autore', min: 128, sort:'string'},
+	{name: 'editore', label: 'Editore', min: 90, sort:'string'},
 
-	{name: 'nomeCategoria', label: 'Categoria', min: 60},
+	{name: 'nomeCategoria', label: 'Categoria', min: 60, sort:'string'},
 
-	{name: 'pezzi', label: 'Pezzi', min: 60, max: 60},
+	{name: 'pezzi', label: 'Pezzi', min: 60, max: 60, sort:'number'},
 
 	] 
 	

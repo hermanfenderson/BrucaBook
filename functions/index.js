@@ -6,7 +6,7 @@ const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
-const {calcolaPezzi,getValues,getDiff,aggiornaMagazzinoEANDiff,aggiornaStoricoMagazzinoEANDiff, aggiornaMagazzinoEANFull, aggiornaMagazzinoFull} = require('./magazzino');
+const {aggiornaMagazzinoEANFull, aggiornaMagazzinoFull} = require('./magazzino');
 
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
 //const equal = require('deep-equal');
@@ -211,27 +211,7 @@ exports.eliminaOrdineDaScontrino = functions.database.ref('{catena}/{negozio}/sc
     });
 
     
-//NON SERVE! NON CONSENTO DI MODIFICARE LA DATA DELL'ORDINE...           
-/*
-exports.updateOrdine =  functions.database.ref('{catena}/{negozio}/elencoOrdini/{cliente}/{id}')
-    .onUpdate((change, context) => {
-    	let key = context.params.id;
-    	let ref = change.after.ref.parent.parent.parent.child('ordini').child(context.params.cliente).child(key);
-    	let values = {dataOrdine : change.after.val().dataOrdine};
-    	return(ref.once('value').then(function(snapshot) {
-					let updates={};
-					snapshot.forEach(function(childSnapshot) 
-						{
-						updates[childSnapshot.key] = values;
-						//childSnapshot.ref.update(values);
-	    				});
-	    			ref.update(updates).then( console.info("Aggiorno riga ordine" +key));	
-					}));
-         }
-    	
-    	);
-              
-    */
+
     
 //Il registroEAN è organizzato per catena -> Negozio -> EAN -> keyDocumento che origina il valore...
 //Caso insert o modify si limita a creare una copia dell'oggetto nel registro. 
@@ -290,59 +270,7 @@ exports.eliminaRegistroDaInventario = functions.database.ref('{catena}/{negozio}
     .onDelete((snap, context) => {return(aggiornaRegistro(snap,context,'elimina','inventari'))});
 
 
-//Il problema emptyAfter lo risolvo dopo...
 
-/*
-exports.correggiMagazzino = functions.database.ref('{catena}/{negozio}/magazzino/{ean}')
-    .onWrite((change, context) => 
-            {
-              const ean = context.params.ean;	
-              const pezzi = change.after.val() ? change.after.val().pezzi : 0;	
-          	  return(
-          	  		change.after.ref.parent.parent.child("registroEAN").child(ean).once("value").then(
-          	  			function(snapshot) 
-          	  				{
-          	  				 let registro = snapshot.val();
-          	  				 let truePezzi = calcolaPezzi(registro, null);
-          	  				 if (truePezzi === pezzi) return(console.info("Totale verificato "+ ean));
-          	  				 else change.after.ref.update({pezzi: truePezzi, createdAt: admin.database.ServerValue.TIMESTAMP}).then(() => {console.info("Totale corretto "+ ean)});
-          	  				}
-          	  			)
-          	  		)
-            });	
-
-exports.aggiornaDateStoricoMagazzino = functions.database.ref('{catena}/{negozio}/storicoMagazzino/{data}')
-    .onWrite((change, context) => 
-            {
-              const data = context.params.data;
-          	  return(
-          	  		change.after.ref.parent.parent.child("dateStoricoMagazzino").child(data).update({createdAt: admin.database.ServerValue.TIMESTAMP}).then(
-          	  			() => {return(console.info("Aggiunta data "+ data));}                )
-          	  		)
-            });	
-  
-
-
-exports.correggiStoricoMagazzino = functions.database.ref('{catena}/{negozio}/storicoMagazzino/{data}/{ean}')
-    .onWrite((change, context) => 
-            {
-              const ean = context.params.ean;
-              const data = context.params.data;
-              const pezzi = change.after.val() ? change.after.val().pezzi : 0;	
-          	  return(
-          	  		change.after.ref.parent.parent.parent.child("registroEAN").child(ean).once("value").then(
-          	  			function(snapshot) 
-          	  				{
-          	  				 let registro = snapshot.val();
-          	  				 let truePezzi = calcolaPezzi(registro, data);
-          	  				 if (truePezzi === pezzi) return(console.info("Totale storico magazzino verificato "+ ean));
-          	  				 else change.after.ref.update({pezzi: truePezzi, createdAt: admin.database.ServerValue.TIMESTAMP}).then(() => {console.info("Totale storico magazzino corretto "+ ean)});
-          	  				}
-          	  			)
-          	  		)
-            });	
-            
-*/
 
 exports.aggiornaMagazzinoNew = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}')
     .onWrite((change, context) => 
@@ -352,33 +280,7 @@ exports.aggiornaMagazzinoNew = functions.database.ref('{catena}/{negozio}/regist
             return (aggiornaMagazzinoEANFull(admin, ean, refBookStoreRadix, change.after.val() ));
             });
 
-/*
-exports.aggiornaMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}/{data}/{key}')
-    .onWrite((change, context) => 
-            {
-            const ean = context.params.ean;	
-            const refBookStoreRadix = change.after.ref.parent.parent.parent.parent;
-            
-            const value = change.after.val();	//Loop dalla prima all'ultima data...
-            const oldValue = change.before.val(); //Prendo il dato precedente
-             return (aggiornaMagazzinoEANDiff(admin, ean, refBookStoreRadix, getValues(value,oldValue), getDiff(value, oldValue)));
-            });
-            
-exports.aggiornaStoricoMagazzino = functions.database.ref('{catena}/{negozio}/registroEAN/{ean}/{data}/{key}')
-    .onWrite((change, context) => 
-            {
-            const ean = context.params.ean;	
-            const data = context.params.data;
-           // const key = context.params.key;
-            const refBookStoreRadix = change.after.ref.parent.parent.parent.parent;
-            
-            const value = change.after.val();	//Loop dalla prima all'ultima data...
-            const oldValue = change.before.val(); //Prendo il dato precedente
-             return (aggiornaStoricoMagazzinoEANDiff(admin, ean, refBookStoreRadix, data, getValues(value,oldValue), getDiff(value, oldValue)));
-            });
-           
-           
-*/
+
 exports.forzaAggiornaMagazzino = functions.https.onRequest((req, res) => {
 
 cors(req, res, () => {
@@ -387,97 +289,13 @@ cors(req, res, () => {
 let catena = req.query.catena;
 let libreria = req.query.libreria;
 let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
-/*
-let updates = []; //Qui devo azzerare EAN e prima data in cui appare...	gestisco un array...per aggirare il problema dei 1000 record... a botte di 450 (che per 2 fa 900)
-let updates_dim	= 0;					
-let promises = [];
-									
-	return(refBookStoreRadix.child('registroEAN').once("value").then
-				(
-				function(snapshot)
-								{
-  								if (snapshot.val())
-									{
-									let eans = Object.entries(snapshot.val());
-									updates_dim = eans.length / 450;
-									for (let j = 0; j < updates_dim + 1; j++) updates.push({});
-										for (let i=0; i<eans.length; i++ ) 
-										{
-										let ean = eans[i][0];
-										//Elenco dei trigger da scatenare	
-										let firstDate = Object.keys(eans[i][1])[0];
-										let idx = Math.floor(i / 450);
-										updates[idx]['magazzino/'+ean+'/pezzi'] = 0;
-										updates[idx]['storicoMagazzino/'+firstDate+'/'+ean+'/pezzi'] = 0;
-										}	
 
-									}
-								}
-			    ).then(()=>{
-						    for (let j = 0; j < updates_dim + 1; j++)  promises.push(refBookStoreRadix.update(updates[j]));
-			    	        Promise.all(promises).then(()=>{
-			    	        							   res.send('Passed.');
-			    	        							   console.info("avviato ricalcolo magazzino e storico");
-			    	        	
-			    	        							   }
-			    	        						   );
-			    	        			
-			    		   })
-		 )
-	*/
 	return(aggiornaMagazzinoFull(admin,refBookStoreRadix));
 	});
 });
 
 
-/*
-exports.forzaAggiornaTitoli = functions.https.onRequest((req, res) => {
 
-cors(req, res, () => {
-let catena = req.query.catena;
-let libreria = req.query.libreria;
-let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
-
-
-
-let updates = {}; //Qui devo azzerare EAN e prima data in cui appare...	
-console.log("sono qua");								
-return(refBookStoreRadix.child('registroEAN').once("value").then(function(snapshot)
-								{
-								console.log("sono qui");
-								if (snapshot.val())
-									{
-									for (let ean in snapshot.val()) 
-										{
-										let record = snapshot.val()[ean];
-										//Scendo di due nella gerarchia
-										let firstDateRecord = record[Object.keys(record)[0]];
-										
-										let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
-										console.log(firstKeyRecord);
-										let titolo = firstKeyRecord.titolo;
-										let editore = firstKeyRecord.editore;
-										//Elenco dei trigger da scatenare	
-										updates['magazzino/'+ean+'/titolo'] = titolo;
-										updates['magazzino/'+ean+'/editore'] = editore;
-										
-										}		
-									}
-								},
-								function(error) {
-  // The Promise was rejected.
-  console.log(error);
-}
-								
-								)).then(()=>{
-									refBookStoreRadix.update(updates).then(()=>{res.send('Passed.');console.info("avviato aggiornamento titoli")})
-								}, function(error) {
-  // The Promise was rejected.
-  console.log(error);
-})
-});
-});  
-*/
 
 
 exports.aggiornaOrdiniAperti = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
@@ -530,36 +348,7 @@ let promise = refBookStoreRadix.child('registroEAN').once("value").then(function
 										
 										})
 								    console.log(updates);
-								    /*
-									for (let i=0; i< eans.length; i++)
-										{
-										console.log(eans[i]);
-										//console.log(eans[i]);
-										//console.log(snapshot.val()[eans[i]]);
-										//let firstDateRecord = record[Object.keys(record)[0]];
-										//let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
-										//console.log(firstKeyRecord);
-										}
-									/*	
-									for (let ean in snapshot.val()) 
-										{
-										console.log(ean);
-											
-										let record = snapshot.val()[ean];
-										//Scendo di due nella gerarchia
-										let firstDateRecord = record[Object.keys(record)[0]];
-										
-										let firstKeyRecord = firstDateRecord[Object.keys(firstDateRecord)[0]];
-										console.log(firstKeyRecord);
-										/*
-										let titolo = firstKeyRecord.titolo;
-										let editore = firstKeyRecord.editore;
-										//Elenco dei trigger da scatenare	
-										updates['magazzino/'+ean+'/titolo'] = titolo;
-										updates['magazzino/'+ean+'/editore'] = editore;
-										*/
-									
-									
+							
 										
 									}
 								

@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react'
-import WrappedTable from '../../../components/WrappedVirtualizedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable2'
 import { withRouter } from 'react-router-dom';
 import {Spin} from 'antd';
 

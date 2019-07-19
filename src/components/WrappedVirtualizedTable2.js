@@ -17,18 +17,41 @@ function itemKey({ columnIndex, data, rowIndex }) {
 
 
 
-
-
 class WrappedVirtualizedTable extends React.PureComponent {
 //if (this.props.actionFirst)
 
 
 componentDidUpdate(prevProps, prevState) {
+	 let last = Object.keys(this.dataIndex).length - 1;
   // only update chart if the data has changed
   if (prevProps.header !== this.props.header) {
- 
-   this.refs.gridRef.resetAfterColumnIndex(0,true);
+    this.gridRef.current.resetAfterColumnIndex(0,true);
   }
+  
+  if (this.props.tableScroll)
+			{
+			if (last>=0) 
+				{this.gridRef.current.scrollToItem({rowIndex:last}); //Vado alla fine...
+				this.props.toggleTableScroll(false); //Resetto lo scroll...
+				}
+			}
+
+  if (this.props.tableScrollByKey)
+			{
+			let rowToGo = -1;
+			console.log("scroll a riga: " +this.dataIndex[this.props.tableScrollByKey]);
+			if (this.props.tableScrollByKey)
+					{
+					 if (rowToGo !== this.dataIndex[this.props.tableScrollByKey]) rowToGo = this.dataIndex[this.props.tableScrollByKey];
+					 else rowToGo = -1;
+					}
+					
+			if (rowToGo >= 0) this.gridRef.current.scrollToItem({align: 'auto', rowIndex: rowToGo}); //Vado alla riga richiesta...
+		    this.props.setTableScrollByKey(null); //Resetto lo scroll...
+			
+			}	
+	  		
+
 }
 
 constructor(props) {
@@ -40,6 +63,8 @@ constructor(props) {
     hoverKey: null,
   }
 	
+    this.gridRef = React.createRef();
+    this.dataIndex = {};
 
 	//Indice della action
 	this.actIdx = this.props.actionFirst ? 0 : this.props.header.length;
@@ -47,18 +72,20 @@ constructor(props) {
 	
 }
 
-onHeaderClick = ({event, dataField}) => {
+onHeaderClick = ({event, col}) => {
 		//loop su tre stati...sortBy null, sortDirection ASC sortDirection DESC
-	let sortBy = dataField;
+if (col.sort)
+	{
+	let sortBy = col.dataField;
 	let sortDirection = 'ASC';
-	if (this.state.sortBy === dataField)
+	if (this.state.sortBy === col.dataField)
 		{
 		if (this.state.sortDirection==='ASC') sortDirection = 'DESC';
 	    if (this.state.sortDirection==='DESC') {sortBy = null, sortDirection = null} 	
 		}
-	let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection};
+	let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection, sortType: col.sort };
 	this.setState(newState);
-
+	}
 };
 
 Header = (header) => 
@@ -67,9 +94,9 @@ Header = (header) =>
 let headCols = header.map((col, idx) => 
 				  <div className={'vtHeadCell'} 
 				  key={idx} 
-				  onClick={(e) => {this.onHeaderClick({event: e, dataField:col.dataField })} }
+				  onClick={(e) => {this.onHeaderClick({event: e, col:col })} }
                              
-				  style={{ display: 'table-cell', width:col.width}}>
+				  style={{ display: 'table-cell', height: 30, width:col.width}}>
                        {col.label} 
                         {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC')) ? <Icon type="sort-ascending" /> : null}     
                   {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC')) ? <Icon type="sort-descending" /> : null}     
@@ -132,7 +159,12 @@ cellRenderer = (rowIndex, columnIndex, data) => {
 		{   	let cellName = this.props.header[cIdx].dataField;
 			let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
 
-			return(<div className={'vtCellValue'}>{cellValue}</div>);
+		    let customRender = (this.props.customRowRender) ? this.props.customRowRender[cellName] : null;
+		    //Se ho un render specifico per questa colonna....
+		    if (customRender) {
+		    		        return customRender(cellValue, data[rowIndex], rowIndex);
+		    				}
+			else return(<div className={classNames({'vtCellValue': true, 'vtCellEllipsis': this.props.header[cIdx].ellipsis})} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>);
 		}	
 }
 
@@ -179,12 +211,12 @@ render ()
   					  itemData.sort((a, b) => 
   							{
   							let sortBool = false;	
-  							if (typeof(a[this.state.sortBy]) === 'string') 
+  							if (this.state.sortType === 'string') 
   								{
-  									sortBool = a[this.state.sortBy].localeCompare(b[this.state.sortBy]);
+  									if ((a[this.state.sortBy] !== undefined) && (b[this.state.sortBy] !== undefined)) sortBool = a[this.state.sortBy].localeCompare(b[this.state.sortBy]);
   									
   								}
-  							else sortBool = a[this.state.sortBy] - b[this.state.sortBy];
+  							else if ((a[this.state.sortBy] !== undefined) && (b[this.state.sortBy] !== undefined))  sortBool = a[this.state.sortBy] - b[this.state.sortBy];
   							if (this.state.sortDirection==='DESC') sortBool = -sortBool;
   							return sortBool;
   							}) 
@@ -194,32 +226,38 @@ render ()
 		let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection};
 		this.setState(newState);
 	} 
+//Genero un indice che associa aalla chiave la sua posizione nell'array sortato e filtrato. Mi serve per saltare a una riga	
+const reducer = (acc, curr, idx) => {
+	acc[curr.key] = idx;
+	return(acc);
+};
+if (sortedData.length > 0) this.dataIndex = sortedData.reduce(reducer, this.dataIndex);
+
 	
 this.header2 = [...this.props.header];
-	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || '60px'}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || '60px'})
+	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || 60}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || 60})
 	  
 let columnWidths = (() => 
 		{
 		let cW = this.header2.map(h => h.width);
 		return cW;
 		})()
-		
    return(
   <div >
   <Row >
    {this.Header(this.header2)}	
- 
+  
   </Row>
   <Grid 
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}
     height={this.props.height - 30}
     rowCount={itemData ? itemData.length : 0}
-    rowHeight={index => 40}
+    rowHeight={index => 30}
     width={this.props.width}
     itemData={sortedData}
     itemKey={itemKey}
-    ref='gridRef'
+    ref={this.gridRef}
           
   >
     {this.Cell}

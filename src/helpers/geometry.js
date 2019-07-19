@@ -66,7 +66,13 @@ export const calcHeader = (colParams, width) =>
 	//Vedo se ho spazio a disposizione per allargarmi
 	let spread = width  - minTot;
 	let cols = [];
-	for (let i=0; i<numCol; i++) cols.push({dataField: colParams[i].name}); //Inizio a mettere il nome
+
+	for (let i=0; i<numCol; i++) 
+		{cols.push({dataField: colParams[i].name});
+		 if (colParams[i].sort) cols[i].sort = colParams[i].sort;
+		if (colParams[i].ellipsis) cols[i].ellipsis = colParams[i].ellipsis;
+			
+		} //Inizio a mettere il nome e altri operatori se ci sono
 	if (spread > 0)
 		{
 		//calcolo le richieste...

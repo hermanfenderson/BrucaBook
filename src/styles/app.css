@@ -234,25 +234,25 @@ font-weight: bold;
 
 
 .vtHeadCell {
-    /* font-style: italic; */
     font-weight: bold;
-     border-top: 1px solid #e8e8e8;
-       border-bottom: 1px solid #e8e8e8;
+    /* border-top: 1px solid #e8e8e8; */
+    /*   border-bottom: 1px solid #e8e8e8;*/
+       
   padding-left: 5px;
-     vertical-align: middle;
-    border-left: 1px solid #e8e8e8;
-  border-right: 1px solid #e8e8e8;
-  display: table-cell;
-   /*background-color: #e8e8e8;*/
+      display: table-cell;
+       vertical-align: middle;
+   background-color: #fafafa;
 }
 
 
 .vtCell {
     border-bottom: 1px solid #e8e8e8;
-    border-left: 1px solid #e8e8e8;
-  border-right: 1px solid #e8e8e8;
+   /* border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;*/
   
-   display: table;
+   display: flex;
+  /*vertical-align: middle;*/
+    align-items: center; 
 }
 
 .vtCellSelected {
@@ -263,7 +263,7 @@ font-weight: bold;
 }
 
 .vtCellHover {
-	background-color: #d3d3d3;
+	background-color: #D9E6DF;
 	
 }
 
@@ -273,8 +273,11 @@ font-weight: bold;
 
 .vtCellValue {
 	padding-left: 5px;
-    display: table-cell;
-    vertical-align: middle;
    
+}
+.vtCellEllipsis {
+    text-overflow: ellipsis;
+white-space: nowrap;
+  overflow: hidden;
 }
 

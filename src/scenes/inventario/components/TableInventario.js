@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedVirtualizedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable2'
 import { withRouter } from 'react-router-dom';
 import equal from 'deep-equal';
 
@@ -58,6 +58,10 @@ class TableInventario extends Component
     	this.props.history.push('/dettagli/'+row.ean);
     }
     
+  //  customRowRender = {
+
+   // 		 	'titolo' : (text, record, index) => { return(<div style={{width: this.props.header[1].width-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
+
     	render() { 
     	let props = {...this.props};
     	let selectedItemKey = null;
