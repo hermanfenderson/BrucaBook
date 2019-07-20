@@ -34,7 +34,7 @@ export const saveMagazzino = () =>
     {  
        Firebase.database().ref(url).once('value', snapshot => {
        	  let data = [];
-       	  data.push(['EAN','Titolo','Autore','Editore','Prezzo', 'Pezzi','Valore']);
+       	  data.push(['EAN','Titolo','Autore','Editore','Prezzo', 'Pezzi','Valore','IVA']);
        	  let righeMagazzino = snapshot.val();
        	  let riga = null
        	 		for (var idRiga in righeMagazzino)
@@ -42,7 +42,7 @@ export const saveMagazzino = () =>
        				riga =  righeMagazzino[idRiga];
        				let pezzi = parseInt(riga.pezzi, 10);
        				let valore = pezzi * parseFloat(riga.prezzoListino);
-       				data.push([idRiga, riga.titolo, riga.autore, riga.editore, parseFloat(riga.prezzoListino), pezzi, valore]);	
+       				data.push([idRiga, riga.titolo, riga.autore, riga.editore, parseFloat(riga.prezzoListino), pezzi, valore, riga.iva]);	
        				}
        		
        	  let date = riga ? moment(riga.data).format('YYYYMMDD') : null; 	

@@ -1,4 +1,4 @@
-import zipcelx from 'zipcelx/lib/module';
+import zipcelx from 'zipcelx-es5-cjs/lib/module';
 
 //import json2xlsx from 'json2xlsx-export';
 
