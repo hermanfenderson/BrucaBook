@@ -50,9 +50,9 @@ const colParams1 = [
 	
 const headerParams = [
 	{name: 'ean', label: 'EAN', min: 130, max: 130},
-	{name: 'titolo', label: 'Titolo', min: 250, ellipsis: true, sort: 'string'},
+	{name: 'titolo', label: 'Titolo', min: 240, ellipsis: true, sort: 'string'},
 	{name: 'autore', label: 'Autore', min: 110},
-	{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60, sort: 'number'},
+	{name: 'prezzoListino', label: 'Prezzo', min: 70, max: 70, sort: 'number'},
 	{name: 'stock', label: 'Stock', min: 50, max: 50},
 	{name: 'pezzi', label: 'Delta', min: 50, max: 50},
 

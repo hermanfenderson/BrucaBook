@@ -38,3 +38,9 @@ export function generateEAN(number)
   var result = number.concat(eanCheckDigit(number));
   return result;
 }
+
+export function getAliquotaIVA(iva, aliquote)
+{  let ivaGood = ((!iva) || (iva[0] !== 'a')) ? 'a0' : iva;
+   let result = 100*Object.values(aliquote[ivaGood])[0];
+	return(result);
+}

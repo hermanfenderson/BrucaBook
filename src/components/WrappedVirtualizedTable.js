@@ -1,77 +1,227 @@
 import React from 'react';
-import {Table, Column } from 'react-virtualized'
-import { Icon } from 'antd';
+
+import { VariableSizeGrid as Grid } from 'react-window';
+import {Row, Icon} from 'antd'; 
+
 import classNames from 'classnames';
 
-// Si appoggia alla react-virtualized table. Capace di filtrare e rortare 
-// Gestisco internamente le funzioni di sort e di filter
-// gestisco lo stato della ricerca internamente...
-//disableSort disabilita il sort
-//disableSortColumns disabilita il sort per una o più colonne
-class WrappedVirtualizedTable extends React.Component {
-constructor(props, context) {
-    super(props, context);
-    this.state = {
-      sortBy: null,
-      sortDirection: null,
-    }
- }
-onRowClick = ({event, index, rowData}) => {
-	var myRe = /<i.+class=.anticon/m;
-	var element = event.target.outerHTML;
+// These item sizes are arbitrary.
+// Yours should be based on the content of the item.
+const SortSvg = () => (
+  <svg width="12" height="12" >       
+     <image href="/sort.svg"   width="12" height="12"/>    
+</svg>
+);
+const SortAlphaAscSvg = () => (
+  <svg width="12" height="12">       
+     <image href="/sort-alpha-asc.svg"  width="12" height="12"/>    
+</svg>
+);
+const SortAlphaDescSvg = () => (
+  <svg width="12" height="12">       
+     <image href="/sort-alpha-desc.svg"  width="12" height="12"/>    
+</svg>
+);
+const SortNumericAscSvg = () => (
+  <svg width="12" height="12">       
+     <image href="/sort-numeric-asc.svg"  width="12" height="12"/>    
+</svg>
+);
+const SortNumericDescSvg = () => (
+  <svg width="12" height="12">       
+     <image href="/sort-numeric-desc.svg"  width="12" height="12"/>    
+</svg>
+);
+
+function itemKey({ columnIndex, data, rowIndex }) {
+   const item = data[rowIndex];
+   return `${item.key}-${columnIndex}`;
+}
+
+
+
+
+class WrappedVirtualizedTable extends React.PureComponent {
+//if (this.props.actionFirst)
+
+
+componentDidUpdate(prevProps, prevState) {
+	 let last = Object.keys(this.dataIndex).length - 1;
+  // only update chart if the data has changed
+  if (prevProps.header !== this.props.header) {
+    this.gridRef.current.resetAfterColumnIndex(0,true);
+  }
+  
+  if (this.props.tableScroll)
+			{
+			if (last>=0) 
+				{this.gridRef.current.scrollToItem({rowIndex:last}); //Vado alla fine...
+				this.props.toggleTableScroll(false); //Resetto lo scroll...
+				}
+			}
+
+  if (this.props.tableScrollByKey)
+			{
+			let rowToGo = -1;
+			console.log("scroll a riga: " +this.dataIndex[this.props.tableScrollByKey]);
+			if (this.props.tableScrollByKey)
+					{
+					 if (rowToGo !== this.dataIndex[this.props.tableScrollByKey]) rowToGo = this.dataIndex[this.props.tableScrollByKey];
+					 else rowToGo = -1;
+					}
+					
+			if (rowToGo >= 0) this.gridRef.current.scrollToItem({align: 'auto', rowIndex: rowToGo}); //Vado alla riga richiesta...
+		    this.props.setTableScrollByKey(null); //Resetto lo scroll...
+			
+			}	
+	  		
+
+}
+
+constructor(props) {
+	super(props)
+	//HEader con sel... al posto giusto LO USO SEMPRE
+	//Gestisco hover e direzione del sort...
+	this.state = {
+    //options: [],
+    hoverKey: null,
+  }
 	
-	var bool = myRe.test(element);
-	//Eseguo se l'utente non ha fatto click su una icona
-	if (!bool)
+    this.gridRef = React.createRef();
+    this.dataIndex = {};
+
+	//Indice della action
+	this.actIdx = this.props.actionFirst ? 0 : this.props.header.length;
+	
+	
+}
+
+onHeaderClick = ({event, col}) => {
+		//loop su tre stati...sortBy null, sortDirection ASC sortDirection DESC
+if (col.sort)
+	{
+	let sortBy = col.dataField;
+	let sortDirection = 'ASC';
+	if (this.state.sortBy === col.dataField)
 		{
-		if (this.props.selectRow) this.props.selectRow(rowData);	
+		if (this.state.sortDirection==='ASC') sortDirection = 'DESC';
+	    if (this.state.sortDirection==='DESC') {sortBy = null, sortDirection = null} 	
 		}
+	let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection, sortType: col.sort };
+	this.setState(newState);
+	}
 };
 
-
+Header = (header) => 
+{
+	
+let headCols = header.map((col, idx) => 
+				  <div className={'vtHeadCell'} 
+				  key={idx} 
+				  onClick={(e) => {this.onHeaderClick({event: e, col:col })} }
+                             
+				  style={{ display: 'table-cell', height: 30, width:col.width}}>
+                       {col.label} 
+                    {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'string')) ? <Icon component={SortAlphaAscSvg} /> : null}     
+                
+                  {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC') && (col.sort === 'string')) ? <Icon component={SortAlphaDescSvg} /> : null}     
+                   {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'number')) ? <Icon component={SortNumericAscSvg} /> : null}     
+                
+                  {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC') && (col.sort === 'number')) ? <Icon component={SortNumericDescSvg} /> : null}     
+                 {((col.sort) && (col.dataField  !== this.state.sortBy)) ? <Icon component={SortSvg} /> : null}     
+               
+                 </div>
+			)	
+return (
+    <div>
+    {headCols}
+    </div>
+)
+};
 
 actionCellRenderer = ({rowData, rowIndex}) => {
  return (
-        <div>
+        <div className={'vtCellValue'}>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(rowData)}}/>} 
 		{(this.props.editRow) && <Icon type="edit" onClick={() => {   this.props.editRow(rowData)}}/>}  
-       	{(this.props.pinRow) && <Icon type={(rowData[this.props.pinField]) ? "pushpin" : "pushpin-o" } onClick={() => { this.props.pinRow(rowData)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => {this.props.detailRow(rowData)}}/>}  
+       	{(this.props.pinRow) && <Icon  type={"pushpin"} theme={(rowData[this.props.pinField]) ? "filled" : "outlined" } onClick={() => { this.props.pinRow(rowData)}}/>}  
+      
        {(this.props.saveRow) && <Icon type={"save"} onClick={() => { this.props.saveRow(rowData, rowIndex)}}/>}  
        {(this.props.ordiniRow) && (this.props.ordiniRow(rowData)) && <Icon type="team" onClick={() => { this.props.ordiniRow(rowData,true)}}/>}  
        {(this.props.bollaRow) && (this.props.bollaRow(rowData)) && <Icon type="shopping-cart" onClick={() => { this.props.bollaRow(rowData,true)}}/>}  
-       {(this.props.scontrinoRow) && (this.props.scontrinoRow(rowData)) && <Icon type="smile-o" onClick={() => { this.props.scontrinoRow(rowData,true)}}/>}  
+       {(this.props.scontrinoRow) && (this.props.scontrinoRow(rowData)) && <Icon type="smile" onClick={() => { this.props.scontrinoRow(rowData,true)}}/>}  
        
         </div>
         );
  }
 
 
+onRowClick = ({event, index, rowData, column}) => {
+	//Eseguo se l'utente non ha fatto click su una icona
+	if ((column !== this.actIdx) && this.props.selectRow) this.props.selectRow(rowData);	
+};
+
+onMouseOver = ({event, index, rowData}) => {
+	//Aggiorno lo stato
+	if (rowData)
+		{
+		let newState = {...this.state}
+		newState.hoverKey = rowData.key;
+		this.setState(newState);
+		}
+};
+onMouseOut = () => {
+		let newState = {...this.state}
+		newState.hoverKey = null;
+		this.setState(newState);
+	
+}
+
+columnCount = this.props.header.length+1;
+
+
+cellRenderer = (rowIndex, columnIndex, data) => {
+	let cIdx = this.props.actionFirst ? columnIndex + 1 : columnIndex;
+	
+	if (columnIndex === this.actIdx) return data[rowIndex] ? this.actionCellRenderer({rowData: data[rowIndex], rowIndex: rowIndex}) : '';
+	else 
+		{   	let cellName = this.props.header[cIdx].dataField;
+			let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
+
+		    let customRender = (this.props.customRowRender) ? this.props.customRowRender[cellName] : null;
+		    //Se ho un render specifico per questa colonna....
+		    if (customRender) {
+		    		        return customRender(cellValue, data[rowIndex], rowIndex);
+		    				}
+			else return(<div className={classNames({'vtCellValue': true, 'vtCellEllipsis': this.props.header[cIdx].ellipsis})} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>);
+		}	
+}
+
+
+Cell = ({ columnIndex, data, rowIndex, style }) => (
+  <div className={classNames({'vtCell': true, 
+							  'vtCellHover': (this.state.hoverKey===data[rowIndex].key),
+                             
+                              'vtCellSelected': (this.props.highlightedRowKey===data[rowIndex].key),
+                              
+                              'vtCellPinned': (this.props.pinField && data[rowIndex][this.props.pinField])})} 
+                              style={style} 
+                              onClick={(e) => {this.onRowClick({event: e, index: rowIndex, rowData: data[rowIndex], column: columnIndex})} }
+                              onMouseOver={(e) => {this.onMouseOver({event: e, index: rowIndex, rowData: data[rowIndex]})} }
+                              onMouseOut={this.onMouseOut} >
+    {this.cellRenderer(rowIndex, columnIndex, data)}
+  </div>
+);
+
+ 
+	
+
 render ()
      {
-     let columns = this.props.header.map((col,index) =>
-		    <Column 
-		       label={col.label}
-		       dataKey = {col.dataField}
-		       width = {col.width}
-		       key = {index}
-		       disableSort = {this.props.disableSortColumns && this.props.disableSortColumns[col.dataField]}
-		    />
-		);
-	let actionColumn = 
-			(
-			 <Column 	
-			 label={'Sel.'}
-		     dataKey = {'sel'}
-		     width = {60}
-		     key={-1}
-		     cellRenderer={this.actionCellRenderer}
-		     disableSort = {true}
-		  
-		     />
-			);
-	let data = (this.props.filters) ? 
-  		this.props.data.map((record) => 
+   let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
+   let itemData = (this.props.filters) ? 
+  		dataCpy.map((record) => 
   			{
   			//Il record è buono... se non esiste quel campo nel record oppure esiste e la regex è rispettata	
   			let good = true;
@@ -85,53 +235,78 @@ render ()
   				}
   			return (good ? {...record} : null) 
   			}).filter((record => !!record)) :
-  			this.props.data;
+  			dataCpy;
   	//Se devo sortare... applico una funzione di sort... altrimenti ritornoa sortedData... data...
   	let sortedData = (this.state.sortBy) ? 
-  					  data.sort((a, b) => 
+  					  itemData.sort((a, b) => 
   							{
   							let sortBool = false;	
-  							if (typeof(a[this.state.sortBy]) === 'string') 
+  							if (this.state.sortType === 'string') 
   								{
-  									sortBool = a[this.state.sortBy].localeCompare(b[this.state.sortBy]);
+  									if ((a[this.state.sortBy] !== undefined) && (b[this.state.sortBy] !== undefined)) sortBool = a[this.state.sortBy].localeCompare(b[this.state.sortBy]);
   									
   								}
-  							else sortBool = a[this.state.sortBy] - b[this.state.sortBy];
+  							else if ((a[this.state.sortBy] !== undefined) && (b[this.state.sortBy] !== undefined))  sortBool = a[this.state.sortBy] - b[this.state.sortBy];
   							if (this.state.sortDirection==='DESC') sortBool = -sortBool;
   							return sortBool;
   							}) 
-  					  : data;
+  					  : itemData;
   			
   	let sort = ({defaultSortDirection, event, sortBy, sortDirection}) => {
-		let newState = {sortBy: sortBy, sortDirection: sortDirection};
+		let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection};
 		this.setState(newState);
 	} 
-		
-	let rowGetter = ({index})	=> {
-							let row = sortedData[index];
-							row.sel = index;
-							return(row);
-							};
-	let rowClassName = ({index})	=> {
-							if (index===-1) return("ReactVirtualized__Table__headerRow");
-							let row = sortedData[index];
-							let selected = (this.props.highlightedRowKey===row.key);
-							let pinned = (this.props.pinField && row[this.props.pinField])
-							return (classNames({ReactVirtualized__Table__Row: true, ReactVirtualized__Table__Selected: selected, ReactVirtualized__Table__Pinned: pinned}))
-							};
-		
+//Genero un indice che associa aalla chiave la sua posizione nell'array sortato e filtrato. Mi serve per saltare a una riga	
+const reducer = (acc, curr, idx) => {
+	acc[curr.key] = idx;
+	return(acc);
+};
+if (sortedData.length > 0) this.dataIndex = sortedData.reduce(reducer, this.dataIndex);
+
 	
-		
-	if (this.props.deleteRow || this.props.editRow || this.props.detailRow || this.props.pinRow || this.props.saveRow) 
-  		{if (this.props.actionFirst)
-  		    columns.unshift(actionColumn);
-			else columns.push(actionColumn);
-  		}
+this.header2 = [...this.props.header];
+	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || 60}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || 60})
+	  
+let columnWidths = (() => 
+		{
+		let cW = this.header2.map(h => h.width);
+		return cW;
+		})()
    return(
-        	 <Table rowClassName={rowClassName} sortBy={this.state.sortBy} sortDirection={this.state.sortDirection} sort={this.props.disableSort ? null: sort} onRowClick={this.onRowClick} height={this.props.height} width={this.props.width} headerHeight={25} rowHeight={25} rowCount={data.length} rowGetter={rowGetter}>
-			{columns}
-        	 </Table>);
-     }
+  <div >
+ 
+   <Row >
+   {this.Header(this.header2)}	
+  
+  </Row>
+  <Grid 
+    columnCount={this.columnCount}
+    columnWidth={index => columnWidths[index]}
+    height={this.props.height - 30}
+    rowCount={itemData ? itemData.length : 0}
+    rowHeight={index => 30}
+    width={this.props.width}
+    itemData={sortedData}
+    itemKey={itemKey}
+    ref={this.gridRef}
+          
+  >
+    {this.Cell}
+  </Grid>	
+  </div> 
+)
+     	
+     };
+
 }
 
 export default WrappedVirtualizedTable
+
+
+
+
+
+
+
+
+

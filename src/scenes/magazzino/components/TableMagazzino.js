@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react'
-import WrappedTable from '../../../components/WrappedVirtualizedTable2'
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import { withRouter } from 'react-router-dom';
 import {Spin} from 'antd';
-
+import {getAliquotaIVA} from '../../../helpers/ean';
 
 
 
@@ -41,10 +41,14 @@ componentWillReceiveProps()
         let editRow = (props.noDetails) ? null : this.editRow;
         
         let selectRow = (props.selectedCallback) ? this.selectRow : (props.noDetails) ? null : this.detailRow;
-        
+            		let customRowRender = {
+	                     'iva' : (text, record, index) => { return(<div style={{width: 30}}> {getAliquotaIVA(text,this.props.iva)}</div>)}
+            			
+            		}  
+    	
     	  return(
     	  	<Spin spinning={(this.props.data.length===0)}>
-			<WrappedTable {...props}  disableSortColumns={{ean: true}} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
+			<WrappedTable {...props}  customRowRender={customRowRender} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
 			</Spin>
 			)}
     }		

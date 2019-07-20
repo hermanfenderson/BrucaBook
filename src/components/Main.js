@@ -1,7 +1,5 @@
 //Componente puro per gestire il contenuto di Main
 //In sostanza sceglie una "scene"
-//Foglio di stile per react-virtualized
-import 'react-virtualized/styles.css'
 
 import React from 'react';
 

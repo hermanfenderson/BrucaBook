@@ -17,6 +17,7 @@ Storia delle versioni
 * Migrata tabella inventario a react-window
 * Campo IVA in magazzino
 * Riscritta routine aggiornamento magazzino e storico magazzino
+* Porting da react-virtualized a react-window delle tabelle magazzino e inventario
 
 ### Versione 0.11.2
 * Bug fixing inventario (campo ricerca, selezione libri controllati)
