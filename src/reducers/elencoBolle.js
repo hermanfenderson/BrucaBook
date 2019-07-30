@@ -10,7 +10,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
 import {STORE_MEASURE} from '../actions';
-import {calcFormCols, calcHeader} from '../helpers/geometry';
+import {calcFormColsFix, calcHeader, calcGeneralError} from '../helpers/geometry';
 
 moment.locale("it");
 
@@ -30,7 +30,14 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {} ));
 }
 
-const formWidth = (880 -16)  * 5 / 6 -8;
+const formHeight = 180;
+const periodWidth = 190;
+const periodHeight = 720;
+const tableWidth = 960 - periodWidth;
+const formWidth = tableWidth;
+const tableHeight = 720 - formHeight;
+
+
 const colParams1 = [
 	{name: 'riferimento', min: 135, max: 240},
 	{name: 'fornitore', min: 180, max: 240},
@@ -47,7 +54,7 @@ const colParams2 = [
 	
 	];
 	
-const headerParams = [{name: 'riferimento', label: 'Rif.', min: 80, max: 150},
+const headerParams = [{name: 'riferimento', label: 'Rif.', min: 80},
 			    {name: 'nomeFornitore', label: 'Fornitore', min: 135, max: 300},
 			    {name: 'tipoBolla', label: 'Tipo', min: 40, max: 80},
 			    
@@ -65,8 +72,17 @@ const initialState = () => {
     const extraState = {
 			//period: moment2period(moment())    	
     		period: null,
-    		
-    		geometry: {formWidth: formWidth, formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, formWidth - 60)
+    		geometry: {formHeight: formHeight, 
+    					formWidth: formWidth, 
+    					formCols1: calcFormColsFix(colParams1,8,formWidth -25,60,0), 
+    					formCols2: calcFormColsFix(colParams2,8,formWidth -25,60,60), 
+    					tableHeight: tableHeight, 
+    					tableWidth: tableWidth, 
+    					generalError: calcGeneralError(formWidth - 25, 120),	 
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					header: calcHeader(headerParams, tableWidth - 60 -10),
+    					periodHeight: periodHeight, 
+    					periodWidth: periodWidth,
     					}		
     				}
 	return initialStateHelper(eiis,extraState);
@@ -113,6 +129,8 @@ function transformAndValidateEditedBolla(cei, name, value)
    errMgmt(cei, 'dataDocumento','invalidDate','Data non valida',  (!cei.values.dataDocumento.isValid()));
     errMgmt(cei, 'dataCarico','invalidDate','Data non valida',  (!cei.values.dataCarico.isValid()));
     errMgmt(cei, 'dataRendiconto','invalidDate','Data non valida',  ((cei.values.tipoBolla === 'R') && (!cei.values.dataRendiconto.isValid())));
+      errMgmt(cei, 'form','invalidDate','Data non valida',  true, true);
+  
      //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
     return cei;
@@ -124,26 +142,32 @@ export default function elencoBolle(state = initialState(), action) {
   var newState;
   switch (action.type) {
    
-        
-   
+     
     case STORE_MEASURE:
     	newState = state;
    	    var measures = {...action.allMeasures};
    	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    if (action.newMeasure.name==='viewPortHeight')
+   	    if (action.newMeasure.name==='mainHeight')
    			{
-   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formBollaHeight'] -130;
-   	    	newState = {...newState, tableHeight: height};
+   	    	let tableHeight = measures['mainHeight'] - formHeight;
+   	    	let periodHeight = measures['mainHeight'];
+   	    	let geometry = {...newState.geometry};
+   			
+   	    	newState = {...newState, geometry: {...geometry, periodHeight: periodHeight, tableHeight: tableHeight}};
    			}
-   	if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
+   	if (action.newMeasure.name==='mainWidth')
    	   		{
-   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 -8 ;	
-   			let formCols1 = calcFormCols(colParams1,8,formWidth);
-   			let formCols2 = calcFormCols(colParams2,8,formWidth);
-   			let header = calcHeader(headerParams, formWidth - 60);
+   			let formWidth = measures['mainWidth'] - periodWidth ;
+   			let	generalError = calcGeneralError(formWidth - 25, 120);	 
+    
+   			let tableWidth = formWidth ;	
+   			
+   			let formCols1 = calcFormColsFix(colParams1,8,formWidth - 25,60,0);
+   			let formCols2 = calcFormColsFix(colParams2,8,formWidth - 25,60,60);
+   			let header = calcHeader(headerParams, tableWidth - 60 - 10);
    			let geometry = {...newState.geometry};
    			
-   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, header: header}};
+   		    newState = {...newState, geometry: {...geometry, tableWidth: tableWidth, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, header: header, generalError: generalError}};
    			}
         break;  
      case SET_PERIOD_ELENCOBOLLE:

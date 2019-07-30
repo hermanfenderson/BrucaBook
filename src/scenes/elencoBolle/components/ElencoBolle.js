@@ -1,11 +1,12 @@
 import TableElencoBolle from '../containers/TableElencoBolle';
 import FormBolla from '../containers/FormBolla';
 import React, {Component} from 'react'
+
 import {period2moment, period2month, isEqual} from '../../../helpers/form'
 import ReactDOM from 'react-dom';
 import {Redirect} from 'react-router-dom';
 
-
+import FixBlock from '../../../components/FixBlock'
 
 import { Row, Col, DatePicker, Form} from 'antd'
 const {MonthPicker} = DatePicker;
@@ -38,28 +39,23 @@ else
 
 return (
  <div>	
-  <Row>
-  
-      <Col style={{'marginTop': '30px'}} span={4}>
+ 
+      <FixBlock className='periodPicker' width={this.props.geometry.periodWidth} height={this.props.geometry.periodHeight} top={0} left={0}>
        <Form.Item
             label="Periodo"
           >
        <MonthPicker allowClear={false} value={period2moment([this.props.match.params.anno, this.props.match.params.mese])} onChange={this.props.setPeriodElencoBolle} format={"MM/YYYY"} />
        </Form.Item>
-      </Col>
-       <Col span={20}>
-      <TableElencoBolle geometry={this.props.geometry} listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
+      </FixBlock>
+     <FixBlock width={this.props.geometry.tableWidth} height={this.props.geometry.tableHeight} top={0} left={this.props.geometry.periodWidth}>
+       
+       <TableElencoBolle geometry={this.props.geometry} listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
    
-   	 	 </Col>
-    </Row>
-  <Row className='bottom-form' style={{height: '150px'}} ref='formBolla'>
-       <Col span={4} />
-     
-      <Col span={20}>
-     
+   	 	 </FixBlock>
+   <FixBlock width={this.props.geometry.formWidth - 10} height={this.props.geometry.formHeight - 10} top={this.props.geometry.tableHeight} left={this.props.geometry.periodWidth} className='bottom-form2' >
+       
      <FormBolla geometry={this.props.geometry}  period={this.props.period}/>
-     </Col>
-          </Row>
+           </FixBlock>
    
   </div>
  

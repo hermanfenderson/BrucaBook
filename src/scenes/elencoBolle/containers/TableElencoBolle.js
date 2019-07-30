@@ -14,7 +14,7 @@ const resetTable = bollaFA.resetTable;
 const setReadOnlyForm = bollaFA.setReadOnlyForm;
 
 const mapStateToProps = (state) => {
-	return ({data: getElencoBolle(state), tableScroll: getTableElencoBolleScroll(state), height: getTableElencoBolleHeight(state), selectedItem: getEditedBolla(state).selectedItem})
+	return ({data: getElencoBolle(state), tableScroll: getTableElencoBolleScroll(state), selectedItem: getEditedBolla(state).selectedItem})
 }
  
 

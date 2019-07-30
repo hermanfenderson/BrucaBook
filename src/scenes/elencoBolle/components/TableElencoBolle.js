@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import WrappedTable from '../../../components/WrappedTable';
+import WrappedTable from '../../../components/WrappedVirtualizedTable';
 import {withRouter} from 'react-router-dom'
 
 import {isEqual} from '../../../helpers/form';
@@ -88,8 +88,11 @@ class TableElencoBolle extends Component
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	delete props['deleteBolla']; //Non la passo liscia...
     	delete props['setSelectedBolla']; //Idem
+    	let height = props.geometry.tableHeight;
+    	let width = props.geometry.tableWidth;
+    	delete props['geometry'];
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
+			<WrappedTable {...props} width={width} height={height}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
 			)}
     }		
 	

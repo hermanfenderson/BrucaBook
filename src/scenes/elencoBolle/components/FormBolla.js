@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
-import WrappedForm from '../../../components/WrappedForm'
+import WrappedForm from '../../../components/WrappedForm2'
 import {period2month, moment2period} from '../../../helpers/form'
 import {objSelector} from '../../../helpers/form'
 
@@ -38,31 +38,26 @@ componentDidMount = () =>
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
   	const  formCols1 = this.props.geometry.formCols1;
   	const  formCols2 = this.props.geometry.formCols2;
+  	const  generalError = this.props.geometry.generalError;
+  
   	return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter: formCols1.gutter}} >
-        <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} formColumnLayout={{width:formCols1.riferimento}} />
-        <WrappedForm.AutoCompleteList field='fornitore' label='Fornitore' list={objSelector(this.props.fornitori,'nome')}  required={true} formColumnLayout={{width:formCols1.fornitore}} />
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataDocumento}} style={{width:formCols1.dataDocumento}}  disabled={(this.props.editedBolla.selectedItem!==null)}/>
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataCarico}} style={{width:formCols1.dataCarico}}/>
-      </WrappedForm.Group>
-       <WrappedForm.Group formGroupLayout={{gutter: formCols2.gutter}}>
-      
-       <WrappedForm.SelectList field='tipoBolla' formColumnLayout={{width:formCols2.tipo}} label='Tipo' list={this.props.tipiBolla} defaultValue = 'A' />
-        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto'formColumnLayout={{width:formCols2.dataRendiconto}} style={{width:formCols2.dataRendiconto}} allowClear={false} format = 'DD/MM/YYYY'  disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
+         <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} coord={formCols1.riferimento}/>
+        <WrappedForm.AutoCompleteList field='fornitore' label='Fornitore' list={objSelector(this.props.fornitori,'nome')}  required={true} coord={formCols1.fornitore} />
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataDocumento}} coord={formCols1.dataDocumento}  disabled={(this.props.editedBolla.selectedItem!==null)}/>
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataCarico}} coord={formCols1.dataCarico}/>
+     
+       <WrappedForm.SelectList field='tipoBolla' coord={formCols2.tipo} label='Tipo' list={this.props.tipiBolla} defaultValue = 'A' />
+        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto' coord={formCols2.dataRendiconto} style={{width:formCols2.dataRendiconto}} allowClear={false} format = 'DD/MM/YYYY'  disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
        
-       <WrappedForm.Button   type={'button'}  formColumnLayout={{width:formCols2.annulla}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Button   type={'button'}  coord={formCols2.annulla} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit"  formColumnLayout={{width:formCols2.crea}}>{submitLabel}</WrappedForm.Button>
-     
-       </WrappedForm.Group>
-        
-     
-       <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
+        <WrappedForm.Button  type="primary" htmlType="submit"  coord={formCols2.crea}>{submitLabel}</WrappedForm.Button>
+         <WrappedForm.GeneralError coord={generalError}  />
        
+  
+   
          
-        </WrappedForm.Group >
        </WrappedForm>
     )
   }

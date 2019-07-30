@@ -10,8 +10,6 @@ const calcolaStoricoMagazzino = (registro, allDates) =>
 	 for (let i=0; i<numDate;i++) righePerData[i][1] = Object.values(righePerData[i][1]); //Trasformo oggetto righe in data in array...
 	 let lastRowPos = righePerData[numDate-1][1].length - 1;
 	 let values = {...righePerData[numDate-1][1][lastRowPos]} //Ultima riga utile... con info sicuramente aggiornate
-     delete values.pezzi;
-     delete values.gratis;
      let numAllDates = allDates.length;
      let posDate=0;
      let pnt=-1;
@@ -20,15 +18,15 @@ const calcolaStoricoMagazzino = (registro, allDates) =>
         //tre casi... data del loop minore della data da cui parte la sequenza... non devo fare nulla..
         let eanDate = righePerData[posDate][0];
         if (allDates[posAllDates] >= eanDate) {
-        	                                let newValues = {ean: values.ean, 
-        														 titolo: values.titolo, 
-        														 autore: values.autore, 
-        														 editore: values.editore, 
-        														 prezzoListino: values.prezzoListino,
+        	                                let newValues = {ean: (values.ean) ? values.ean : '', 
+        													 titolo: (values.titolo) ? values.titolo : '',
+        													 autore: (values.autore) ? values.autore : '',
+        													 editore: (values.editore) ? values.editore : '',
+        													 prezzoListino: (values.prezzoListino) ? values.prezzoListino : 0.00,
+        													 categoria: (values.categoria) ? values.categoria : '',
+        													 iva: (values.iva) ? values.iva : 'a0',
         	                                				}
-        									if (values.categoria !== undefined) newValues.categoria = values.categoria;				 
-        	                                if (values.iva !== undefined) newValues.iva = values.iva;				 
-        	                               
+        								   
         									totalePezziDate.push([allDates[posAllDates],
         														 newValues]);
         									pnt++;
@@ -72,6 +70,8 @@ const aggiornaMagazzinoEANFull = (admin, ean, refRadix, registro) =>
 	return(refRadix.child('dateStoricoMagazzino').once("value").then(
 		function(snapshot) 
 			    	{
+			    	if (ean)
+			    	{
 				    let updates={};
 				    let allDates = Object.keys(snapshot.val());
 				    let totalePezziDate = calcolaStoricoMagazzino(registro, allDates);
@@ -87,14 +87,21 @@ const aggiornaMagazzinoEANFull = (admin, ean, refRadix, registro) =>
 				    		updates['dateStoricoMagazzino/'+totalePezziDate[i][0]] = admin.database.ServerValue.TIMESTAMP;
 				    	}
 				        refRadix.update(updates).then(console.log("Aggiornato magazzino: "+ean));
+			    	}
+			    	else (console.log("ean non definito"));
 			    	}    
 			)												)
 	
 }
 
 const aggiornaMagazzinoFull = (admin, refRadix) =>
-{
-	return(refRadix.child('registroEAN').once("value").then(
+{   //Prima di tutto pulisco magazzino e storicoMagazzino
+    let clearAll = {};
+    clearAll['magazzino'] = {};
+    clearAll['storicoMagazzino'] = {};
+    
+	return(refRadix.update(clearAll).then(
+				()=>{refRadix.child('registroEAN').once("value").then(
 			    function(snapshot) 
 			    	{
 			    	//Solita storia in 0 gli EAN in 1 il pezzo di registro...	
@@ -108,6 +115,8 @@ const aggiornaMagazzinoFull = (admin, refRadix) =>
 			        	
 			    	}
 				)
+			   }
+		     )
 		   )	
 }
 

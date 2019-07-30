@@ -50,6 +50,39 @@ export const calcFormCols = (colParams, minGutter, width) =>
 			
 }
 
+//Coalcola le dimensioni di form e tabelle tramite parametri
+//colParams è un array 
+//Esempio
+/*
+[
+{min: 100, max: 200, name: 'nome'}
+]
+Ritorna un oggetto con top, left, width, height. Offset è un integer che dice a quale riga sto...
+*/
+
+export const calcFormColsFix = (colParams, minGutter, width, height=60, offset=0) =>
+{
+	
+	let cols = calcFormCols(colParams, minGutter, width);
+	let colsObj = {};
+	let left = 0;
+	for (let i=0; i<colParams.length; i++)
+		{   let name = colParams[i].name;
+			let width = cols[name];
+			colsObj[name] = {width: width, height: height, top: offset, left: left};
+			left += width + cols.gutter; //Sommo la larghezza
+		}
+    return colsObj;
+			
+}
+
+export const calcGeneralError = (width,  offset=0, height=40,) =>
+{
+return ({width: width, height: height, top: offset, left: 0})
+}
+//Calcolatore di coordinate per generalError
+
+
 //colParams è un array un po' diverso
 //Esempio
 /*

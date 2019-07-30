@@ -80,9 +80,11 @@ export function signOutUser() {
 export function toggleCollapsed() {
   return function(dispatch, getState) {
      let width = (getState().app.collapsed) ? 200 : 80;
+     let viewPortWidth = getState().measures.measures.viewPortWidth;
 	 dispatch ({
   		type: TOGGLE_COLLAPSED,
 		});
+    dispatch(storeMeasure('mainWidth', viewPortWidth - width));		
 	dispatch(storeMeasure('siderWidth',width));	
   }	
 }

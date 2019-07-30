@@ -63,6 +63,9 @@ handleResize = () => {
   let dims = viewportSize(); 
   this.props.storeMeasure('viewPortHeight', dims.height);
   this.props.storeMeasure('viewPortWidth', dims.width);
+  this.props.storeMeasure('mainWidth', dims.width - this.props.measures.siderWidth);
+  this.props.storeMeasure('mainHeight', dims.height - this.props.measures.headerHeight);
+  
 }
            
            
@@ -97,7 +100,7 @@ handleResize = () => {
           
            
            
-           <Content style={{ margin: '0px 0px', padding: '8px', background: '#fff', overflow: 'scroll'  }}>
+           <Content style={{ position: 'fixed', left: this.props.measures.siderWidth, top: this.props.measures.headerHeight, width: window.innerWidth-this.props.measures.siderWidth, height: window.innerHeight-this.props.measures.headerHeight, minWidth: window.innerWidth-this.props.measures.siderWidth, minHeight: window.innerHeight-this.props.measures.headerHeight,  margin: '0px 0px', background: '#fff', overflow: 'hidden'  }}>
         
           <Main  authenticated={true} user={this.props.user}/>
 	      

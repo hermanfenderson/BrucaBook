@@ -14,8 +14,8 @@ import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
 
-import { Row, Col,  Modal, Spin} from 'antd'
-
+import { Modal, Spin} from 'antd'
+import FixBlock from '../../../components/FixBlock'
 
 class Bolla extends Component {
 
@@ -72,35 +72,27 @@ render()
     <OrdiniModalTable visible={this.props.ordiniModalVisible} data={this.props.ordiniModalVisible}/>
 
     
-		
-    <Row style={{'backgroundColor': 'white'}}>
-   <Col span={4}>
-         <Row>
+	 <FixBlock className='totaliCol' coors={this.props.geometry.totaliCoors}>
+    	
     	 <TotaliBolla staleTotali={this.props.staleTotali} testataBolla={this.props.testataBolla} totaliBolla={	this.props.totaliBolla}/>
-    	</Row>
-    	<Row>
+    	</FixBlock>
+    	<FixBlock className='immagineCol' coors={this.props.geometry.immagineCoors} >
     	  <BookImg eanState={this.props.editedRigaBolla.eanState} ean={this.props.editedRigaBolla.values.ean} imgUrl={this.props.editedRigaBolla.values.imgFirebaseUrl}/>
-		</Row>
-      </Col>
- 
-       <Col span={20}>
-        <Row>
-      <FilterBolla geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
-      </Row>
-   <Row>
+		</FixBlock>
+      
+       <FixBlock className='filter-form' coors={this.props.geometry.formSearchCoors} >
+      <FilterBolla  geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      </FixBlock>
+   <FixBlock coors={this.props.geometry.tableCoors} >
      <TableBolla  geometry={this.props.geometry} period={period} idBolla={this.props.match.params.id} filters={this.props.filters}/>
-      </Row>
-    	   </Col>
-      </Row>
+      </FixBlock>
     
-      <Row type="flex" align="bottom" className='bottom-form' style={{height: '120px'}} ref='formRigaBolla'>
+      <FixBlock className='bottom-form2' coors={this.props.geometry.formCoors} >
    
-       <Col span={24}>
-    
-      <FormRigaBolla geometry={this.props.geometry} idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} />
-      </Col>
+      
+      <FormRigaBolla  geometry={this.props.geometry} idBolla={this.props.match.params.id} period={period} testataBolla={this.props.testataBolla} />
         
-    </Row>
+    </FixBlock>
    
   </div>
   </Spin>

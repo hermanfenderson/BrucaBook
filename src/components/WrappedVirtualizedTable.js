@@ -2,7 +2,6 @@ import React from 'react';
 
 import { VariableSizeGrid as Grid } from 'react-window';
 import {Row, Icon} from 'antd'; 
-
 import classNames from 'classnames';
 
 // These item sizes are arbitrary.
@@ -70,7 +69,7 @@ componentDidUpdate(prevProps, prevState) {
 					 else rowToGo = -1;
 					}
 					
-			if (rowToGo >= 0) this.gridRef.current.scrollToItem({align: 'auto', rowIndex: rowToGo}); //Vado alla riga richiesta...
+			if (rowToGo >= 0) this.gridRef.current.scrollToItem({align: 'center', rowIndex: rowToGo}); //Vado alla riga richiesta...
 		    this.props.setTableScrollByKey(null); //Resetto lo scroll...
 			
 			}	
@@ -114,13 +113,16 @@ if (col.sort)
 
 Header = (header) => 
 {
-	
+let leftPos = [];
+leftPos.push(0);
+for (let i=0; i<header.length; i++) leftPos.push(header[i].width+leftPos[i]); //Posizioni degli header...
 let headCols = header.map((col, idx) => 
-				  <div className={'vtHeadCell'} 
+				  {
+				  return(<div className={'vtHeadCell'} 
 				  key={idx} 
 				  onClick={(e) => {this.onHeaderClick({event: e, col:col })} }
                              
-				  style={{ display: 'table-cell', height: 30, width:col.width}}>
+				  style={{ height: 30, position: 'absolute', left: leftPos[idx], width: col.width}}>
                        {col.label} 
                     {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'string')) ? <Icon component={SortAlphaAscSvg} /> : null}     
                 
@@ -131,9 +133,12 @@ let headCols = header.map((col, idx) =>
                  {((col.sort) && (col.dataField  !== this.state.sortBy)) ? <Icon component={SortSvg} /> : null}     
                
                  </div>
+                 )
+				  }
+                 
 			)	
 return (
-    <div>
+    <div style={{ height: 30}}>
     {headCols}
     </div>
 )
@@ -220,6 +225,7 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
 render ()
      {
    let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
+   console.log(dataCpy);
    let itemData = (this.props.filters) ? 
   		dataCpy.map((record) => 
   			{
@@ -272,6 +278,8 @@ let columnWidths = (() =>
 		let cW = this.header2.map(h => h.width);
 		return cW;
 		})()
+	console.log(this.props.width);
+	console.log(columnWidths);
    return(
   <div >
  
@@ -282,10 +290,10 @@ let columnWidths = (() =>
   <Grid 
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}
-    height={this.props.height - 30}
+    height={this.props.height - 30 -10} //La testata e un minimo di spazio per gli oggetti sotto...
     rowCount={itemData ? itemData.length : 0}
     rowHeight={index => 30}
-    width={this.props.width}
+    width={this.props.width+20}
     itemData={sortedData}
     itemKey={itemKey}
     ref={this.gridRef}

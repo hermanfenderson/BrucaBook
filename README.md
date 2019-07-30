@@ -11,6 +11,11 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.12.1
+* In inventario in automatico si viene portati alla riga del codice che si sta lavorando
+* Fix di un piccolo baco su incolonnamento tabelle
+
+
 ### Versione 0.12.0
 * Bug fixing catalogo (non mostrava l'iva)
 * Aggiornate librerie a ultime versioni (in particolare antd a 3.20)

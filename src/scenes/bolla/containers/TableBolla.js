@@ -20,7 +20,6 @@ const mapStateToProps = (state) => {
 	return ({
 	//data: getRigheBolla(state),
 	data: getItems(state,'BOLLA'),
-	height: getTableHeight(state), 
 	selectedItem: getEditedRigaBolla(state).selectedItem,
 	listeningItemBolla: getListeningItemBolla(state),
 	tableScroll: getTableScroll(state),

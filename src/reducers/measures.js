@@ -1,7 +1,14 @@
 import { STORE_MEASURE, REMOVE_MEASURE } from '../actions';
 
 const initialState =  {
- measures: {siderWidth: 80}
+ measures: 
+    {
+    //Dichiaro tutte le costanti e i valori iniziali...	
+    //Modulo principale...	
+    siderWidth: 80, 
+    headerHeight: 64,
+   
+    }
 };
 
 export default function measures(state = initialState, action) {

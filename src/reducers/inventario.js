@@ -49,10 +49,10 @@ const colParams1 = [
 	];
 	
 const headerParams = [
-	{name: 'ean', label: 'EAN', min: 130, max: 130},
-	{name: 'titolo', label: 'Titolo', min: 240, ellipsis: true, sort: 'string'},
+	{name: 'ean', label: 'EAN', min: 130, max: 130,sort:'number'},
+	{name: 'titolo', label: 'Titolo', min: 250,sort:'string', ellipsis: true},
 	{name: 'autore', label: 'Autore', min: 110},
-	{name: 'prezzoListino', label: 'Prezzo', min: 70, max: 70, sort: 'number'},
+	{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},
 	{name: 'stock', label: 'Stock', min: 50, max: 50},
 	{name: 'pezzi', label: 'Delta', min: 50, max: 50},
 
@@ -163,14 +163,14 @@ export default function inventario(state = initialState(), action) {
    	    measures[action.newMeasure.name] = action.newMeasure.number;
    	       if (action.newMeasure.name==='viewPortHeight' || action.newMeasure.name==='headerHeight')
    			{
-   	      	 let height = measures['viewPortHeight'] - measures['headerHeight'] - 260;
+   	      	 let height = measures['viewPortHeight'] - measures['headerHeight'] - 320;
    	      	 if (!height) height = 100;
    			newState = {...state, tableHeight: height};
    			}
    		   
    		    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
    	   		{
-	   	   		let tableWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 - 8;	
+	   	   		let tableWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 - 28;	
 	   			let formCols1 = calcFormCols(colParams1,8,tableWidth);
 	   			let formCols2 = calcFormCols(colParams2,8,tableWidth);
 	   		    let formSearchCols = calcFormCols(colSearchParams,8,tableWidth);
@@ -233,8 +233,12 @@ export default function inventario(state = initialState(), action) {
 		 	let key = action.payload.key;
 		 	if (newState.estrattoStoricoMagazzino[key]) newState.itemsArray[newState.itemsArrayIndex[key]].stock = state.stock[key];
 		    newState.tableScrollByKey = action.payload.key;
-	    
-	    
+	        break;
+	    //Arricchisco per andare alla riga quando ho un EAN valido...
+	    case rigaInventarioR.CHANGE_EDITED_ITEM:
+	    	newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
+            //Se sgto agendo su ho un EAN valido...
+	        if (action.name === 'ean' && newState.editedItem.eanState === 'VALID' && state.itemsArrayIndex[action.value] >=0 ) newState.tableScrollByKey = action.value;
 	    	break;	    
 	    	
 	    	
