@@ -88,8 +88,8 @@ class TableElencoBolle extends Component
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	delete props['deleteBolla']; //Non la passo liscia...
     	delete props['setSelectedBolla']; //Idem
-    	let height = props.geometry.tableHeight;
-    	let width = props.geometry.tableWidth;
+    	let height = props.geometry.tableCoors.height;
+    	let width = props.geometry.tableCoors.width;
     	delete props['geometry'];
     	  return(
 			<WrappedTable {...props} width={width} height={height}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>

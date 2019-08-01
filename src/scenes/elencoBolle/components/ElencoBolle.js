@@ -40,21 +40,21 @@ else
 return (
  <div>	
  
-      <FixBlock className='periodPicker' width={this.props.geometry.periodWidth} height={this.props.geometry.periodHeight} top={0} left={0}>
+      <FixBlock className='periodPicker' coors={this.props.geometry.periodCoors}>
        <Form.Item
             label="Periodo"
           >
        <MonthPicker allowClear={false} value={period2moment([this.props.match.params.anno, this.props.match.params.mese])} onChange={this.props.setPeriodElencoBolle} format={"MM/YYYY"} />
        </Form.Item>
       </FixBlock>
-     <FixBlock width={this.props.geometry.tableWidth} height={this.props.geometry.tableHeight} top={0} left={this.props.geometry.periodWidth}>
+     <FixBlock coors={this.props.geometry.tableCoors}>
        
        <TableElencoBolle geometry={this.props.geometry} listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
    
    	 	 </FixBlock>
-   <FixBlock width={this.props.geometry.formWidth - 10} height={this.props.geometry.formHeight - 10} top={this.props.geometry.tableHeight} left={this.props.geometry.periodWidth} className='bottom-form2' >
+   <FixBlock coors={this.props.geometry.formCoors} className='bottom-form2' >
        
-     <FormBolla geometry={this.props.geometry}  period={this.props.period}/>
+     <FormBolla geometry={this.props.geometry} />
            </FixBlock>
    
   </div>

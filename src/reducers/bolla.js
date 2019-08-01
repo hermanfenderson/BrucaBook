@@ -4,7 +4,7 @@ import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
-import {calcFormColsFix, calcHeader, calcGeneralError} from '../helpers/geometry';
+import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMH, FMW, FORM_COL_H} from '../helpers/geometry';
 
 
 
@@ -31,82 +31,81 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedRigaBollaValuesInitialState, {} ));
 }
 
-const formHeight = 180;
-const totaliWidth = 190;
-const totaliHeight = 200;
-const immagineWidth = 190;
-const immagineHeight = 200;
 
-const tableWidth = 960 - totaliWidth;
-const formWidth = 960;
-const formSearchWidth = tableWidth;
-const formSearchHeight = 60;
-const tableHeight = 720 - formHeight;
-
-const colSearchParams = [
-	{name: 'ean', min: 120, max: 120},
-	{name: 'titolo', min: 396},
-	{name: 'reset', min: 180, max: 240},
-
-	]
- 
-const colParams1 = [
-	{name: 'ean', min: 200, max: 200},
-	{name: 'titolo', min: 446 },
-	{name: 'autore', min: 180 },
-	{name: 'listino', min: 70, max: 70}
-	
-	];
-	
-const colParams2 = [
-	{name: 'man', min: 30, max: 30},
-	{name: 'sconto1', min: 60, max: 70},
-	{name: 'sconto2', min: 60, max: 70},
-	{name: 'sconto3', min: 60, max: 70},
-	{name: 'prezzo', min: 80, max: 90},
-	{name: 'pezzi', min: 70, max: 80},
-	{name: 'gratis', min: 70, max: 80},
-	{name: 'totale', min: 90, max: 100},
-
-	{name: 'annulla', min: 120, max: 240},
-	{name: 'crea', min: 120, max: 240}
-	
-	];
-	
-
-	
-const headerParams = [{name: 'ean', label: 'EAN', min: 130, max: 130},
-			    {name: 'titolo', label: 'Titolo', min: 312, sort:'string', ellipsis: true},
-			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
-			    {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
-			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
-			    {name: 'gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
-			   ];
-	
-
+//Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
+let geometryParams = {cal: {
+						formHeight: 180,
+						totaliWidth: 190,
+						totaliHeight: 200,
+						immagineWidth: 190,
+						immagineHeight: 200,
+						formSearchHeight: 60,
+						
+						colSearchParams: [
+										{name: 'ean', min: 120, max: 120},
+										{name: 'titolo', min: 396},
+										{name: 'reset', min: 180, max: 240},
+										],
+						colParams1: [
+									{name: 'ean', min: 200, max: 200},
+									{name: 'titolo', min: 446 },
+									{name: 'autore', min: 180 },
+									{name: 'listino', min: 70, max: 70}
+									
+									],
+						colParams2: [
+									{name: 'man', min: 30, max: 30},
+									{name: 'sconto1', min: 60, max: 70},
+									{name: 'sconto2', min: 60, max: 70},
+									{name: 'sconto3', min: 60, max: 70},
+									{name: 'prezzo', min: 80, max: 90},
+									{name: 'pezzi', min: 70, max: 80},
+									{name: 'gratis', min: 70, max: 80},
+									{name: 'totale', min: 90, max: 100},
+								
+									{name: 'annulla', min: 120, max: 240},
+									{name: 'crea', min: 120, max: 240}
+									
+									],
+						headerParams: [
+									  {name: 'ean', label: 'EAN', min: 130, max: 130},
+									  {name: 'titolo', label: 'Titolo', min: 312, sort:'string', ellipsis: true},
+									  {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
+									  {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
+									  {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+									  {name: 'gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
+									 ],
+						
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight-cal.formSearchHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.w)}},
+				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	   ],
+				 geo: [ 
+				  	   
+     		    		{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: cal.totaliWidth})}},
+    					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
+    					{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight+cal.formSearchHeight, left: 0})}},
+    				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth, offset: 0}))}}, 
+    				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth, offset: 1}))}}, 
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight, left: cal.totaliWidth})}},
+    				
+    					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 2}))}},	 
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+    				
+    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},
+    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h - cal.formHeight -cal.immagineHeight, left: 0})}}
+						]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 		
-    		geometry: {
-     		    		formSearchCoors: {height: 60, width: formSearchWidth, top: 0, left: totaliWidth},
-    				
-     		    		formSearchCols: calcFormColsFix(colSearchParams,8,formSearchWidth -25, 60, 0),
-     		    		formCoors: {height: formHeight - 10, width: formWidth -10, top: formSearchHeight + tableHeight, left: 0},
-    				
-     		    		formCols1: calcFormColsFix(colParams1,8,formWidth -25,60,0), 
-    					formCols2: calcFormColsFix(colParams2,8,formWidth -25,60,60), 
-    					tableCoors: {height: tableHeight, width: tableWidth, top: formSearchHeight, left: totaliWidth},
-    				
-    					generalError: calcGeneralError(formWidth - 25, 120),	 
-    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
-    					header: calcHeader(headerParams, tableWidth - 60 -10),
-    					totaliCoors: {height: totaliHeight, width: totaliWidth, top: 0, left: 0},
-    					immagineCoors: {height: immagineHeight, width: immagineWidth, top: 720 - totaliHeight - immagineHeight - formHeight, left: 0}
-    				
-    							
-    			
-    					}	
+    		geometry: calcGeometry()
      				}
 
 	return initialStateHelper(eiis,extraState);
@@ -132,7 +131,7 @@ const calcolaTotali = (state) =>
  
     
 //Metodi reducer per le Form
-const rigaBollaR = new FormReducer('BOLLA', foundCompleteItem, null, null, initialState); 
+const rigaBollaR = new FormReducer('BOLLA', foundCompleteItem, null, null, initialState, null,calcGeometry); 
 
 
 function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
@@ -274,58 +273,7 @@ export default function bolla(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
-   case STORE_MEASURE:
-   	    newState = state;
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    if (action.newMeasure.name==='mainHeight')
-   			{
-   			/*	
-   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formRigaBollaHeight'] -150;
-   	    	newState = {...state, tableHeight: height};
-   			*/
-   			let geometry = {...state.geometry};
-   			let tableHeight = measures['mainHeight'] - formHeight - formSearchHeight;
-    		geometry.tableCoors = {...state.geometry.tableCoors, height: tableHeight - 10}; 
-    		geometry.formCoors = {...state.geometry.formCoors,  top: formSearchHeight + tableHeight};
-    		geometry.immagineCoors = {...state.geometry.immagineCoors,  top: measures['mainHeight']- totaliHeight - formHeight};
-    				
-    		newState = {...state, geometry: geometry};
-   					
-   			}
-   		if (action.newMeasure.name==='mainWidth' )
-   	   		{	let geometry = {...state.geometry};
-   		
-   	   			let tableWidth = measures['mainWidth'] - totaliWidth;
-				let formWidth = measures['mainWidth'];
-				let formSearchWidth = tableWidth;
-                geometry.formSearchCoors = {...state.geometry.formSearchCoors, width: formSearchWidth }; 
-    	        geometry.formSearchCols = calcFormColsFix(colSearchParams,8,formSearchWidth -25, 60, 0); 
-    			geometry.formCoors = {...state.geometry.formCoors, width: formWidth -10}; 
-    	        geometry.formCols1 = calcFormColsFix(colParams1,8,formWidth -25,60,0); 
-    	    	geometry.formCols2 = calcFormColsFix(colParams2,8,formWidth -25,60,60); 
-    			geometry.tableCoors = {...state.geometry.tableCoors, width: tableWidth }; 
-    	        geometry.generalError= calcGeneralError(formWidth - 25, 120); 
-    		    geometry.header= calcHeader(headerParams, tableWidth - 60 -10);
-    	    	newState = {...state, geometry: geometry};
-   			
-   	   			
-    									
-   	   		/*	
-   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) - 8;	
-   			let tableWidth = formWidth * 5 / 6 -8 ;
-   			let formSearchCols = calcFormCols(colSearchParams,8,tableWidth);
-   		
-   			let formCols1 = calcFormCols(colParams1,8,formWidth);
-   			let formCols2 = calcFormCols(colParams2,8,formWidth);
-   			let header = calcHeader(headerParams, tableWidth - 60);
-   			let geometry = {...newState.geometry};
-   			
-   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, formSearchCols: formSearchCols, header: header}};
-   			*/
-   			}
-   	
-        break;
+   
   
     default:
         newState = rigaBollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaBolla, calcolaTotali);
@@ -333,7 +281,6 @@ export default function bolla(state = initialState(), action) {
     	break;
    
   }
- console.log(newState); 
  return newState;
 }
 

@@ -10,7 +10,7 @@ import React from 'react';
 //mostrare.
 //la funzione transformSelectedItem prende invece dalla riga in tabella e la porta verso il form...
 //KeepOnSubmit non resetta il form al submit... serve per le casse..
-function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState, keepOnSubmit) {
+function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState, keepOnSubmit, calcGeometry) {
 this.scene = scene;
 this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
 this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
@@ -67,11 +67,13 @@ this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
 this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
 this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
 this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
+this.STORE_MEASURE = 'STORE_MEASURE';
+
 
 if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
 if (transformItem) this.transformItem = transformItem;
 if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
-
+if (calcGeometry) this.calcGeometry = calcGeometry;
 
 	
 	//Questa funzione calcola gli stati ulteriori...l'override si fa definendo un case che reagisce alla stessa stringa nel padre...
@@ -443,6 +445,29 @@ if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
    		newState = {...state, dataMagazzino: action.dataMagazzino};	
    		
    		break;
+   		
+   	case this.STORE_MEASURE:
+   	    
+   	    newState = state;
+   	    if (this.calcGeometry) 
+   	    	{
+	   	    var measures = {...action.allMeasures};
+	   	    measures[action.newMeasure.name] = action.newMeasure.number;
+	   	    if ((action.newMeasure.name==='mainHeight') || (action.newMeasure.name==='mainWidth' ))
+	   			{
+	   			
+	   		
+	   			let wh = {};
+	   			if (measures['mainHeight']) wh.h = measures['mainHeight'];
+	   			if (measures['mainWidth']) wh.w = measures['mainWidth'];
+	   			newState = {...state, geometry: calcGeometry(wh)};
+	   					
+	   			}
+   	    	}
+   			
+        break;
+  
+	
     default:
         		newState =  state;
     		break;

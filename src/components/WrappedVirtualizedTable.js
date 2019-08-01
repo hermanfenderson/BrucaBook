@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { VariableSizeGrid as Grid } from 'react-window';
-import {Row, Icon} from 'antd'; 
+import {Row, Icon, Empty} from 'antd'; 
 import classNames from 'classnames';
 
 // These item sizes are arbitrary.
@@ -47,7 +47,7 @@ class WrappedVirtualizedTable extends React.PureComponent {
 componentDidUpdate(prevProps, prevState) {
 	 let last = Object.keys(this.dataIndex).length - 1;
   // only update chart if the data has changed
-  if (prevProps.header !== this.props.header) {
+  if (prevProps.header !== this.props.header && this.gridRef.current) {
     this.gridRef.current.resetAfterColumnIndex(0,true);
   }
   
@@ -225,7 +225,6 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
 render ()
      {
    let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
-   console.log(dataCpy);
    let itemData = (this.props.filters) ? 
   		dataCpy.map((record) => 
   			{
@@ -278,15 +277,15 @@ let columnWidths = (() =>
 		let cW = this.header2.map(h => h.width);
 		return cW;
 		})()
-	console.log(this.props.width);
-	console.log(columnWidths);
-   return(
+  return(
   <div >
  
    <Row >
    {this.Header(this.header2)}	
   
   </Row>
+  {
+  (itemData && itemData.length > 0) ?
   <Grid 
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}
@@ -301,6 +300,9 @@ let columnWidths = (() =>
   >
     {this.Cell}
   </Grid>	
+  :
+  <Empty style={{color: '#DCDCDC', position: 'relative', top: (this.props.height - 40 -130) / 2}}/>
+  }
   </div> 
 )
      	

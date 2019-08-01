@@ -15,6 +15,7 @@ class Help extends React.Component
       }
     };
    return (
+   	
    	<YouTube
          opts={opts}
         

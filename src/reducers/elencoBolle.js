@@ -10,7 +10,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
 import {STORE_MEASURE} from '../actions';
-import {calcFormColsFix, calcHeader, calcGeneralError} from '../helpers/geometry';
+import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMW, FMH} from '../helpers/geometry';
 
 moment.locale("it");
 
@@ -30,60 +30,75 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {} ));
 }
 
-const formHeight = 180;
-const periodWidth = 190;
-const periodHeight = 720;
-const tableWidth = 960 - periodWidth;
-const formWidth = tableWidth;
-const tableHeight = 720 - formHeight;
+//Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
+let geometryParams = {cal: {
+						formHeight: 180,
+						periodWidth: 190,
+						
+						colParams1: [
+									{name: 'riferimento', min: 135, max: 240},
+									{name: 'fornitore', min: 180, max: 240},
+									{name: 'dataDocumento', min: 180, max: 240},
+									{name: 'dataCarico', min: 180, max: 240}
+	
+									],
+						colParams2: [
+									{name: 'tipo', min: 180, max: 240},
+									{name: 'dataRendiconto', min: 180, max: 240},
+									{name: 'annulla', min: 120, max: 240},
+									{name: 'crea', min: 120, max: 240}
+									],
+						headerParams: [
+									  {name: 'riferimento', label: 'Rif.', min: 80},
+									  {name: 'nomeFornitore', label: 'Fornitore', min: 135, max: 300},
+									  {name: 'tipoBolla', label: 'Tipo', min: 40, max: 80},
+									    
+									  {name: 'dataDocumento', shortLabel: 'Data Doc.', label: 'Data Documento', min: 85, max: 150, shortBreak: 120},
+									  {name: 'dataCarico', shortLabel: 'Data Car.', label: 'Data Carico', min: 85, max: 150, shortBreak: 120},
+									  {name: 'dataRendiconto', shortLabel: 'Data Rend.', label: 'Data Rendiconto', min: 85, max: 150, shortBreak: 120},
+									    
+									  {name: 'totali.prezzoTotale', label: 'Totale', min: 60, max: 100},
+									  {name: 'totali.pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+									  {name: 'totali.gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
+
+									 ],
+						
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.periodWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	    {periodHeight: (cal) =>  {return(cal.h)}},
+				  	   ],
+				 geo: [ 
+	
+
+     		    		{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight, left: cal.periodWidth})}},
+    				
+     		    		{formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth, offset: 0}))}}, 
+    					{formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width:cal.formWidth , offset: 1}))}}, 
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.periodWidth})}},
+    				    {generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 2}))}}, 
+    					
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+    					{periodCoors: (cal) => {return({height: cal.periodHeight, width: cal.periodWidth, top: 0, left: 0})}},
+    					]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
 
 
-const colParams1 = [
-	{name: 'riferimento', min: 135, max: 240},
-	{name: 'fornitore', min: 180, max: 240},
-	{name: 'dataDocumento', min: 180, max: 240},
-	{name: 'dataCarico', min: 180, max: 240}
+
+
 	
-	];
-	
-const colParams2 = [
-	{name: 'tipo', min: 180, max: 240},
-	{name: 'dataRendiconto', min: 180, max: 240},
-	{name: 'annulla', min: 120, max: 240},
-	{name: 'crea', min: 120, max: 240}
-	
-	];
-	
-const headerParams = [{name: 'riferimento', label: 'Rif.', min: 80},
-			    {name: 'nomeFornitore', label: 'Fornitore', min: 135, max: 300},
-			    {name: 'tipoBolla', label: 'Tipo', min: 40, max: 80},
-			    
-			    {name: 'dataDocumento', shortLabel: 'Data Doc.', label: 'Data Documento', min: 85, max: 150, shortBreak: 120},
-			    {name: 'dataCarico', shortLabel: 'Data Car.', label: 'Data Carico', min: 85, max: 150, shortBreak: 120},
-			    {name: 'dataRendiconto', shortLabel: 'Data Rend.', label: 'Data Rendiconto', min: 85, max: 150, shortBreak: 120},
-			    
-			    {name: 'totali.prezzoTotale', label: 'Totale', min: 60, max: 100},
-			   {name: 'totali.pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
-			    {name: 'totali.gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
-			   ];
+
 	
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 			//period: moment2period(moment())    	
     		period: null,
-    		geometry: {formHeight: formHeight, 
-    					formWidth: formWidth, 
-    					formCols1: calcFormColsFix(colParams1,8,formWidth -25,60,0), 
-    					formCols2: calcFormColsFix(colParams2,8,formWidth -25,60,60), 
-    					tableHeight: tableHeight, 
-    					tableWidth: tableWidth, 
-    					generalError: calcGeneralError(formWidth - 25, 120),	 
-    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
-    					header: calcHeader(headerParams, tableWidth - 60 -10),
-    					periodHeight: periodHeight, 
-    					periodWidth: periodWidth,
-    					}		
+    		geometry: calcGeometry(),	
     				}
 	return initialStateHelper(eiis,extraState);
     }
@@ -106,7 +121,7 @@ const transformSelectedItem = (cei) =>
 	if (cei.tipoBolla === '') cei.tipoBolla = 'A';
 }
 
-const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem, initialState, false); 
+const bollaR = new FormReducer('ELENCOBOLLE',null, transformEditedBolla, transformSelectedItem, initialState, false, calcGeometry); 
 
     
  
@@ -143,34 +158,7 @@ export default function elencoBolle(state = initialState(), action) {
   switch (action.type) {
    
      
-    case STORE_MEASURE:
-    	newState = state;
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    if (action.newMeasure.name==='mainHeight')
-   			{
-   	    	let tableHeight = measures['mainHeight'] - formHeight;
-   	    	let periodHeight = measures['mainHeight'];
-   	    	let geometry = {...newState.geometry};
-   			
-   	    	newState = {...newState, geometry: {...geometry, periodHeight: periodHeight, tableHeight: tableHeight}};
-   			}
-   	if (action.newMeasure.name==='mainWidth')
-   	   		{
-   			let formWidth = measures['mainWidth'] - periodWidth ;
-   			let	generalError = calcGeneralError(formWidth - 25, 120);	 
-    
-   			let tableWidth = formWidth ;	
-   			
-   			let formCols1 = calcFormColsFix(colParams1,8,formWidth - 25,60,0);
-   			let formCols2 = calcFormColsFix(colParams2,8,formWidth - 25,60,60);
-   			let header = calcHeader(headerParams, tableWidth - 60 - 10);
-   			let geometry = {...newState.geometry};
-   			
-   		    newState = {...newState, geometry: {...geometry, tableWidth: tableWidth, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, header: header, generalError: generalError}};
-   			}
-        break;  
-     case SET_PERIOD_ELENCOBOLLE:
+   case SET_PERIOD_ELENCOBOLLE:
         newState = {...state, period: action.period};
         break;
     default:
