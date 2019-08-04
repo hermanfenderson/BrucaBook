@@ -430,7 +430,7 @@ export default function cassa(state = initialState(), action) {
    	    	{
    	    	let tableCassaWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 1 / 4;
    		    let tableCassaCols = {...state.geometry.tableCassaCols};
-   	    	if (tableCassaCols && tableCassaWidth) 
+   	    	if ((tableCassaCols !==null) && tableCassaWidth) 
    	    		{
    	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 40 -16 -10; 
    				let geometry = {...state.geometry};

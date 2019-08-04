@@ -186,20 +186,16 @@ const getMatrixVenditeFromRegistroData = (registroData, today=setDay(moment())) 
 	
 	const updateCell = (matrix, dataIn, details, ytd) =>
 		{
-		//let data = (moment(parseInt(dataIn,10)));
-	 	console.log("ciao");
-		//let anno = data.format('YYYY');
-		 // let mese = data.format('MM');
-		 // let giorno = data.format('DD');
-		  /*
+		let data = (moment(parseInt(dataIn,10)));
+	 	let anno = data.format('YYYY');
+		  let mese = data.format('MM');
+		  let giorno = data.format('DD');
 		   updateCellSublevel(matrix.anno, anno, details, ytd);
 		   if (!matrix.anno[anno].mese) matrix.anno[anno].mese = {};
 		   updateCellSublevel(matrix.anno[anno].mese, mese, details, ytd);
 		   if (!matrix.anno[anno].mese[mese].giorno) matrix.anno[anno].mese[mese].giorno = {};
 		   updateCellSublevel(matrix.anno[anno].mese[mese].giorno, giorno, details, ytd);
-	      */
-		 }
-	console.log("sono qui");	
+	     }
 	let matrix = {anno: {}, totale: {ean: {}, totalePezzi: 0, ricavoTotale: parseFloat(0.0), listinoTotale: parseFloat(0.0) }};
 	let registroArray = Object.entries(registroData);
 	let registroArrayLen =registroArray.length;

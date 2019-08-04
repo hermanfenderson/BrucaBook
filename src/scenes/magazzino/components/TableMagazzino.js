@@ -33,6 +33,11 @@ componentWillReceiveProps()
 	console.log("ho props nuove");
 	console.log(this.props.height);
 }
+
+customRowRender = {
+	                     'iva' : (text, record, index) => { return(<div style={{width: 30}}> {getAliquotaIVA(text,this.props.iva)}</div>)}
+            			
+            		}  
     
     	render() { 
     	console.log("Sto renderizzando");
@@ -41,14 +46,11 @@ componentWillReceiveProps()
         let editRow = (props.noDetails) ? null : this.editRow;
         
         let selectRow = (props.selectedCallback) ? this.selectRow : (props.noDetails) ? null : this.detailRow;
-            		let customRowRender = {
-	                     'iva' : (text, record, index) => { return(<div style={{width: 30}}> {getAliquotaIVA(text,this.props.iva)}</div>)}
-            			
-            		}  
+            	
     	
     	  return(
     	  	<Spin spinning={(this.props.data.length===0)}>
-			<WrappedTable {...props}  customRowRender={customRowRender} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
+			<WrappedTable {...props}  customRowRender={this.customRowRender} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
 			</Spin>
 			)}
     }		

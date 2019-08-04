@@ -226,7 +226,7 @@ export default function scontrino(state = initialState(), action) {
    	    	let formRigaScontrinoSpread = formRigaScontrinoWidth - 660;
    	    	let tableScontrinoWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 3 / 4 - state.geometry['colonnaTestataScontrinoWidth'];
    		    let tableScontrinoCols = {...state.geometry.tableScontrinoCols};
-   	    	if (tableScontrinoCols && tableScontrinoWidth) 
+   	    	if ((tableScontrinoCols!== null) && tableScontrinoWidth) 
    	    		{
    	    		tableScontrinoCols.titolo = tableScontrinoWidth - 60 - (tableScontrinoCols.ean + tableScontrinoCols.prezzoUnitario + tableScontrinoCols.pezzi+ tableScontrinoCols.sconto + tableScontrinoCols.prezzoTotale) - 10; 
    				let geometry = {...state.geometry};

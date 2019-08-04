@@ -280,7 +280,7 @@ let columnWidths = (() =>
   
   </Row>
   {
-  (itemData && itemData.length > 0) ?
+  (itemData!==null && itemData.length > 0) ?
   <Grid 
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}

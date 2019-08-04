@@ -119,7 +119,7 @@ const WrapGeneric = (props) =>
          <FormItem {...formItemLayout}
               	width={props.width} 
         		required={props.required}
-        		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
+        		validateStatus={(typeof props.errorMessages[props.field] !== 'undefined') ? 'error' : ''}
         		help={props.errorMessages[props.field]}
         		label={props.label}
         		colon={disableAllColon ? false : disableColon ? false : true }
