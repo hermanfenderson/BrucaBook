@@ -287,7 +287,7 @@ let columnWidths = (() =>
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}
     height={this.props.height - 30 -10} //La testata e un minimo di spazio per gli oggetti sotto...
-    rowCount={itemData ? itemData.length : 0}
+    rowCount={itemData.length}
     rowHeight={index => 30}
     width={this.props.width+20}
     itemData={sortedData}

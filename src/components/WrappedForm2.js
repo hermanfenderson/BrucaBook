@@ -80,7 +80,7 @@ const WrapGeneric = (props) =>
                 style={{position: 'relative', height: props.coord.height, width: props.coord.width}}
               	width={props.coord.width} 
         		required={props.required}
-        		validateStatus={!(typeof props.errorMessages[props.field] === 'undefined') ? 'error' : ''}
+        		validateStatus={(typeof props.errorMessages[props.field] !== 'undefined') ? 'error' : ''}
         		help={props.errorMessages[props.field]}
         		label={props.label}
         		colon={disableAllColon ? false : disableColon ? false : true }

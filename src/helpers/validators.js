@@ -22,12 +22,12 @@ export function isNotNegativeInteger(number)
 
 export function isPositiveInteger(number)
 {
-	return((isInteger(number) && number >0));
+	return(isInteger(number) && number >0);
 }
 
 export function isNotZeroInteger(number)
 {
-	return((isInteger(number) && number !==0));
+	return(isInteger(number) && number !==0);
 }
 
 

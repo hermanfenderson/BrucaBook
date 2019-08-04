@@ -54,7 +54,7 @@ function transformAndValidateEditedSignup(cei, name, value)
 //Mostro l'errore solo in fase di validazione	
    errMgmt(cei, 'email','invalidEmail','email non valida', !isValidEmail(cei.values.email), (!isValidEmail(cei.values.email) && cei.values.email.length >0));
    if ((cei.userMgmtMode !== 'requestPasswordReset')&& (cei.userMgmtMode !== 'configuration')) errMgmt(cei, 'password','blankPassword','password obbligatoria', (cei.values.password.length === 0), false);
-   if ((cei.userMgmtMode !== 'requestPasswordReset')&&(cei.userMgmtMode !== 'configuration') )errMgmt(cei, 'confirmPassword','notIdentic','le password non coincidono', (!(cei.values.password === cei.values.confirmPassword)), (cei.values.confirmPassword.length > 0) && (!(cei.values.password === cei.values.confirmPassword)));
+   if ((cei.userMgmtMode !== 'requestPasswordReset')&&(cei.userMgmtMode !== 'configuration') )errMgmt(cei, 'confirmPassword','notIdentic','le password non coincidono', (cei.values.password !== cei.values.confirmPassword), (cei.values.confirmPassword.length > 0) && (cei.values.password !== cei.values.confirmPassword));
    if (cei.userMgmtMode === 'signup') errMgmt(cei, 'nome','blankNome','nome obbligatorio', (cei.values.nome.length === 0), false);	
    if (cei.userMgmtMode === 'signup') errMgmt(cei, 'cognome','blankCognome','Cognome obbligatorio', (cei.values.cognome.length === 0), false);	
    if (cei.userMgmtMode === 'configuration') errMgmt(cei, 'imgFirebaseUrl','loading','Attendi upload per salvare', (cei.values.imgFirebaseUrl === 'uploading'), false);
