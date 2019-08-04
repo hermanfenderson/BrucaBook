@@ -84,10 +84,10 @@ export const eanArray = (subEanTree) => {
 export const eanArrayWithDefault = (eanArray, qty) => {
 	for (let elem of eanArray) {
 	//I pezzi che una riga può prendersi:
-	{
+	
 	elem.pezziDelta = (elem.pezzi >= qty) ? qty : elem.pezzi;
 	qty = qty - elem.pezziDelta;
-	}
+	
   }
   //Adesso predisoongo la riga per la vendita libera...
   let rigaVenditaLibera = {pezziDelta : qty, key : 'venditaLibera' }; //23 Skidoo...a parte gli scherzi... qualsiasi numero che non sia una key valida... 

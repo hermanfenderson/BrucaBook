@@ -3,7 +3,6 @@ import WrappedForm from '../../../components/WrappedForm2'
 import Magazzino from '../../magazzino'
 import {Modal} from 'antd';
 import OrdiniAperti from '../../ordiniAperti';
-import OrdiniModalTable from '../../ordine/containers/OrdiniModalTable';
 
 
 class FormRigaBolla extends Component {
@@ -35,10 +34,7 @@ submitFuncFromOrdiniAperti = () => {
 }
 		
 onSubmit = (e) => {
-	const resetFunc = () => {
-	      this.props.resetEditedRigaBolla();
-	}
-	
+
 
 	e.preventDefault();
 	var valuesTestata = {...this.props.testataBolla};

@@ -1,7 +1,7 @@
 import TableElencoBolleComponent from '../components/TableElencoBolle'
 import {bollaFA} from '../../../actions/elencoBolle'
 
-import {getEditedBolla, getElencoBolle, getTableElencoBolleHeight, getTableElencoBolleScroll} from '../../../reducers'
+import {getEditedBolla, getElencoBolle, getTableElencoBolleScroll} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 

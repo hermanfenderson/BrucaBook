@@ -4,17 +4,6 @@ import {Modal} from 'antd'
 import {withRouter} from 'react-router-dom'
 
 
-//E' un dato.... che passo come costante...
-const header = [
-				{dataField: 'nome', label: 'Nome', width: '200px'},
-			    	{dataField: 'cognome', label: 'Cognome', width: '200px'},
-				{dataField: 'email', label: 'email', width: '200px'},
-				{dataField: 'telefono', label: 'telefono', width: '200px'},
-				
-			    ];
-
-
-
 
 class TableClienti extends Component 
     {

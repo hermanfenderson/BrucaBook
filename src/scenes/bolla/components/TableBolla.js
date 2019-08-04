@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedVirtualizedTable'
-import OrdiniModalTable from '../../ordine/containers/OrdiniModalTable'
 
 //Per gestire in modo smmooth il ricaricamento!
 
@@ -13,7 +12,6 @@ class TableBolla extends Component
 	}
 	
 	 componentWillUnmount() {
-	 	console.log("smonto");
 	 	let params = [...this.props.period];
     	params.push(this.props.idBolla);
     	this.props.offListenRigaBolla(params); 

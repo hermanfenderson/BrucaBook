@@ -309,6 +309,12 @@ white-space: nowrap;
     padding-left: 10px;
     padding-top: 30px;
 }
+.generalError {
+	padding-left: 30px;
+	color: red;
+	border-radius: 25px;
+	background: lightpink;
+}	
 
 
 

@@ -1,4 +1,4 @@
-//Helper per generare automagicamente un pezzo del reducer nel caso debba gestire una specifica scene...
+//Helper per generare automagicamente un pezzo del reducer nel caso debba gestire una specifica this.scene...
 //E' polimorfico!  Se non esiste un campo EAN... si comporta senza doppi salti ecc ecc...
 import {errMgmt, editedItemCopy, showError, showAllErrors} from '../helpers/form';
 import {isValidEAN, generateEAN} from '../helpers/ean';
@@ -10,70 +10,90 @@ import React from 'react';
 //mostrare.
 //la funzione transformSelectedItem prende invece dalla riga in tabella e la porta verso il form...
 //KeepOnSubmit non resetta il form al submit... serve per le casse..
-function FormReducer(scene, foundCompleteItem, transformItem,transformSelectedItem, initialState, keepOnSubmit, calcGeometry) {
-this.scene = scene;
-this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
-this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
-this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+scene;
-this.FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_'+scene;
-this.FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_'+scene;
-this.NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_'+scene;
-this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+scene;
-this.RESET_EDITED_CATALOG_ITEM = 'RESET_EDITED_CATALOG_ITEM_'+scene;
-this.SUBMIT_EDITED_CATALOG_ITEM = 'SUBMIT_EDITED_CATALOG_ITEM_'+scene;
+function FormReducer(params, foundCompleteItem, transformItem,transformSelectedItem, initialState, keepOnSubmit, calcGeometry) {
+//Gestisco la possibilità di passare un oggetto di parametri al FormReducer (maggiore leggibilità)
+//Quando avrò portato tutto... butto via questa if...
+if (typeof params === 'string' || params instanceof String)
+{
+	this.scene = params; //Retro-compatibilità...
+	if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
+	if (transformItem) this.transformItem = transformItem;
+	if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
+	if (calcGeometry) this.calcGeometry = calcGeometry;
+	if (keepOnSubmit) this.keepOnSubmit = keepOnSubmit;
+	if (initialState) this.initialState = initialState;
+}
+else //E' un oggetto...
 
-this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
-this.SET_FILTER = 'SET_FILTER_'+scene;
-this.RESET_FILTER = 'RESET_FILTER_'+scene;
+{
+	this.scene = params.scene;
+	this.foundCompleteItem = params.foundCompleteItem;
+	this.transformItem = params.transformItem;
+	 this.transformSelectedItem = params.transformSelectedItem;
+	  this.initialState = params.initialState;
+	
+	 this.keepOnSubmit = params.keepOnSubmit;
+	  this.calcGeometry = params.calcGeometry;
+}
+	
+
+this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+this.scene;
+this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+this.scene;
+this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+this.scene;
+this.FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_'+this.scene;
+this.FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_'+this.scene;
+this.NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_'+this.scene;
+this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+this.scene;
+this.RESET_EDITED_CATALOG_ITEM = 'RESET_EDITED_CATALOG_ITEM_'+this.scene;
+this.SUBMIT_EDITED_CATALOG_ITEM = 'SUBMIT_EDITED_CATALOG_ITEM_'+ this.scene;
+
+this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+this.scene;
+this.SET_FILTER = 'SET_FILTER_'+this.scene;
+this.RESET_FILTER = 'RESET_FILTER_'+this.scene;
 
 
-this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+scene;
-this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
-this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
-this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
-this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
-this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
-this.ADD_EAN_LISTENER = 'ADD_EAN_LISTENER_'+scene;
+this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+this.scene;
+this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+this.scene;
+this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+this.scene;
+this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+this.scene;
+this.LISTEN_ITEM='LISTEN_ITEM_'+this.scene;
+this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+this.scene;
+this.ADD_EAN_LISTENER = 'ADD_EAN_LISTENER_'+this.scene;
 
 
-this.ADD_ITEM = 'ADD_ITEM_'+scene;
-this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
-this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
-this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+scene;
+this.ADD_ITEM = 'ADD_ITEM_'+this.scene;
+this.DELETE_ITEM = 'DELETE_ITEM_'+this.scene;
+this.CHANGE_ITEM = 'CHANGE_ITEM_'+this.scene;
+this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+this.scene;
 
-this.RESET='RESET_'+scene;
+this.RESET='RESET_'+this.scene;
 
-this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
-this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
-this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
-this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
-this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
-this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
-this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+scene;
+this.ADDED_ITEM = 'ADDED_ITEM_'+this.scene;
+this.DELETED_ITEM = 'DELETED_ITEM_'+this.scene;
+this.CHANGED_ITEM = 'CHANGED_ITEM_'+this.scene;
+this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+this.scene;
+this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+this.scene;
+this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+this.scene;
+this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+this.scene;
 
-this.ADDED_STORICO_MAGAZZINO ='ADDED_STORICO_MAGAZZINO_'+scene;
-this.CHANGED_STORICO_MAGAZZINO ='CHANGED_STORICO_MAGAZZINO_'+scene;
-this.DELETED_STORICO_MAGAZZINO ='DELETED_STORICO_MAGAZZINO_'+scene;
-this.INITIAL_LOAD_STORICO_MAGAZZINO ='INITIAL_LOAD_STORICO_MAGAZZINO_'+scene;
-this.LISTEN_STORICO_MAGAZZINO ='LISTEN_STORICO_MAGAZZINO_'+scene;
-this.UNLISTEN_STORICO_MAGAZZINO ='UNLISTEN_STORICO_MAGAZZINO_'+scene;
-this.DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED_'+scene;
+this.ADDED_STORICO_MAGAZZINO ='ADDED_STORICO_MAGAZZINO_'+this.scene;
+this.CHANGED_STORICO_MAGAZZINO ='CHANGED_STORICO_MAGAZZINO_'+this.scene;
+this.DELETED_STORICO_MAGAZZINO ='DELETED_STORICO_MAGAZZINO_'+this.scene;
+this.INITIAL_LOAD_STORICO_MAGAZZINO ='INITIAL_LOAD_STORICO_MAGAZZINO_'+this.scene;
+this.LISTEN_STORICO_MAGAZZINO ='LISTEN_STORICO_MAGAZZINO_'+this.scene;
+this.UNLISTEN_STORICO_MAGAZZINO ='UNLISTEN_STORICO_MAGAZZINO_'+this.scene;
+this.DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED_'+this.scene;
 
-this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
-this.RESET_TABLE = 'RESET_TABLE_'+scene;
-this.FOCUS_SET = 'FOCUS_SET_'+scene;
-this.LISTEN_TESTATA='LISTEN_TESTATA_'+scene;
-this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
-this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
-this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
-this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
+this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+this.scene;
+this.RESET_TABLE = 'RESET_TABLE_'+this.scene;
+this.FOCUS_SET = 'FOCUS_SET_'+this.scene;
+this.LISTEN_TESTATA='LISTEN_TESTATA_'+this.scene;
+this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+this.scene;
+this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+this.scene;
+this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+this.scene;
+this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+this.scene;
 this.STORE_MEASURE = 'STORE_MEASURE';
 
-
-if (foundCompleteItem) this.foundCompleteItem = foundCompleteItem;
-if (transformItem) this.transformItem = transformItem;
-if (transformSelectedItem) this.transformSelectedItem = transformSelectedItem;
-if (calcGeometry) this.calcGeometry = calcGeometry;
 
 	
 	//Questa funzione calcola gli stati ulteriori...l'override si fa definendo un case che reagisce alla stessa stringa nel padre...
@@ -194,7 +214,7 @@ if (calcGeometry) this.calcGeometry = calcGeometry;
         
      case this.SUBMIT_EDITED_CATALOG_ITEM:
      	  //Se torno dal form sono sicuro che è completo...ma solo se il form è valido...
-     	  if (action.isValid) newState = {...state, editedItem: foundCompleteItem(state.editedItem, action), showCatalogModal : false};
+     	  if (action.isValid) newState = {...state, editedItem: this.foundCompleteItem(state.editedItem, action), showCatalogModal : false};
           else if (isValidEAN(state.editedItem.values.ean)) 
 	    		     {
 	    		      //Mostro gli errori nel form...
@@ -226,7 +246,7 @@ if (calcGeometry) this.calcGeometry = calcGeometry;
 	   	   let cei = editedItemCopy(state.editedItem);
 	   	   cei.selectedItem = action.row;
 	   	   cei.values = {...action.row};
-	   	   if (this.transformSelectedItem) transformSelectedItem(cei.values);
+	   	   if (this.transformSelectedItem) this.transformSelectedItem(cei.values);
 	   	   cei.eanState = 'COMPLETE';
 	   	   cei.errors = {};
 	   	   cei.errorMessages = {};
@@ -240,7 +260,7 @@ if (calcGeometry) this.calcGeometry = calcGeometry;
 				
 			if (state.editedItem.isValid)
 		    	{
-		    	if (keepOnSubmit) newState = state;
+		    	if (this.keepOnSubmit) newState = state;
 		    	else  newState = {...state, editedItem: {...editedItemInitialState()}};  //Reset dello stato della riga bolla...basta la copia superficiale
 		    	}
 		    else if ('ean' in state.editedItem.values)
@@ -345,7 +365,7 @@ if (calcGeometry) this.calcGeometry = calcGeometry;
    	    //Trucchismo.... salvo l'altezza della tabella e le altre geometrie
    	    const tableHeight = state.tableHeight;
    	    const geometry = state.geometry;
-      	newState =  {...initialState(), tableHeight: tableHeight, geometry: geometry};
+      	newState =  {...this.initialState(), tableHeight: tableHeight, geometry: geometry};
 		break;
 		
 	
@@ -460,7 +480,7 @@ if (calcGeometry) this.calcGeometry = calcGeometry;
 	   			let wh = {};
 	   			if (measures['mainHeight']) wh.h = measures['mainHeight'];
 	   			if (measures['mainWidth']) wh.w = measures['mainWidth'];
-	   			newState = {...state, geometry: calcGeometry(wh)};
+	   			newState = {...state, geometry: this.calcGeometry(wh)};
 	   					
 	   			}
    	    	}

@@ -1,6 +1,6 @@
 import {FormActions} from '../helpers/formActions';
 import {setDay} from '../helpers/form';
-import {addCreatedStamp, addChangedStamp, urlFactory} from '../helpers/firebase';
+import {urlFactory} from '../helpers/firebase';
 import Firebase from 'firebase';
 
 //import {isInternalEAN} from './ean';

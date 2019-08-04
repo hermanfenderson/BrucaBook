@@ -1,6 +1,6 @@
 import FormReducer from '../helpers/formReducer'
 import {initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper} from '../helpers/form';
-import {SET_ORDINIAPERTI_PER_EAN, SET_SHOW_ORDINIAPERTI_MODAL, SAVE_ORDINI_APERTI_DIFF, CHANGE_DELTA_PEZZI} from '../actions/ordiniAperti';
+import {SET_ORDINIAPERTI_PER_EAN, SET_SHOW_ORDINIAPERTI_MODAL, CHANGE_DELTA_PEZZI} from '../actions/ordiniAperti';
 import {ADDED_ITEM_ORDINIAPERTI,  CHANGED_ITEM_ORDINIAPERTI, DELETED_ITEM_ORDINIAPERTI,  INITIAL_LOAD_ITEM_ORDINIAPERTI, deltaOrdiniAperti} from '../helpers/ordiniAperti';
 import {isNotNegativeInteger} from '../helpers/validators';
 import {calcHeader} from '../helpers/geometry';

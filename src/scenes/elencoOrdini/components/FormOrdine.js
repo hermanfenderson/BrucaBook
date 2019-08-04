@@ -1,8 +1,6 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import WrappedForm from '../../../components/WrappedForm'
-import {period2month, moment2period} from '../../../helpers/form'
-import {objSelector} from '../../../helpers/form'
 
 
 class FormOrdine extends Component {

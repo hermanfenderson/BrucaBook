@@ -1,9 +1,7 @@
 import TableElencoOrdini from '../containers/TableElencoOrdini';
 import FormOrdine from '../containers/FormOrdine';
 import React, {Component} from 'react'
-import {isEqual} from '../../../helpers/form'
 import ReactDOM from 'react-dom';
-import {Redirect} from 'react-router-dom';
 
 
 

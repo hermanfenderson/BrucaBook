@@ -2,7 +2,7 @@ import TableBollaComponent from '../components/TableBolla'
 import {rigaBollaFA} from '../../../actions/bolla'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaBolla, getTableHeight, getTableScroll,  getListeningItemBolla, getTableScrollByKey, getItems, getOrdiniModalVisible} from '../../../reducers'
+import {getEditedRigaBolla,  getTableScroll,  getListeningItemBolla, getTableScrollByKey, getItems} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 import {setOrdiniModalVisible} from '../../../actions/ordine'

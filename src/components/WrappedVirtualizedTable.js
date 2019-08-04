@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { VariableSizeGrid as Grid } from 'react-window';
-import {Row, Icon, Empty} from 'antd'; 
+import {Row, Icon} from 'antd'; 
+import Empty from './Empty';
 import classNames from 'classnames';
 
 // These item sizes are arbitrary.
@@ -62,7 +63,6 @@ componentDidUpdate(prevProps, prevState) {
   if (this.props.tableScrollByKey)
 			{
 			let rowToGo = -1;
-			console.log("scroll a riga: " +this.dataIndex[this.props.tableScrollByKey]);
 			if (this.props.tableScrollByKey)
 					{
 					 if (rowToGo !== this.dataIndex[this.props.tableScrollByKey]) rowToGo = this.dataIndex[this.props.tableScrollByKey];
@@ -104,7 +104,7 @@ if (col.sort)
 	if (this.state.sortBy === col.dataField)
 		{
 		if (this.state.sortDirection==='ASC') sortDirection = 'DESC';
-	    if (this.state.sortDirection==='DESC') {sortBy = null, sortDirection = null} 	
+	    if (this.state.sortDirection==='DESC') {sortBy = null; sortDirection = null} 	
 		}
 	let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection, sortType: col.sort };
 	this.setState(newState);
@@ -257,10 +257,7 @@ render ()
   							}) 
   					  : itemData;
   			
-  	let sort = ({defaultSortDirection, event, sortBy, sortDirection}) => {
-		let newState = {...this.state, sortBy: sortBy, sortDirection: sortDirection};
-		this.setState(newState);
-	} 
+  	 
 //Genero un indice che associa aalla chiave la sua posizione nell'array sortato e filtrato. Mi serve per saltare a una riga	
 const reducer = (acc, curr, idx) => {
 	acc[curr.key] = idx;
@@ -301,7 +298,8 @@ let columnWidths = (() =>
     {this.Cell}
   </Grid>	
   :
-  <Empty style={{color: '#DCDCDC', position: 'relative', top: (this.props.height - 40 -130) / 2}}/>
+    <Empty width={this.props.width+20} height={this.props.height -30 -10}/>
+
   }
   </div> 
 )

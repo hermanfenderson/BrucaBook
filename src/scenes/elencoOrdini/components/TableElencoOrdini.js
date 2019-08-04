@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import WrappedTable from '../../../components/WrappedTable';
 import {withRouter} from 'react-router-dom'
 
-import {isEqual} from '../../../helpers/form';
 import {Modal} from 'antd';
 
 

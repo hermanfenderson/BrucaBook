@@ -17,7 +17,7 @@ if (props.coors)
 	
 	}
 
-let style = {...props.style, width:width, position:'absolute', top: top, left: left, width: width, height: height}
+let style = {...props.style, position:'absolute', top: top, left: left, width: width, height: height}
     return (
      <div className={props.className} style={style}>
       {props.children}

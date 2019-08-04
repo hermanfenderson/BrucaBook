@@ -11,6 +11,10 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 1.0.0
+* Rivisitazione di tutta la grafica 
+* Fix rimandato di rese aperte
+
 ### Versione 0.12.1
 * In inventario in automatico si viene portati alla riga del codice che si sta lavorando
 * Fix di un piccolo baco su incolonnamento tabelle

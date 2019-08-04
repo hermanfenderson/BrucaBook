@@ -83,11 +83,7 @@ const rigaInventarioR = new FormReducer('INVENTARIO', foundCompleteItem, null, n
 
 
 var stockMap = new Map();
-//Function per gestire lo stock... dallo storico magazzino
-function transformItem(value)
-{   let stock = stockMap.get(value.ean); 
-	if (stock !== undefined) value.stock = stock;
-}
+
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla

@@ -6,7 +6,7 @@ Ogni riga occupa 60px
 */
 
 import React, {Component} from 'react'
-import {Form, Alert, Button, Input, Checkbox, DatePicker, TimePicker, InputNumber, Spin} from 'antd';
+import {Form,  Button, Input, Checkbox, DatePicker, TimePicker, InputNumber, Spin} from 'antd';
 import SelectBookstore from './SelectBookstore'; 
 import SelectList from './SelectList';
 import AutoCompleteList from './AutoCompleteList';
@@ -38,7 +38,7 @@ let children = React.Children.map(props.children, child => {
 
 const GeneralError = (props) => {
 		const { errorMessages, setFocus, ...otherProps } = props;
-		if (errorMessages['form']) return <Alert {...otherProps} message={errorMessages['form']} type='error'/>
+		if (errorMessages['form']) return <div className={'generalError'} {...otherProps}> {errorMessages['form']} </div>
 		else return null
 		}
 

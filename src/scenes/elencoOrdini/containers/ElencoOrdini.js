@@ -1,7 +1,7 @@
 import ElencoOrdiniComponent from '../components/ElencoOrdini'
 import {ordineFA} from '../../../actions/elencoOrdini'
 import {storeMeasure, setHeaderInfo} from  '../../../actions'
-import {getAnagraficheLocali, getListeningItem, getGeometry} from '../../../reducers'
+import {getAnagraficheLocali,  getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 

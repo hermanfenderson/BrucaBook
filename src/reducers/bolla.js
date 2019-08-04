@@ -1,10 +1,9 @@
 import FormReducer from '../helpers/formReducer'
-import {STORE_MEASURE} from '../actions';
 
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
-import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMH, FMW, FORM_COL_H} from '../helpers/geometry';
+import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMH, FMW, FORM_COL_H, GE_H} from '../helpers/geometry';
 
 
 
@@ -34,12 +33,12 @@ const editedItemInitialState = () => {
 
 //Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
 let geometryParams = {cal: {
-						formHeight: 180,
+						formHeight: 2 * FORM_COL_H + GE_H,
 						totaliWidth: 190,
 						totaliHeight: 200,
 						immagineWidth: 190,
 						immagineHeight: 200,
-						formSearchHeight: 60,
+						formSearchHeight: FORM_COL_H,
 						
 						colSearchParams: [
 										{name: 'ean', min: 120, max: 120},

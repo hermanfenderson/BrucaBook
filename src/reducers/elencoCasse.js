@@ -9,7 +9,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {SET_PERIOD_ELENCOCASSE, SAVE_CASSA} from '../actions/elencoCasse';
 import {STORE_MEASURE} from '../actions';
-import {calcFormCols, calcHeader} from '../helpers/geometry';
+import {calcFormCols} from '../helpers/geometry';
 
 
 moment.locale("it");

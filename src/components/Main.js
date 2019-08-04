@@ -40,11 +40,11 @@ import ElencoOrdini from '../scenes/elencoOrdini';
 import GestioneItemCatalog from '../scenes/catalogo';
 
 
- const RequireAuthRoute = ({ component: Component, otherProps: otherProps, ...rest }) => 
+ const RequireAuthRoute = ({ component: Component, ...rest }) => 
 			{
 			  return(
 			  <Route {...rest} render={props => (
-			    rest.authenticated?  <Component {...props} {...otherProps}/>:  <Redirect to='/userMgmt?mode=login' />
+			    rest.authenticated?  <Component {...props} {...rest.otherProps} />:  <Redirect to='/userMgmt?mode=login' />
 			  )}/>)
 			}
 			

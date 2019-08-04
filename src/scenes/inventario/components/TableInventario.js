@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import { withRouter } from 'react-router-dom';
-import equal from 'deep-equal';
 
 //E' un dato.... che passo come costante...
 /*

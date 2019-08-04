@@ -12,7 +12,7 @@ export const FORM_COL_H=60;
 const SEL_W=60;
 const SCROLL_W=10;
 const FORM_MARGIN=25;
-const GE_H = 40;
+export const GE_H = 40;
 export const FMH = 10; //Form margin Height
 export const FMW = 10; //Form margin Width
 
