@@ -63,11 +63,9 @@ componentDidUpdate(prevProps, prevState) {
   if (this.props.tableScrollByKey)
 			{
 			let rowToGo = -1;
-			if (this.props.tableScrollByKey)
-					{
-					 if (rowToGo !== this.dataIndex[this.props.tableScrollByKey]) rowToGo = this.dataIndex[this.props.tableScrollByKey];
-					 else rowToGo = -1;
-					}
+			if (rowToGo !== this.dataIndex[this.props.tableScrollByKey]) rowToGo = this.dataIndex[this.props.tableScrollByKey];
+		    else rowToGo = -1;
+					
 					
 			if (rowToGo >= 0) this.gridRef.current.scrollToItem({align: 'center', rowIndex: rowToGo}); //Vado alla riga richiesta...
 		    this.props.setTableScrollByKey(null); //Resetto lo scroll...

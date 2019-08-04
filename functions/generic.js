@@ -182,7 +182,7 @@ const calcolaTotali = (change, context, part) =>
 		    				console.log(totaleImporto);
 		    				totali = {'pezzi' : totalePezzi,  'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem}; 
 		    			    ref = change.after.ref.parent.parent.parent.parent.child(part).child(context.params.cliente).child(key);
-		
+		                break;
 		    			default:
 		    			break;
 		    			}

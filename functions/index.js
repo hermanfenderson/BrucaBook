@@ -301,8 +301,6 @@ let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
 exports.aggiornaOrdiniAperti = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
     .onWrite((change, context) => 
             {
-            let cliente = context.params.cliente;
-            let id = context.params.id;
             let idItem = context.params.idItem;
             //Caso inserimento o aggiornamento... se ho lo stato after non in 'Z' ho un ordine aperto...e semplicemente lo aggiorno...
             if (change.after.val())
