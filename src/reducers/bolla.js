@@ -130,7 +130,17 @@ const calcolaTotali = (state) =>
  
     
 //Metodi reducer per le Form
-const rigaBollaR = new FormReducer('BOLLA', foundCompleteItem, null, null, initialState, null,calcGeometry); 
+const rigaBollaR = new FormReducer(
+						{scene: 'BOLLA',
+						foundCompleteItem: foundCompleteItem,
+								transformItem: null, 
+								transformSelectedItem: null, 
+								initialState: initialState, 
+								keepOnSubmit: false, 
+								calcGeometry: calcGeometry}); 
+
+	
+	
 
 
 function discountPrice(prezzoListino, sconto1, sconto2, sconto3)

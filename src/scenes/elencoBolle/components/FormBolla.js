@@ -44,11 +44,11 @@ componentDidMount = () =>
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
          <WrappedForm.Input field='riferimento' label='Riferimento'  required={true} coord={formCols1.riferimento}/>
         <WrappedForm.AutoCompleteList field='fornitore' label='Fornitore' list={objSelector(this.props.fornitori,'nome')}  required={true} coord={formCols1.fornitore} />
-        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataDocumento}} coord={formCols1.dataDocumento}  disabled={(this.props.editedBolla.selectedItem!==null)}/>
-        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataCarico}} coord={formCols1.dataCarico}/>
+        <WrappedForm.DatePicker field='dataDocumento' label='Data Documento' allowClear={false} format = 'DD/MM/YYYY'  coord={formCols1.dataDocumento}  disabled={(this.props.editedBolla.selectedItem!==null)}/>
+        <WrappedForm.DatePicker field='dataCarico' label='Data Carico'  allowClear={false} format = 'DD/MM/YYYY'  coord={formCols1.dataCarico}/>
      
        <WrappedForm.SelectList field='tipoBolla' coord={formCols2.tipo} label='Tipo' list={this.props.tipiBolla} defaultValue = 'A' />
-        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto' coord={formCols2.dataRendiconto} style={{width:formCols2.dataRendiconto}} allowClear={false} format = 'DD/MM/YYYY'  disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
+        <WrappedForm.DatePicker field='dataRendiconto' label='Data Rendiconto' coord={formCols2.dataRendiconto}  allowClear={false} format = 'DD/MM/YYYY'  disabled={(this.props.editedBolla.values.tipoBolla!=='R')}/>
        
        <WrappedForm.Button   type={'button'}  coord={formCols2.annulla} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	

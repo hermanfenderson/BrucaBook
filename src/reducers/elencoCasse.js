@@ -9,18 +9,64 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {SET_PERIOD_ELENCOCASSE, SAVE_CASSA} from '../actions/elencoCasse';
 import {STORE_MEASURE} from '../actions';
-import {calcFormCols} from '../helpers/geometry';
+import {calcFormColsFix, initCalcGeometry, calcGeneralError, calcHeaderFix, FORM_COL_H, GE_H, P_W, FMH, FMW} from '../helpers/geometry';
 
 
 moment.locale("it");
 
-//Metodi reducer per le Form
-const colParams = [
-	{name: 'cassa', min: 170, max: 170},
-	{name: 'data', min: 180, max: 360 },
-	{name: 'annulla', min: 130, max: 250 },
-	{name: 'crea', min: 130, max: 250 },
-	];
+
+//E' un dato.... che passo come costante...
+
+//Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
+let geometryParams = {cal: {
+						formHeight: FORM_COL_H + GE_H,
+						periodWidth: P_W,
+						colParams: [
+									{name: 'cassa', min: 170, max: 170},
+									{name: 'data', min: 180, max: 360 },
+									{name: 'annulla', min: 130, max: 250 },
+									{name: 'crea', min: 130, max: 250 },
+									],
+					
+						headerParams: [
+									    
+									  {name: 'dataCassa', label: 'Data ', min: 200},
+									  {name: 'cassa', label: 'Cassa', min: 150, max: 150},
+								  
+									  {name: 'totali.prezzoTotale', label: 'Totale', min: 200, max: 200},
+									   {name: 'totali.scontrini',  label: 'Scontrini',  min: 200, max: 200},
+									  {name: 'totali.pezzi', label: 'Pezzi',  min: 200, max: 200},
+									 
+									 ],
+						
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.periodWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	    {periodHeight: (cal) =>  {return(cal.h)}},
+				  	   ],
+				 geo: [ 
+	
+
+     		    		{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight, left: cal.periodWidth})}},
+    				
+     		    		{formCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams, width: cal.formWidth, offset: 0}))}}, 
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.periodWidth})}},
+    				    {generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 1}))}}, 
+    					
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+    					{periodCoors: (cal) => {return({height: cal.periodHeight, width: cal.periodWidth, top: 0, left: 0})}},
+    					]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
+
+
+
+
+
+
 
 const editedBollaValuesInitialState = 
 	  {			cassa: '1',
@@ -38,7 +84,7 @@ const initialState = () => {
     const extraState = {
 			//period: moment2period(moment())    	
     		period: null,
-    		geometry: {formCols: calcFormCols(colParams, 8, (880 -16)  * 5 / 6 -8)},
+    		geometry: calcGeometry(),
     				}
 	return initialStateHelper(eiis,extraState);
     }
@@ -55,8 +101,16 @@ const transformSelectedItem = (cei) =>
 {
 	cei.dataCassa = moment(cei.dataCassa,"DD/MM/YYYY");
 	}
-
-const bollaR = new FormReducer('ELENCOCASSE',null, transformEditedCassa, transformSelectedItem, initialState); 
+	
+	
+const cassaR = new FormReducer({scene: 'ELENCOCASSE', 
+								foundCompleteItem: null,
+								transformItem: transformEditedCassa, 
+								transformSelectedItem: transformSelectedItem, 
+								initialState: initialState, 
+								keepOnSubmit: false, 
+								calcGeometry: calcGeometry}); 
+	
 
     
  
@@ -88,25 +142,7 @@ export default function elencoCasse(state = initialState(), action) {
    
         
    
-    case STORE_MEASURE:
-    	newState = state;
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	     if (action.newMeasure.name==='viewPortHeight')
-   			{
-   	   
-   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formCassaHeight'] -130;
-   	    	newState = {...state, tableHeight: height};
-   			}
-   		if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
-   	   		{
-   	   		let geometry = {...state.geometry};
-   	   		let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6- 8;	
-   			
-   	   		geometry.formCols = calcFormCols(colParams, 8, formWidth);
-   	   		newState = {...state, geometry: geometry};
-   	   		}
-        break;  
+   
      case SET_PERIOD_ELENCOCASSE:
         newState = {...state, period: action.period};
         break;
@@ -114,7 +150,7 @@ export default function elencoCasse(state = initialState(), action) {
      	newState = state;
      	break;
     default:
-        newState = bollaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa);
+        newState = cassaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedCassa);
         //newState =  state;
     	break;
    

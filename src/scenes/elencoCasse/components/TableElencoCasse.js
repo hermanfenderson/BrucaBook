@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import WrappedTable from '../../../components/WrappedTable';
+import WrappedTable from '../../../components/WrappedVirtualizedTable';
 import {isEqual} from '../../../helpers/form';
 import {Modal} from 'antd';
 import {period2month} from '../../../helpers/form'
@@ -7,14 +7,6 @@ import {withRouter} from 'react-router-dom'
 
 
 
-//E' un dato.... che passo come costante...
-const header = [{dataField: 'dataCassa', label: 'Data', width: '200px'},
-			    
-				{dataField: 'cassa', label: 'Cassa', width: '150px'},
-			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '200px'},
-			      {dataField: 'totali.scontrini', label: 'Scontrini', width: '200px'},
-			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '200px'},
-			   ];
 
 
 
@@ -98,10 +90,13 @@ class TableElencoCasse extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
+    		let height = props.geometry.tableCoors.height;
+    	let width = props.geometry.tableCoors.width;
+    
     	delete props['deleteCassa']; //Non la passo liscia...
     	delete props['setSelectedCassa']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} height={height} width={width} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
 			)}
     }		
 	

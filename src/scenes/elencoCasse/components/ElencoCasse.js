@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {period2moment, period2month, isEqual} from '../../../helpers/form'
 import ReactDOM from 'react-dom';
 import {Redirect} from 'react-router-dom';
+import FixBlock from '../../../components/FixBlock'
 
 
 
@@ -40,32 +41,31 @@ else
 {
 //	
 return (
- <div>	
-  <Row>
-      <Col style={{'marginTop': '30px'}} span={4}>
+  <div>	
+ 
+      <FixBlock className='periodPicker' coors={this.props.geometry.periodCoors}>
        <Form.Item
             label="Periodo"
           >
        <MonthPicker allowClear={false} value={period2moment([this.props.match.params.anno, this.props.match.params.mese])} onChange={this.props.setPeriodElencoCasse} format={"MM/YYYY"} />
        </Form.Item>
-      </Col>
-       <Col span={20}>
-    
-   <TableElencoCasse listeningPeriod={this.props.listeningPeriod} period={this.props.period} geometry={this.props.geometry}/>
-  	 </Col>
-    </Row>
-    <Row type="flex" align="bottom" className='bottom-form'  ref='formCassa' style={{height: '100px'}} >
+      </FixBlock>
+     <FixBlock coors={this.props.geometry.tableCoors}>
+       
+       <TableElencoCasse geometry={this.props.geometry} listeningPeriod={this.props.listeningPeriod} period={this.props.period} />
    
-     <Col span={4} />
-         <Col span={20}>
-    
-   	 <FormCassa period={this.props.period} geometry={this.props.geometry}/>
-   	 </Col>
- 
-             </Row>
+   	 	 </FixBlock>
+   <FixBlock coors={this.props.geometry.formCoors} className='bottom-form2' >
+       
+     <FormCassa geometry={this.props.geometry} />
+           </FixBlock>
    
   </div>
  
+ 
+ 
+ 
+
  
 )
 }

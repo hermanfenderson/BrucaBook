@@ -190,8 +190,14 @@ cellRenderer = (rowIndex, columnIndex, data) => {
 	if (columnIndex === this.actIdx) return data[rowIndex] ? this.actionCellRenderer({rowData: data[rowIndex], rowIndex: rowIndex}) : '';
 	else 
 		{   	let cellName = this.props.header[cIdx].dataField;
-			let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
-
+		
+			//let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
+            let cellValue = data[rowIndex] ? cellName.split('.').reduce((o,i)=>o[i], data[rowIndex]) : '';
+            
+            console.log(cellValue);
+            console.log(cellName);
+            console.log(data[rowIndex]);
+            
 		    let customRender = (this.props.customRowRender) ? this.props.customRowRender[cellName] : null;
 		    //Se ho un render specifico per questa colonna....
 		    if (customRender) {

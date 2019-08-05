@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
-import WrappedForm from '../../../components/WrappedForm'
+import WrappedForm from '../../../components/WrappedForm2'
 import {period2month, moment2period} from '../../../helpers/form'
 
 class FormCassa extends Component {
@@ -35,23 +35,18 @@ componentDidMount = () =>
   	const selectedItem = this.props.editedCassa.selectedItem;
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
   	const formCols = this.props.geometry.formCols;
+  	const  generalError = this.props.geometry.generalError;
+  
    return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter:formCols.gutter}}>
-        <WrappedForm.Input field='cassa' label='Cassa'  required={true} formColumnLayout={{width: formCols.cassa}} />
-        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' formColumnLayout={{width: formCols.data}}  disabled={(this.props.editedCassa.selectedItem!==null)}/>
-          <WrappedForm.Button type={'button'} formColumnLayout={{width: formCols.annulla}}   onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.Input field='cassa' label='Cassa'  required={true} coord={formCols.cassa} />
+        <WrappedForm.DatePicker allowClear={false} field='dataCassa' label='Data'  format = 'DD/MM/YYYY' coord={formCols.data}  disabled={(this.props.editedCassa.selectedItem!==null)}/>
+          <WrappedForm.Button type={'button'} coord={formCols.annulla}   onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  type="primary" htmlType="submit" formColumnLayout={{width: formCols.crea}} >{submitLabel}</WrappedForm.Button>
-          </WrappedForm.Group>
-        
-     
-       <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
+        <WrappedForm.Button  type="primary" htmlType="submit" coord={formCols.crea} >{submitLabel}</WrappedForm.Button>
+        <WrappedForm.GeneralError  coord={generalError}/>
        
-         
-        </WrappedForm.Group >
-       </WrappedForm>
+         </WrappedForm>
     )
   }
 }

@@ -9,6 +9,8 @@
 */
 const MIN_GUT=8;
 export const FORM_COL_H=60;
+//Larghezza colonna period
+export const P_W=190;
 const SEL_W=60;
 const SCROLL_W=10;
 const FORM_MARGIN=25;

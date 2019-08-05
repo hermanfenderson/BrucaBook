@@ -9,7 +9,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 
 import {SET_PERIOD_ELENCOBOLLE} from '../actions/elencoBolle';
-import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMW, FMH, FORM_COL_H, GE_H} from '../helpers/geometry';
+import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMW, FMH, FORM_COL_H, GE_H, P_W} from '../helpers/geometry';
 
 moment.locale("it");
 
@@ -32,7 +32,7 @@ const editedItemInitialState = () => {
 //Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
 let geometryParams = {cal: {
 						formHeight: FORM_COL_H*2 + GE_H,
-						periodWidth: 190,
+						periodWidth: P_W,
 						
 						colParams1: [
 									{name: 'riferimento', min: 135, max: 240},
