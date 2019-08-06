@@ -7,31 +7,13 @@ import classNames from 'classnames';
 
 // These item sizes are arbitrary.
 // Yours should be based on the content of the item.
-const SortSvg = () => (
-  <svg width="12" height="12" >       
-     <image href="/sort.svg"   width="12" height="12"/>    
-</svg>
-);
-const SortAlphaAscSvg = () => (
-  <svg width="12" height="12">       
-     <image href="/sort-alpha-asc.svg"  width="12" height="12"/>    
-</svg>
-);
-const SortAlphaDescSvg = () => (
-  <svg width="12" height="12">       
-     <image href="/sort-alpha-desc.svg"  width="12" height="12"/>    
-</svg>
-);
-const SortNumericAscSvg = () => (
-  <svg width="12" height="12">       
-     <image href="/sort-numeric-asc.svg"  width="12" height="12"/>    
-</svg>
-);
-const SortNumericDescSvg = () => (
-  <svg width="12" height="12">       
-     <image href="/sort-numeric-desc.svg"  width="12" height="12"/>    
-</svg>
-);
+
+const COL_H = 30;
+const COL_H_S = 20;
+const ICO = '12px';
+const ICO_S = '10px';
+
+
 
 function itemKey({ columnIndex, data, rowIndex }) {
    const item = data[rowIndex];
@@ -109,6 +91,35 @@ if (col.sort)
 	}
 };
 
+i_size  = (this.props.size==='small') ? ICO_S : ICO;
+
+SortSvg = () => (
+  <svg width={this.i_size} height={this.i_size} >       
+     <image href="/sort.svg"   width={this.i_size} height={this.i_size}/>    
+</svg>
+);
+SortAlphaAscSvg = () => (
+  <svg width={this.i_size} height={this.i_size}>       
+     <image href="/sort-alpha-asc.svg"  width={this.i_size} height={this.i_size}/>    
+</svg>
+);
+SortAlphaDescSvg = () => (
+  <svg width={this.i_size} height={this.i_size}>       
+     <image href="/sort-alpha-desc.svg"  width={this.i_size} height={this.i_size}/>    
+</svg>
+);
+SortNumericAscSvg = () => (
+  <svg width={this.i_size} height={this.i_size}>       
+     <image href="/sort-numeric-asc.svg"  width={this.i_size} height={this.i_size}/>    
+</svg>
+);
+
+SortNumericDescSvg = () => (
+  <svg width={this.i_size} height={this.i_size}>       
+     <image href="/sort-numeric-desc.svg"  width={this.i_size} height={this.i_size}/>    
+</svg>
+);
+
 Header = (header) => 
 {
 let leftPos = [];
@@ -116,19 +127,19 @@ leftPos.push(0);
 for (let i=0; i<header.length; i++) leftPos.push(header[i].width+leftPos[i]); //Posizioni degli header...
 let headCols = header.map((col, idx) => 
 				  {
-				  return(<div className={'vtHeadCell'} 
+				  return(<div className={classNames({'vtHeadCell': true, 'vtHeadCellSmall': (this.props.size==='small')})} 
 				  key={idx} 
 				  onClick={(e) => {this.onHeaderClick({event: e, col:col })} }
                              
-				  style={{ height: 30, position: 'absolute', left: leftPos[idx], width: col.width}}>
+				  style={{ height: (this.props.size==='small'? COL_H_S : COL_H), position: 'absolute', left: leftPos[idx], width: col.width}}>
                        {col.label} 
-                    {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'string')) ? <Icon component={SortAlphaAscSvg} /> : null}     
+                    {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'string')) ? <Icon component={this.SortAlphaAscSvg} /> : null}     
                 
-                  {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC') && (col.sort === 'string')) ? <Icon component={SortAlphaDescSvg} /> : null}     
-                   {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'number')) ? <Icon component={SortNumericAscSvg} /> : null}     
+                  {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC') && (col.sort === 'string')) ? <Icon component={this.SortAlphaDescSvg} /> : null}     
+                   {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'number')) ? <Icon component={this.SortNumericAscSvg} /> : null}     
                 
-                  {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC') && (col.sort === 'number')) ? <Icon component={SortNumericDescSvg} /> : null}     
-                 {((col.sort) && (col.dataField  !== this.state.sortBy)) ? <Icon component={SortSvg} /> : null}     
+                  {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'DESC') && (col.sort === 'number')) ? <Icon component={this.SortNumericDescSvg} /> : null}     
+                 {((col.sort) && (col.dataField  !== this.state.sortBy)) ? <Icon component={this.SortSvg} /> : null}     
                
                  </div>
                  )
@@ -136,7 +147,7 @@ let headCols = header.map((col, idx) =>
                  
 			)	
 return (
-    <div style={{ height: 30}}>
+    <div style={{ height: (this.props.size==='small'? COL_H_S : COL_H)}}>
     {headCols}
     </div>
 )
@@ -144,7 +155,7 @@ return (
 
 actionCellRenderer = ({rowData, rowIndex}) => {
  return (
-        <div className={'vtCellValue'}>
+        <div className={classNames({'vtCellValue': true,'vtCellSmall': (this.props.size==='small')})}>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(rowData)}}/>} 
 		{(this.props.editRow) && <Icon type="edit" onClick={() => {   this.props.editRow(rowData)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => {this.props.detailRow(rowData)}}/>}  
@@ -194,16 +205,13 @@ cellRenderer = (rowIndex, columnIndex, data) => {
 			//let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
             let cellValue = data[rowIndex] ? cellName.split('.').reduce((o,i)=>o[i], data[rowIndex]) : '';
             
-            console.log(cellValue);
-            console.log(cellName);
-            console.log(data[rowIndex]);
-            
+             
 		    let customRender = (this.props.customRowRender) ? this.props.customRowRender[cellName] : null;
 		    //Se ho un render specifico per questa colonna....
 		    if (customRender) {
 		    		        return customRender(cellValue, data[rowIndex], rowIndex);
 		    				}
-			else return(<div className={classNames({'vtCellValue': true, 'vtCellEllipsis': this.props.header[cIdx].ellipsis})} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>);
+			else return(<div className={classNames({'vtCellValue': true, 'vtCellSmall': (this.props.size==='small'),'vtCellEllipsis': this.props.header[cIdx].ellipsis, })} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>);
 		}	
 }
 
@@ -228,6 +236,7 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
 
 render ()
      {
+   let col_h = (this.props.size==='small'? COL_H_S : COL_H);
    let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
    let itemData = (this.props.filters) ? 
   		dataCpy.map((record) => 
@@ -290,9 +299,9 @@ let columnWidths = (() =>
   <Grid 
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}
-    height={this.props.height - 30 -10} //La testata e un minimo di spazio per gli oggetti sotto...
+    height={this.props.height - col_h -10} //La testata e un minimo di spazio per gli oggetti sotto...
     rowCount={itemData.length}
-    rowHeight={index => 30}
+    rowHeight={index => col_h}
     width={this.props.width+20}
     itemData={sortedData}
     itemKey={itemKey}
@@ -302,7 +311,7 @@ let columnWidths = (() =>
     {this.Cell}
   </Grid>	
   :
-    <Empty width={this.props.width+20} height={this.props.height -30 -10}/>
+    <Empty width={this.props.width+20} height={this.props.height -col_h -10}/>
 
   }
   </div> 
