@@ -14,7 +14,7 @@ const {MonthPicker} = DatePicker;
 
 class ElencoBolle extends Component {
 componentDidMount() {
-    	if (ReactDOM.findDOMNode(this.refs.formBolla)) this.props.storeMeasure('formBollaHeight', ReactDOM.findDOMNode(this.refs.formBolla).clientHeight);
+    	//if (ReactDOM.findDOMNode(this.refs.formBolla)) this.props.storeMeasure('formBollaHeight', ReactDOM.findDOMNode(this.refs.formBolla).clientHeight);
     	this.props.setHeaderInfo('Acquisti');
     	if (!this.props.period) this.props.setPeriodElencoBolle(period2moment([this.props.match.params.anno, this.props.match.params.mese]));	
 		else if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoBolle(period2moment(this.props.period));

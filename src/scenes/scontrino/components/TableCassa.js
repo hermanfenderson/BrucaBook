@@ -213,13 +213,15 @@ class TableCassa extends Component
     	render() { 
         let props = {...this.props};
     	let selectedItemKey = null;
-    	let colsW = this.props.geometry.tableCassaCols;
+    //	let colsW = this.props.geometry.tableCassaCols;
+    	let header=this.props.geometry.header;
+    	/*
     	let header = [{dataField: 'numero', label: '#', width: colsW.numero},
 				{dataField: 'oraScontrino', label: 'Ora', width: colsW.oraScontrino},		
                 {dataField: 'totali.pezzi', label: 'Qtà', width: colsW.pezzi},
 			     {dataField: 'totali.prezzoTotale', label: 'Tot.', width: colsW.prezzoTotale}
 			   ];
-
+)   */
        	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaScontrino']; //Non la passo liscia...

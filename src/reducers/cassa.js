@@ -1,9 +1,9 @@
 import FormReducer from '../helpers/formReducer'
-import {STORE_MEASURE} from '../actions';
 import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO, LISTEN_RIGASCONTRINO, OFF_LISTEN_RIGASCONTRINO} from '../actions/cassa';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import {isPositiveInteger, isPercentage} from '../helpers/validators'
+import {COL_H_S, FORM_COL_H_S, initCalcGeometry, calcFormColsFix, calcHeaderFix} from '../helpers/geometry'
 import moment from 'moment';
 
 
@@ -68,21 +68,61 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedRigaCassaValuesInitialState, {} ));
 }
 
+//eeometria dela metà di sinistra della scena scontrino
+let geometryParams = {cal: {
+	                    infoHeight: COL_H_S,
+	                    
+						totaliWidth: 190,
+						totaliHeight: 100,
+						
+						formSearchHeight: COL_H_S,
+						
+						colSearchParams: [
+										{name: 'titolo', min: 120},
+										{name: 'reset', min: 30, max: 30},
+										],
+						headerParams: [
+									  {name: 'numero', label: '#', min: 80 },
+									  {name: 'oraScontrino', label: 'Ora', min: 50, max: 50},
+									  {name: 'pezzi', label: 'Qtà',  min: 40, max: 40},
+									  {name: 'prezzoTotale', label: 'Tot.', min: 50, max: 50},
+									 ],
+						
+						},
+				  tbc: [
+				  	    {cassaWidth: (cal) => {return(cal.w/4)}},
+				  	    {cassaHeight: (cal) => {return(cal.h)}},
+				  	    
+				  		{infoWidth: (cal) => {return(cal.cassaWidth/3)}},
+				  	    {nuovoScontrinoWidth: (cal) => {return(cal.cassaWidth*2/3)}},
+				  	    
+				  	    {tableWidth: (cal) => {return(cal.w/4)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formSearchHeight-cal.testataHeight - cal.totaliHeight)}},
+				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	   ],
+				 geo: [ 
+				  	    {cassaCoors: (cal) =>  {return({height: cal.cassaHeight, width: cal.cassaWidth, top: 0, left: 0})}},
+    					
+     		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight+cal.totaliHeight+cal.infoHeight, left: 0})}},
+    				
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+    				    {infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 0})}},
+    				    {nuovoScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth, top: 0, left: cal.infoWidth})}},
+    				    {testataCoors: (cal) => {return({height: cal.totaliHeight+cal.formSearchHeight, width: cal.cassaWidth, top: cal.infoHeight, left: 0})}},
+    				    //Da tendere relativi a testata...
+    				    {formSearchCoors: (cal) =>  {return({height: COL_H_S, width: cal.formSearchWidth, top: 0, left: cal.totaliWidth})}},
+    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},
+    					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
+    				
+    					]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
+
 
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {listenersItem: {scontrini: {}},
-    					geometry: {
-    						      tableCassaTitoloWidth: 77,
-    						      tableCassaCols: {
-			                                  		numero: 20,
-			                                  		oraScontrino: 35,
-			                                  		pezzi: 30,
-			                                  		prezzoTotale: 45,
-			        
-			                                						},
-			                      
-    							  }
+    					geometry: calcGeometry(),
                   }
 	return initialStateHelper(eiis,extraState);
     }
@@ -388,7 +428,15 @@ function subChildChanged(payload, state, dataArrayName, dataIndexName, transform
  
     
 //Metodi reducer per le Form
-const rigaCassaR = new FormReducer('CASSA', null, transformEditedCassa, transformSelectedItem, initialState, true); 
+const rigaCassaR = new FormReducer(
+	{							scene: 'CASSA',
+								foundCompleteItem: null,
+								transformItem: transformEditedCassa, 
+								transformSelectedItem: transformSelectedItem, 
+								initialState: initialState, 
+								keepOnSubmit: true, 
+								calcGeometry: calcGeometry});
+
 
 
 
@@ -415,32 +463,6 @@ function transformAndValidateEditedRigaCassa(cei, name, value)
 export default function cassa(state = initialState(), action) {
   var newState;
   switch (action.type) {
-   case STORE_MEASURE:
-   	    
-   	    newState = state;
-   	    var measures = {...action.allMeasures};
-	    measures[action.newMeasure.name] = action.newMeasure.number;
-	   	  
-   	    if (action.newMeasure.name==='viewPortHeight')
-   	    	{
-   	   	    let height = measures['viewPortHeight'] - 255;
-	   	    newState = {...state, tableHeight: height};
-   	    	}
-   	    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
-   	    	{
-   	    	let tableCassaWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 1 / 4;
-   		    let tableCassaCols = {...state.geometry.tableCassaCols};
-   	    	if ((tableCassaCols !==null) && tableCassaWidth) 
-   	    		{
-   	    		tableCassaCols.numero = tableCassaWidth - 30 - (tableCassaCols.oraScontrino + tableCassaCols.pezzi+ tableCassaCols.prezzoTotale) - 40 -16 -10; 
-   				let geometry = {...state.geometry};
-   	    		geometry.tableCassaWidth = tableCassaWidth;
-   	    		geometry.tableCassaCols = tableCassaCols;
-   	    		geometry.tableCassaTitoloWidth = 30 + tableCassaCols.numero +tableCassaCols.oraScontrino -18;
-   			   	newState = {...newState, geometry: geometry};
-   	    		}
-			}
-        break;
    //Over-ride del reducer form... gestisco diversamente i totali...     
    case ADD_ITEM_CASSA:
    case CHANGE_ITEM_CASSA:

@@ -8,13 +8,13 @@ import FixBlock from '../../../components/FixBlock'
 
 
 
-import { Row, Col, DatePicker, Form} from 'antd'
+import {DatePicker, Form} from 'antd'
 const {MonthPicker} = DatePicker;
 
 
 class ElencoCasse extends Component {
 componentDidMount() {
-    	if (ReactDOM.findDOMNode(this.refs.formCassa)) this.props.storeMeasure('formCassaHeight', ReactDOM.findDOMNode(this.refs.formCassa).clientHeight);
+    	//if (ReactDOM.findDOMNode(this.refs.formCassa)) this.props.storeMeasure('formCassaHeight', ReactDOM.findDOMNode(this.refs.formCassa).clientHeight);
     	this.props.setHeaderInfo('Cassa');
     	if (!this.props.period) this.props.setPeriodElencoCasse(period2moment([this.props.match.params.anno, this.props.match.params.mese]));	
 		 else if (this.props.period && !isEqual(this.props.period,[this.props.match.params.anno, this.props.match.params.mese]))  this.props.setPeriodElencoCasse(period2moment(this.props.period));

@@ -11,12 +11,19 @@ const MIN_GUT=8;
 export const FORM_COL_H=60;
 //Larghezza colonna period
 export const P_W=190;
-const SEL_W=60;
+export const SEL_W=60;
+export const SEL_W_S=30;
 const SCROLL_W=10;
 const FORM_MARGIN=25;
 export const GE_H = 40;
 export const FMH = 10; //Form margin Height
 export const FMW = 10; //Form margin Width
+export const COL_H = 30;
+export const COL_H_S = 20;
+export const ICO = '12px';
+export const ICO_S = '10px';
+
+
 
 export const calcFormCols = (colParams, minGutter, width) =>
 {
@@ -156,10 +163,10 @@ export const calcHeader = (colParams, width) =>
     return cols;
 }
 
-export const calcHeaderFix = (params) =>
+export const calcHeaderFix = (params, sel_w=SEL_W) =>
 {
 	let colParams = params.colParams;
-	let width = params.width - SEL_W - SCROLL_W;
+	let width = params.width - sel_w - SCROLL_W;
 	return(calcHeader(colParams,width));
 }
 //I Params dovrebbero essere

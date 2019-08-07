@@ -21,9 +21,10 @@ import 'moment/locale/it';
 import {withRouter} from 'react-router-dom'
 import {period2month} from '../../../helpers/form'
 import FixCol from '../../../components/FixCol'
+import FixBlock from '../../../components/FixBlock'
 
 
-import { Row, Col,  Modal, Spin, Button} from 'antd'
+import {Modal, Spin, Button} from 'antd'
 
 class Scontrino extends Component {
 
@@ -110,96 +111,79 @@ render()
    const period = [this.props.match.params.anno, this.props.match.params.mese];
 
 return (
-  <Row gutter={16}>
+<div>	
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='SCONTRINO'/>
     </Modal>  
      <OrdiniModalTable visible={this.props.ordiniModalVisible} data={this.props.ordiniModalVisible}/>
 
-  <Col  style={{'backgroundColor': '#F0F0F0'}} span={6}>
+  <FixBlock  style={{'backgroundColor': '#F0F0F0'}} coors={this.props.geometryC.cassaCoors}>
 	
-    <Row>
-    <Col className='header-cassa' span={8}>
+    <FixBlock className='header-cassa' coors={this.props.geometryC.headerCassaCoors}>
   
     Cassa {this.props.testataCassa ? this.props.testataCassa.cassa : ''}
-    </Col>
-    <Col span={16}>
+    </FixBlock>
+    <FixBlock coors={this.props.geometryC.nuovoScontrinoCoors}>
+  
     	<Button type="primary" icon="plus" className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
-     </Col>
    
-    </Row>
-    <Row>
-    	<TestataCassa filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa} totaliCassa={this.props.totaliCassa}/>
-	
-    </Row>
-	
-	<Row>
-	    <TableCassa  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
-	</Row>
-
-  </Col>
-  <Col   span={18} className='sezione-scontrino' onKeyPress={this.handleKeyPress}>
+    </FixBlock>
+    <FixBlock coors={this.props.geometryC.testataCoors}>
+ 
+    	<TestataCassa geometry={this.props.geometryC} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} ref='testataCassa' testataCassa={this.props.testataCassa} staleTotaliCassa={this.props.staleTotaliCassa} totaliCassa={this.props.totaliCassa}/>
+   </FixBlock>
+ 	
+ 
+  <FixBlock coors={this.props.geometryC.tableCoors}>
+ 	    <TableCassa geometry={this.props.geometryC}  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+	</FixBlock>
+ </FixBlock>
+ 
+  <FixBlock coors={this.props.geometryS.scontrinoCoors} className='sezione-scontrino' onKeyPress={this.handleKeyPress}>
   <Spin spinning={!this.props.match.params.scontrino}>
-  <Row style={{height: this.props.geometry.sezioneScontrinoHeight}}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   
-    	<FixCol  width={this.props.geometry.colonnaTestataScontrinoWidth}>
-    	<Row  className='header-scontrino'>
+    	<FixBlock  coors={this.props.geometryS.infoCoors} className='header-scontrino'>
     	Scontrino
-    	</Row>
-    	<Row>
+    	</FixBlock>
+    	<FixBlock  coors={this.props.geometryS.editScontrinoCoors}>
     	
-			
-		
-		
-		
-	
 			<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} data={this.props.data}  ref='formTestataScontrino'/>
 			
-    	</Row>
-    	<Row>
+    	</FixBlock>
+    	<FixBlock coors={this.props.geometryS.totaliCoors}>
 			<TotaliScontrino staleTotali={this.props.staleTotali} testataScontrino={this.props.testataScontrino} totaliScontrino={this.props.totaliScontrino}/>
-		</Row>
-		<Row>
+		</FixBlock>
+		<FixBlock coors={this.props.geometryS.restoFormCoors}>
 			<FormCalcoloResto staleTotali={this.props.staleTotali} totaliScontrino={this.props.totaliScontrino} testataScontrino={this.props.testataScontrino}/>
-		</Row>
-		<Row>
+		</FixBlock>
+		<FixBlock coors={this.props.geometryS.nuovoScontrinoCoors}>
 			<Button type="primary" icon="plus" className='nuovo-scontrino-button' onClick={this.submitRigaCassa}> Nuovo scontrino</Button>
      
-		</Row>
-		<Row>
-		<BookImg style={{marginTop: this.props.geometry.sezioneScontrinoHeight - 120 - 250}} eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
-        </Row>
+		</FixBlock>
+		<FixBlock className='immagineCol' coors={this.props.geometryS.immagineCoors} >
+    	<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
+        </FixBlock>
 	
-		</FixCol>
-	     <FixCol width={this.props.geometry.tableScontrinoWidth}>
+	     <FixBlock coors={this.props.geometryS.tableCoors}>
     
-		<Row >
-   		
+	
 		   <Spin spinning={!this.props.testataScontrino}>	
    	
 			
-					<TableScontrino geometry={this.props.geometry} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+					<TableScontrino geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 		   </Spin>
-	   	</Row>
-			   
-	   </FixCol>
-	   
-	</Row>  
-	
-       <Row type="flex" align="bottom" className='bottom-form'  ref='formRigaScontrino' style={{height: '120px'}}>
-    	  <Col span={24}>
+	   	</FixBlock>
 
-
-    		<FormRigaScontrino   geometry={this.props.geometry} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />
-    	  </Col>
-
-     </Row>
-   </Spin>  
-  </Col>
- 
+<FixBlock className='bottom-form2' coors={this.props.geometryS.formCoors} >
    
-  </Row>
+
+    		<FormRigaScontrino   geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />
+</FixBlock>
+ 
+   </Spin>  
+  </FixBlock>
+ </div>
   )
   
 

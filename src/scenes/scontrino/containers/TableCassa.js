@@ -17,7 +17,6 @@ const setTableScrollByKey = cassaFA.setTableScrollByKey;
 
 const mapStateToProps = (state) => {
 	return ({data: getRigheCassa(state), tableScroll: getTableScrollCassa(state), 
-	height: getTableHeightCassa(state), 
 	selectedItem: getEditedRigaCassa(state).selectedItem,
 	listeningItemCassa: getListeningItemCassa(state),
 	index: getRigheCassaIndex(state),

@@ -42,12 +42,12 @@ const mapStateToProps = (state) => {
 	         listeningTestataCassa: getListeningTestataCassa(state),
 			 messageBuffer: getMessageBufferScontrino(state),
 			 listenersItemScontrino: getListenersItemScontrino(state),
-			 measures: getMeasures(state),
 			 filters: getFiltersCassa(state), 
 			 totaliScontrino: getTotaliScontrino(state),
 			 totaliCassa: getTotaliCassa(state),
-			 geometry: getGeometry(state,'SCONTRINO'),
-			 height: getTableHeightScontrino(state),  
+			 geometryS: getGeometry(state,'SCONTRINO'),
+			 geometryC: getGeometry(state,'CASSA'),
+			 
 			 eanLookupOpen: getEanLookupOpen(state),
 			 ordiniModalVisible: getOrdiniModalVisible(state)
 

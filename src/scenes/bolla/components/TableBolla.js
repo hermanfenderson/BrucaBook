@@ -54,7 +54,21 @@ class TableBolla extends Component
     	let width = props.geometry.tableCoors.width;
     	
     	  return(
-			<WrappedTable {...props} height={height} width={width} size={'small'}  highlightedRowKey={selectedItemKey} ordiniRow={this.ordiniRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header} />
+			<WrappedTable {...props}
+			height={height} 
+			width={width} 
+			size={'small'} 
+			actionFirst={true} 
+			
+			noAction={(rowData, rowIndex) => {if (rowIndex ===0) return true; else return false;}}  
+			customRowRender={{'ean': (text, record, index, stdRender) => {if (index===0) return(<div style={{marginLeft: '-50px', width: '200px', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis'}}>{text}123456789012345</div>); else return(stdRender);}}}
+			actionWidth={30}
+			highlightedRowKey={selectedItemKey} 
+			ordiniRow={this.ordiniRow} 
+			editRow={this.editRow} 
+			deleteRow={this.deleteRow} 
+			selectRow={this.editRow} 
+			header={this.props.geometry.header} />
 			)}
     }		
 	

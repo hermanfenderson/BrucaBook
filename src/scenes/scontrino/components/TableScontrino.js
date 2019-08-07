@@ -81,7 +81,8 @@ class TableScontrino extends Component
     	render() { 
       	let props = {...this.props};
     	let selectedItemKey = null;
-    	let colsW = this.props.geometry.tableScontrinoCols;
+    //	let colsW = this.props.geometry.tableScontrinoCols;
+      /*
         let header = [{dataField: 'ean', label: 'EAN', width: colsW.ean},
                 {dataField: 'titolo', label: 'Titolo', width: colsW.titolo},
 			    {dataField: 'prezzoUnitario', label: 'Eur', width: colsW.prezzoUnitario},
@@ -89,10 +90,12 @@ class TableScontrino extends Component
 			      {dataField: 'sconto', label: 'Sc.', width: colsW.sconto},
 			     {dataField: 'prezzoTotale', label: 'Tot.', width: colsW.prezzoTotale}
 			   ];
-    	let customRowRender = {
+    	*/
+    	let header = this.props.geometry.header;
+    	let customRowRender = {};
     		
     		     //'ean' : (text, record, index) => { return(<div style={{width: colsW.ean - 10}}> {text}</div>)},
-    			'titolo' : (text, record, index) => { return(<div style={{width: colsW.titolo-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
+    		//	'titolo' : (text, record, index) => { return(<div style={{width: colsW.titolo-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
 //'titolo' : (text, record, index) => {let w=parseInt(colsW.titolo/6.9); let c=text.length; let txt=(c>w) ? text.substring(0,w-4)+"..." : text; return(<div> {txt}</div>)}}
 
 

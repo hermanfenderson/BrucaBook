@@ -1,17 +1,14 @@
 import React from 'react';
 
 import { VariableSizeGrid as Grid } from 'react-window';
+import {SEL_W, COL_H, COL_H_S, ICO, ICO_S} from '../helpers/geometry';
 import {Row, Icon} from 'antd'; 
 import Empty from './Empty';
 import classNames from 'classnames';
 
 // These item sizes are arbitrary.
 // Yours should be based on the content of the item.
-
-const COL_H = 30;
-const COL_H_S = 20;
-const ICO = '12px';
-const ICO_S = '10px';
+//Aggiunt funzione per visualizzare su base condizione la sel
 
 
 
@@ -154,8 +151,11 @@ return (
 };
 
 actionCellRenderer = ({rowData, rowIndex}) => {
+ if (this.props.noAction && this.props.noAction(rowData, rowIndex)) 
+ return (<div></div>)
+ else
  return (
-        <div className={classNames({'vtCellValue': true,'vtCellSmall': (this.props.size==='small')})}>
+ 	    <div className={classNames({'vtCellValue': true,'vtCellSmall': (this.props.size==='small')})}>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(rowData)}}/>} 
 		{(this.props.editRow) && <Icon type="edit" onClick={() => {   this.props.editRow(rowData)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => {this.props.detailRow(rowData)}}/>}  
@@ -196,7 +196,7 @@ columnCount = this.props.header.length+1;
 
 
 cellRenderer = (rowIndex, columnIndex, data) => {
-	let cIdx = this.props.actionFirst ? columnIndex + 1 : columnIndex;
+	let cIdx = this.props.actionFirst ? columnIndex - 1 : columnIndex;
 	
 	if (columnIndex === this.actIdx) return data[rowIndex] ? this.actionCellRenderer({rowData: data[rowIndex], rowIndex: rowIndex}) : '';
 	else 
@@ -208,10 +208,14 @@ cellRenderer = (rowIndex, columnIndex, data) => {
              
 		    let customRender = (this.props.customRowRender) ? this.props.customRowRender[cellName] : null;
 		    //Se ho un render specifico per questa colonna....
+		    let stdRender = <div className={classNames({'vtCellValue': true, 'vtCellSmall': (this.props.size==='small'),'vtCellEllipsis': this.props.header[cIdx].ellipsis, })} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>;
+		
 		    if (customRender) {
-		    		        return customRender(cellValue, data[rowIndex], rowIndex);
+		    		        return customRender(cellValue, data[rowIndex], rowIndex, stdRender);
 		    				}
-			else return(<div className={classNames({'vtCellValue': true, 'vtCellSmall': (this.props.size==='small'),'vtCellEllipsis': this.props.header[cIdx].ellipsis, })} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>);
+			//else return(<div className={classNames({'vtCellValue': true, 'vtCellSmall': (this.props.size==='small'),'vtCellEllipsis': this.props.header[cIdx].ellipsis, })} style={{width: this.props.header[cIdx].width}}>{cellValue}</div>);
+		
+			else return(stdRender);
 		}	
 }
 
@@ -280,7 +284,7 @@ if (sortedData.length > 0) this.dataIndex = sortedData.reduce(reducer, this.data
 
 	
 this.header2 = [...this.props.header];
-	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || 60}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || 60})
+	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || SEL_W}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || SEL_W})
 	  
 let columnWidths = (() => 
 		{
