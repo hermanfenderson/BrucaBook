@@ -2,7 +2,7 @@
 import React, {Component} from 'react'
 
 
-import WrappedTable from '../../../components/WrappedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 
 //E' un dato.... che passo come costante...
 //Per gestire in modo smmooth il ricaricamento!
@@ -81,6 +81,9 @@ class TableScontrino extends Component
     	render() { 
       	let props = {...this.props};
     	let selectedItemKey = null;
+    	let height = props.geometry.tableCoors.height;
+    	let width = props.geometry.tableCoors.width;
+    	
     //	let colsW = this.props.geometry.tableScontrinoCols;
       /*
         let header = [{dataField: 'ean', label: 'EAN', width: colsW.ean},
@@ -105,7 +108,7 @@ class TableScontrino extends Component
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
-			<WrappedTable {...props} size={'small'} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow}  ordiniRow={this.ordiniRow} selectRow={this.editRow} header={header} customRowRender={customRowRender}/>
+			<WrappedTable {...props} height={height} width={width} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow}  ordiniRow={this.ordiniRow} selectRow={this.editRow} header={header} customRowRender={customRowRender}/>
 			)}
     }		
 	

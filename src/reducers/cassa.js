@@ -3,7 +3,7 @@ import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO, LISTE
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import {isPositiveInteger, isPercentage} from '../helpers/validators'
-import {COL_H_S, FORM_COL_H_S, initCalcGeometry, calcFormColsFix, calcHeaderFix} from '../helpers/geometry'
+import {COL_H_S, SEL_W_S, initCalcGeometry, calcFormColsFix, calcHeaderFix} from '../helpers/geometry'
 import moment from 'moment';
 
 
@@ -30,13 +30,15 @@ let totaleImporto = 0.00;
 let totalePezziGen = 0;
 let totaleImportoGen = 0.00;
 let scontrini = 0;
-
+let scontrinoKey = null;
 for (let propt=righe.length-1; propt>=0; propt--)
 	{
 			if (righe[propt].tipo==='scontrino') 
 				{
-				righe[propt].totali = {'pezzi' : totalePezzi, 
-						'prezzoTotale' : totaleImporto.toFixed(2)}; 
+				righe[propt].pezzi =  totalePezzi;
+				righe[propt].prezzoTotale =totaleImporto.toFixed(2); 
+				
+						
 				totalePezziGen = totalePezziGen + totalePezzi;
 	    		totaleImportoGen =  parseFloat(totaleImportoGen) + parseFloat(totaleImporto);
 	    		scontrini++;
@@ -48,9 +50,21 @@ for (let propt=righe.length-1; propt>=0; propt--)
 				{
 				totalePezzi = parseInt(righe[propt].totali.pezzi, 10) + totalePezzi;
 	    		totaleImporto =  parseFloat(righe[propt].totali.prezzoTotale) + parseFloat(totaleImporto);	
-				}
+	    		}
+	    	
 	}
-	
+//Aggiungo la chiave scontrino per ogni riga...	
+for (let propt=0; propt<righe.length; propt++)
+	{
+			if (righe[propt].tipo==='scontrino') 
+				{
+				scontrinoKey = righe[propt].key;
+				}
+			righe[propt].scontrinoKey = scontrinoKey;
+	    		
+				
+	}
+
 return({...newState,  itemsArray: righe, totali: {'scontrini': scontrini, 'pezzi' : totalePezziGen, 
 						'prezzoTotale' : totaleImportoGen.toFixed(2)} });
 //return(newState);
@@ -73,7 +87,7 @@ let geometryParams = {cal: {
 	                    infoHeight: COL_H_S,
 	                    
 						totaliWidth: 190,
-						totaliHeight: 100,
+						totaliHeight: 70,
 						
 						formSearchHeight: COL_H_S,
 						
@@ -96,19 +110,19 @@ let geometryParams = {cal: {
 				  		{infoWidth: (cal) => {return(cal.cassaWidth/3)}},
 				  	    {nuovoScontrinoWidth: (cal) => {return(cal.cassaWidth*2/3)}},
 				  	    
-				  	    {tableWidth: (cal) => {return(cal.w/4)}},
-				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formSearchHeight-cal.testataHeight - cal.totaliHeight)}},
+				  	    {tableWidth: (cal) => {return(cal.w/4-10)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formSearchHeight- cal.totaliHeight-cal.infoHeight)}},
 				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
 				  	   ],
 				 geo: [ 
 				  	    {cassaCoors: (cal) =>  {return({height: cal.cassaHeight, width: cal.cassaWidth, top: 0, left: 0})}},
     					
-     		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight+cal.totaliHeight+cal.infoHeight, left: 0})}},
+     		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight+cal.totaliHeight+cal.infoHeight, left: 5})}},
     				
-    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
-    				    {infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 0})}},
-    				    {nuovoScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth, top: 0, left: cal.infoWidth})}},
-    				    {testataCoors: (cal) => {return({height: cal.totaliHeight+cal.formSearchHeight, width: cal.cassaWidth, top: cal.infoHeight, left: 0})}},
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth, sel_w: SEL_W_S}))}},
+    				    {infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 5})}},
+    				    {nuovoScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth-5, top: 0, left: cal.infoWidth})}},
+    				    {testataCoors: (cal) => {return({height: cal.totaliHeight+cal.formSearchHeight, width: cal.cassaWidth, top: cal.infoHeight, left: 5})}},
     				    //Da tendere relativi a testata...
     				    {formSearchCoors: (cal) =>  {return({height: COL_H_S, width: cal.formSearchWidth, top: 0, left: cal.totaliWidth})}},
     					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},

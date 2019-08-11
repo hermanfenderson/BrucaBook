@@ -2,7 +2,7 @@
 
 import FormReducer from '../helpers/formReducer'
 import {SET_SCONTO_SCONTRINO, SET_EAN_LOOKUP_OPEN} from '../actions/scontrino';
-import {COL_H_S, FORM_COL_H_S, FORM_COL_H, GE_H,FMH, FMW, initCalcGeometry, calcHeaderFix, calcFormColsFix, calcGeneralError} from '../helpers/geometry'
+import {COL_H_S, COL_H, FORM_COL_H, GE_H,FMH, FMW, initCalcGeometry, calcHeaderFix, calcFormColsFix, calcGeneralError} from '../helpers/geometry'
 
 
 
@@ -48,16 +48,19 @@ let geometryParams = {cal: {
 	                    
 						formHeight: 2 * FORM_COL_H + GE_H,
 						totaliWidth: 190,
-						totaliHeight: 150,
+						totaliHeight: 60,
 						infoHeight : COL_H_S,
-	                    
+						editScontrinoHeight: COL_H,
+						nuovoScontrinoHeight : COL_H_S,
+						scontoFormHeight: COL_H,
+							restoFormHeight: FORM_COL_H,
+					
+					 
 						immagineWidth: 190,
 						immagineHeight: 200,
 						formWidth: 190,
 						scontoFormWidth: 190,
-						scontoFormHeight: 200,
 						restoFormWidth: 190,
-						restoFormHeight: 200,
 						
 						
 						colParams1: [
@@ -76,12 +79,12 @@ let geometryParams = {cal: {
 									{name: 'totale', min: 90, max: 100},
 								
 									{name: 'annulla', min: 120, max: 240},
-									{name: 'crea', min: 120, max: 240}
+									{name: 'aggiungi', min: 120, max: 240}
 									
 									],
 						headerParams: [
 									  {name: 'ean', label: 'EAN', min: 130, max: 130},
-									  {name: 'titolo', label: 'Titolo', min: 212, sort:'string', ellipsis: true},
+									  {name: 'titolo', label: 'Titolo', min: 212, ellipsis: true},
 									  {name: 'prezzoUnitario', label: 'Eur', min: 50, max: 50},
 									  {name: 'pezzi', label: 'Q.Tà', min: 40, max: 40},
 									  {name: 'sconto', label: 'Sc.', min: 40, max: 40},
@@ -91,36 +94,36 @@ let geometryParams = {cal: {
 									 ],
 						
 						},
-				  tbc: [{cassaWidth: (cal) => {return(cal.w/4)}},
+				  tbc: [{cassaWidth: (cal) => {return(cal.w/4-2)}},
 				  	    
 				  		{scontrinoWidth: (cal) => {return(3*cal.cassaWidth)}},
 				  	    {scontrinoHeight: (cal) =>  {return(cal.h)}},
 				  	     
-				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
-				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight-cal.formSearchHeight)}},
-				  	    {formWidth: (cal) =>  {return(cal.w)}},
+				  	    {tableWidth: (cal) => {return(cal.scontrinoWidth-cal.totaliWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.w*3/4)}},
 				  	   ],
 				 geo: [ 
-				  	   	{scontrinoCoors: (cal) => {return({height: cal.scontrinoHeight, width: cal.scontrinoWidth, top: cal.infoHeight, left: cal.cassaWidth})}},
+				  	   	{scontrinoCoors: (cal) => {return({height: cal.scontrinoHeight, width: cal.scontrinoWidth, top: 0, left: cal.cassaWidth+5})}},
     				     //Tutti gli altri sono relativi...
      		    		{infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 0})}},
-    				    {editScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth, top: 0, left: cal.testataWidth})}},
-    				    {scontoFormCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 0})}},
-    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},
+    				    {editScontrinoCoors: (cal) => {return({height: cal.editScontrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight, left: 0})}},
+    				    {scontoFormCoors: (cal) => {return({height: cal.scontoFormHeight, width: cal.infoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.emptyHeight, left: 0})}},
+    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight, left: 0})}},
     				
-    				    {restoFormCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 0})}},
-    					{nuovoScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth, top: 0, left: cal.testataWidth})}},
+    				    {restoFormCoors: (cal) => {return({height: cal.restoFormHeight, width: cal.restoFormWidth, top:  cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight, left: 0})}},
+    					{nuovoScontrinoCoors: (cal) => {return({height: cal.nuovoSContrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight+cal.restoFormHeight, left: 0})}},
     				    
     					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h - cal.formHeight -cal.immagineHeight, left: 0})}},
 						{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
     				
-					    {tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight, left: cal.totaliWidth})}},
+					    {tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.totaliWidth})}},
     				
-     		    		{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight+cal.formSearchHeight, left: 0})}},
-    				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth, offset: 0}))}}, 
-    				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth, offset: 1}))}}, 
+     		    		{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW -10, top: cal.tableHeight, left: 0})}},
+    				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth-10, offset: 0}))}}, 
+    				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth-10, offset: 1}))}}, 
     					
-    					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 2}))}},	 
+    					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth-10, offset: 2}))}},	 
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 
     				     
     		

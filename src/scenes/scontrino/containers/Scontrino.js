@@ -3,10 +3,10 @@ import {rigaScontrinoFA} from '../../../actions/scontrino'
 import {cassaFA} from '../../../actions/cassa'
 
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
-import {storeMeasure, setHeaderInfo} from '../../../actions'
+import {setHeaderInfo} from '../../../actions'
 
-import {getFiltersCassa, getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, getMeasures,
-		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa,  getMessageBufferScontrino, getTotaliScontrino, getTotaliCassa, getGeometry, getTableHeightScontrino, getEanLookupOpen, getOrdiniModalVisible} from '../../../reducers'
+import {getFiltersCassa, getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, 
+		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa,  getMessageBufferScontrino, getTotaliScontrino, getTotaliCassa, getGeometry,  getEanLookupOpen, getOrdiniModalVisible} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataScontrino = rigaScontrinoFA.listenTestata;
@@ -57,7 +57,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ resetFilter, setFilter, shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataScontrino, unlistenTestataScontrino, storeMeasure, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa}, dispatch);
+  listenTestataScontrino, unlistenTestataScontrino, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa}, dispatch);
 }
 
 const Scontrino = connect(mapStateToProps, mapDispatchToProps)(ScontrinoComponent)

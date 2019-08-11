@@ -163,9 +163,10 @@ export const calcHeader = (colParams, width) =>
     return cols;
 }
 
-export const calcHeaderFix = (params, sel_w=SEL_W) =>
+export const calcHeaderFix = (params) =>
 {
 	let colParams = params.colParams;
+	let sel_w = params.sel_w ? params.sel_w: SEL_W;
 	let width = params.width - sel_w - SCROLL_W;
 	return(calcHeader(colParams,width));
 }

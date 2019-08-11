@@ -211,13 +211,15 @@ const listenRigheScontrino = (cassaParams, scontrinoKey) =>
        const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
 	      dispatch({
 	        type: type1,
-	        payload: snapshot
+	        payload: snapshot,
+	        scontrinoKey: scontrinoKey
 	      })
 	    });
 	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
 	      dispatch({
 	        type: type2,
-	        payload: snapshot
+	        payload: snapshot,
+	        scontrinoKey: scontrinoKey
 	      })  
 	   });
 	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {

@@ -20,7 +20,6 @@ import moment from 'moment';
 import 'moment/locale/it';
 import {withRouter} from 'react-router-dom'
 import {period2month} from '../../../helpers/form'
-import FixCol from '../../../components/FixCol'
 import FixBlock from '../../../components/FixBlock'
 
 
@@ -134,8 +133,8 @@ return (
    </FixBlock>
  	
  
-  <FixBlock coors={this.props.geometryC.tableCoors}>
- 	    <TableCassa geometry={this.props.geometryC}  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+  <FixBlock  style={{backgroundColor: 'white'}} coors={this.props.geometryC.tableCoors}>
+ 	    <TableCassa  geometry={this.props.geometryC}  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</FixBlock>
  </FixBlock>
  

@@ -124,7 +124,7 @@ leftPos.push(0);
 for (let i=0; i<header.length; i++) leftPos.push(header[i].width+leftPos[i]); //Posizioni degli header...
 let headCols = header.map((col, idx) => 
 				  {
-				  return(<div className={classNames({'vtHeadCell': true, 'vtHeadCellSmall': (this.props.size==='small')})} 
+				  return(<div className={classNames({ 'vtHeadCell': true, 'vtHeadCellSmall': (this.props.size==='small')})} 
 				  key={idx} 
 				  onClick={(e) => {this.onHeaderClick({event: e, col:col })} }
                              
@@ -154,8 +154,11 @@ actionCellRenderer = ({rowData, rowIndex}) => {
  if (this.props.noAction && this.props.noAction(rowData, rowIndex)) 
  return (<div></div>)
  else
- return (
- 	    <div className={classNames({'vtCellValue': true,'vtCellSmall': (this.props.size==='small')})}>
+   {
+   let classes = {'vtCellValue': true,'vtCellSmall': (this.props.size==='small')};
+   if (this.props.selClass) classes[this.props.selClass] = true;
+   return (
+ 	    <div className={classNames(classes)}>
         {(this.props.deleteRow) && <Icon type="delete" onClick={() => { this.props.deleteRow(rowData)}}/>} 
 		{(this.props.editRow) && <Icon type="edit" onClick={() => {   this.props.editRow(rowData)}}/>}  
        {(this.props.detailRow) && <Icon type={"search"} onClick={() => {this.props.detailRow(rowData)}}/>}  
@@ -168,6 +171,7 @@ actionCellRenderer = ({rowData, rowIndex}) => {
        
         </div>
         );
+    }    
  }
 
 
@@ -306,7 +310,7 @@ let columnWidths = (() =>
     height={this.props.height - col_h -10} //La testata e un minimo di spazio per gli oggetti sotto...
     rowCount={itemData.length}
     rowHeight={index => col_h}
-    width={this.props.width+20}
+    width={this.props.width}
     itemData={sortedData}
     itemKey={itemKey}
     ref={this.gridRef}

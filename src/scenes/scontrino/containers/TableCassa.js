@@ -2,7 +2,7 @@ import TableCassaComponent from '../components/TableCassa'
 import {cassaFA} from '../../../actions/cassa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaCassa, getRigheCassa, getRigheCassaIndex, getTableHeightCassa, getTableScrollCassa, getTableScrollByKey, getListeningItemCassa, getListenersItemCassa, getGeometry} from '../../../reducers'
+import {getEditedRigaCassa, getRigheCassa, getRigheCassaIndex, getTableScrollCassa, getTableScrollByKey, getListeningItemCassa, getListenersItemCassa, getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 

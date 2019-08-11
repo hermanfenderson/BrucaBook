@@ -2,7 +2,6 @@ import TableElencoCasse from '../containers/TableElencoCasse';
 import FormCassa from '../containers/FormCassa';
 import React, {Component} from 'react'
 import {period2moment, period2month, isEqual} from '../../../helpers/form'
-import ReactDOM from 'react-dom';
 import {Redirect} from 'react-router-dom';
 import FixBlock from '../../../components/FixBlock'
 

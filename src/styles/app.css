@@ -313,6 +313,15 @@ white-space: nowrap;
   overflow: hidden;
 }
 
+.vtCellCassaScontrino{
+
+
+    background-color: #e6f7ff;
+    color: #108ee9;
+}
+
+
+
 .periodPicker {
     padding-left: 10px;
     padding-top: 30px;
@@ -324,6 +333,7 @@ white-space: nowrap;
 	border-radius: 25px;
 	background: lightpink;
 }	
+
 
 
 
