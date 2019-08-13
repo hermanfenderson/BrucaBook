@@ -10,7 +10,9 @@ import classNames from 'classnames';
 // Yours should be based on the content of the item.
 //Aggiunt funzione per visualizzare su base condizione la sel
 
+//Aggiunto il concetto di subtable tutto legato alle chiavi della tabellea principale
 
+const SUB_W = 30;
 
 function itemKey({ columnIndex, data, rowIndex }) {
    const item = data[rowIndex];
@@ -54,6 +56,7 @@ componentDidUpdate(prevProps, prevState) {
 
 }
 
+
 constructor(props) {
 	super(props)
 	//HEader con sel... al posto giusto LO USO SEMPRE
@@ -61,6 +64,7 @@ constructor(props) {
 	this.state = {
     //options: [],
     hoverKey: null,
+    subTableOpen: {},  //Una lista delle righe aperte...
   }
 	
     this.gridRef = React.createRef();
@@ -68,7 +72,11 @@ constructor(props) {
 
 	//Indice della action
 	this.actIdx = this.props.actionFirst ? 0 : this.props.header.length;
-	
+	if (this.props.subTables) this.actIdx++; //Tutspostato di 1...
+	this.columnCount = this.props.header.length+1;
+    if (this.props.subTables) this.columnCount++;
+    this.col_h =(this.props.size==='small'? COL_H_S : COL_H);
+
 	
 }
 
@@ -128,7 +136,7 @@ let headCols = header.map((col, idx) =>
 				  key={idx} 
 				  onClick={(e) => {this.onHeaderClick({event: e, col:col })} }
                              
-				  style={{ height: (this.props.size==='small'? COL_H_S : COL_H), position: 'absolute', left: leftPos[idx], width: col.width}}>
+				  style={{ height: this.col_h, position: 'absolute', left: leftPos[idx], width: col.width}}>
                        {col.label} 
                     {((col.dataField === this.state.sortBy) && (this.state.sortDirection === 'ASC') && (col.sort === 'string')) ? <Icon component={this.SortAlphaAscSvg} /> : null}     
                 
@@ -174,10 +182,37 @@ actionCellRenderer = ({rowData, rowIndex}) => {
     }    
  }
 
+//In questa cella avviene la magia che porta alle sottotabelle...
+expandCellRenderer = ({rowKey, rowIndex}) => {
+const onClick=() => {
+	let newState = {...this.state};
+	newState.subTableOpen = {...this.state.subTableOpen};
+	if (newState.subTableOpen[rowKey]) delete newState.subTableOpen[rowKey];
+	else newState.subTableOpen[rowKey] = true;
+	this.setState(newState);
+	this.gridRef.current.resetAfterRowIndex(rowIndex,true);
+
+    	
+};
+let subTableRender = (this.props.subTables && this.props.subTables[rowKey] && this.state.subTableOpen[rowKey]) 
+? 
+<div style={{position: 'absolute', top: this.props.col_h, left: SUB_W, height: this.props.subTables[rowKey].height-this.col_h, width: this.props.width - SUB_W }}>
+	{this.props.subTables[rowKey].render}
+</div>
+: null;
+return(
+	<div>
+	<Icon style={{marginLeft: 5}} type={(this.state.subTableOpen[rowKey])? "minus-square" : "plus-square"} onClick={onClick}/>
+
+      {subTableRender}
+      </div>
+      )	
+};
+
 
 onRowClick = ({event, index, rowData, column}) => {
 	//Eseguo se l'utente non ha fatto click su una icona
-	if ((column !== this.actIdx) && this.props.selectRow) this.props.selectRow(rowData);	
+	if ((column !== this.actIdx) && !(this.props.subTables && (column ===0)) && this.props.selectRow) this.props.selectRow(rowData);	
 };
 
 onMouseOver = ({event, index, rowData}) => {
@@ -196,15 +231,18 @@ onMouseOut = () => {
 	
 }
 
-columnCount = this.props.header.length+1;
-
 
 cellRenderer = (rowIndex, columnIndex, data) => {
 	let cIdx = this.props.actionFirst ? columnIndex - 1 : columnIndex;
-	
+	if (this.props.subTables) cIdx = cIdx - 1;
 	if (columnIndex === this.actIdx) return data[rowIndex] ? this.actionCellRenderer({rowData: data[rowIndex], rowIndex: rowIndex}) : '';
+	//Se ho una subtable definita all'indirizzo dell'indice...
+	//if (this.props.subTables && columnIndex===0) return((data[rowIndex] && this.props.subTables[data[rowIndex].key]) ? this.expandCellRenderer({rowKey: data[rowIndex].key}) : ''); //Qui metto il testo per  espandere...
 	else 
-		{   	let cellName = this.props.header[cIdx].dataField;
+		{
+		if (this.props.subTables && columnIndex===0) return((data[rowIndex] && this.props.subTables[data[rowIndex].key]) ? this.expandCellRenderer({rowKey: data[rowIndex].key, rowIndex: rowIndex}) : ''); //Qui metto il testo per  espandere...
+			
+			let cellName = this.props.header[cIdx].dataField;
 		
 			//let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
             let cellValue = data[rowIndex] ? cellName.split('.').reduce((o,i)=>o[i], data[rowIndex]) : '';
@@ -231,7 +269,7 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
                               'vtCellSelected': (this.props.highlightedRowKey===data[rowIndex].key),
                               
                               'vtCellPinned': (this.props.pinField && data[rowIndex][this.props.pinField])})} 
-                              style={style} 
+                              style={{...style, height: (this.props.size==='small'? COL_H_S : COL_H)}} 
                               onClick={(e) => {this.onRowClick({event: e, index: rowIndex, rowData: data[rowIndex], column: columnIndex})} }
                               onMouseOver={(e) => {this.onMouseOver({event: e, index: rowIndex, rowData: data[rowIndex]})} }
                               onMouseOut={this.onMouseOut} >
@@ -244,7 +282,6 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
 
 render ()
      {
-   let col_h = (this.props.size==='small'? COL_H_S : COL_H);
    let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
    let itemData = (this.props.filters) ? 
   		dataCpy.map((record) => 
@@ -289,7 +326,7 @@ if (sortedData.length > 0) this.dataIndex = sortedData.reduce(reducer, this.data
 	
 this.header2 = [...this.props.header];
 	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || SEL_W}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || SEL_W})
-	  
+	if (this.props.subTables) this.header2.unshift({label: '', width:  SUB_W})
 let columnWidths = (() => 
 		{
 		let cW = this.header2.map(h => h.width);
@@ -307,19 +344,18 @@ let columnWidths = (() =>
   <Grid 
     columnCount={this.columnCount}
     columnWidth={index => columnWidths[index]}
-    height={this.props.height - col_h -10} //La testata e un minimo di spazio per gli oggetti sotto...
+    height={this.props.height - this.col_h -10} //La testata e un minimo di spazio per gli oggetti sotto...
     rowCount={itemData.length}
-    rowHeight={index => col_h}
+    rowHeight={(index) => {let rowKey = sortedData[index].key; let h= (this.state.subTableOpen[rowKey]) ? this.col_h + this.props.subTables[rowKey].height: this.col_h; return(h)}}
     width={this.props.width}
     itemData={sortedData}
     itemKey={itemKey}
     ref={this.gridRef}
-          
   >
     {this.Cell}
   </Grid>	
   :
-    <Empty width={this.props.width+20} height={this.props.height -col_h -10}/>
+    <Empty width={this.props.width+20} height={this.props.height -this.col_h -10}/>
 
   }
   </div> 
