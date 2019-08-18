@@ -163,7 +163,6 @@ export const getRigheResaIndexed = (state) => {return fromResa.getRigheResaIndex
 
 export const getEditedRigaResa = (state) => {return fromResa.getEditedItem(state.resa)};
 export const getTestataResa = (state) => {return fromResa.getTestataResa(state.resa)};
-export const getTableResaHeight = (state) => {return fromResa.getTableHeight(state.resa)};
 export const getTableResaScroll = (state)  => {return fromResa.getTableScroll(state.resa)};
 export const getListeningTestataResa = (state) => {return fromResa.getListeningTestataResa(state.resa)};
 export const getListeningItemResa = (state) => {return fromResa.getListeningItemResa(state.resa)};

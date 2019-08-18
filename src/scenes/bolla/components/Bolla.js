@@ -62,10 +62,9 @@ render()
 {
   const period = [this.props.match.params.anno, this.props.match.params.mese];
  return (
- 
-  <Spin spinning={!this.props.testataBolla}>
-  <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   <div>
+ 
+  <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='BOLLA'/>
     </Modal>  
@@ -83,7 +82,7 @@ render()
        <FixBlock className='filter-form' coors={this.props.geometry.formSearchCoors} >
       <FilterBolla  geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </FixBlock>
-   <FixBlock coors={this.props.geometry.tableCoors} >
+   <FixBlock spinning={!this.props.testataBolla} coors={this.props.geometry.tableCoors} >
      <TableBolla  geometry={this.props.geometry} period={period} idBolla={this.props.match.params.id} filters={this.props.filters}/>
       </FixBlock>
     
@@ -95,7 +94,6 @@ render()
     </FixBlock>
    
   </div>
-  </Spin>
  
  
 )

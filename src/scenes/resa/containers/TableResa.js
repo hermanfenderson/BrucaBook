@@ -2,7 +2,7 @@ import TableResaComponent from '../components/TableResa'
 import {rigaResaFA} from '../../../actions/resa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaResa, getTabellaRighe, getRigheResaIndexed, getTableResaHeight, getTableResaScroll,  getListeningItemResa} from '../../../reducers'
+import {getEditedRigaResa, getTabellaRighe, getRigheResaIndexed, getTableResaScroll,  getListeningItemResa} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -19,7 +19,6 @@ const submitEditedItem = rigaResaFA.submitEditedItem;
 
 const mapStateToProps = (state) => {
 	return ({data: getTabellaRighe(state), tableScroll: getTableResaScroll(state), 
-	height: getTableResaHeight(state), 
 	selectedItem: getEditedRigaResa(state).selectedItem,
 	listeningItemResa: getListeningItemResa(state),
 	righeResa: getRigheResaIndexed(state)

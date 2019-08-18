@@ -1,21 +1,8 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import SubInput from '../../../components/SubInput'
 import moment from 'moment'
 
-//E' un dato.... che passo come costante...
-const header = [
-				{dataField: 'values.riferimentoBolla', label: 'Rif.', width: '80px'},
-                {dataField: 'values.dataDocumentoBolla', label: 'Data', width: '160px'},
-				{dataField: 'values.ean', label: 'EAN', width: '160px'},
-                {dataField: 'values.titolo', label: 'Titolo', width: '320px'},
-                {dataField: 'values.prezzoListino', label: 'Listino', width: '60px'},
-			   
-			    {dataField: 'values.prezzoUnitario', label: 'Prezzo', width: '60px'},
-			    {dataField: 'values.pezzi', label: 'Quantità', width: '60px'},
-			    {dataField: 'values.gratis', label: 'Gratis', width: '60px'},
-			    {dataField: 'values.prezzoTotale', label: 'Totale', width: '70px'}
-			   ];
 
 //var currentListenedIdResa = null;
 
@@ -68,7 +55,13 @@ class TableResa extends Component
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
     	  return(
-			<WrappedTable {...props}  customRowRender={this.customRowRender}  highlightedRowKey={selectedItemKey} deleteRow={this.deleteRow} saveRow={this.onSave} header={header}/>
+			<WrappedTable {...props}  customRowRender={this.customRowRender}  highlightedRowKey={selectedItemKey} deleteRow={this.deleteRow} saveRow={this.onSave}
+			height={props.geometry.tableCoors.height}
+			width={props.geometry.tableCoors.width}
+			
+			header={props.geometry.header}
+			
+			/>
 			)}
     }		
 	

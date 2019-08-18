@@ -20,6 +20,7 @@
     "js-file-download": "^0.4.1",
     "jszip": "^3.2.2",
     "lodash": "^4.17.13",
+    "memoize-one": "^5.0.5",
     "moment": "^2.19.1",
     "prop-types": "^15.6.0",
     "query-string": "^5.0.1",

@@ -10,8 +10,9 @@ import moment from 'moment';
 import 'moment/locale/it';
 import {Redirect} from 'react-router-dom';
 
-import { Row, Col, Spin} from 'antd'
+import { Spin} from 'antd'
 
+import FixBlock from '../../../components/FixBlock'
 
 
 class Resa extends Component {
@@ -73,17 +74,17 @@ else return (
   <Spin spinning={!this.props.testataResa}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   <div>
+ <FixBlock coors={this.props.geometry.totaliCoors}>
   
-      <Row style={{'backgroundColor': 'white'}}>
-   <Col span={4}>
     	 <TotaliResa staleTotali={this.props.staleTotali} testataResa={this.props.testataResa} listeningTestataResa={this.props.listeningTestataResa} setStato={this.props.setStato}/>
-      </Col>
- 
-       <Col span={20}>
-    {isOpen ? <TableOpenResa  testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> :  <TableResa testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> }
-      
-    	   </Col>
-      </Row>
+ </FixBlock>
+  
+ <FixBlock coors={this.props.geometry.tableCoors}>
+       
+    {isOpen ? <TableOpenResa  geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> :  <TableResa geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> }
+   
+   	 	 </FixBlock>
+  
     
      
    

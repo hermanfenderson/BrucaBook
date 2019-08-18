@@ -94,7 +94,7 @@ eanLookupClosed = () => {this.props.setEanLookupOpen(false)};
 	
 	 </Modal>  	
 	
-	 <WrappedForm  layout={'vertical'} disableAllColon={true} readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+	 <WrappedForm   height={this.props.geometry.formCoors.height} width={this.props.geometry.formCoors.width} layout={'vertical'} disableAllColon={true} readOnlyForm={this.props.scontrino ? false : true} focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
          <WrappedForm.InputLookup  lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' coord={frsCols1.ean}   disabled={readOnlyEAN} onOpenModal={this.eanLookupOpen} onCloseModal={this.eanLookupClosed}/>
         <WrappedForm.Input field='titolo' label='Titolo'  coord={frsCols1.titolo} disabled/>
         <WrappedForm.Input field='autore' label='Autore'  coord={frsCols1.autore} disabled/>

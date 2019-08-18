@@ -86,13 +86,13 @@ resetForm = () => {
   		const formCols2 = this.props.geometry.formCols2;
   		const generalError = this.props.geometry.generalError;
   	return (
-  <div>
+  <div >
   		<Modal width={880} title={'Ordini aperti per "'+ formValues.titolo+'"'} visible={this.props.showOrdiniApertiModal} onOk={this.submitFuncFromOrdiniAperti} onCancel={this.resetForm} okButtonProps={{ disabled: this.props.ordiniApertiErrors.hasErrors}}
  >
 		<OrdiniAperti onSubmit={this.submitFuncFromOrdiniAperti}></OrdiniAperti>
 	  </Modal>  	
 	
-     <WrappedForm layout='vertical' focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+     <WrappedForm height={this.props.geometry.formCoors.height} width={this.props.geometry.formCoors.width} layout='vertical' focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
         <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' coord={formCols1.ean}   disabled={readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'  coord={formCols1.titolo}  disabled/>
         <WrappedForm.Input field='autore' label='Autore'  coord={formCols1.autore}  disabled/>

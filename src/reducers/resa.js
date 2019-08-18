@@ -21,8 +21,10 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 } from '../actions/resa';
 
 
+
 import {isNotNegativeInteger} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem,   insertRow, removeRow, getStock} from '../helpers/form';
+import {calcHeaderFix, initCalcGeometry} from '../helpers/geometry';
 
 
 const editedRigaResaValuesInitialState = 
@@ -36,6 +38,52 @@ const editedRigaResaValuesInitialState =
 				gratis: 0,
 				prezzoTotale: '',
 	};
+
+
+let geometryParams = {cal: {
+						totaliWidth: 150,
+						
+						headerParams: [
+									{name: 'values.riferimentoBolla', label: 'Rif.', min: 80, max: 80 },
+					                {name: 'values.dataDocumentoBolla', label: 'Data', min: 160,max: 160},
+									{name: 'values.ean', label: 'EAN', min: 160,max: 160},
+					                {name: 'values.titolo', label: 'Titolo', min: 260,  ellipsis: true},
+					                {name: 'values.prezzoListino', label: 'Listino', min: 60,max: 60},
+								   
+								    {name: 'values.prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
+								    {name: 'values.pezzi', label: 'Quantità', min: 60,max: 60},
+								    {name: 'values.gratis', label: 'Gratis', min: 60,max: 60},
+								    {name: 'values.prezzoTotale', label: 'Totale', min: 70,max: 70}
+								   ],
+						headerOpenParams: [
+									{name: 'values.ean', label: 'EAN', min: 160,max: 160},
+					                {name: 'values.titolo', label: 'Titolo', min: 310,  ellipsis: true},
+					                {name: 'values.autore', label: 'Autore', min: 270,max: 270,  ellipsis: true},
+					            
+					                {name: 'values.prezzoListino', label: 'Listino', min: 90,max: 90},
+								   
+								    {name: 'values.stock', label: 'Stock*', min: 70,max: 70},
+								    {name: 'values.resi', label: 'Resi', min: 70,max: 70},
+								   ],
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h)}},
+				  	    {totaliHeight: (cal) =>  {return(cal.h)}},
+				  	   ],
+				 geo: [ 
+	
+
+     		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.totaliWidth})}},
+    				    
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+    					{headerOpen: (cal) =>  {return(calcHeaderFix({colParams: cal.headerOpenParams, width: cal.tableWidth}))}},
+    				
+    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},
+    					]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
 	
 	
 
@@ -53,13 +101,20 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}, activeModal: false, period: {anno: null, mese: null}});
+	return initialStateHelper(eiis,{subTables: {}, geometry: calcGeometry(), listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}, activeModal: false, period: {anno: null, mese: null}});
     }
     
 
 
 //Metodi reducer per le Form
-const rigaResaR = new FormReducer('RESA', null, null, null, initialState); 
+
+const rigaResaR = new FormReducer({scene: 'RESA', 
+								foundCompleteItem: null,
+								transformItem: null, 
+								transformSelectedItem: null, 
+								initialState: initialState, 
+								keepOnSubmit: false, 
+								calcGeometry: calcGeometry}); 
 
 
 
@@ -443,7 +498,6 @@ export default function resa(state = initialState(), action) {
  export const getTestataResa = (state) => {return state.testata};
  //Per certo non consento di inserire un item che non ho censito!!!
  //export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
- export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getListeningTestataResa = (state) => {return state.listeningTestata};
  export const getListeningItemResa = (state) => {return state.listeningItem};

@@ -138,8 +138,8 @@ return (
 	</FixBlock>
  </FixBlock>
  
-  <FixBlock coors={this.props.geometryS.scontrinoCoors} className='sezione-scontrino' onKeyPress={this.handleKeyPress}>
-  <Spin spinning={!this.props.match.params.scontrino}>
+  
+  <FixBlock spinning={!this.props.match.params.scontrino} coors={this.props.geometryS.scontrinoCoors} className='sezione-scontrino' onKeyPress={this.handleKeyPress}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
   
     	<FixBlock  coors={this.props.geometryS.infoCoors} className='header-scontrino'>
@@ -171,7 +171,7 @@ return (
    	
 			
 					<TableScontrino geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
-		   </Spin>
+	     </Spin>
 	   	</FixBlock>
 
 <FixBlock className='bottom-form2' coors={this.props.geometryS.formCoors} >
@@ -180,8 +180,8 @@ return (
     		<FormRigaScontrino   geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} testataScontrino={this.props.testataScontrino} />
 </FixBlock>
  
-   </Spin>  
-  </FixBlock>
+   </FixBlock>
+   
  </div>
   )
   

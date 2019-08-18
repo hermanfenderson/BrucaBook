@@ -2,7 +2,9 @@ import ResaComponent from '../components/Resa'
 import {rigaResaFA, listenBollePerFornitore, unlistenBollePerFornitore} from '../../../actions/resa'
 import {setStato} from '../../../actions/elencoRese'
 
-import {storeMeasure, setHeaderInfo} from '../../../actions'
+import {setHeaderInfo} from '../../../actions'
+import {getGeometry} from '../../../reducers'
+
 
 import {getMessageBufferResa,  getEditedCatalogItem, getTestataResa, getListeningTestataResa, isStaleTotaliResa, getEditedRigaResa} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -23,8 +25,9 @@ const mapStateToProps = (state) => {
 	         listeningTestataResa: getListeningTestataResa(state),
 	         staleTotali: isStaleTotaliResa(state),
 	         editedRigaResa: getEditedRigaResa(state),
-	         messageBuffer: getMessageBufferResa(state)
-	         
+	         messageBuffer: getMessageBufferResa(state),
+	          geometry: getGeometry(state, 'RESA')
+     
 		
 		
 	})
@@ -32,7 +35,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ shiftMessage, resetResa, listenBollePerFornitore, unlistenBollePerFornitore,
-  listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo, setStato, listenRigaResa, offListenRigaResa, resetTableResa, searchDataMagazzino}, dispatch);
+  listenTestataResa, unlistenTestataResa,  setHeaderInfo, setStato, listenRigaResa, offListenRigaResa, resetTableResa, searchDataMagazzino}, dispatch);
 }
 
 const Resa = connect(mapStateToProps, mapDispatchToProps)(ResaComponent)

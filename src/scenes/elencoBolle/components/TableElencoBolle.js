@@ -92,7 +92,7 @@ class TableElencoBolle extends Component
     	let width = props.geometry.tableCoors.width;
     	delete props['geometry'];
     	  return(
-			<WrappedTable {...props}  subTables={{'-LlHw27KTEHvmJLoZvoj': {height: 100, render: <div>Ciao</div>}}} width={width} height={height}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
+			<WrappedTable {...props}   width={width} height={height}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
 			)}
     }		
 	

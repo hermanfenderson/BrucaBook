@@ -128,15 +128,19 @@ class WrappedForm extends Component {
   
 	render ()
 	{  
-   	return <Spin spinning={this.props.loading}>
-   	        	
-            <Form className={this.props.formClass}
+   	return 	<Spin spinning={this.props.loading} style={{height: this.props.height, width: this.props.width, minHeight: this.props.height, minWidth: this.props.width}}>
+   	         
+   			<div style={{height: this.props.height, width: this.props.width, minHeight: this.props.height, minWidth: this.props.width}}>
+   	         <Form className={this.props.formClass}
     			layout={this.props.layout}  
     			hideRequiredMark={this.props.hideRequiredMark}
     			onSubmit={this.props.onSubmit}>
     			{renderChildren({...this.props, setFocus: this.setFocus})}
     		</Form>
+    	    </div>	
+    		
     	</Spin>	
+    
 	}
 	
 }

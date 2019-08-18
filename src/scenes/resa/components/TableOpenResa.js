@@ -1,20 +1,10 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import TableDettagliResa from './TableDettagliResa'
 import ModalDettagli from '../containers/ModalDettagli'
 import {getDetailsInMatrix} from '../../../helpers/form'
 
 
-//E' un dato.... che passo come costante...
-const header = [{dataField: 'values.ean', label: 'EAN', width: '160px'},
-                {dataField: 'values.titolo', label: 'Titolo', width: '310px'},
-                {dataField: 'values.autore', label: 'Autore', width: '270px'},
-			    
-			    {dataField: 'values.prezzoListino', label: 'Listino', width: '90px'},
-			    {dataField: 'values.stock', label: 'Stock*', width: '70px'},
-			    {dataField: 'values.resi', label: 'Resi', width: '70px'},
-			    
-			   ];
 			   
 
 //var currentListenedIdResa = null;
@@ -33,8 +23,8 @@ class TableOpenResa extends Component
 		                    
 							}
 
-	expandedRowRender = (record) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]} righeResa={this.props.righeResa} />)}
-
+	//expandedRowRender = (record) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]} righeResa={this.props.righeResa} />)}
+expandedRowRender = (ean) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa} />)}
 
     
     	render() { 
@@ -52,7 +42,13 @@ class TableOpenResa extends Component
 			expandedRowRender={this.expandedRowRender} 
 			highlightedRowKey={selectedItemKey} 
 			detailRow={this.detailRow}
-			header={header}/>
+			height={props.geometry.tableCoors.height}
+			width={props.geometry.tableCoors.width}
+			subTables={props.tabelleRigheEAN}
+			subTablesHeight={(ean) => {return((props.tabelleRigheEAN[ean].length+1)*30)}}
+			
+			subTablesRender={this.expandedRowRender}
+			header={props.geometry.headerOpen}/>
 			</div>
 			)}
     }		

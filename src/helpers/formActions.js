@@ -478,8 +478,11 @@ this.listenItem = (params) => {
     { var listener_added = null;
     	if (!onEAN)
       {
+      let first = true;
        listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
-	      dispatch({
+	      //Così non dovrebbe più generare due volte il primo rigo...
+	      if (first) first = false;
+	      else dispatch({
 	        type: type1,
 	        payload: snapshot
 	      })

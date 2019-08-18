@@ -5,6 +5,7 @@ import {SEL_W, COL_H, COL_H_S, ICO, ICO_S} from '../helpers/geometry';
 import {Row, Icon} from 'antd'; 
 import Empty from './Empty';
 import classNames from 'classnames';
+import memoizeOne from 'memoize-one';
 
 // These item sizes are arbitrary.
 // Yours should be based on the content of the item.
@@ -30,6 +31,7 @@ componentDidUpdate(prevProps, prevState) {
 	 let last = Object.keys(this.dataIndex).length - 1;
   // only update chart if the data has changed
   if (prevProps.header !== this.props.header && this.gridRef.current) {
+  
     this.gridRef.current.resetAfterColumnIndex(0,true);
   }
   
@@ -69,7 +71,7 @@ constructor(props) {
 	
     this.gridRef = React.createRef();
     this.dataIndex = {};
-
+    this.header2 = [];
 	//Indice della action
 	this.actIdx = this.props.actionFirst ? 0 : this.props.header.length;
 	if (this.props.subTables) this.actIdx++; //Tutspostato di 1...
@@ -125,6 +127,71 @@ SortNumericDescSvg = () => (
 </svg>
 );
 
+
+calcHeader2 = (header) =>
+	{
+	let header2= [...header];
+	(this.props.actionFirst) ? header2.unshift({label: 'Sel', width: this.props.actionWidth || SEL_W}) : header2.push({label: 'Sel', width: this.props.actionWidth || SEL_W})
+	if (this.props.subTables) header2.unshift({label: '', width:  SUB_W})
+	
+	return(header2);	
+	};
+	
+memoizedCalcHeader2 = memoizeOne(this.calcHeader2);	
+
+calcColumnWidth = (header) => 
+		{
+		let cW = header.map(h => h.width);
+		return cW;
+		};
+		
+memoizedCalcColumnWidth = memoizeOne(this.calcColumnWidth);	
+
+filterData = (data, filters) =>
+{
+	let dataCpy = [...data]; //Shallow copy utile per il sort...
+   let itemData = (filters) ? 
+  		dataCpy.map((record) => 
+  			{
+  			//Il record è buono... se non esiste quel campo nel record oppure esiste e la regex è rispettata	
+  			let good = true;
+  			
+  			for (var prop in filters)
+  					
+  				{  let regex = new RegExp(filters[prop],'i');
+  				
+  					if (filters[prop] && (record[prop]!==undefined) && (!record[prop].match(regex))) good = false;
+  					if (filters[prop] && ((record[prop]===undefined) || record[prop].length===0)) good = false;
+  				}
+  			return (good ? {...record} : null) 
+  			}).filter((record => !!record)) :
+  			dataCpy;
+   return(itemData);
+}
+
+memoizedFilterData = memoizeOne(this.filterData);
+
+sortData = (data, sortBy, sortDirection) =>
+{
+	let sortedData = (sortBy) ? 
+  					  data.sort((a, b) => 
+  							{
+  							let sortBool = false;	
+  							if (this.state.sortType === 'string') 
+  								{
+  									if ((a[sortBy] !== undefined) && (b[sortBy] !== undefined)) sortBool = a[sortBy].localeCompare(b[sortBy]);
+  									
+  								}
+  							else if ((a[sortBy] !== undefined) && (b[sortBy] !== undefined))  sortBool = a[sortBy] - b[sortBy];
+  							if (sortDirection==='DESC') sortBool = -sortBool;
+  							return sortBool;
+  							}) 
+  					  : data;
+  	return(sortedData);
+}
+
+memoizedSortData = memoizeOne(this.sortData);
+	
 Header = (header) => 
 {
 let leftPos = [];
@@ -157,6 +224,7 @@ return (
     </div>
 )
 };
+
 
 actionCellRenderer = ({rowData, rowIndex}) => {
  if (this.props.noAction && this.props.noAction(rowData, rowIndex)) 
@@ -196,14 +264,14 @@ const onClick=() => {
 };
 let subTableRender = (this.props.subTables && this.props.subTables[rowKey] && this.state.subTableOpen[rowKey]) 
 ? 
-<div style={{position: 'absolute', top: this.props.col_h, left: SUB_W, height: this.props.subTables[rowKey].height-this.col_h, width: this.props.width - SUB_W }}>
-	{this.props.subTables[rowKey].render}
+<div style={{position: 'absolute', top: this.col_h, left: SUB_W, height: this.props.subTablesHeight(rowKey)-this.col_h, width: this.props.width - SUB_W }}>
+	{this.props.subTablesRender(rowKey)}
 </div>
 : null;
 return(
 	<div>
 	<Icon style={{marginLeft: 5}} type={(this.state.subTableOpen[rowKey])? "minus-square" : "plus-square"} onClick={onClick}/>
-
+       
       {subTableRender}
       </div>
       )	
@@ -282,6 +350,8 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
 
 render ()
      {
+   let itemData = this.memoizedFilterData(this.props.data, this.props.filters);
+   /*
    let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
    let itemData = (this.props.filters) ? 
   		dataCpy.map((record) => 
@@ -299,7 +369,10 @@ render ()
   			return (good ? {...record} : null) 
   			}).filter((record => !!record)) :
   			dataCpy;
+  	*/		
   	//Se devo sortare... applico una funzione di sort... altrimenti ritornoa sortedData... data...
+    let sortedData = this.memoizedSortData(itemData, this.state.sortBy, this.state.sortDirection)
+ /*
   	let sortedData = (this.state.sortBy) ? 
   					  itemData.sort((a, b) => 
   							{
@@ -314,7 +387,7 @@ render ()
   							return sortBool;
   							}) 
   					  : itemData;
-  			
+  			*/
   	 
 //Genero un indice che associa aalla chiave la sua posizione nell'array sortato e filtrato. Mi serve per saltare a una riga	
 const reducer = (acc, curr, idx) => {
@@ -323,15 +396,24 @@ const reducer = (acc, curr, idx) => {
 };
 if (sortedData.length > 0) this.dataIndex = sortedData.reduce(reducer, this.dataIndex);
 
-	
-this.header2 = [...this.props.header];
+
+this.header2 = this.memoizedCalcHeader2(this.props.header);
+/*
+[...this.props.header];
 	(this.props.actionFirst) ? this.header2.unshift({label: 'Sel', width: this.props.actionWidth || SEL_W}) : this.header2.push({label: 'Sel', width: this.props.actionWidth || SEL_W})
 	if (this.props.subTables) this.header2.unshift({label: '', width:  SUB_W})
-let columnWidths = (() => 
+*/
+
+let columnWidths = this.memoizedCalcColumnWidth(this.header2);
+
+/*
+((header) => 
 		{
-		let cW = this.header2.map(h => h.width);
+		let cW = header.map(h => h.width);
 		return cW;
-		})()
+		})(this.header2)
+*/
+console.log("ready");
   return(
   <div >
  
@@ -346,7 +428,7 @@ let columnWidths = (() =>
     columnWidth={index => columnWidths[index]}
     height={this.props.height - this.col_h -10} //La testata e un minimo di spazio per gli oggetti sotto...
     rowCount={itemData.length}
-    rowHeight={(index) => {let rowKey = sortedData[index].key; let h= (this.state.subTableOpen[rowKey]) ? this.col_h + this.props.subTables[rowKey].height: this.col_h; return(h)}}
+    rowHeight={(index) => {let rowKey = sortedData[index].key; let h= (this.state.subTableOpen[rowKey]) ? this.col_h + this.props.subTablesHeight(rowKey): this.col_h; return(h)}}
     width={this.props.width}
     itemData={sortedData}
     itemKey={itemKey}
