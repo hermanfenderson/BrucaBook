@@ -79,9 +79,7 @@ handleResize = () => {
   	return (
   	  <LocaleProvider  locale={itIT}>	
       {(this.props.authenticated === null)? 
-      <Spin style={{width: '100vw', height: '100vh'}}>
-      <div style={{width: '100vw', height: '100vh'}} />
-      </Spin>
+    <div className={'spinner'}></div>
       :
       (this.props.authenticated === true) ?
       (
