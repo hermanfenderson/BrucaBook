@@ -1,9 +1,9 @@
 import InventarioComponent from '../components/Inventario'
 import {rigaInventarioFA, generaRighe} from '../../../actions/inventario'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
-import {storeMeasure, setHeaderInfo} from '../../../actions'
+import {setHeaderInfo} from '../../../actions'
 
-import {getFilters, getMessageBufferInventario, getShowCatalogModalInventario, getEditedCatalogItem, getTestataInventario, getListeningTestataInventario, isStaleTotaliInventario, getEditedRigaInventario, getDataMagazzino, getGeometry} from '../../../reducers'
+import {getFilters, getMessageBufferInventario, getShowCatalogModalInventario, getEditedCatalogItem, getTestataInventario, getListeningTestataInventario, isStaleTotaliInventario, getEditedRigaInventario, getDataMagazzino, getGeometry, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataInventario = rigaInventarioFA.listenTestata;
@@ -26,6 +26,7 @@ const mapStateToProps = (state) => {
 	         messageBuffer: getMessageBufferInventario(state),
 	         dataMagazzino: getDataMagazzino(state, 'INVENTARIO'),
 	         geometry: getGeometry(state,'INVENTARIO'),
+	         measures: getMeasures(state),
 	         formSearchCols: getGeometry(state,'INVENTARIO').formSearchCols,
 	         filters: getFilters(state,'INVENTARIO')
 	})
@@ -33,7 +34,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ generaRighe, shiftMessage, resetInventario, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataInventario, unlistenTestataInventario, storeMeasure, setHeaderInfo, searchDataMagazzino, setFilter, resetFilter}, dispatch);
+  listenTestataInventario, unlistenTestataInventario, setHeaderInfo, searchDataMagazzino, setFilter, resetFilter}, dispatch);
 }
 
 const Inventario = connect(mapStateToProps, mapDispatchToProps)(InventarioComponent)

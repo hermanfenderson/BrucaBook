@@ -14,8 +14,9 @@ import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
 
-import { Modal, Spin, Button} from 'antd'
+import { Modal, Button} from 'antd'
 import FixBlock from '../../../components/FixBlock'
+import Spinner from '../../../components/Spinner'
 
 
 class Inventario extends Component {
@@ -67,7 +68,7 @@ render()
  <div>
  
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
-    <Spin spinning={!this.props.testataInventario}>
+    <Spinner height={this.props.measures.mainHeight} width={this.props.measures.mainWidth} spinning={!this.props.testataInventario}>
  
     <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='INVENTARIO'/>
@@ -96,7 +97,7 @@ render()
       <FormRigaInventario geometry={this.props.geometry} idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} />
   </FixBlock>
         
-     </Spin>
+     </Spinner>
   </div>
  
  

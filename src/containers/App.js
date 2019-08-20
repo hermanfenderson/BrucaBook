@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { withRouter } from 'react-router-dom'
-import { LocaleProvider, Layout,  Affix, Row, Col, Spin } from 'antd';
+import { LocaleProvider, Layout,  Affix, Row, Col } from 'antd';
 import itIT from 'antd/lib/locale-provider/it_IT';
 //import Measure from 'react-measure';
 

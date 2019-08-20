@@ -6,7 +6,6 @@ import ChartIncassi from './ChartIncassi';
 import ChartIncassiMesi from './ChartIncassiMesi';
 import ChartIncassiAnni from './ChartIncassiAnni';
 import TopBooks from './TopBooks';
-import ReactDOM from 'react-dom';
 import Spinner from '../../../components/Spinner'
 
 

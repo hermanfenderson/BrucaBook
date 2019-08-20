@@ -9,7 +9,6 @@ import {SAVE_INVENTARIO} from '../actions/elencoInventari';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper,  isValidEditedItem} from '../helpers/form';
 
 
-import {STORE_MEASURE} from '../actions';
 
 import {calcFormColsFix, initCalcGeometry, calcGeneralError, calcHeaderFix, FORM_COL_H, GE_H, P_W, FMH, FMW} from '../helpers/geometry';
 

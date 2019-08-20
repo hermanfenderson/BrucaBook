@@ -1,5 +1,4 @@
 import FormReducer from '../helpers/formReducer'
-import {STORE_MEASURE} from '../actions';
 import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
 import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
 import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMH, FMW, FORM_COL_H, GE_H} from '../helpers/geometry';

@@ -6,7 +6,7 @@ Ogni riga occupa 60px
 */
 
 import React, {Component} from 'react'
-import {Form,  Button, Input, Checkbox, DatePicker, TimePicker, InputNumber, Spin} from 'antd';
+import {Form,  Button, Input, Checkbox, DatePicker, TimePicker, InputNumber} from 'antd';
 import SelectBookstore from './SelectBookstore'; 
 import SelectList from './SelectList';
 import AutoCompleteList from './AutoCompleteList';
