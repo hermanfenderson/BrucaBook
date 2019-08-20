@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Spin, Row, Col, Button} from 'antd'
+import {Row, Col, Button} from 'antd'
 
 import ChartIncassi from './ChartIncassi';
 
@@ -7,7 +7,7 @@ import ChartIncassiMesi from './ChartIncassiMesi';
 import ChartIncassiAnni from './ChartIncassiAnni';
 import TopBooks from './TopBooks';
 import ReactDOM from 'react-dom';
-
+import Spinner from '../../../components/Spinner'
 
 
 class Dashboard extends Component {
@@ -16,33 +16,25 @@ componentDidMount() {
     	//Chiedo sempre dati freschi...quando entro qui...
     	this.props.getReportDataAction();
     	if (!this.props.listeningMagazzino) this.props.listenMagazzino(""); //Ascolto da subito il magazzino....
-   	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
-   		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
-   		this.props.storeMeasure('dashboardWidth', node.clientWidth);
-   		}
+   
     	
  }
  
-componentDidUpdate() {
-	if(ReactDOM.findDOMNode(this.refs.dashboardWidth)) 
-   		{var node = ReactDOM.findDOMNode(this.refs.dashboardWidth);
-   		if (this.props.measures['dashboardWidth'] !==node.clientWidth) this.props.storeMeasure('dashboardWidth', node.clientWidth);
-   		}
-} 
 
 //  <Tooltip crosshairs={{type : "y"}}/>
  
 render()
 {
-let width =  (this.props.measures['dashboardWidth']) ? this.props.measures['dashboardWidth']-50 : 100; //Default a caso...
+let width =  (this.props.measures['mainWidth']) ? this.props.measures['mainWidth'] : 100; //Default a caso...
+let height =  (this.props.measures['mainHeight']) ? this.props.measures['mainHeight'] : 100; //Default a caso...
+
 if (isNaN(width) || (this.props.serieIncassi && this.props.serieIncassi.length===0)) return (
-	<Spin style={{width: '100vw', height: '100vh'}}>
-      <div style={{width: '100vw', height: '100vh'}} />
-      </Spin>)
+	<Spinner width={this.props.measures.mainWidth}  height={this.props.measures.mainHeight} />
+     )
 else  
 	return (
-<Spin spinning={(this.props.waitingForData)} >		
-<div ref='dashboardWidth'>
+<Spinner spinning={(this.props.waitingForData)} width={this.props.measures.mainWidth}  height={this.props.measures.mainHeight} >		
+<div style={{position: 'relative', width: width, height: height, overflowY: 'scroll'}}>
 <Row >
 <Col span={12} style={{ height: width/4}}>
 <div className='report-title'>Confronto incassi annui</div>
@@ -86,7 +78,7 @@ else
 </Row>
 
 </div>
-</Spin>
+</Spinner>
           )       
 
 }

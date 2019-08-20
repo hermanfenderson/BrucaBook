@@ -3,7 +3,7 @@ import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO, LISTE
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import {isPositiveInteger, isPercentage} from '../helpers/validators'
-import {COL_H_S, SEL_W_S, initCalcGeometry, calcFormColsFix, calcHeaderFix} from '../helpers/geometry'
+import {COL_H_S, SEL_W_S,FMW, initCalcGeometry, calcFormColsFix, calcHeaderFix} from '../helpers/geometry'
 import moment from 'moment';
 
 
@@ -119,7 +119,7 @@ let geometryParams = {cal: {
     					
      		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight+cal.totaliHeight+cal.infoHeight, left: 5})}},
     				
-    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth, sel_w: SEL_W_S}))}},
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW, sel_w: SEL_W_S}))}},
     				    {infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 5})}},
     				    {nuovoScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth-5, top: 0, left: cal.infoWidth})}},
     				    {testataCoors: (cal) => {return({height: cal.totaliHeight+cal.formSearchHeight, width: cal.cassaWidth, top: cal.infoHeight, left: 5})}},

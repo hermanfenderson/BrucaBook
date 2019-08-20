@@ -63,10 +63,13 @@ class TableCassa extends Component
 
 	
 	editRow = (row) => {
-		let params = [...this.props.period];
-    	params.push(this.props.cassa);
-    	this.props.setSelectedRigaCassa(row);
-    	this.props.history.push('/scontrino/'+ period2month(this.props.period) + '/' +this.props.cassa + '/'+row.scontrinoKey  );
+		if (row.tipo==='scontrino')
+			{
+			let params = [...this.props.period];
+    		params.push(this.props.cassa);
+    		this.props.setSelectedRigaCassa(row);
+    		this.props.history.push('/scontrino/'+ period2month(this.props.period) + '/' +this.props.cassa + '/'+row.scontrinoKey  );
+			}
 	}
     
     customRenderFunc = (text, record, pos) => {

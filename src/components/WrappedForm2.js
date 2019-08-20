@@ -13,6 +13,7 @@ import AutoCompleteList from './AutoCompleteList';
 import ImageUploaderWrapper from './ImageUploaderWrapper';
 import InputLookup from './InputLookup';
 import FixBlock from './FixBlock';
+import Spinner from './Spinner';
 
 import moment from 'moment';
 import 'moment/locale/it';
@@ -128,18 +129,16 @@ class WrappedForm extends Component {
   
 	render ()
 	{  
-   	return 	<Spin spinning={this.props.loading} style={{height: this.props.height, width: this.props.width, minHeight: this.props.height, minWidth: this.props.width}}>
-   	         
-   			<div style={{height: this.props.height, width: this.props.width, minHeight: this.props.height, minWidth: this.props.width}}>
-   	         <Form className={this.props.formClass}
+   	return 	<Spinner spinning={this.props.loading} height={this.props.height} width={this.props.width}>
+   	      <div style={{position: 'relative', top: 0, left: 0, height: 'inherit', width: 'inherit'}}>   
+   		  <Form className={this.props.formClass}
     			layout={this.props.layout}  
     			hideRequiredMark={this.props.hideRequiredMark}
     			onSubmit={this.props.onSubmit}>
     			{renderChildren({...this.props, setFocus: this.setFocus})}
     		</Form>
-    	    </div>	
-    		
-    	</Spin>	
+    	  </div>	
+    	</Spinner>	
     
 	}
 	

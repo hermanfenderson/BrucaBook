@@ -115,7 +115,7 @@ let geometryParams = {cal: {
     					{nuovoScontrinoCoors: (cal) => {return({height: cal.nuovoSContrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight+cal.restoFormHeight, left: 0})}},
     				    
     					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h - cal.formHeight -cal.immagineHeight, left: 0})}},
-						{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+						{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
     				
 					    {tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.totaliWidth})}},
     				

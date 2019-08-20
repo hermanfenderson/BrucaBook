@@ -2,7 +2,7 @@ import React from 'react';
 
 import { VariableSizeGrid as Grid } from 'react-window';
 import {SEL_W, COL_H, COL_H_S, ICO, ICO_S} from '../helpers/geometry';
-import {Row, Icon} from 'antd'; 
+import {Icon} from 'antd'; 
 import Empty from './Empty';
 import classNames from 'classnames';
 import memoizeOne from 'memoize-one';
@@ -219,7 +219,7 @@ let headCols = header.map((col, idx) =>
                  
 			)	
 return (
-    <div style={{ height: (this.props.size==='small'? COL_H_S : COL_H)}}>
+    <div style={{ width: this.props.width, height: (this.props.size==='small'? COL_H_S : COL_H)}}>
     {headCols}
     </div>
 )
@@ -417,10 +417,8 @@ console.log("ready");
   return(
   <div >
  
-   <Row >
-   {this.Header(this.header2)}	
+      {this.Header(this.header2)}	
   
-  </Row>
   {
   (itemData!==null && itemData.length > 0) ?
   <Grid 

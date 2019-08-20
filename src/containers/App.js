@@ -104,7 +104,7 @@ handleResize = () => {
           
            
            
-           <Content style={{ position: 'fixed', left: this.props.measures.siderWidth, top: this.props.measures.headerHeight, width: window.innerWidth-this.props.measures.siderWidth, height: window.innerHeight-this.props.measures.headerHeight, minWidth: window.innerWidth-this.props.measures.siderWidth, minHeight: window.innerHeight-this.props.measures.headerHeight,  margin: '0px 0px', background: '#fff', overflow: 'hidden'  }}>
+           <Content style={{ position: 'absolute', left: this.props.measures.siderWidth, top: this.props.measures.headerHeight, width: window.innerWidth-this.props.measures.siderWidth, height: window.innerHeight-this.props.measures.headerHeight, minWidth: window.innerWidth-this.props.measures.siderWidth, minHeight: window.innerHeight-this.props.measures.headerHeight,  margin: '0px 0px', background: '#fff', overflow: 'hidden'  }}>
         
           <Main  authenticated={true} user={this.props.user}/>
 	      

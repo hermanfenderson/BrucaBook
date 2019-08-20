@@ -21,7 +21,7 @@ if (props.coors)
 let spinning = (props.spinning) ? true : false;	
 let classname = props.className;
     
-let style = {...props.style, position:'absolute', top: top, left: left, width: width, minWidth: width,  height: height, minHeight: height}
+let style = {...props.style, position:'absolute', top: top, left: left, width: width,  height: height}
     return (
      <div className={props.className} style={style}>
     <Spinner spinning={props.spinning}>	

@@ -55,7 +55,7 @@ let geometryParams = {cal: {
     				    {generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 1}))}}, 
     					
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 
-    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
     					{periodCoors: (cal) => {return({height: cal.periodHeight, width: cal.periodWidth, top: 0, left: 0})}},
     					]
 				 }	
