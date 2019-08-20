@@ -14,7 +14,7 @@ import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
 
-import { Modal, Spin} from 'antd'
+import { Modal} from 'antd'
 import FixBlock from '../../../components/FixBlock'
 
 class Bolla extends Component {

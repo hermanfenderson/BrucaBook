@@ -1,6 +1,6 @@
 import ElencoCasseComponent from '../components/ElencoCasse'
 import {elencoCasseFA, setPeriodElencoCasse} from '../../../actions/elencoCasse'
-import {storeMeasure, setHeaderInfo} from  '../../../actions'
+import {setHeaderInfo} from  '../../../actions'
 import {getPeriodElencoCasse, getListeningItemElencoCasse, getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -18,7 +18,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ toggleTableScroll, resetElencoCasse, setSelectedCassa, storeMeasure, setHeaderInfo, setPeriodElencoCasse}, dispatch);
+  return bindActionCreators({ toggleTableScroll, resetElencoCasse, setSelectedCassa, setHeaderInfo, setPeriodElencoCasse}, dispatch);
 }
 
 const ElencoCasse = connect(mapStateToProps, mapDispatchToProps)(ElencoCasseComponent)

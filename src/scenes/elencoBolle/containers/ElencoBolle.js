@@ -1,6 +1,6 @@
 import ElencoBolleComponent from '../components/ElencoBolle'
 import {bollaFA, setPeriodElencoBolle} from '../../../actions/elencoBolle'
-import {storeMeasure, setHeaderInfo} from  '../../../actions'
+import {setHeaderInfo} from  '../../../actions'
 import {getPeriod, getListeningItem, getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ resetElencoBolle, setSelectedBolla, storeMeasure, setHeaderInfo, setPeriodElencoBolle}, dispatch);
+  return bindActionCreators({ resetElencoBolle, setSelectedBolla, setHeaderInfo, setPeriodElencoBolle}, dispatch);
 }
 
 const ElencoBolle = connect(mapStateToProps, mapDispatchToProps)(ElencoBolleComponent)

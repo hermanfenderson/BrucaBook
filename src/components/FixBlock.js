@@ -1,7 +1,6 @@
 //Un blocco fisso nella main
 //Gli devo dare una posizione top, una sinistra, una width, una height, una  style eventuale... 
 import React from 'react';
-import classNames from 'classnames'
 import Spinner from './Spinner'
 
 const FixBlock = (props) =>  {
@@ -19,12 +18,11 @@ if (props.coors)
 	
 	}
 let spinning = (props.spinning) ? true : false;	
-let classname = props.className;
-    
+
 let style = {...props.style, position:'absolute', top: top, left: left, width: width,  height: height}
     return (
      <div className={props.className} style={style}>
-    <Spinner spinning={props.spinning}>	
+    <Spinner spinning={spinning}>	
     	{props.children}
     </Spinner>	
     </div>
