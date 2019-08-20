@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import WrappedForm from '../../../components/WrappedForm'
+import WrappedForm from '../../../components/WrappedForm2'
 import Magazzino from '../../magazzino'
 
 class FormRigaInventario extends Component {
@@ -36,34 +36,29 @@ resetForm = () => {
   	const loading = this.props.editedRigaInventario.loading;
   	const cols1 = this.props.geometry.formCols1;
   	const cols2 = this.props.geometry.formCols2;
+  	const generalError = this.props.geometry.generalError;
+ 
    	const readOnlyEAN = ((this.props.editedRigaInventario.selectedItem !== null) || (this.props.editedRigaInventario.eanState === 'PARTIAL'))
   	return (
-      <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-         <WrappedForm.Group formGroupLayout={{gutter:cols1.gutter}}>
-        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' formColumnLayout={{width:cols1.ean}}  disabled={readOnlyEAN}/>
-        <WrappedForm.Input field='titolo' label='Titolo'  formColumnLayout={{width:cols1.titolo}}   disabled/>
-        <WrappedForm.Input field='autore' label='Autore'  formColumnLayout={{width:cols1.autore}} disabled/>
+      <WrappedForm  layout='vertical'focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
+        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' coord={cols1.ean}  disabled={readOnlyEAN}/>
+        <WrappedForm.Input field='titolo' label='Titolo'  coord={cols1.titolo}   disabled/>
+        <WrappedForm.Input field='autore' label='Autore'  coord={cols2.autore} disabled/>
      
-       </WrappedForm.Group>
-        
-        <WrappedForm.Group formGroupLayout={{gutter:cols1.gutter}}>
-          <WrappedForm.Input field='prezzoListino' label='Listino'  formColumnLayout={{width:cols2.listino}}  disabled/>
+          <WrappedForm.Input field='prezzoListino' label='Listino'  coord={cols2.listino}  disabled/>
      
-        <WrappedForm.Input field='stock' label='Stock' formColumnLayout={{width:cols2.stock}} disabled/>
+        <WrappedForm.Input field='stock' label='Stock' coord={cols2.stock} disabled/>
        
-        <WrappedForm.InputNumber field='pezzi' label='Variazione' formColumnLayout={{width:cols2.delta}}/>
-       <WrappedForm.Button  type={'button'} formColumnLayout={{width: cols2.annulla}}  onClick={this.resetForm}>Annulla</WrappedForm.Button>
+        <WrappedForm.InputNumber field='pezzi' label='Variazione' coord={cols2.delta}/>
+       <WrappedForm.Button  type={'button'} coord={cols2.annulla}  onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button  formColumnLayout={{width:cols2.inserisci}}  type="primary" htmlType="submit" >{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
+        <WrappedForm.Button  coord={cols2.inserisci}  type="primary" htmlType="submit" >{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>
      
-      </WrappedForm.Group>
-       <WrappedForm.Group formGroupLayout={{gutter:0}} >
-         <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
+         <WrappedForm.GeneralError  coord={generalError}/>
        
         
         
        
-        </WrappedForm.Group >
        </WrappedForm>
     )
   }

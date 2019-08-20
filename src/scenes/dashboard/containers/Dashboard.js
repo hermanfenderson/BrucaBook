@@ -1,5 +1,5 @@
 import DashboardComponent from '../components/Dashboard'
-import {setHeaderInfo, storeMeasure} from  '../../../actions'
+import {setHeaderInfo} from  '../../../actions'
 import {getReportData as getReportDataAction } from '../../../actions/dashboard'
 import {getSerieIncassi, getSerieIncassiMesi, getSerieIncassiAnni, getTop5thisYear, getTop5lastYear, getTop5lastMonth, isWaitingForData, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -14,7 +14,7 @@ const listenMagazzino = magazzinoFA.listenItem;
 
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ setHeaderInfo, getReportDataAction, storeMeasure, listenMagazzino}, dispatch);
+  return bindActionCreators({ setHeaderInfo, getReportDataAction, listenMagazzino}, dispatch);
 }
 
 const mapStateToProps = (state) => {

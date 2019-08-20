@@ -11,7 +11,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 
 import {STORE_MEASURE} from '../actions';
 
-import {calcFormCols, calcHeader} from '../helpers/geometry';
+import {calcFormColsFix, initCalcGeometry, calcGeneralError, calcHeaderFix, FORM_COL_H, GE_H, P_W, FMH, FMW} from '../helpers/geometry';
 
 
 moment.locale("it");
@@ -27,31 +27,55 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedBollaValuesInitialState, {isValid: true} ));
 }
 
-const formWidth = (880 -16)  * 5 / 6 -8;
-
-//E' un dato.... che passo come costante...
-const headerParams = [
-				{name: 'dataInventario', label: 'Data inventario', min: '200px', max: '200px'},
-				{name: 'note', label: 'Note', min: '400px', max: '400px'},
-				
-			   {name: 'totali.righe', label: 'Inventario', min: '100px', max: '100px'},
-			    {name: 'totali.magazzino', label: 'Magazzino', min: '100px', max: '100px'},
-			   
-			    ];
-			    
-const colParams1 = [
-	{name: 'dataInventario', min: 200, max: 200},
-	{name: 'note', min: 400, max: 400},
-	{name: 'annulla', min: 100, max: 100},
-	{name: 'crea', min: 100, max: 100}
+//Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
+let geometryParams = {cal: {
+						formHeight: FORM_COL_H + GE_H,
+						emptyWidth: P_W,
+						colParams: [
+									{name: 'dataInventario', min: 200, max: 200},
+									{name: 'note', min: 400, max: 400},
+									{name: 'annulla', min: 100, max: 100},
+									{name: 'crea', min: 100, max: 100}
+									],
+					
+						headerParams: [
+									    
+									  {name: 'dataInventario', label: 'Data inventario', min: 200, max: 200},
+									  {name: 'note', label: 'Note', min: 400,},
+									  {name: 'totali.righe', label: 'Inventario', min: 100, max: 100},
+			    					  {name: 'totali.magazzino', label: 'Magazzino', min: 100, max: 100},
+									 ],
+						
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.emptyWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	    {emptyHeight: (cal) =>  {return(cal.h)}},
+				  	   ],
+				 geo: [ 
 	
-	];
+
+     		    		{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight, left: cal.emptyWidth})}},
+    				
+     		    		{formCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams, width: cal.formWidth, offset: 0}))}}, 
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.emptyWidth})}},
+    				    {generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 1}))}}, 
+    					
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
+    					{emptyCoors: (cal) => {return({height: cal.emptyHeight, width: cal.emptyWidth, top: 0, left: 0})}},
+    					]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
+
+
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
-			geometry: {formWidth: formWidth, formCols1: calcFormCols(colParams1,8,formWidth), header: calcHeader(headerParams, formWidth - 60)
-    					}		
-    				}
+    	    geometry: calcGeometry(),
+						}		
+    				
 	return initialStateHelper(eiis,extraState);
     }
     
@@ -67,7 +91,14 @@ const transformSelectedItem = (cei) =>
 	cei.dataInventario = moment(cei.dataInventario,"DD/MM/YYYY");
 }
 
-const inventarioR = new FormReducer('ELENCOINVENTARI',null, transformEditedInventario, transformSelectedItem, initialState, false); 
+
+const inventarioR = new FormReducer({scene: 'ELENCOINVENTARI', 
+								foundCompleteItem: null,
+								transformItem: transformEditedInventario, 
+								transformSelectedItem: transformSelectedItem, 
+								initialState: initialState, 
+								keepOnSubmit: false, 
+								calcGeometry: calcGeometry}); 
 
     
  
@@ -104,13 +135,7 @@ export default function elencoInventari(state = initialState(), action) {
    
         
    
-    case STORE_MEASURE:
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    let height = measures['viewPortHeight'] - measures['headerHeight'] - measures['formInventarioHeight'] -130;
-   	    newState = {...state, tableHeight: height};
-        break;  
-   case SAVE_INVENTARIO:
+     case SAVE_INVENTARIO:
      	newState = state;
      	break;
     

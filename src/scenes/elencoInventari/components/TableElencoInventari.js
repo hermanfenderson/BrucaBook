@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import WrappedTable from '../../../components/WrappedTable';
+import WrappedTable from '../../../components/WrappedVirtualizedTable';
 import {Modal} from 'antd';
 
 import {withRouter} from 'react-router-dom'
@@ -60,12 +60,16 @@ class TableElencoInventari extends Component
     
     	render() { 
     	let props = {...this.props};
+    	let height = props.geometry.tableCoors.height;
+    	let width = props.geometry.tableCoors.width;
+    	let header = props.geometry.header;
+        
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	delete props['deleteInventario']; //Non la passo liscia...
     	delete props['setSelectedInventario']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.header}/>
+			<WrappedTable {...props} width={width} height={height}  highlightedRowKey={selectedItemKey} saveRow={this.saveRow} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	

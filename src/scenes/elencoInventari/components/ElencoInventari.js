@@ -1,15 +1,13 @@
 import TableElencoInventari from '../containers/TableElencoInventari';
 import FormInventario from '../containers/FormInventario';
 import React, {Component} from 'react'
-import ReactDOM from 'react-dom';
 
 
-import { Row, Col} from 'antd'
+import FixBlock from '../../../components/FixBlock'
 
 
 class ElencoInventari extends Component {
 componentDidMount() {
-    	if (ReactDOM.findDOMNode(this.refs.formInventario)) this.props.storeMeasure('formInventarioHeight', ReactDOM.findDOMNode(this.refs.formInventario).clientHeight);
     	this.props.setHeaderInfo('Inventario');
     	
  }
@@ -24,24 +22,20 @@ render()
 ////Era...       <Col style={{'marginTop': '100px'}} span={4}>
 	
 return (
- <div>	
-  <Row>
-  
-      <Col style={{'marginTop': '30px'}} span={4}>
-      </Col>
-      <Col span={20}>
-      <TableElencoInventari header={this.props.geometry.header}/>
+ <div>
+  <FixBlock coors={this.props.geometry.emptyCoors} />
+     
+   <FixBlock coors={this.props.geometry.tableCoors}>
+    
+      <TableElencoInventari geometry={this.props.geometry}/>
    
-   	 	 </Col>
-    </Row>
-    <Row type="flex" align="bottom" className='bottom-form' ref='formInventario' style={{height: '100px'}}>
-    <Col span={4} />
-     
-      <Col span={20}>
-     
+   	</FixBlock>
+    
+   <FixBlock coors={this.props.geometry.formCoors} className='bottom-form2' >
+   
      <FormInventario geometry={this.props.geometry} />
-     </Col>
-          </Row>
+   </FixBlock>
+  
    
   </div>
  

@@ -14,7 +14,8 @@ import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
 
-import { Row, Col,  Modal, Spin, Button} from 'antd'
+import { Modal, Spin, Button} from 'antd'
+import FixBlock from '../../../components/FixBlock'
 
 
 class Inventario extends Component {
@@ -63,42 +64,41 @@ generaRighe = () => {
 render()
 {
    return (
+ <div>
  
-  <Spin spinning={!this.props.testataInventario}>
   <MessageQueue messageBuffer={this.props.messageBuffer} shiftMessage={this.props.shiftMessage} />
-  <div>
-  
+    <Spin spinning={!this.props.testataInventario}>
+ 
     <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='INVENTARIO'/>
     </Modal>  
-    <Row style={{'backgroundColor': 'white'}}>
-   <Col span={4}>
-         <Button onClick={this.generaRighe}> Carica </Button>
+     <FixBlock className='totaliCol' coors={this.props.geometry.caricaCoors}>
+    
+          <Button onClick={this.generaRighe}> Carica </Button>
         <TotaliInventario staleTotali={this.props.staleTotali} testataInventario={this.props.testataInventario} />
-      </Col>
- 
-       <Col span={20}>
+    </FixBlock>
+     <FixBlock className='filter-form' coors={this.props.geometry.formSearchCoors} >
      <FilterInventario formSearchCols={this.props.formSearchCols} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+  
+      </FixBlock>
+      <FixBlock  coors={this.props.geometry.tableCoors} >
    
-     <TableInventario  height={this.props.tableHeight} width={this.props.geometry.tableWidth} filters={this.props.filters} header={this.props.geometry.header} idInventario={this.props.match.params.id}/>
-      
-    	   </Col>
-      </Row>
+		   <TableInventario  height={this.props.geometry.tableCoors.height} width={this.props.geometry.tableCoors.width} filters={this.props.filters} header={this.props.geometry.header} idInventario={this.props.match.params.id}/>
+      </FixBlock>
     
-    <Row type="flex" align="bottom" className='bottom-form' ref='formRigaInventario'  style={{height: '200px'}}>
-    <Col span={4}>
+    <FixBlock className='immagineCol' coors={this.props.geometry.immagineCoors} >
+    
      <BookImg eanState={this.props.editedRigaInventario.eanState} ean={this.props.editedRigaInventario.values.ean} imgUrl={this.props.editedRigaInventario.values.imgFirebaseUrl} />
-
-      </Col>
-       <Col span={20}>
+  </FixBlock>
     
+   <FixBlock className='bottom-form2' coors={this.props.geometry.formCoors} >
+     
       <FormRigaInventario geometry={this.props.geometry} idInventario={this.props.match.params.id}  testataInventario={this.props.testataInventario} />
-      </Col>
+  </FixBlock>
         
-    </Row>
-   
+     </Spin>
   </div>
-  </Spin>
+ 
  
  
 )

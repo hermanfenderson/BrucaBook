@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
-import WrappedForm from '../../../components/WrappedForm'
+import WrappedForm from '../../../components/WrappedForm2'
 
 class FormInventario extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -28,7 +28,9 @@ componentWillMount = () =>
 }
 
   render() {
-  	const  formCols1 = this.props.geometry.formCols1;
+  	const  formCols1 = this.props.geometry.formCols;
+  	const  generalError = this.props.geometry.generalError;
+  
   
   	const formValues = this.props.editedInventario.values;
   	const errorMessages = this.props.editedInventario.errorMessages;
@@ -37,22 +39,17 @@ componentWillMount = () =>
   	const submitLabel = readOnlyForm ? 'Seleziona' : (selectedItem ? 'Modifica' : 'Crea');
     return (
      <WrappedForm  layout='vertical' loading={false} readOnlyForm={readOnlyForm} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
-         <WrappedForm.Group formGroupLayout={{gutter: formCols1.gutter}}>
-         <WrappedForm.DatePicker field='dataInventario' label='Data Inventario'  allowClear={false} format = 'DD/MM/YYYY' formColumnLayout={{width:formCols1.dataInventario}} disabled={(this.props.editedInventario.selectedItem!==null)} />
-         <WrappedForm.Input field='note' label='Note'   formColumnLayout={{width:formCols1.note}} />
+         <WrappedForm.DatePicker field='dataInventario' label='Data Inventario'  allowClear={false} format = 'DD/MM/YYYY' coord={formCols1.dataInventario} disabled={(this.props.editedInventario.selectedItem!==null)} />
+         <WrappedForm.Input field='note' label='Note'   coord={formCols1.note} />
      
-       <WrappedForm.Button  type={'button'} formColumnLayout={{width:formCols1.annulla}} onClick={this.resetForm}>Annulla</WrappedForm.Button>
+       <WrappedForm.Button  type={'button'} coord={formCols1.annulla} onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
-        <WrappedForm.Button type="primary" htmlType="submit" formColumnLayout={{width:formCols1.crea}}>{submitLabel}</WrappedForm.Button>
+        <WrappedForm.Button type="primary" htmlType="submit" coord={formCols1.crea}>{submitLabel}</WrappedForm.Button>
      
-       </WrappedForm.Group>
-        
-     
-       <WrappedForm.Group formGroupLayout={{gutter:0}}>
-        <WrappedForm.GeneralError  formColumnLayout={{span:24}}/>
+        <WrappedForm.GeneralError  coord={generalError}/>
        
          
-        </WrappedForm.Group >
+
        </WrappedForm>
     )
   }

@@ -1,7 +1,7 @@
 import TableInventarioComponent from '../components/TableInventario'
 import {rigaInventarioFA} from '../../../actions/inventario'
 
-import {getEditedRigaInventario, getRigheInventario, getTableHeightInventario, getTableScrollInventario, getTableScrollByKey, getListeningItemInventario} from '../../../reducers'
+import {getEditedRigaInventario, getRigheInventario, getTableScrollInventario, getTableScrollByKey, getListeningItemInventario} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -18,7 +18,6 @@ const setTableScrollByKey = rigaInventarioFA.setTableScrollByKey;
 
 const mapStateToProps = (state) => {
 	return ({data: getRigheInventario(state), tableScroll: getTableScrollInventario(state), 
-	height: getTableHeightInventario(state), 
 	selectedItem: getEditedRigaInventario(state).selectedItem,
 	listeningItemInventario: getListeningItemInventario(state),
 	tableScrollByKey: getTableScrollByKey(state,'INVENTARIO'),

@@ -2,7 +2,7 @@ import FormReducer from '../helpers/formReducer'
 import {STORE_MEASURE} from '../actions';
 import {GENERA_RIGHE_INVENTARIO} from '../actions/inventario';
 import { childAdded, childDeleted, childChanged, initialLoading } from '../helpers/firebase';
-import {calcFormCols, calcHeader} from '../helpers/geometry';
+import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMH, FMW, FORM_COL_H, GE_H} from '../helpers/geometry';
 
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
@@ -18,58 +18,93 @@ const editedInventarioValuesInitialState =
 				imgUrl: ''	
 	};
 	
-const colSearchParams = [
-	{name: 'ean', min: 120, max: 120},
-	{name: 'titolo', min: 250},
-	{name: 'autore', min: 110},
-	{name: 'reset', min: 150, max: 240},
 
-	]	
 
 const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedInventarioValuesInitialState, {willFocus: 'ean'} ));
 }
 
-const tableWidth = 880 / 6 * 5 -24;
-const colParams1 = [
-	{name: 'ean', min: 170, max: 170},
-	{name: 'titolo', min: 360},
-	{name: 'autore', min: 160},
-	];
- 
- const colParams2 = [
-	{name: 'listino', min: 65, max: 65},
-	{name: 'stock', min: 65, max: 65},
-	{name: 'delta', min: 404},
 
-	{name: 'annulla', min: 55, max: 55},
-	{name: 'inserisci', min: 55, max: 55},
+//Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
+let geometryParams = {cal: {
+						formHeight: 2 * FORM_COL_H + GE_H,
+						caricaWidth: 190,
+						caricaHeight: 200,
+						immagineWidth: 190,
+						immagineHeight: 200,
+						formSearchHeight: FORM_COL_H,
+						
+						colSearchParams: [
+										{name: 'ean', min: 120, max: 120},
+										{name: 'titolo', min: 250},
+										{name: 'autore', min: 110},
+										{name: 'reset', min: 150, max: 240},
+										],
+						colParams1: [
+										{name: 'ean', min: 170, max: 170},
+										{name: 'titolo', min: 360},
+					
+									
+									],
+						colParams2: [
+									{name: 'autore', min: 160},
+
+									{name: 'listino', min: 65, max: 65},
+									{name: 'stock', min: 65, max: 65},
+									{name: 'delta', min: 65, max: 65},
+								
+									{name: 'annulla', min: 70, max: 100},
+									{name: 'inserisci', min: 70, max: 100},
+
+									
+									],
+						headerParams: [
+									  	{name: 'ean', label: 'EAN', min: 130, max: 130,sort:'number'},
+										{name: 'titolo', label: 'Titolo', min: 250,sort:'string', ellipsis: true},
+										{name: 'autore', label: 'Autore', min: 110,sort:'string', ellipsis: true},
+										{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},
+										{name: 'stock', label: 'Stock', min: 50, max: 50},
+										{name: 'pezzi', label: 'Delta', min: 50, max: 50},
+
+									 ],
+						
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.caricaWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight-cal.formSearchHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.w - cal.caricaWidth)}},
+				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	   ],
+				 geo: [ 
+				  	   
+     		    		{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: cal.caricaWidth})}},
+    					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
+    					{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight+cal.formSearchHeight, left: cal.caricaWidth})}},
+    				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth, offset: 0}))}}, 
+    				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth, offset: 1}))}}, 
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight, left: cal.caricaWidth})}},
+    				
+    					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 2}))}},	 
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
+    				
+    					{caricaCoors: (cal) => {return({height: cal.caricaHeight, width: cal.caricaWidth, top: 0, left: 0})}},
+    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h -cal.immagineHeight, left: 0})}}
+						]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);
+
 	
 
-	];
 	
-const headerParams = [
-	{name: 'ean', label: 'EAN', min: 130, max: 130,sort:'number'},
-	{name: 'titolo', label: 'Titolo', min: 250,sort:'string', ellipsis: true},
-	{name: 'autore', label: 'Autore', min: 110},
-	{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},
-	{name: 'stock', label: 'Stock', min: 50, max: 50},
-	{name: 'pezzi', label: 'Delta', min: 50, max: 50},
 
-	] 
 
  
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
 		    totaleOccorrenze: 0,
-    		geometry: {header: calcHeader(headerParams, tableWidth - 60), 
-    				  formCols1: calcFormCols(colParams1,8,tableWidth), 
-    				  formCols2: calcFormCols(colParams2,8,tableWidth), 
-    				  tableWidth: tableWidth,
-    				  formSearchCols: calcFormCols(colSearchParams,8,tableWidth), 
-    				 
-    				  	}		
+    		geometry: calcGeometry()	
     				}
 	return initialStateHelper(eiis, extraState);
     }
@@ -79,7 +114,14 @@ const initialState = () => {
  
     
 //Metodi reducer per le Form
-const rigaInventarioR = new FormReducer('INVENTARIO', foundCompleteItem, null, null, initialState); 
+const rigaInventarioR = new FormReducer(
+						{scene: 'INVENTARIO',
+						foundCompleteItem: foundCompleteItem,
+								transformItem: null, 
+								transformSelectedItem: null, 
+								initialState: initialState, 
+								keepOnSubmit: false, 
+								calcGeometry: calcGeometry}); 
 
 
 var stockMap = new Map();
@@ -152,32 +194,7 @@ export default function inventario(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
-   case STORE_MEASURE:
-   	    newState = state;
-   	    
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	       if (action.newMeasure.name==='viewPortHeight' || action.newMeasure.name==='headerHeight')
-   			{
-   	      	 let height = measures['viewPortHeight'] - measures['headerHeight'] - 320;
-   	      	 if (!height) height = 100;
-   			newState = {...state, tableHeight: height};
-   			}
-   		   
-   		    if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
-   	   		{
-	   	   		let tableWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) * 5 / 6 - 28;	
-	   			let formCols1 = calcFormCols(colParams1,8,tableWidth);
-	   			let formCols2 = calcFormCols(colParams2,8,tableWidth);
-	   		    let formSearchCols = calcFormCols(colSearchParams,8,tableWidth);
-   		
-	   			let header = calcHeader(headerParams, tableWidth - 60);
-	   			let geometry = {...newState.geometry};
-	   		newState = {...newState, geometry: {...geometry, formCols1: formCols1, formCols2: formCols2, header: header, tableWidth: tableWidth, formSearchCols: formSearchCols}};
-   		
-			}
-        	
-        break;
+ 
    case GENERA_RIGHE_INVENTARIO:
    	    newState = state;
    	    break;
@@ -195,14 +212,12 @@ export default function inventario(state = initialState(), action) {
 	    	
 	    	break;
 	  case rigaInventarioR.INITIAL_LOAD_ITEM:
-		 	console.log("dati freschi bis!")
-		 	 let obj = state.estrattoStoricoMagazzino;
+		  let obj = state.estrattoStoricoMagazzino;
 			if (obj)
 				{Object.keys(obj).forEach(key => {
     				stockMap.set(key, obj[key].stock);
 					});
 				}	
-			console.log(obj);	
 		
 		    newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
 		    
