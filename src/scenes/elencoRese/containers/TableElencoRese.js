@@ -1,7 +1,7 @@
 import TableElencoReseComponent from '../components/TableElencoRese'
 import {resaFA, saveResa} from '../../../actions/elencoRese'
 
-import {getEditedResa, getElencoRese, getTableElencoReseHeight, getTableElencoReseScroll} from '../../../reducers'
+import {getEditedResa, getElencoRese, getTableElencoReseScroll} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -14,7 +14,7 @@ const resetTable = resaFA.resetTable;
 const setReadOnlyForm = resaFA.setReadOnlyForm;
 
 const mapStateToProps = (state) => {
-	return ({data: getElencoRese(state), tableScroll: getTableElencoReseScroll(state), height: getTableElencoReseHeight(state), selectedItem: getEditedResa(state).selectedItem})
+	return ({data: getElencoRese(state), tableScroll: getTableElencoReseScroll(state), selectedItem: getEditedResa(state).selectedItem})
 }
  
 

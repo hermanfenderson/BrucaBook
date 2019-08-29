@@ -5,12 +5,14 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 		ADDED_BOLLE_PER_FORNITORE, 
 		CHANGED_BOLLE_PER_FORNITORE , 
 		DELETED_BOLLE_PER_FORNITORE,  
+		INITIAL_LOAD_BOLLE_PER_FORNITORE,
 		UNLISTEN_BOLLE_PER_FORNITORE, 
-	
+	   
 		LISTEN_BOLLA_IN_RESA, 
 		ADDED_RIGABOLLA_IN_RESA, 
 		CHANGED_RIGABOLLA_IN_RESA , 
 		DELETED_RIGABOLLA_IN_RESA,  
+		INITIAL_LOAD_RIGABOLLA_IN_RESA,
 		UNLISTEN_BOLLA_IN_RESA, 
 		LISTEN_DETTAGLI_EAN,
 		UNLISTEN_DETTAGLI_EAN,
@@ -227,7 +229,99 @@ function transformAndValidateEditedRigaResa(cei, name, value)
 
     return cei;
 }
-
+//Per consentire di essere richiamata da entrambi i metodi (initial load e added)
+function calcRigaBolla(state, action)
+{
+	let anno = action.payload.ref.path.pieces_[3];
+   		let mese = action.payload.ref.path.pieces_[4];
+   	    
+   		let bolla = action.payload.ref.path.pieces_[5];
+   		//da qui ho un loop... se ho una added... è un loop di uno...
+   		//Singola riga?
+   		let righe = [];
+   		let rows = [];
+   		if (action.payload.ref.path.pieces_[6])
+   		{
+   			righe[0] = action.payload.ref.path.pieces_[6];
+   			rows[0] = action.payload.val();
+   		}
+   		else
+   		{//per gestire una bolla senza righe...
+   		 if (action.payload.val())
+   		 {righe = Object.keys(action.payload.val());
+   		 rows = Object.values(action.payload.val());
+   		 }
+   		}
+   		let bolleOsservate = {...state.bolleOsservate};
+	   	let indiceEAN = {...state.indiceEAN};
+	   	let tabellaEAN = [...state.tabellaEAN];
+	   	let tabelleRigheEAN = {...state.tabelleRigheEAN};
+	   	let dettagliEAN = state.dettagliEAN;
+	   	   
+   		for (let i=0; i<righe.length; i++)
+   			{
+	   		let riga = righe[i];
+	   		let idRigaBolla = anno + '/' + mese + '/' + bolla + '/' + riga;
+	   	    let row = rows[i];
+	   	     //Ne copio i contenuti in bolleOsservate...
+	   	    if (!bolleOsservate[bolla].righe) bolleOsservate[bolla].righe = {};
+	   	    bolleOsservate[bolla].righe[riga] = row;
+	   	    let ean = row.ean;
+	   	    //Creazione della testata EAN...
+	   	    if (!indiceEAN[ean]) 
+	   	    	{indiceEAN[ean] = {};
+	   	    	 //tabellaEAN[key] = ean;
+	   	    	//insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, imgFirebaseUrl: row.imgFirebaseUrl, stock: getStock(dettagliEAN[ean], null,null, state.testata.dataScarico - 1), resi: 0}, ean, 'pos', 'ean');
+	   	    	let stock = (state.stock[ean] !== undefined) ? state.stock[ean] : '';
+	   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, imgFirebaseUrl: row.imgFirebaseUrl, stock: stock, resi: 0}, ean, 'pos', 'ean');
+	   	    	
+	   	    		
+	   	    	}
+	   	    if (!indiceEAN[ean].righe) indiceEAN[ean].righe = {};
+	   	    let rigaBollaKey = bolla+'/'+riga;
+	   	    if (!indiceEAN[ean].righe[rigaBollaKey]) indiceEAN[ean].righe[rigaBollaKey] = {'pos': -1}; //Non è in mostra...
+	   	   	 
+	   	     if (!tabelleRigheEAN[ean]) tabelleRigheEAN[ean] = [];
+	   	     
+					
+	   	     let rigaBolla = {'ean': ean, 
+	   	    				  'rigaBolla': rigaBollaKey, 
+	   	    				  'idRigaBolla': idRigaBolla, 
+	   	    				  'riferimentoBolla': row.riferimento, 
+	   	    				  'dataDocumentoBolla': row.dataDocumento, 
+	   	    				  'dataCarico': row.dataCarico, 
+	   	    				  'prezzoUnitario': row.prezzoUnitario,
+	   	     	               'titolo': row.titolo,
+	   	     	               'autore': row.autore,
+	   	     	               'prezzoListino': row.prezzoListino,
+	   	     	               'pezzi': row.pezzi,
+	   	     	               'gratis': row.gratis,
+	   	     	               'rese': row.rese
+	   	     	               	}
+	   	     let itemsArrayIndex = state.itemsArrayIndex; //Non devo modificarle!
+	   	     let itemsArray = state.itemsArray;
+	   	     let indiceBolleRese = state.indiceBolleRese;
+	   	     let rigaResa = {pezzi: 0, gratis: 0}; //Oggetto inizialmente vuoto
+	   	     
+	   	     if (indiceBolleRese[rigaBollaKey])  //Se ho giè una riga resa collegata a questa riga bolla
+	   	    	{
+	   	    		rigaResa = {...itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]].pos].values};
+	   	    		tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //Aggiorno i totali...
+			 	    rigaResa.key = indiceBolleRese[rigaBollaKey];
+	   	    		//Se ho elementi a blank... li valorizzo
+	   	    	}
+	   	     setMaxRese(rigaBolla, rigaResa, rigaResa ); //Calcolo quante rese posso fare... se non ho nessuna resa in memoria le prendo tutte...
+	         
+	   	     let blendedRiga = {...rigaBolla, ...rigaResa}; //Prevalenza di resa su bolla...
+	   	     if (action.type !== CHANGED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], blendedRiga, rigaBollaKey, 'pos', 'rigaBolla' );
+	   	     else 
+	   	    	{   let pos = indiceEAN[ean].righe[rigaBollaKey].pos;
+	   	    		tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, ...blendedRiga}; //Prevalenza di rigaresa su rigabolla!
+	   	    	}
+   			}
+   	    let newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN, tabelleRigheEAN: tabelleRigheEAN};
+   	    return(newState);
+}
 
 
 export default function resa(state = initialState(), action) {
@@ -239,8 +333,8 @@ export default function resa(state = initialState(), action) {
    case LISTEN_BOLLE_PER_FORNITORE:
    	    newState = {...state, listeningFornitore : action.params};
    	    break;
-   	    
    //Ascolto i dettagli per un singolo EAN	    
+   /*
    case LISTEN_DETTAGLI_EAN:
    	    newState = state;
    	    break;
@@ -251,25 +345,17 @@ export default function resa(state = initialState(), action) {
    	    newState = {...state, dettagliEAN: dettagliEAN};
    	    }
    	    break;	  
-   	    
+	*/    
    //Anche qui aggiorno il valore dello stock	    
    case GET_DETTAGLI_EAN:
    	    {let dettagliEAN = {...state.dettagliEAN};
-   	    let indiceEAN = {...state.indiceEAN};
    	    let ean = action.payload.key;
    	    let details = action.payload.val();
    	    dettagliEAN[ean] = details;
      
-   	    if (indiceEAN[ean] && indiceEAN[ean].pos >= 0) //Se serve ricalcolo lo stock
-   	    	{
-   	    	 let tabellaEAN = [...state.tabellaEAN];
-   	    	 tabellaEAN[indiceEAN[ean].pos].values.stock = getStock(details, null, null, state.testata.dataScarico -1); 
-   	    	 newState = {...state, dettagliEAN: dettagliEAN, tabellaEAN: tabellaEAN};
-   	    	}
-   	    else newState = {...state, dettagliEAN: dettagliEAN}	
+   	    newState = {...state, dettagliEAN: dettagliEAN}	
    	    }
    	    break;
-   
    //Ascolto le bolle in resa aggiungendole a un elenco di bolle osservate...
    case LISTEN_BOLLA_IN_RESA:
    		{
@@ -311,11 +397,16 @@ export default function resa(state = initialState(), action) {
     //Per ogni riga bolla potenzialmente potrei associare una riga resa...
     
     
-    
-   
+    case INITIAL_LOAD_RIGABOLLA_IN_RESA: 
+		{
+		newState = calcRigaBolla(state, action);
+		}
+    break;
    	case ADDED_RIGABOLLA_IN_RESA: 
    	case CHANGED_RIGABOLLA_IN_RESA:
-   		{
+   		
+   		newState = calcRigaBolla(state, action);
+   		/*
    		let anno = action.payload.ref.path.pieces_[3];
    		let mese = action.payload.ref.path.pieces_[4];
    	    
@@ -381,6 +472,7 @@ export default function resa(state = initialState(), action) {
    	    	}
    	    newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN, tabelleRigheEAN: tabelleRigheEAN};
    		}
+   		*/
         break;
         
    case DELETED_RIGABOLLA_IN_RESA:
@@ -410,6 +502,20 @@ export default function resa(state = initialState(), action) {
    	    newState = {...state, listeningFornitore : null};
    	    break;
    
+   	case INITIAL_LOAD_BOLLE_PER_FORNITORE: 
+		{
+			let listaBolleArr = Object.entries(action.payload.val());
+			let bolleOsservate = {...state.bolleOsservate};
+			for (let i=0; i<listaBolleArr.length; i++)
+				{
+				let key = listaBolleArr[i][0];
+				let val = listaBolleArr[i][1];
+				bolleOsservate[key] = {...val};
+				}
+			newState = {...state, bolleOsservate : bolleOsservate};
+   	
+		}
+		break;
    	case ADDED_BOLLE_PER_FORNITORE: 
    	case CHANGED_BOLLE_PER_FORNITORE:
    		{
@@ -482,6 +588,30 @@ export default function resa(state = initialState(), action) {
      	 	headerEAN: action.headerEAN
      	 }	 
      	  break;
+     	  
+      case rigaResaR.INITIAL_LOAD_STORICO_MAGAZZINO:
+  	  case rigaResaR.ADDED_STORICO_MAGAZZINO:
+  	  case rigaResaR.CHANGED_STORICO_MAGAZZINO:
+  	  case rigaResaR.DELETED_STORICO_MAGAZZINO:
+  	   {
+  	   newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+       //Aggiorno solo gli stock da cambiare...
+       let tabellaEAN = [...newState.tabellaEAN];
+       let indiceEAN = newState.indiceEAN;
+       if (action.type ===  rigaResaR.INITIAL_LOAD_STORICO_MAGAZZINO)
+    		{
+    			
+    		 let allStocks = Object.entries(action.payload.val());
+    		 for (let i=0; i < allStocks.length; i++) 
+    			{   let ean = allStocks[i][0];
+    			    let stock = allStocks[i][1].pezzi;
+    			    
+    				if (indiceEAN[ean]!==undefined) tabellaEAN[indiceEAN[ean].pos].values.stock = stock;
+    			}
+    		}
+  	   newState.tabellaEAN = tabellaEAN;
+  	   }
+      break;
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;

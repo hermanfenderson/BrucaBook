@@ -40,15 +40,12 @@ customRowRender = {
             		}  
     
     	render() { 
-    	console.log("Sto renderizzando");
     	let props = {...this.props};
         let detailRow = (props.noDetails) ? null : this.detailRow;
         let editRow = (props.noDetails) ? null : this.editRow;
         
         let selectRow = (props.selectedCallback) ? this.selectRow : (props.noDetails) ? null : this.detailRow;
-            	
-    	
-    	  return(
+          return(
     	  	<Spin spinning={(this.props.data.length===0)}>
 			<WrappedTable {...props}  customRowRender={this.customRowRender} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
 			</Spin>

@@ -15,6 +15,7 @@ const toggleTableScroll = rigaResaFA.toggleTableScroll;
 const resetTableResa = rigaResaFA.resetTable;
 const changeEditedItem = rigaResaFA.changeEditedItem;
 const submitEditedItem = rigaResaFA.submitEditedItem;
+const getDettagliEAN = rigaResaFA.getDettagliEAN;
 
 
 const mapStateToProps = (state) => {
@@ -31,7 +32,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight, setActiveModal, setModalDetails, setPeriodResa }, dispatch);
+  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight, setActiveModal, setModalDetails, setPeriodResa, getDettagliEAN }, dispatch);
 }
 
 

@@ -12,6 +12,116 @@ import {isInternalEAN} from './ean';
 import {getListeningMagazzino, getDataMagazzino}  from '../reducers';
 
 import {magazzinoFA} from '../actions/magazzino'
+
+//Metodo riutilizzabile... dati tre action, una url fa primo infasamento e ascolta tutto (distringuendo il caso ean)
+//Parametri... url oppure urlParams, itemsurl
+//le tre action da triggerare e la quarta per l'initial load
+//Se devo usare timeStamp
+
+export const stdListenItem = (params) => {
+ const type1 = params.added_item;
+   const type2 = params.changed_item;
+   const type3 = params.deleted_item;
+   const type4 = params.initial_load_item;
+   const typeListen = params.listen_item;
+   const onEAN = (params.useTimestamp) ? true : false;
+   const itemsUrl = params.itemsUrl;
+   const urlParams = params.urlParams;
+   
+  return function(dispatch, getState) {
+  	const url = (params.url) ? params.url : urlFactory(getState,itemsUrl, urlParams);
+     
+  	if (url)
+    {
+    	let ref = Firebase.database().ref(url);
+   if (params.extraQuery) ref=params.extraQuery(ref); //Consente di fare filtri e altre magie...
+   	
+    var listener_added = null;
+    	if (!onEAN)
+      {
+      let first = true;
+       listener_added = ref.limitToLast(1).on('child_added', snapshot => {
+	      //Così non dovrebbe più generare due volte il primo rigo...
+	      if (first) first = false;
+	      else dispatch({
+	        type: type1,
+	        payload: snapshot
+	      })
+	    });
+      }
+      else
+      {
+      let now = getServerTime(Firebase.database().ref('/'))();
+      //Ragiono per timestamp
+      listener_added = ref.orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
+	      dispatch({
+	        type: type1,
+	        payload: snapshot
+	      })
+	    });	
+      }
+	   const listener_changed = ref.on('child_changed', snapshot => {
+	      dispatch({
+	        type: type2,
+	        payload: snapshot
+	      })  
+	   });
+	   const listener_removed = ref.on('child_removed', snapshot => {
+	      dispatch({
+	        type: type3,
+	        payload: snapshot
+	      })  
+	   });
+	   ref.once('value', snapshot => {
+	      dispatch({
+	        type: type4,
+	        payload: snapshot
+	      })  
+	   });
+	   dispatch({
+	   	type: typeListen,
+	   	params: urlParams,
+	   	url: url,
+	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
+	   })
+	}   
+	else dispatch({
+	   	type: typeListen,
+	   	params: null,
+	   	url: url,
+	   })   
+  }
+}
+
+
+//Non ritorna nessuna azione e non crea nessuna actionCreator
+export const stdOffListenItem = (params) =>
+{   
+	const listeners = params.listeners;
+	const itemsUrl = params.itemsUrl;
+	const urlParams = params.urlParams;
+    const typeUnlisten = params.off_listen_item;
+	return function(dispatch, getState) {
+	const url = (params.url) ? params.url : urlFactory(getState,itemsUrl, urlParams);
+  
+	if (listeners) 
+		{
+			Firebase.database().ref(url).off('child_added',listeners.added);
+			Firebase.database().ref(url).off('child_changed',listeners.changed);
+			Firebase.database().ref(url).off('child_removed',listeners.removed);
+		}
+	else Firebase.database().ref(url).off();
+	dispatch({
+	   	type: typeUnlisten,
+	   	params: urlParams,
+	   	url: url
+	   })
+    }
+}
+
+
+
+
 //3 modificatori...
 //stockMessageQueue aggiorna con la info dello stock
 //getStock... passa lo stock quando viene cercato il catalogo
@@ -473,81 +583,34 @@ this.listenItem = (params) => {
 		{    
 				dispatch(magazzinoFA.listenItem());
 		}
-  	const url = urlFactory(getState,itemsUrl, params);
-  	if (url)
-    { var listener_added = null;
-    	if (!onEAN)
-      {
-      let first = true;
-       listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
-	      //Così non dovrebbe più generare due volte il primo rigo...
-	      if (first) first = false;
-	      else dispatch({
-	        type: type1,
-	        payload: snapshot
-	      })
-	    });
-      }
-      else
-      {
-      let now = getServerTime(Firebase.database().ref('/'))();
-      //Ragiono per timestamp
-      listener_added = Firebase.database().ref(url).orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
-	      dispatch({
-	        type: type1,
-	        payload: snapshot
-	      })
-	    });	
-      }
-	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
-	      dispatch({
-	        type: type2,
-	        payload: snapshot
-	      })  
-	   });
-	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
-	      dispatch({
-	        type: type3,
-	        payload: snapshot
-	      })  
-	   });
-	   Firebase.database().ref(url).once('value', snapshot => {
-	      dispatch({
-	        type: type4,
-	        payload: snapshot
-	      })  
-	   });
-	   dispatch({
-	   	type: typeListen,
-	   	params: params,
-	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
-	   })
-	}   
-	else dispatch({
-	   	type: typeListen,
-	   	params: null,
-	   })   
+	dispatch(stdListenItem({ added_item: type1,
+					changed_item: type2,
+					deleted_item: type3,
+					initial_load_item: type4,
+					listen_item: typeListen,
+					useTimestamp : onEAN,
+					itemsUrl : itemsUrl,
+					urlParams : params,}));	
   }
 }
 
 
 //Non ritorna nessuna azione e non crea nessuna actionCreator
 this.offListenItem = (params, listeners=null) =>
-{   const itemsUrl = this.itemsUrl;
+{   
+	const itemsUrl = this.itemsUrl;
     const typeUnlisten = this.OFF_LISTEN_ITEM;
+	
 	return function(dispatch, getState) {
-	if (listeners) 
-		{
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_added',listeners.added);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_changed',listeners.changed);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_removed',listeners.removed);
-		}
-	else Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
-	dispatch({
-	   	type: typeUnlisten,
-	   	params: params
-	   })
-    }
+		dispatch(stdOffListenItem({
+			            listeners: listeners,
+			            itemsUrl: itemsUrl,
+			            urlParams: params,
+			            off_listen_item: typeUnlisten,
+						}));
+
+	 }
+    
 }
 
 

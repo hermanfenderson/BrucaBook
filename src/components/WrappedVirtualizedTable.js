@@ -313,7 +313,7 @@ cellRenderer = (rowIndex, columnIndex, data) => {
 			let cellName = this.props.header[cIdx].dataField;
 		
 			//let cellValue = data[rowIndex] ? data[rowIndex][cellName] : '';
-            let cellValue = data[rowIndex] ? cellName.split('.').reduce((o,i)=>o[i], data[rowIndex]) : '';
+            let cellValue = data[rowIndex] ? cellName.split('.').reduce((o,i)=>o[i] ? o[i] : '', data[rowIndex]) : '';
             
              
 		    let customRender = (this.props.customRowRender) ? this.props.customRowRender[cellName] : null;
@@ -413,7 +413,6 @@ let columnWidths = this.memoizedCalcColumnWidth(this.header2);
 		return cW;
 		})(this.header2)
 */
-console.log("ready");
   return(
   <div >
  

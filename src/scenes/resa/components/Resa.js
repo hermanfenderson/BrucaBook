@@ -45,12 +45,20 @@ componentDidUpdate(oldProps) {
 	if (this.props.testataResa && (this.props.testataResa !== oldProps.testataResa))
 		{
 		this.props.listenBollePerFornitore(this.props.testataResa.fornitore, this.props.testataResa.dataScarico);
+
 		let riga = this.props.testataResa;
 		this.props.setHeaderInfo("Rese - Doc. " + riga.riferimento + ' ' 
 					          						+ riga.nomeFornitore + ' del ' + moment(riga.dataDocumento).format("L"));
 				 
 		}	 
-	 	
+		let dataInventarioNew = this.props.testataResa ? this.props.testataResa.dataScarico : null;
+	let dataInventarioOld = oldProps.testataResa ? oldProps.testataResa.dataScarico : null;
+	//Ho ricevuto una data resa nuova oppure la ho per la prima volta... mi prendo il valore dello storico magazzino
+	if (dataInventarioNew !== dataInventarioOld)
+		{
+		this.props.searchDataMagazzino(dataInventarioNew);		
+		}
+		 	
 }   
 
 

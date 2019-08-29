@@ -34,7 +34,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ shiftMessage, resetResa, listenBollePerFornitore, unlistenBollePerFornitore,
+  return bindActionCreators({ shiftMessage, resetResa, listenBollePerFornitore,  unlistenBollePerFornitore,
   listenTestataResa, unlistenTestataResa,  setHeaderInfo, setStato, listenRigaResa, offListenRigaResa, resetTableResa, searchDataMagazzino}, dispatch);
 }
 

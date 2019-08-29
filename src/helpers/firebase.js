@@ -37,6 +37,8 @@ export function urlFactory(getState, destination, params, itemId)
 	  	switch(destination)
 			{
 				//RigheBolla sta sotto anno, mese e idBolla
+					case "allRigheBolla": url = prefissoNegozio(getState)+'bolle'; break;
+			
 				case "righeBolla": url = prefissoNegozio(getState)+'bolle/'  +params[0]+'/'+params[1] + '/'+params[2] ; break;
 				//Un trucco per passare l'id che ho già nel formato giusto...
 				case "righeBollaInResa": url = prefissoNegozio(getState)+'bolle/'  +params[0]; break;

@@ -8,16 +8,20 @@ export const LISTEN_BOLLE_PER_FORNITORE = 'LISTEN_BOLLE_PER_FORNITORE';
 export const ADDED_BOLLE_PER_FORNITORE = 'ADDED_BOLLE_PER_FORNITORE';
 export const CHANGED_BOLLE_PER_FORNITORE = 'CHANGED_BOLLE_PER_FORNITORE';
 export const DELETED_BOLLE_PER_FORNITORE = 'DELETED_BOLLE_PER_FORNITORE';
+export const INITIAL_LOAD_BOLLE_PER_FORNITORE = 'INITIAL_LOAD_BOLLE_PER_FORNITORE';
+
 
 export const UNLISTEN_BOLLE_PER_FORNITORE = 'UNLISTEN_BOLLE_PER_FORNITORE';
 
-export const LISTEN_DETTAGLI_EAN = 'LISTEN_DETTAGLI_EAN';
-export const UNLISTEN_DETTAGLI_EAN = 'UNLISTEN_DETTAGLI_EAN';
+//export const LISTEN_DETTAGLI_EAN = 'LISTEN_DETTAGLI_EAN';
+//export const UNLISTEN_DETTAGLI_EAN = 'UNLISTEN_DETTAGLI_EAN';
 export const GET_DETTAGLI_EAN = 'GET_DETTAGLI_EAN';
 
 
 export const LISTEN_BOLLA_IN_RESA = 'LISTEN_BOLLA_IN_RESA';
 export const ADDED_RIGABOLLA_IN_RESA = 'ADDED_RIGABOLLA_IN_RESA';
+export const INITIAL_LOAD_RIGABOLLA_IN_RESA = 'INITIAL_LOAD_RIGABOLLA_IN_RESA';
+
 export const CHANGED_RIGABOLLA_IN_RESA = 'CHANGED_RIGABOLLA_IN_RESA';
 export const DELETED_RIGABOLLA_IN_RESA = 'DELETED_RIGABOLLA_IN_RESA';
 
@@ -62,9 +66,11 @@ export function listenBollePerFornitore(idFornitore, dataScarico)
    return function(dispatch, getState) {
   	const url = urlFactory(getState,'bollePerFornitore', idFornitore);
   	if (url)
-    {  
-       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
-       	if (snapshot.val().dataCarico < dataScarico)
+    {   let first = true;
+  
+       const listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
+       	 if (first) first = false;
+	     else if (snapshot.val().dataCarico < dataScarico)
        	 {
        	  dispatch({
 	        type: ADDED_BOLLE_PER_FORNITORE,
@@ -94,6 +100,19 @@ export function listenBollePerFornitore(idFornitore, dataScarico)
 	      });  
 	      
 	   });
+	   
+	   Firebase.database().ref(url).once('value', snapshot => {
+	       dispatch({
+	        type: INITIAL_LOAD_BOLLE_PER_FORNITORE,
+	        payload: snapshot
+	      });  
+	       let listaBolle = Object.values(snapshot.val());
+	       for (let i=0; i<listaBolle.length; i++)
+	    	{
+	    		if (listaBolle[i].dataCarico < dataScarico) dispatch(listenBolla(listaBolle[i].id))
+	    	}
+	   });
+	   
 	   dispatch({
 	   	type: LISTEN_BOLLE_PER_FORNITORE,
 	   	params: idFornitore,
@@ -118,10 +137,11 @@ return function(dispatch, getState) {
 		   	type: UNLISTEN_BOLLE_PER_FORNITORE,
 		   	params: idFornitore
 		   })
-     //Mi sgancio anche da tutti i dettagli di libri che ho ascoltato finora...
+     //Mi sgancio anche da tutti i dettagli di libri che ho ascoltato finora...NON SERVE PIU'
+     /*
      let dettagliEAN = getDettagliEANResa(getState());
 	 for (var ean in dettagliEAN) dispatch(unlistenDettagliEAN(ean));
-
+     */
 	}
 }	   
 
@@ -137,11 +157,16 @@ export function listenBolla(idBolla)
   	const url = urlFactory(getState,'righeBollaInResa', idBolla);
   	if (url)
     {  
-       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
+       let first = true;
+  	
+       const listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
+       	/*NON SERVE PIU'... CAMBIO STRATEGIA*/
+       	/*
        	let indiceEAN = getIndiceEAN(getState());
 	      if (!indiceEAN[snapshot.val().ean]) {dispatch(listenDettagliEAN(snapshot.val().ean))} //Ascolto i dettagli...
-	    
-	      dispatch({
+	    */
+	   if (first) first  = false;
+	    else  dispatch({
 	        type: ADDED_RIGABOLLA_IN_RESA,
 	        payload: snapshot
 	      })
@@ -158,6 +183,14 @@ export function listenBolla(idBolla)
 	        payload: snapshot
 	      })  
 	   });
+	   
+	   Firebase.database().ref(url).once('value', snapshot => {
+	       dispatch({
+	        type: INITIAL_LOAD_RIGABOLLA_IN_RESA,
+	        payload: snapshot
+	      });  
+	   });
+	   
 	   dispatch({
 	   	type: LISTEN_BOLLA_IN_RESA,
 	   	params: idBolla,
@@ -185,7 +218,20 @@ return function(dispatch, getState) {
 	}
 }
 
-
+export function getDettagliEAN(ean)
+{
+return function(dispatch, getState) {
+  	const url = urlFactory(getState,'registroEAN', null, ean);
+	Firebase.database().ref(url).once('value', snapshot => {
+	      dispatch({
+	        type: GET_DETTAGLI_EAN,
+	        payload: snapshot
+	      })
+	    });
+}
+}
+//Questa non serve più...
+/*
 export function listenDettagliEAN(ean)
 {
 	
@@ -230,7 +276,7 @@ return function(dispatch, getState) {
 	}
 }	   
 
-
+*/
 
 export const setPeriodResa = (period) =>
 {

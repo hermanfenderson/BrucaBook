@@ -24,7 +24,7 @@ componentDidMount() {
  
 render()
 {
-let width =  (this.props.measures['mainWidth']) ? this.props.measures['mainWidth'] -10 : 100; //Default a caso...
+let width =  (this.props.measures['mainWidth']) ? this.props.measures['mainWidth'] -20 : 100; //Default a caso...
 let height =  (this.props.measures['mainHeight']) ? this.props.measures['mainHeight'] : 100; //Default a caso...
 
 if (isNaN(width) || (this.props.serieIncassi && this.props.serieIncassi.length===0)) return (
@@ -32,8 +32,8 @@ if (isNaN(width) || (this.props.serieIncassi && this.props.serieIncassi.length==
      )
 else  
 	return (
-<Spinner spinning={(this.props.waitingForData)} width={width}  height={height} >		
-<div style={{position: 'relative', width: width+10, height: height, overflowY: 'scroll'}}>
+<Spinner spinning={(this.props.waitingForData)} width={width+20}  height={height} >		
+<div style={{position: 'relative', width: width+20, height: height, overflowY: 'scroll'}}>
 <FixBlock coors={{top: 0, left: 0,  width: width/2, height: width/4}} >
 <div className='report-title'>Confronto incassi annui</div>
 

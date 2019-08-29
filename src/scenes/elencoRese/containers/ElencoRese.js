@@ -1,7 +1,7 @@
 import ElencoReseComponent from '../components/ElencoRese'
 import {resaFA, setPeriodElencoRese} from '../../../actions/elencoRese'
 import {storeMeasure, setHeaderInfo} from  '../../../actions'
-import {getPeriodElencoRese, getListeningItemElencoRese} from '../../../reducers'
+import {getPeriodElencoRese, getListeningItemElencoRese, getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -10,7 +10,8 @@ const resetElencoRese = resaFA.reset;
 
 const mapStateToProps = (state) => {
 	return ({period: getPeriodElencoRese(state),
-	        listeningPeriod: getListeningItemElencoRese(state)
+	        listeningPeriod: getListeningItemElencoRese(state),
+	        geometry: getGeometry(state, 'ELENCORESE')
 	})
 }
 

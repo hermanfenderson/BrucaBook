@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import WrappedTable from '../../../components/WrappedTable';
+import WrappedTable from '../../../components/WrappedVirtualizedTable';
 import {withRouter} from 'react-router-dom'
 
 import {isEqual} from '../../../helpers/form';
@@ -7,17 +7,6 @@ import {Modal} from 'antd';
 import {period2month} from '../../../helpers/form'
 
 
-//E' un dato.... che passo come costante...
-const header = [{dataField: 'riferimento', label: 'Rif.', width: '150px'},
-			    {dataField: 'nomeFornitore', label: 'Fornitore', width: '300px'},
-			    {dataField: 'dataDocumento', label: 'Data Doc', width: '200px'},
-			    {dataField: 'dataScarico', label: 'Data Scarico', width: '200px'},
-			    {dataField: 'stato', label: 'Stato', width: '200px'},
-			    
-			    {dataField: 'totali.prezzoTotale', label: 'Totale', width: '200px'},
-			   {dataField: 'totali.pezzi', label: 'Pezzi', width: '100px'},
-			    {dataField: 'totali.gratis', label: 'Gratis', width: '100px'},
-			   ];
 
 
 
@@ -92,10 +81,15 @@ class TableElencoRese extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
+    	let height = props.geometry.tableCoors.height;
+    	let width = props.geometry.tableCoors.width;
+        let header = props.geometry.header;
+    	
+    
     	delete props['deleteResa']; //Non la passo liscia...
     	delete props['setSelectedResa']; //Idem
     	  return(
-			<WrappedTable {...props} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} saveRow={this.saveRow} selectRow={this.selectRow} header={header}/>
+			<WrappedTable {...props} width={width} height={height}   highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} saveRow={this.saveRow} selectRow={this.selectRow} header={header}/>
 			)}
     }		
 	

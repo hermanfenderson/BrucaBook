@@ -74,7 +74,6 @@ export const getRigheBolla = (state) => {return fromBolla.getItems(state.bolla)}
 export const getEditedRigaBolla = (state) => {return fromBolla.getEditedItem(state.bolla)};
 export const getTestataBolla = (state) => {return fromBolla.getTestataBolla(state.bolla)};
 export const getShowCatalogModal = (state) => {return fromBolla.getShowCatalogModal(state.bolla)};
-export const getTableHeight = (state) => {return fromBolla.getTableHeight(state.bolla)};
 export const getTableScroll = (state)  => {return fromBolla.getTableScroll(state.bolla)};
 export const getListeningTestataBolla = (state) => {return fromBolla.getListeningTestataBolla(state.bolla)};
 export const getListeningItemBolla = (state) => {return fromBolla.getListeningItemBolla(state.bolla)};
@@ -133,7 +132,6 @@ export const getPeriodDetails = (state) => {return fromDettagliArticolo.getPerio
 //Scene ElencoBolle
 export const getElencoBolle = (state) => {return fromElencoBolle.getItems(state.elencoBolle)};
 export const getEditedBolla = (state) => {return fromElencoBolle.getEditedItem(state.elencoBolle)};
-export const getTableElencoBolleHeight = (state) => {return fromElencoBolle.getTableHeight(state.elencoBolle)};
 export const getTableElencoBolleScroll = (state)  => {return fromElencoBolle.getTableScroll(state.elencoBolle)};
 export const getReadOnlyFormBolla = (state)  => {return fromElencoBolle.getReadOnlyForm(state.elencoBolle)};
 export const getPeriod = (state) => {return fromElencoBolle.getPeriod(state.elencoBolle)};
@@ -151,7 +149,6 @@ export const getListeningItemElencoOrdini = (state) => {return fromElencoOrdini.
 //Scene ElencoRese
 export const getElencoRese = (state) => {return fromElencoRese.getItems(state.elencoRese)};
 export const getEditedResa = (state) => {return fromElencoRese.getEditedItem(state.elencoRese)};
-export const getTableElencoReseHeight = (state) => {return fromElencoRese.getTableHeight(state.elencoRese)};
 export const getTableElencoReseScroll = (state)  => {return fromElencoRese.getTableScroll(state.elencoRese)};
 export const getReadOnlyFormResa = (state)  => {return fromElencoRese.getReadOnlyForm(state.elencoRese)};
 export const getPeriodElencoRese = (state) => {return fromElencoRese.getPeriod(state.elencoRese)};
@@ -288,7 +285,6 @@ export const getSaveGeneral = (state) => {return fromCatalog.getSaveGeneral(stat
 
 //Scene Magazzino
 export const getMagazzino = (state) => {return fromMagazzino.getItems(state.magazzino)};
-export const getTableMagazzinoHeight = (state) => {return fromMagazzino.getTableHeight(state.magazzino)};
 export const getListeningMagazzino = (state) => {return fromMagazzino.getListeningItem(state.magazzino)};
 export const getFiltersMagazzino = (state) => {return fromMagazzino.getFilters(state.magazzino)};
 
@@ -331,6 +327,10 @@ export const s2s = (scene) => {
 			case 'ELENCOBOLLE':
 				s.stato = 'elencoBolle';
 				s.origin = fromElencoBolle;
+			break;
+			case 'ELENCORESE':
+				s.stato = 'elencoRese';
+				s.origin = fromElencoRese;
 			break;
 			case 'ELENCOINVENTARI':
 				s.stato = 'elencoInventari';
