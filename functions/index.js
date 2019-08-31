@@ -278,6 +278,8 @@ exports.aggiornaMagazzinoNew = functions.database.ref('{catena}/{negozio}/regist
             const ean = context.params.ean;	
             const refBookStoreRadix = change.after.ref.parent.parent;
             return (aggiornaMagazzinoEANFull(admin, ean, refBookStoreRadix, change.after.val() ));
+            //return (aggiornaMagazzinoFull(admin, refBookStoreRadix));
+            
             });
 
 
@@ -289,8 +291,13 @@ cors(req, res, () => {
 let catena = req.query.catena;
 let libreria = req.query.libreria;
 let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
-
-	return(aggiornaMagazzinoFull(admin,refBookStoreRadix));
+ aggiornaMagazzinoFull(admin,refBookStoreRadix).then(function (result) {
+                res.status(200).send();
+            })
+            .catch(function (err) {
+                console.error(err);
+                res.status(501).send();
+            });
 	});
 });
 

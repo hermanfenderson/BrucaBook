@@ -99,7 +99,8 @@ export function urlFactory(getState, destination, params, itemId)
 			    case "dateStoricoMagazzino": url = prefissoNegozio(getState)+'dateStoricoMagazzino'; break;
 			    case "storicoMagazzino": url = prefissoNegozio(getState)+'storicoMagazzino/'+params[0]; break;
 			    
-				
+				 case "allStoricoMagazzino": url = prefissoNegozio(getState)+'storicoMagazzino'; break;
+			   
 				default: return null;
 			}
 		if (itemId) url = url + '/' + itemId;	

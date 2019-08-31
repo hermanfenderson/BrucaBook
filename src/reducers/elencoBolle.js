@@ -150,8 +150,7 @@ function transformAndValidateEditedBolla(cei, name, value)
    errMgmt(cei, 'dataDocumento','invalidDate','Data non valida',  (!cei.values.dataDocumento.isValid()));
     errMgmt(cei, 'dataCarico','invalidDate','Data non valida',  (!cei.values.dataCarico.isValid()));
     errMgmt(cei, 'dataRendiconto','invalidDate','Data non valida',  ((cei.values.tipoBolla === 'R') && (!cei.values.dataRendiconto.isValid())));
-      errMgmt(cei, 'form','invalidDate','Data non valida',  true, true);
-  
+     
      //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
     return cei;

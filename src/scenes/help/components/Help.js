@@ -15,11 +15,14 @@ class Help extends React.Component
       }
     };
    return (
-   	
+   	<div>
    	<YouTube
          opts={opts}
         
       />
+      <button onClick={this.props.forzaAggiornaMagazzino}>Forza</button> 
+     </div>
+    
   );
   }
 

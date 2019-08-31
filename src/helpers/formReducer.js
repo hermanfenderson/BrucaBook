@@ -76,6 +76,8 @@ this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+this.scene;
 this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+this.scene;
 this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+this.scene;
 
+
+this.DATI_STORICO_MAGAZZINO = 'DATI_STORICO_MAGAZZINO_' + this.scene;
 this.ADDED_STORICO_MAGAZZINO ='ADDED_STORICO_MAGAZZINO_'+this.scene;
 this.CHANGED_STORICO_MAGAZZINO ='CHANGED_STORICO_MAGAZZINO_'+this.scene;
 this.DELETED_STORICO_MAGAZZINO ='DELETED_STORICO_MAGAZZINO_'+this.scene;
@@ -100,6 +102,7 @@ this.STORE_MEASURE = 'STORE_MEASURE';
 	
 	this.updateState =(state,action, editedItemInitialState, transformAndValidateEditedItem, calcolaTotali) =>
 	{ var newState;
+	  
 		switch(action.type)
 		{
 	
@@ -402,6 +405,25 @@ this.STORE_MEASURE = 'STORE_MEASURE';
            break;
            
 
+ case this.DATI_STORICO_MAGAZZINO:
+    	{
+       let estrattoStoricoMagazzino = {...state.estrattoStoricoMagazzino};
+   	    let itemsArray = [...state.itemsArray];
+   	    let itemsArrayIndex = state.itemsArrayIndex;
+   	    let totaleOccorrenze = state.totaleOccorrenze;
+   	    let stock = {...state.stock};
+   	    
+   	    	for (let ean in action.values)
+   	    		{
+   	    		estrattoStoricoMagazzino[ean] = action.values[ean];
+		   		stock[ean] = parseInt(action.values[ean].pezzi,10);
+		   		if (stock[ean] !== 0) totaleOccorrenze++;
+		   		if (itemsArrayIndex[ean] >= 0 ) itemsArray[itemsArrayIndex[ean]].stock = stock[ean];
+   	    		}
+		newState = {...state, estrattoStoricoMagazzino: estrattoStoricoMagazzino, itemsArray: itemsArray, stock: stock, totaleOccorrenze: totaleOccorrenze};
+   		}
+   	    break;
+   
 	    	
 	 case this.LISTEN_STORICO_MAGAZZINO:
    	    newState = {...state, listeningStoricoMagazzino: action.params[0]};
@@ -514,4 +536,6 @@ export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  export const getDataMagazzino = (state) => {return state.dataMagazzino};
  export const getGeometry = (state) => {return state.geometry};
  export const getFilters= (state) => {return state.filters};
+ export const getStock= (state) => {return state.stock};
+ 
  

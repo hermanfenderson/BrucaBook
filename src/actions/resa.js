@@ -2,6 +2,7 @@ import {FormActions} from '../helpers/formActions';
 import {addCreatedStamp,addChangedStamp, urlFactory} from '../helpers/firebase';
 import Firebase from 'firebase';
 import {getBolleOsservate, getIndiceEAN, getDettagliEANResa} from '../reducers';
+import {getDetailsInMatrix} from '../helpers/form'
 
 export const SCENE = 'RESA';
 export const LISTEN_BOLLE_PER_FORNITORE = 'LISTEN_BOLLE_PER_FORNITORE';
@@ -295,6 +296,21 @@ export const setModalDetails = (matrixEAN, headerEAN) =>
 };
 
 
+export const showModalDetails = (headerEAN) =>
+{
+return function(dispatch, getState) {
+	let ean = headerEAN.ean;
+  	const url = urlFactory(getState,'registroEAN', null, ean);
+ 	Firebase.database().ref(url).once('value', snapshot => {
+	      let registro = snapshot.val();
+	      let matrixEAN = getDetailsInMatrix(registro);
+	      dispatch(setModalDetails(matrixEAN, headerEAN));
+	        dispatch(setActiveModal(true));
+   dispatch(setPeriodResa([null, null]));
+
+	    });
+}
+}
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
 export const rigaResaFA = new FormActions(SCENE, preparaItem, 'righeResa','righeElencoRese', true);

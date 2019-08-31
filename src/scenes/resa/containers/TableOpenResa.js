@@ -1,8 +1,8 @@
 import TableOpenResaComponent from '../components/TableOpenResa'
-import {rigaResaFA, setActiveModal, setModalDetails, setPeriodResa} from '../../../actions/resa'
+import {rigaResaFA, setActiveModal, setModalDetails, setPeriodResa, showModalDetails} from '../../../actions/resa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaResa, getRigheResaIndexed, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa, getMatrixEAN, getHeaderEANResa} from '../../../reducers'
+import {getEditedRigaResa, getRigheResaIndexed, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa, getMatrixEAN, getHeaderEANResa, getStock} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -15,7 +15,7 @@ const toggleTableScroll = rigaResaFA.toggleTableScroll;
 const resetTableResa = rigaResaFA.resetTable;
 const changeEditedItem = rigaResaFA.changeEditedItem;
 const submitEditedItem = rigaResaFA.submitEditedItem;
-const getDettagliEAN = rigaResaFA.getDettagliEAN;
+
 
 
 const mapStateToProps = (state) => {
@@ -26,13 +26,14 @@ const mapStateToProps = (state) => {
 	tabelleRigheEAN: getTabelleRigheEAN(state), 
 	dettagliEAN: getDettagliEANResa(state),
 	matrixEAN: getMatrixEAN(state),
-	headerEAN: getHeaderEANResa(state)
+	headerEAN: getHeaderEANResa(state),
+	stock: getStock(state, 'RESA'),
 	})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight, setActiveModal, setModalDetails, setPeriodResa, getDettagliEAN }, dispatch);
+  return bindActionCreators({ submitEditedItem, changeEditedItem, listenRigaResa, offListenRigaResa, resetTableResa, deleteRigaResa, setSelectedRigaResa, toggleTableScroll, setTableWindowHeight, setActiveModal, setModalDetails, setPeriodResa, showModalDetails }, dispatch);
 }
 
 

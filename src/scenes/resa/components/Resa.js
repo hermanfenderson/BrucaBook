@@ -56,7 +56,8 @@ componentDidUpdate(oldProps) {
 	//Ho ricevuto una data resa nuova oppure la ho per la prima volta... mi prendo il valore dello storico magazzino
 	if (dataInventarioNew !== dataInventarioOld)
 		{
-		this.props.searchDataMagazzino(dataInventarioNew);		
+	//	this.props.searchDataMagazzino(dataInventarioNew);	
+		this.props.datiStoricoMagazzino(dataInventarioNew);
 		}
 		 	
 }   

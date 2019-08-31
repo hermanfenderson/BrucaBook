@@ -413,7 +413,7 @@ export const getFilters = (state, scene) => {let s=s2s(scene); return fromFormRe
 
 export const listeningDataMagazzino = (state, scene) => {let s=s2s(scene); return fromFormReducer.listeningDataMagazzino(state[s.stato])};
 export const getDataMagazzino = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getDataMagazzino(state[s.stato])};
-
+export const getStock = (state, scene) => {let s=s2s(scene);  return fromFormReducer.getStock(state[s.stato])};
 //Per bolle e scontrini mi da gli EAN corrispondenti a ordini aperti...
 
  

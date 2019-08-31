@@ -37,29 +37,7 @@ export const stdListenItem = (params) => {
    if (params.extraQuery) ref=params.extraQuery(ref); //Consente di fare filtri e altre magie...
    	
     var listener_added = null;
-    	if (!onEAN)
-      {
-      let first = true;
-       listener_added = ref.limitToLast(1).on('child_added', snapshot => {
-	      //Così non dovrebbe più generare due volte il primo rigo...
-	      if (first) first = false;
-	      else dispatch({
-	        type: type1,
-	        payload: snapshot
-	      })
-	    });
-      }
-      else
-      {
-      let now = getServerTime(Firebase.database().ref('/'))();
-      //Ragiono per timestamp
-      listener_added = ref.orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
-	      dispatch({
-	        type: type1,
-	        payload: snapshot
-	      })
-	    });	
-      }
+    //l'added lo faccio dopo...per gestire il caso del initial vuoto
 	   const listener_changed = ref.on('child_changed', snapshot => {
 	      dispatch({
 	        type: type2,
@@ -73,6 +51,29 @@ export const stdListenItem = (params) => {
 	      })  
 	   });
 	   ref.once('value', snapshot => {
+	   	  	if (!onEAN)
+    		{
+    		let first = (snapshot.val()) ? true : false; //In questo modo non carico due volte ma carico la prima se il data set di initial load è vuoto...
+	       listener_added = ref.limitToLast(1).on('child_added', snapshot => {
+		      //Così non dovrebbe più generare due volte il primo rigo...
+		      if (first) first = false;
+		      else dispatch({
+		        type: type1,
+		        payload: snapshot
+		      })
+		    });
+	      }
+	      else
+	      {
+	      let now = getServerTime(Firebase.database().ref('/'))();
+	      //Ragiono per timestamp
+	      listener_added = ref.orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
+		      dispatch({
+		        type: type1,
+		        payload: snapshot
+		      })
+		    });	
+	      }
 	      dispatch({
 	        type: type4,
 	        payload: snapshot
@@ -193,6 +194,8 @@ this.INITIAL_LOAD_STORICO_MAGAZZINO ='INITIAL_LOAD_STORICO_MAGAZZINO_'+scene;
 this.LISTEN_STORICO_MAGAZZINO ='LISTEN_STORICO_MAGAZZINO_'+scene;
 this.UNLISTEN_STORICO_MAGAZZINO ='UNLISTEN_STORICO_MAGAZZINO_'+scene;
 this.DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED_'+scene;
+this.DATI_STORICO_MAGAZZINO = 'DATI_STORICO_MAGAZZINO_'+scene;
+
 
 this.itemsUrl = itemsUrl;
 this.preparaItem = preparaItem;
@@ -773,6 +776,80 @@ this.submitEditedItem = (isValid,selectedItem,params,valori) => {
 	      }
 	}
 	
+	
+this.datiStoricoMagazzino = (date) => {
+	 const DATI_STORICO_MAGAZZINO = this.DATI_STORICO_MAGAZZINO;
+	 return function(dispatch, getState) {
+//	 	let storicoMagazzinoRef = Firebase.database().ref(urlFactory(getState, 'allStoricoMagazzino'));
+//	 	let dateStoricoRef = Firebase.database().ref(urlFactory(getState, 'dateStoricoMagazzino'));
+	 	
+	 	let magazzinoRef = Firebase.database().ref(urlFactory(getState, 'magazzino'));
+	 	let eanInfo = {};
+	 	Firebase.database().ref(urlFactory(getState, 'registroData')).once('value', snapshot => {
+	 				let registroData = Object.entries(snapshot.val());
+			    	
+			    	//Update a chunk di date...
+			    	 for (let i=0; i<registroData.length; i++) 
+			        	{
+			        	 let currentData = registroData[i][0];
+			              if(currentData > date - 1) break; //Salto fuori se ho raggiunto la data richiesta
+			        	 let rowsData = Object.values(registroData[i][1]);
+			        		for (let j=0; j<rowsData.length; j++) 
+			        			{
+			        	 
+			        			let values = rowsData[j]; 
+			        			let ean = values.ean;
+			        			let pezzi =  (eanInfo[ean]) ? eanInfo[ean].pezzi : 0;
+			        			if (values.tipo == "bolle")
+				  					{
+					    			pezzi = parseInt(values.pezzi) + parseInt(values.gratis)+ pezzi;
+					    			}
+								 if (values.tipo == "rese")
+				  					{
+					    			pezzi = pezzi - (parseInt(values.pezzi) + parseInt(values.gratis));
+					    			}	
+								if (values.tipo == "scontrini")
+				  					{
+				  					pezzi = pezzi - parseInt(values.pezzi);
+					    			}
+									
+								if (values.tipo == "inventari")
+				  					{
+				  					pezzi = pezzi + parseInt(values.pezzi);
+					    			}
+				        		eanInfo[ean] = {ean: (values.ean) ? values.ean : '', 
+        													 titolo: (values.titolo) ? values.titolo : '',
+        													 autore: (values.autore) ? values.autore : '',
+        													 editore: (values.editore) ? values.editore : '',
+        													 prezzoListino: (values.prezzoListino) ? values.prezzoListino : 0.00,
+        													 categoria: (values.categoria) ? values.categoria : '',
+        													 iva: (values.iva) ? values.iva : 'a0',
+        													 pezzi: pezzi
+        	                                				}
+			        			}       
+			        	//Qui preparo gli updates specifici della giornata...
+			        	//storicoMagazzinoRef.child(currentData).update({...eanInfo});
+			        	//dateStoricoRef.child(currentData).update(Firebase.database.ServerValue.TIMESTAMP);
+			        	
+			        //	promises.push(refRadix.child('storicoMagazzino/'+currentData).update({...eanInfo}));
+			        	}
+			        	dispatch ({type: DATI_STORICO_MAGAZZINO, date: date, values: eanInfo}	);	
+			        	
+			        	//magazzinoRef.update({...eanInfo});
+			        	//storicoMagazzinoRef.update(updatesStorico);
+			        	/*
+			        	storicoMagazzinoRef.update(updatesStorico).then(
+			        	   dateStoricoRef.update(updatesDateStorico).then(	
+			        		magazzinoRef.update({...eanInfo}).then(	dispatch ({type: 'FORZA_AGGIORNA_MAGAZZINO'}))
+			        		))
+			        	*/	
+			        	
+	 		})
+	 }
+}
+
+	
+	
 
 //Metodi per recuperare lo storico magazzino
 this.searchDataMagazzino = (dataOsservata) =>
@@ -796,7 +873,7 @@ return function(dispatch, getState) {
 		 //Se stavo già ascoltando qualcosa...     
 		 if (oldDataMagazzino > 0) dispatch(unListenStoricoMagazzino(oldDataMagazzino));
 		 //Carico in tabella specifica tutti gli stock per quella data...
-		 
+		 console.log(dataMagazzino);
 		 dispatch(listenStoricoMagazzino(dataMagazzino));
 		}     
 	})

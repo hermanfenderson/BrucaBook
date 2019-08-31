@@ -157,6 +157,74 @@ export function caricaAnagrafiche() {
 }
 
 
+export function forzaAggiornaMagazzino() {
+	 return function(dispatch, getState) {
+//	 	let storicoMagazzinoRef = Firebase.database().ref(urlFactory(getState, 'allStoricoMagazzino'));
+//	 	let dateStoricoRef = Firebase.database().ref(urlFactory(getState, 'dateStoricoMagazzino'));
+	 	
+	 	let magazzinoRef = Firebase.database().ref(urlFactory(getState, 'magazzino'));
+	 	Firebase.database().ref(urlFactory(getState, 'registroData')).once('value', snapshot => {
+	 				let registroData = Object.entries(snapshot.val());
+			    	let eanInfo = {};
+			    	//Update a chunk di date...
+			    	 for (let i=0; i<registroData.length; i++) 
+			        	{
+			        	 let rowsData = Object.values(registroData[i][1]);
+			        		for (let j=0; j<rowsData.length; j++) 
+			        			{
+			        	 
+			        			let values = rowsData[j]; 
+			        			let ean = values.ean;
+			        			let pezzi =  (eanInfo[ean]) ? eanInfo[ean].pezzi : 0;
+			        			if (values.tipo == "bolle")
+				  					{
+					    			pezzi = parseInt(values.pezzi) + parseInt(values.gratis)+ pezzi;
+					    			}
+								 if (values.tipo == "rese")
+				  					{
+					    			pezzi = pezzi - (parseInt(values.pezzi) + parseInt(values.gratis));
+					    			}	
+								if (values.tipo == "scontrini")
+				  					{
+				  					pezzi = pezzi - parseInt(values.pezzi);
+					    			}
+									
+								if (values.tipo == "inventari")
+				  					{
+				  					pezzi = pezzi + parseInt(values.pezzi);
+					    			}
+				        		eanInfo[ean] = {ean: (values.ean) ? values.ean : '', 
+        													 titolo: (values.titolo) ? values.titolo : '',
+        													 autore: (values.autore) ? values.autore : '',
+        													 editore: (values.editore) ? values.editore : '',
+        													 prezzoListino: (values.prezzoListino) ? values.prezzoListino : 0.00,
+        													 categoria: (values.categoria) ? values.categoria : '',
+        													 iva: (values.iva) ? values.iva : 'a0',
+        													 pezzi: pezzi
+        	                                				}
+			        			}            				
+        				//Qui preparo gli updates specifici della giornata...
+			        	let currentData = registroData[i][0];
+			        	console.log(currentData);
+			        	//storicoMagazzinoRef.child(currentData).update({...eanInfo});
+			        	//dateStoricoRef.child(currentData).update(Firebase.database.ServerValue.TIMESTAMP);
+			        	
+			        //	promises.push(refRadix.child('storicoMagazzino/'+currentData).update({...eanInfo}));
+			        	}
+			        	magazzinoRef.update({...eanInfo});
+			        	//storicoMagazzinoRef.update(updatesStorico);
+			        	/*
+			        	storicoMagazzinoRef.update(updatesStorico).then(
+			        	   dateStoricoRef.update(updatesDateStorico).then(	
+			        		magazzinoRef.update({...eanInfo}).then(	dispatch ({type: 'FORZA_AGGIORNA_MAGAZZINO'}))
+			        		))
+			        	*/	
+			        	
+	 		})
+	 }
+}
+
+
 
 
 

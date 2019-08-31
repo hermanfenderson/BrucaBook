@@ -24,6 +24,7 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 
 
 
+
 import {isNotNegativeInteger} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem,   insertRow, removeRow, getStock} from '../helpers/form';
 import {calcHeaderFix, initCalcGeometry} from '../helpers/geometry';
@@ -257,7 +258,7 @@ function calcRigaBolla(state, action)
 	   	let tabellaEAN = [...state.tabellaEAN];
 	   	let tabelleRigheEAN = {...state.tabelleRigheEAN};
 	   	let dettagliEAN = state.dettagliEAN;
-	   	   
+	   //	console.log(state.stock);   
    		for (let i=0; i<righe.length; i++)
    			{
 	   		let riga = righe[i];
@@ -612,6 +613,28 @@ export default function resa(state = initialState(), action) {
   	   newState.tabellaEAN = tabellaEAN;
   	   }
       break;
+       case rigaResaR.DATI_STORICO_MAGAZZINO:
+       	{
+       newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+      
+       	let tabellaEAN = [...newState.tabellaEAN];
+       let indiceEAN = newState.indiceEAN;
+       	  	 let allStocks = Object.values(action.values);
+    	
+    		 for (let i=0; i < allStocks.length; i++) 
+    			{   let ean = allStocks[i].ean;
+    			    let stock = allStocks[i].pezzi;
+    			    
+    				if (indiceEAN[ean]!==undefined) tabellaEAN[indiceEAN[ean].pos].values.stock = stock;
+    			}
+       console.log(newState.stock);
+       newState = {...newState, tabellaEAN: tabellaEAN};
+       			
+  	   }
+ 
+       break;
+  	 
+      
     default:
         newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
         //newState =  state;

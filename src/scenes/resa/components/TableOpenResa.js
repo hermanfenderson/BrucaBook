@@ -15,11 +15,14 @@ class TableOpenResa extends Component
     {
   
 	detailRow = (record) => {
-						    let matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
-		                    let headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, imgFirebaseUrl: record.values.imgFirebaseUrl, pezzi: matrixEAN.totale.totali.stock};
-		                    this.props.setModalDetails(matrixEAN, headerEAN)
-		                    this.props.setActiveModal(true);
-		                    this.props.setPeriodResa([null, null]);
+		                  
+						    //let matrixEAN = getDetailsInMatrix(this.props.dettagliEAN[record.values.ean]);
+		                   // let headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, imgFirebaseUrl: record.values.imgFirebaseUrl, pezzi: matrixEAN.totale.totali.stock};
+		                    let headerEAN = {ean: record.values.ean, titolo: record.values.titolo, autore: record.values.autore, imgFirebaseUrl: record.values.imgFirebaseUrl, pezzi: this.props.stock[record.values.ean]};
+		                    this.props.showModalDetails(headerEAN);
+		                    //this.props.setModalDetails(matrixEAN, headerEAN)
+		                    //this.props.setActiveModal(true);
+		                    //this.props.setPeriodResa([null, null]);
 		                    
 							}
 
@@ -34,7 +37,7 @@ expandedRowRender = (ean) => {return(<TableDettagliResa testataResa={this.props.
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
-        return(
+    	return(
     	  	<div>
     	  	<ModalDettagli headerEAN={this.props.headerEAN} matrixEAN={this.props.matrixEAN}/>
 			<WrappedTable {...props} 
