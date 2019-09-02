@@ -27,6 +27,7 @@ export const stdListenItem = (params) => {
    const onEAN = (params.useTimestamp) ? true : false;
    const itemsUrl = params.itemsUrl;
    const urlParams = params.urlParams;
+   const sideActions = params.sideActions;
    
   return function(dispatch, getState) {
   	const url = (params.url) ? params.url : urlFactory(getState,itemsUrl, urlParams);
@@ -42,13 +43,16 @@ export const stdListenItem = (params) => {
 	      dispatch({
 	        type: type2,
 	        payload: snapshot
-	      })  
+	      });
+	      if (sideActions) dispatch(sideActions(type2, snapshot)); 
 	   });
 	   const listener_removed = ref.on('child_removed', snapshot => {
 	      dispatch({
 	        type: type3,
 	        payload: snapshot
-	      })  
+	      });
+	      if (sideActions) dispatch(sideActions(type3, snapshot)); 
+	   
 	   });
 	   ref.once('value', snapshot => {
 	   	  	if (!onEAN)
@@ -57,10 +61,14 @@ export const stdListenItem = (params) => {
 	       listener_added = ref.limitToLast(1).on('child_added', snapshot => {
 		      //Così non dovrebbe più generare due volte il primo rigo...
 		      if (first) first = false;
-		      else dispatch({
-		        type: type1,
-		        payload: snapshot
-		      })
+		      else 
+		    	{
+		    	dispatch({
+		        	type: type1,
+		        	payload: snapshot
+		    		});
+		    	if (sideActions) dispatch(sideActions(type1, snapshot)); 
+		    	}
 		    });
 	      }
 	      else
@@ -71,13 +79,16 @@ export const stdListenItem = (params) => {
 		      dispatch({
 		        type: type1,
 		        payload: snapshot
-		      })
+		      });
+		      if (sideActions) dispatch(sideActions(type1, snapshot)); 
 		    });	
 	      }
 	      dispatch({
 	        type: type4,
 	        payload: snapshot
-	      })  
+	      });
+	      if (sideActions) dispatch(sideActions(type4, snapshot)); 
+		  
 	   });
 	   dispatch({
 	   	type: typeListen,
@@ -127,84 +138,98 @@ export const stdOffListenItem = (params) =>
 //stockMessageQueue aggiorna con la info dello stock
 //getStock... passa lo stock quando viene cercato il catalogo
 //onEAN.... persiste EAN e non una key...
-export function FormActions(scene,  preparaItem, itemsUrl, rigaTestataUrl, stockMessageQueue=false, getStock=false, onEAN=false) {
+export function FormActions(params,  preparaItem, itemsUrl, rigaTestataUrl, stockMessageQueue=false, getStock=false, onEAN=false) {
 //Azioni legate ad azioni di ricerca
-this.scene = scene;
-this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+scene;
-this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+scene;
-this.UPDATE_GENERAL_CATALOG_ITEM = 'UPDATE_GENERAL_CATALOG_ITEM_'+scene;
-this.SEARCH_GENERAL_CATALOG_ITEM = 'SEARCH_GENERAL_CATALOG_ITEM_'+scene;
+if (typeof params === 'string' || params instanceof String)
+{
+	this.scene = params; //Retro-compatibilità...
+	if (itemsUrl)this.itemsUrl = itemsUrl;
+ if (preparaItem) this.preparaItem = preparaItem;
+ if (rigaTestataUrl) this.rigaTestataUrl = rigaTestataUrl;
+if (stockMessageQueue) this.stockMessageQueue = stockMessageQueue;
+if (onEAN) this.onEAN = onEAN;
+if (getStock) this.gestStock =getStock;
+}
+else //E' un oggetto...
 
-this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+scene;
-this.FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_'+scene;
-this.FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_'+scene;
-this.FOUND_GENERAL_CATALOG_ITEM = 'FOUND_GENERAL_CATALOG_ITEM_'+scene;
+{
+	this.scene = params.scene;
+this.itemsUrl = params.itemsUrl;
+this.preparaItem = params.preparaItem;
+this.rigaTestataUrl = params.rigaTestataUrl;
+this.stockMessageQueue = params.stockMessageQueue;
+this.onEAN = params.onEAN;
+this.gestStock =params.getStock;
+this.itemsSideActions = params.itemsSideActions;
 
-this.NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_'+scene;
-this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+scene;
-this.NOT_FOUND_GENERAL_CATALOG_ITEM = 'NOT_FOUND_GENERAL_CATALOG_ITEM_'+scene;
+}
 
-this.SET_FILTER = 'SET_FILTER_'+scene;
-this.RESET_FILTER = 'RESET_FILTER_'+scene;
-this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+scene;
-this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+scene;
-this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+scene;
-this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+scene;
-this.ADD_ITEM = 'ADD_ITEM_'+scene;
-this.DELETE_ITEM = 'DELETE_ITEM_'+scene;
-this.CHANGE_ITEM = 'CHANGE_ITEM_'+scene;
-this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+scene;
+
+
+
+this.UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_'+this.scene;
+this.SEARCH_CATALOG_ITEM = 'SEARCH_CATALOG_ITEM_'+this.scene;
+this.UPDATE_GENERAL_CATALOG_ITEM = 'UPDATE_GENERAL_CATALOG_ITEM_'+this.scene;
+this.SEARCH_GENERAL_CATALOG_ITEM = 'SEARCH_GENERAL_CATALOG_ITEM_'+this.scene;
+
+this.SEARCH_CLOUD_ITEM = 'SEARCH_CLOUD_ITEM_'+this.scene;
+this.FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_'+this.scene;
+this.FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_'+this.scene;
+this.FOUND_GENERAL_CATALOG_ITEM = 'FOUND_GENERAL_CATALOG_ITEM_'+this.scene;
+
+this.NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_'+this.scene;
+this.NOT_FOUND_CATALOG_ITEM = 'NOT_FOUND_CATALOG_ITEM_'+this.scene;
+this.NOT_FOUND_GENERAL_CATALOG_ITEM = 'NOT_FOUND_GENERAL_CATALOG_ITEM_'+this.scene;
+
+this.SET_FILTER = 'SET_FILTER_'+this.scene;
+this.RESET_FILTER = 'RESET_FILTER_'+this.scene;
+this.CHANGE_EDITED_ITEM = 'CHANGE_EDITED_ITEM_'+this.scene;
+this.SUBMIT_EDITED_ITEM = 'SUBMIT_EDITED_ITEM_'+this.scene;
+this.SET_SELECTED_ITEM = 'SET_SELECTED_ITEM_'+this.scene;
+this.RESET_EDITED_ITEM = 'RESET_EDITED_ITEM_'+this.scene;
+this.ADD_ITEM = 'ADD_ITEM_'+this.scene;
+this.DELETE_ITEM = 'DELETE_ITEM_'+this.scene;
+this.CHANGE_ITEM = 'CHANGE_ITEM_'+this.scene;
+this.TOGGLE_PIN_ITEM = 'TOGGLE_PIN_ITEM_'+this.scene;
 //Ascolto cambiamenti per questo EAN
-this.ADD_EAN_LISTENER = 'ADD_EAN_LISTENER_'+scene;
+this.ADD_EAN_LISTENER = 'ADD_EAN_LISTENER_'+this.scene;
 
 
 
-this.ADDED_ITEM = 'ADDED_ITEM_'+scene;
-this.DELETED_ITEM = 'DELETED_ITEM_'+scene;
-this.CHANGED_ITEM = 'CHANGED_ITEM_'+scene;
-this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+scene;
-this.LISTEN_ITEM='LISTEN_ITEM_'+scene;
-//this.LISTEN_TOTALI='LISTEN_TOTALI_'+scene;
+this.ADDED_ITEM = 'ADDED_ITEM_'+this.scene;
+this.DELETED_ITEM = 'DELETED_ITEM_'+this.scene;
+this.CHANGED_ITEM = 'CHANGED_ITEM_'+this.scene;
+this.INITIAL_LOAD_ITEM = 'INITIAL_LOAD_ITEM_'+this.scene;
+this.LISTEN_ITEM='LISTEN_ITEM_'+this.scene;
+//this.LISTEN_TOTALI='LISTEN_TOTALI_'+this.scene;
 
-this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+scene;
-//this.OFF_LISTEN_TOTALI='OFF_LISTEN_TOTALI_'+scene;
+this.OFF_LISTEN_ITEM='OFF_LISTEN_ITEM_'+this.scene;
+//this.OFF_LISTEN_TOTALI='OFF_LISTEN_TOTALI_'+this.scene;
 
-this.RESET='RESET_'+scene;
+this.RESET='RESET_'+this.scene;
 
-this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+scene;
-this.RESET_TABLE = 'RESET_TABLE_'+scene;
-this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+scene;
-this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+scene;
+this.TOTALI_CHANGED = 'TOTALI_CHANGED_'+this.scene;
+this.RESET_TABLE = 'RESET_TABLE_'+this.scene;
+this.TOGGLE_TABLE_SCROLL = 'TOGGLE_TABLE_SCROLL_'+this.scene;
+this.SET_TABLE_SCROLL_BY_KEY = 'SET_TABLE_SCROLL_BY_KEY_'+this.scene;
 
-this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+scene;
-this.FOCUS_SET = 'FOCUS_SET_'+scene;
+this.SET_TABLE_WINDOW_HEIGHT = 'SET_TABLE_WINDOW_HEIGHT_'+this.scene;
+this.FOCUS_SET = 'FOCUS_SET_'+this.scene;
 
-this.LISTEN_TESTATA='LISTEN_TESTATA_'+scene;
-this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+scene;
-this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+scene;
+this.LISTEN_TESTATA='LISTEN_TESTATA_'+this.scene;
+this.OFF_LISTEN_TESTATA='OFF_LISTEN_TESTATA_'+this.scene;
+this.TESTATA_CHANGED = 'TESTATA_CHANGED_'+this.scene;
 
-this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+scene;
-this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+scene;
-this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+scene;
+this.SET_READ_ONLY_FORM = 'SET_READ_ONLY_FORM_'+this.scene;
+this.PUSH_MESSAGE = 'PUSH_MESSAGE_'+this.scene;
+this.SHIFT_MESSAGE = 'SHIFT_MESSAGE_'+this.scene;
 
-this.ADDED_STORICO_MAGAZZINO ='ADDED_STORICO_MAGAZZINO_'+scene;
-this.CHANGED_STORICO_MAGAZZINO ='CHANGED_STORICO_MAGAZZINO_'+scene;
-this.DELETED_STORICO_MAGAZZINO ='DELETED_STORICO_MAGAZZINO_'+scene;
-this.INITIAL_LOAD_STORICO_MAGAZZINO ='INITIAL_LOAD_STORICO_MAGAZZINO_'+scene;
-this.LISTEN_STORICO_MAGAZZINO ='LISTEN_STORICO_MAGAZZINO_'+scene;
-this.UNLISTEN_STORICO_MAGAZZINO ='UNLISTEN_STORICO_MAGAZZINO_'+scene;
-this.DATA_MAGAZZINO_CHANGED = 'DATA_MAGAZZINO_CHANGED_'+scene;
-this.DATI_STORICO_MAGAZZINO = 'DATI_STORICO_MAGAZZINO_'+scene;
+this.DATI_STORICO_MAGAZZINO = 'DATI_STORICO_MAGAZZINO_'+this.scene;
 
 
-this.itemsUrl = itemsUrl;
-this.preparaItem = preparaItem;
-this.rigaTestataUrl = rigaTestataUrl;
-this.stockMessageQueue = stockMessageQueue;
 
 this.pushMessage = (element) => {return {type: this.PUSH_MESSAGE, element: element}}
 this.shiftMessage = () => {return {type: this.SHIFT_MESSAGE}}
-this.onEAN = onEAN;
 
 
 
@@ -331,7 +356,7 @@ this.foundCatalogItem = (ean,item) =>
 {
 //Qui prendo il valore dello stock a magazzino... se richiesto.
 let type = this.FOUND_CATALOG_ITEM;
-if (getStock) 
+if (this.getStock) 
 {
 	return function(dispatch, getState) {
        	const url = urlFactory(getState,'magazzino',null,ean);
@@ -581,6 +606,7 @@ this.listenItem = (params) => {
    const onEAN = this.onEAN
    const itemsUrl = this.itemsUrl;
    const scene = this.scene;
+   const itemsSideActions =this.itemsSideActions;
   return function(dispatch, getState) {
   	if (getListeningMagazzino(getState()) === null && scene !=='MAGAZZINO') //Ascolto il magazzino... serve a farlo al refresh...
 		{    
@@ -593,7 +619,9 @@ this.listenItem = (params) => {
 					listen_item: typeListen,
 					useTimestamp : onEAN,
 					itemsUrl : itemsUrl,
-					urlParams : params,}));	
+					urlParams : params,
+					sideActions:itemsSideActions
+					}));	
   }
 }
 
@@ -633,6 +661,8 @@ this.aggiungiItem = (params, valori) => {
   const stockMessageQueue = this.stockMessageQueue;
   const stockMessageQueueListener = this.stockMessageQueueListener;
   const toggleTableScroll = this.toggleTableScroll;
+  const scene = this.scene;
+  const onEAN = this.onEAN;
    addCreatedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
     return function(dispatch,getState) {
@@ -660,7 +690,8 @@ this.aggiornaItem = (params,itemId, valori) => {
     const typeChange = this.CHANGE_ITEM;
  	 const stockMessageQueue = this.stockMessageQueue;
  const stockMessageQueueListener = this.stockMessageQueueListener;
-  
+ const scene = this.scene;
+   
     var nuovoItem = {...valori};
       addChangedStamp(nuovoItem);
    this.preparaItem(nuovoItem);
@@ -849,117 +880,7 @@ this.datiStoricoMagazzino = (date) => {
 }
 
 	
-	
-
-//Metodi per recuperare lo storico magazzino
-this.searchDataMagazzino = (dataOsservata) =>
-{
-	const type = this.DATA_MAGAZZINO_CHANGED;
-    const scene = this.scene;	
-    const listenStoricoMagazzino = this.listenStoricoMagazzino;
-    const unListenStoricoMagazzino = this.unListenStoricoMagazzino;
-    
-return function(dispatch, getState) {
-	const url = urlFactory(getState,'dateStoricoMagazzino', null);
-	const upto = (dataOsservata - 1).toString();
-	Firebase.database().ref(url).orderByKey().endAt(upto).limitToLast(1).on('value', snapshot => {
-	let dataMagazzino = Object.keys(snapshot.val())[0];
-	let oldDataMagazzino = getDataMagazzino(getState(), scene);
-	if (dataMagazzino !== oldDataMagazzino)
-		{dispatch({
-		        type: type,
-		        dataMagazzino: dataMagazzino
-		      })
-		 //Se stavo già ascoltando qualcosa...     
-		 if (oldDataMagazzino > 0) dispatch(unListenStoricoMagazzino(oldDataMagazzino));
-		 //Carico in tabella specifica tutti gli stock per quella data...
-		 console.log(dataMagazzino);
-		 dispatch(listenStoricoMagazzino(dataMagazzino));
-		}     
-	})
-	
-	}
-}
-
-this.listenStoricoMagazzino = (dataMagazzino) =>
-{
-	
-//Genero tre listener... come un'unica funzione...
-    const type1 = this.ADDED_STORICO_MAGAZZINO;
-	const type2 = this.CHANGED_STORICO_MAGAZZINO;
-	const type3 = this.DELETED_STORICO_MAGAZZINO;
-	const type4 = this.INITIAL_LOAD_STORICO_MAGAZZINO;
-	const type = this.LISTEN_STORICO_MAGAZZINO;
-	
-   
-   return function(dispatch, getState) {
-  	const url = urlFactory(getState,'storicoMagazzino', dataMagazzino);
-  	if (url)
-    {  
-       
-       
-       let now = getServerTime(Firebase.database().ref('/'))();
-      //Ragiono per timestamp
-      const listener_added = Firebase.database().ref(url).orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
-	      dispatch({
-	        type: type1,
-	        payload: snapshot
-	      })
-	      if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
-	      });
-	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
-	      dispatch({
-	        type: type2,
-	        payload: snapshot
-	      })
-	      if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
-	     
-	   });
-	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
-	      dispatch({
-	        type: type3,
-	        payload: snapshot
-	      })
-	       if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
-	     
-	   });
-	   Firebase.database().ref(url).once('value', snapshot => {
-	      dispatch({
-	        type: type4,
-	        payload: snapshot
-	      }) 
-	      if (scene==='INVENTARIO') aggiornaOccorrenzeInventario(getState);
-	    });
-	   dispatch({
-	   	type: type,
-	   	params: dataMagazzino,
-	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
-	   })
-	}   
-	else dispatch({
-	   	type: type,
-	   	params: null,
-	   })   
-  }
-  
-}
-
-this.unListenStoricoMagazzino = (dataMagazzino) =>
-{
-const type = this.UNLISTEN_STORICO_MAGAZZINO;
-	
-return function(dispatch, getState) {	
-	Firebase.database().ref(urlFactory(getState,'storicoMagazzino', dataMagazzino)).off();
-	
-		dispatch({
-		   	type: type,
-		   	params: dataMagazzino
-		   })
-
-	}
-}
-
-}
+}	
 
 //Funzioni specifiche di scena..
 const aggiornaRigheInventario = (params, getState, itemId) =>
@@ -974,10 +895,5 @@ const aggiornaOccorrenzeInventario = (getState) =>
 		let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
 		let idInventario = getState().inventario.listeningItem;
 	    if (idInventario) Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
-		}
-
-
-
-
-
-
+		};
+		

@@ -28,16 +28,18 @@ const editedItemInitialState = () => {
 let geometryParams = {cal: {
 						formHeight: 2 * FORM_COL_H + GE_H,
 						caricaWidth: 190,
-						caricaHeight: 200,
-						immagineWidth: 190,
-						immagineHeight: 200,
+						caricaHeight: FORM_COL_H,
+						immagineWidth: 120,
+						immagineHeight: 160,
 						formSearchHeight: FORM_COL_H,
 						
 						colSearchParams: [
 										{name: 'ean', min: 120, max: 120},
 										{name: 'titolo', min: 250},
 										{name: 'autore', min: 110},
-										{name: 'reset', min: 150, max: 240},
+										
+										{name: 'reset', min: 100, max: 100},
+										
 										],
 						colParams1: [
 										{name: 'ean', min: 170, max: 170},
@@ -49,8 +51,10 @@ let geometryParams = {cal: {
 									{name: 'autore', min: 160},
 
 									{name: 'listino', min: 65, max: 65},
-									{name: 'stock', min: 65, max: 65},
+									{name: 'prima', min: 65, max: 65},
 									{name: 'delta', min: 65, max: 65},
+									{name: 'dopo', min: 65, max: 65},
+									{name: 'ora', min: 65, max: 65},
 								
 									{name: 'annulla', min: 70, max: 100},
 									{name: 'inserisci', min: 70, max: 100},
@@ -62,33 +66,36 @@ let geometryParams = {cal: {
 										{name: 'titolo', label: 'Titolo', min: 250,sort:'string', ellipsis: true},
 										{name: 'autore', label: 'Autore', min: 110,sort:'string', ellipsis: true},
 										{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},
-										{name: 'stock', label: 'Stock', min: 50, max: 50},
-										{name: 'pezzi', label: 'Delta', min: 50, max: 50},
+										{name: 'prima', label: 'prima', min: 50, max: 50},
+										{name: 'pezzi', label: 'Variaz.', min: 50, max: 50},
+										{name: 'dopo', label: 'dopo', min: 50, max: 50},
+										{name: 'ora', label: 'ora', min: 50, max: 50},
+										
 
 									 ],
 						
 						},
 				  tbc: [
-				  	    {tableWidth: (cal) => {return(cal.w-cal.caricaWidth)}},
+				  	    {tableWidth: (cal) => {return(cal.w)}},
 				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight-cal.formSearchHeight)}},
-				  	    {formWidth: (cal) =>  {return(cal.w - cal.caricaWidth)}},
-				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	    {formWidth: (cal) =>  {return(cal.w-cal.immagineWidth)}},
+				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth - cal.caricaWidth)}},
 				  	   ],
 				 geo: [ 
 				  	   
-     		    		{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: cal.caricaWidth})}},
+     		    		{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: 0})}},
     					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
-    					{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight+cal.formSearchHeight, left: cal.caricaWidth})}},
+    					{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight+cal.formSearchHeight, left: cal.immagineWidth})}},
     				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth, offset: 0}))}}, 
     				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth, offset: 1}))}}, 
-    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight, left: cal.caricaWidth})}},
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight, left: 10})}},
     				
     					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 2}))}},	 
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 
     					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
     				
-    					{caricaCoors: (cal) => {return({height: cal.caricaHeight, width: cal.caricaWidth, top: 0, left: 0})}},
-    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h -cal.immagineHeight, left: 0})}}
+    					{caricaCoors: (cal) => {return({height: cal.caricaHeight, width: cal.caricaWidth, top: 0, left: cal.formSearchWidth})}},
+    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h -cal.immagineHeight-10, left: 0})}}
 						]
 				 }	
 const calcGeometry = initCalcGeometry(geometryParams);
@@ -102,6 +109,7 @@ const calcGeometry = initCalcGeometry(geometryParams);
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
+    	    stockOra : {},
 		    totaleOccorrenze: 0,
     		geometry: calcGeometry()	
     				}
@@ -211,15 +219,26 @@ export default function inventario(state = initialState(), action) {
 	    	
 	    	break;
 	  case rigaInventarioR.INITIAL_LOAD_ITEM:
-		  let obj = state.estrattoStoricoMagazzino;
+		/*  let obj = state.estrattoStoricoMagazzino;
 			if (obj)
 				{Object.keys(obj).forEach(key => {
     				stockMap.set(key, obj[key].stock);
 					});
 				}	
-		
+		    let stockStorico = state.estrattoStoricoMagazzino;
+		*/
 		    newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", rigaInventarioR.transformItem); 
+		    let objStockStorico = state.stock;
+		    let objStockOra = state.stockOra;
 		    
+		    let iA = newState.itemsArray;
+		    for (let i=0; i<iA; i++)
+		    	{
+		    	let ean = iA[i].ean;	
+		    	let variaz = (iA[i].pezzi) ? iA[i].pezzi : 0; 
+		    	if (objStockOra[ean]!==null) iA.ora = objStockOra[ean];
+		    	if (objStockStorico[ean]!==null) {let prima = objStockStorico[ean]; iA[i].prima = prima; iA[i].dopo = prima+variaz;}  
+		    	}
 		 	//Se ho un dato migliore per stock lo metto qui...per ogni riga
 		 	/*
 		 	for (let key in action.payload.val())
@@ -250,8 +269,50 @@ export default function inventario(state = initialState(), action) {
             //Se sgto agendo su ho un EAN valido...
 	        if (action.name === 'ean' && newState.editedItem.eanState === 'VALID' && state.itemsArrayIndex[action.value] >=0 ) newState.tableScrollByKey = action.value;
 	    	break;	    
-	    	
-	    	
+	    
+	    case rigaInventarioR.INITIAL_LOAD_ITEM_STORICO_MAGAZZINO:
+	    	{newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
+             let objStockStorico = newState.stock;
+		    
+		    let iA = newState.itemsArray;
+		    for (let i=0; i<iA; i++)
+		    	{
+		    	let ean = iA[i].ean;	
+		    	let variaz = (iA[i].pezzi) ? iA[i].pezzi : 0; 
+		    	if (objStockStorico[ean]!==null) {let prima = objStockStorico[ean]; iA[i].prima = prima; iA[i].dopo = prima+variaz;}  
+		    	}
+	    	}
+	    	break;
+		
+	    case 'ADDED_ITEM_INVENTARIO_SIDE':
+	    case 'CHANGED_ITEM_INVENTARIO_SIDE':
+	    case 'INITIAL_LOAD_ITEM_INVENTARIO_SIDE':
+	       {
+	       let stockOra ={...state.stockOra};
+	       let itemsArray = [...state.itemsArray];
+           let itemsArrayIndex = {...state.itemsArrayIndex};
+	       let deltaArray = Object.entries(action.deltaStockOra);  
+	       for (let i=0; i<deltaArray.length; i++)
+	    		{   let ean = deltaArray[i][0];
+	    		    let ora = deltaArray[i][1];
+	    			stockOra[ean] = ora;
+	    			let index = itemsArrayIndex[ean];
+	    			
+	    			itemsArray[index].ora=ora;
+	    		}
+	       newState = {...state, stockOra: stockOra, itemsArray: itemsArray};		
+	       }		
+	       break;
+	       
+	    case 'DELETED_ITEM_INVENTARIO_SIDE':
+	       { 
+	          let stockOra ={...state.stockOra};
+	       let deltaArray = Object.entries(action.deltaStockOra);  
+	       delete stockOra[deltaArray[0][0]];
+	       
+	       newState = {...state, stockOra: stockOra};	
+	       }	
+	    	break;
    	    	    
       default:
     

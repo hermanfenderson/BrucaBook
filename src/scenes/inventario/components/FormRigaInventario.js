@@ -47,9 +47,12 @@ resetForm = () => {
      
           <WrappedForm.Input field='prezzoListino' label='Listino'  coord={cols2.listino}  disabled/>
      
-        <WrappedForm.Input field='stock' label='Stock' coord={cols2.stock} disabled/>
+        <WrappedForm.Input field='prima' label='prima' coord={cols2.prima} disabled/>
        
         <WrappedForm.InputNumber field='pezzi' label='Variazione' coord={cols2.delta}/>
+        <WrappedForm.Input field='dopo' label='dopo' coord={cols2.dopo} disabled/>
+        <WrappedForm.Input field='ora' label='Ora' coord={cols2.ora} disabled/>
+     
        <WrappedForm.Button  type={'button'} coord={cols2.annulla}  onClick={this.resetForm}>Annulla</WrappedForm.Button>
        	
         <WrappedForm.Button  coord={cols2.inserisci}  type="primary" htmlType="submit" >{(this.props.editedRigaInventario.selectedItem)?'Aggiorna':'Aggiungi'}</WrappedForm.Button>

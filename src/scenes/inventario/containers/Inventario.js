@@ -10,10 +10,11 @@ const listenTestataInventario = rigaInventarioFA.listenTestata;
 const unlistenTestataInventario = rigaInventarioFA.unlistenTestata;
 const resetInventario = rigaInventarioFA.reset;
 const shiftMessage = rigaInventarioFA.shiftMessage;
-const searchDataMagazzino = rigaInventarioFA.searchDataMagazzino;
+//const searchDataMagazzino = rigaInventarioFA.searchDataMagazzino;
 const setFilter = rigaInventarioFA.setFilter;
 const resetFilter = rigaInventarioFA.resetFilter;
 
+const datiStoricoMagazzino = rigaInventarioFA.datiStoricoMagazzino;
 
 
 const mapStateToProps = (state) => {
@@ -34,7 +35,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ generaRighe, shiftMessage, resetInventario, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataInventario, unlistenTestataInventario, setHeaderInfo, searchDataMagazzino, setFilter, resetFilter}, dispatch);
+  listenTestataInventario, unlistenTestataInventario, setHeaderInfo,  setFilter, resetFilter, datiStoricoMagazzino}, dispatch);
 }
 
 const Inventario = connect(mapStateToProps, mapDispatchToProps)(InventarioComponent)

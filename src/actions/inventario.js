@@ -22,7 +22,34 @@ function preparaItem(riga)
       riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
       riga['prezzoListino'] = parseFloat(riga['prezzoListino']).toFixed(2);
    }
-
+   
+//Viene richiamata quando arrivano dati in tabella...
+function itemsSideActions(type, payload)
+{
+	  return function(dispatch, getState) 
+		{
+		let magazzinoIndex = 	getState().magazzino.itemsArrayIndex;
+		let magazzinoArray = getState().magazzino.itemsArray
+		let deltaStockOra = {};
+		let actionType = type+'_SIDE';
+		if (type === 'INITIAL_LOAD_ITEM_INVENTARIO') 
+			{  
+				let elencoEAN = Object.keys(payload.val());
+			  	for (let i=0; i<elencoEAN.length; i++)
+					{   let ean = elencoEAN[i];
+					    let index = magazzinoIndex[ean]; 
+						if (index >= 0) deltaStockOra[ean] = magazzinoArray[index].pezzi;
+					}
+			}
+	   else 
+	     {
+	     	 let ean = payload.ean;
+			  let index = magazzinoIndex[ean]; 
+			  if (index >= 0) deltaStockOra[ean] = magazzinoArray[index].pezzi;
+	     }
+	    dispatch({type: actionType, deltaStockOra: deltaStockOra});	
+		}
+}
    
 
 //Traccia per il seguito...
@@ -34,7 +61,9 @@ function preparaItem(riga)
 
 //METODI DEL FORM
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
-export const rigaInventarioFA = new FormActions(SCENE, preparaItem, 'righeInventario','righeElencoInventari', true, true, true);
+
+
+export const rigaInventarioFA = new FormActions({scene: SCENE, preparaItem: preparaItem, itemsUrl: 'righeInventario',rigaTestataUrl: 'righeElencoInventari', stockMessageQueue: true, onEAN: true, getStock: false, itemsSideActions: itemsSideActions});
 
 
 export function generaRighe(inventarioId, dataInventario)

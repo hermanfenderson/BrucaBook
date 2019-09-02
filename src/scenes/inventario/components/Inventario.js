@@ -41,7 +41,9 @@ componentDidUpdate = (oldProps) => {
 	if (dataInventarioNew !== dataInventarioOld)
 		{
 		this.props.setHeaderInfo("Inventario del " + moment(dataInventarioNew).format("L"));
-		this.props.searchDataMagazzino(dataInventarioNew);		
+		this.props.datiStoricoMagazzino(dataInventarioNew);
+	
+//		this.props.searchDataMagazzino(dataInventarioNew);		
 		}
 		
 
@@ -73,7 +75,7 @@ render()
     <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>
 		<FormCatalogo isModal={true} readOnlyEAN={true} scene='INVENTARIO'/>
     </Modal>  
-     <FixBlock className='totaliCol' coors={this.props.geometry.caricaCoors}>
+     <FixBlock className='caricaCol' coors={this.props.geometry.caricaCoors}>
     
           <Button onClick={this.generaRighe}> Carica </Button>
         <TotaliInventario staleTotali={this.props.staleTotali} testataInventario={this.props.testataInventario} />

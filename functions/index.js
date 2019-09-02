@@ -6,7 +6,7 @@ const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
-const {aggiornaMagazzinoEANFull, aggiornaMagazzinoFull} = require('./magazzino');
+const {aggiornaMagazzinoEANFull} = require('./magazzino');
 
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
 //const equal = require('deep-equal');
@@ -282,7 +282,7 @@ exports.aggiornaMagazzinoNew = functions.database.ref('{catena}/{negozio}/regist
             
             });
 
-
+/* OBSOLETA...
 exports.forzaAggiornaMagazzino = functions.https.onRequest((req, res) => {
 
 cors(req, res, () => {
@@ -303,7 +303,7 @@ let refBookStoreRadix = admin.database().ref(catena + '/' + libreria);
 
 
 
-
+*/
 
 exports.aggiornaOrdiniAperti = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
     .onWrite((change, context) => 
