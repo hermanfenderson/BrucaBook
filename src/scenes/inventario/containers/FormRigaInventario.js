@@ -9,7 +9,6 @@ import {store} from '../../../index.js';
 const changeEditedRigaInventario = rigaInventarioFA.changeEditedItem;
 const submitEditedRigaInventario = rigaInventarioFA.submitEditedItem;
 const resetEditedRigaInventario = rigaInventarioFA.resetEditedItem;
-const searchCatalogItem = rigaInventarioFA.searchCatalogItem;
 const setSelectedItem =  rigaInventarioFA.setSelectedItem;
 const focusSet = rigaInventarioFA.focusSet;
 //Passa lo stato modificato come previsto ma intercetta un cambiamento di ean e scatena azioni...
@@ -29,7 +28,7 @@ const getEditedRigaInventarioSideEffects= (state) => {
 		                    	{
 								erb.eanState = 'PARTIAL'; //Mi metto alla ricerca.....
 								
-								store.dispatch(searchCatalogItem(erb.values.ean));
+								//store.dispatch(searchCatalogItem(erb.values.ean));
 		                    	}
 							}
 	return(erb);

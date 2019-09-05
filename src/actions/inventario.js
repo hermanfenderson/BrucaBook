@@ -21,6 +21,12 @@ function preparaItem(riga)
    {
       riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
       riga['prezzoListino'] = parseFloat(riga['prezzoListino']).toFixed(2);
+       //Valori da non persistere....
+	    delete riga.stock;
+	    delete riga.prima;
+	    delete riga.dopo;
+	    delete riga.ora;
+     	  
    }
    
 //Viene richiamata quando arrivano dati in tabella...
@@ -43,7 +49,7 @@ function itemsSideActions(type, payload)
 			}
 	   else 
 	     {
-	     	 let ean = payload.ean;
+	     	 let ean = payload.key;
 			  let index = magazzinoIndex[ean]; 
 			  if (index >= 0) deltaStockOra[ean] = magazzinoArray[index].pezzi;
 	     }
@@ -63,7 +69,7 @@ function itemsSideActions(type, payload)
 //Il true... indica che voglio la gestione dello stock nei messaggi informativi
 
 
-export const rigaInventarioFA = new FormActions({scene: SCENE, preparaItem: preparaItem, itemsUrl: 'righeInventario',rigaTestataUrl: 'righeElencoInventari', stockMessageQueue: true, onEAN: true, getStock: false, itemsSideActions: itemsSideActions});
+export const rigaInventarioFA = new FormActions({scene: SCENE, preparaItem: preparaItem, itemsUrl: 'righeInventario',rigaTestataUrl: 'righeElencoInventari', stockMessageQueue: true, onEAN: true, getStock: true, itemsSideActions: itemsSideActions});
 
 
 export function generaRighe(inventarioId, dataInventario)

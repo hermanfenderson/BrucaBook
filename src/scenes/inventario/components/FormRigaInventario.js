@@ -19,7 +19,8 @@ onSubmit = (e) => {
 	valuesTestata.data = valuesTestata.dataInventario;
     const values =  {...this.props.editedRigaInventario.values, ...valuesTestata};
     values.pinned = false;
-    	   
+    //Non devo persisterli...
+    
 	this.props.submitEditedRigaInventario(this.props.editedRigaInventario.isValid, this.props.editedRigaInventario.selectedItem, this.props.idInventario, values); //Per sapere cosa fare... dopo
   }
  
@@ -47,10 +48,10 @@ resetForm = () => {
      
           <WrappedForm.Input field='prezzoListino' label='Listino'  coord={cols2.listino}  disabled/>
      
-        <WrappedForm.Input field='prima' label='prima' coord={cols2.prima} disabled/>
+        <WrappedForm.Input field='prima' label='Prima' coord={cols2.prima} disabled/>
        
         <WrappedForm.InputNumber field='pezzi' label='Variazione' coord={cols2.delta}/>
-        <WrappedForm.Input field='dopo' label='dopo' coord={cols2.dopo} disabled/>
+        <WrappedForm.Input field='dopo' label='Dopo' coord={cols2.dopo} disabled/>
         <WrappedForm.Input field='ora' label='Ora' coord={cols2.ora} disabled/>
      
        <WrappedForm.Button  type={'button'} coord={cols2.annulla}  onClick={this.resetForm}>Annulla</WrappedForm.Button>

@@ -6,7 +6,7 @@ const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
-const {aggiornaMagazzinoEANFull} = require('./magazzino');
+const {aggiornaMagazzinoEANFull, creaMagazzinoDaCatalogo} = require('./magazzino');
 
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
 //const equal = require('deep-equal');
@@ -95,6 +95,21 @@ exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/ca
 				}));
 			}
 			);
+			
+			
+exports.creaMagazzinoDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/catalogo/{ean}')
+
+   .onCreate((snapshot,context) =>
+			{
+			const ean = context.params.ean;
+			const totaleEAN = snapshot.val(); 
+			const refRadix = snapshot.ref.parent.parent;
+			return(creaMagazzinoDaCatalogo(admin, ean, refRadix, totaleEAN));
+			});
+			
+			
+			
+
 			
 exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}/totali')
     .onWrite((change, context) => {return(calcolaTotali(change, context, 'elencoCasse'))});

@@ -32,6 +32,8 @@ submitFuncFromOrdiniAperti = () => {
 	//Se ho errori... non faccio ulla
 	if (!this.props.ordiniApertiErrors.hasErrors) this.submitFunc();
 }
+
+
 		
 onSubmit = (e) => {
 
@@ -93,7 +95,7 @@ resetForm = () => {
 	  </Modal>  	
 	
      <WrappedForm height={this.props.geometry.formCoors.height} width={this.props.geometry.formCoors.width} layout='vertical' focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-        <WrappedForm.InputLookup lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' coord={formCols1.ean}   disabled={readOnlyEAN}/>
+        <WrappedForm.InputLookup  width={this.props.geometry.formCoors.width} lookupElement={<Magazzino noHeader noDetails/>} field='ean' required={true} label='EAN' coord={formCols1.ean}   disabled={readOnlyEAN}/>
         <WrappedForm.Input field='titolo' label='Titolo'  coord={formCols1.titolo}  disabled/>
         <WrappedForm.Input field='autore' label='Autore'  coord={formCols1.autore}  disabled/>
         <WrappedForm.Input field='prezzoListino' label='Listino'  coord={formCols1.listino}  disabled/>

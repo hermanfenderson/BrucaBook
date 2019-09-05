@@ -23,11 +23,7 @@ class Bolla extends Component {
  //Modificato per eliminare il WillMount
  
  componentDidMount() {
-    	if(ReactDOM.findDOMNode(this.refs.formRigaBolla)) 
-   		{var node = ReactDOM.findDOMNode(this.refs.formRigaBolla);
-   		this.props.storeMeasure('formRigaBollaHeight', node.clientHeight);
-   		}
-   	this.props.listenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...	
+     	this.props.listenTestataBolla([this.props.match.params.anno, this.props.match.params.mese], this.props.match.params.id); //In modo da acoltare il valore giusto...	
  }
  
  
@@ -82,7 +78,7 @@ render()
        <FixBlock className='filter-form' coors={this.props.geometry.formSearchCoors} >
       <FilterBolla  geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
       </FixBlock>
-   <FixBlock spinning={!this.props.testataBolla} coors={this.props.geometry.tableCoors} >
+   <FixBlock  spinning={!this.props.testataBolla} coors={this.props.geometry.tableCoors} >
      <TableBolla  geometry={this.props.geometry} period={period} idBolla={this.props.match.params.id} filters={this.props.filters}/>
       </FixBlock>
     

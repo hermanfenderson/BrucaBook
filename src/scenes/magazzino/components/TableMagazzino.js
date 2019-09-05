@@ -28,11 +28,10 @@ class TableMagazzino extends PureComponent
     		
 	}
 	
-componentWillReceiveProps()
-{
-	console.log("ho props nuove");
-	console.log(this.props.height);
-}
+
+
+
+
 
 customRowRender = {
 	                     'iva' : (text, record, index) => { return(<div style={{width: 30}}> {getAliquotaIVA(text,this.props.iva)}</div>)}
@@ -47,7 +46,7 @@ customRowRender = {
         let selectRow = (props.selectedCallback) ? this.selectRow : (props.noDetails) ? null : this.detailRow;
           return(
     	  	<Spin spinning={(this.props.data.length===0)}>
-			<WrappedTable {...props}  customRowRender={this.customRowRender} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
+			<WrappedTable {...props}  noSel={this.props.inModal} customRowRender={this.customRowRender} editRow={editRow} selectRow={selectRow} detailRow={detailRow}  header={this.props.header}/>
 			</Spin>
 			)}
     }		

@@ -17,7 +17,7 @@ const getEditedRigaResaSideEffects= (state) => {
 	//Il cambio di stato riguarda un EAN
 	if (erb.eanState === 'VALID') {
 							erb.eanState = 'PARTIAL'; //Mi metto alla ricerca.....
-							store.dispatch(searchCatalogItem(erb.values.ean));
+							//store.dispatch(searchCatalogItem(erb.values.ean));
 							}
 	return(erb);
 }

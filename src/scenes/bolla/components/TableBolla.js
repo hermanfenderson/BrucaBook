@@ -9,6 +9,8 @@ class TableBolla extends Component
     	 	let params = [...this.props.period];
     	   	params.push(this.props.idBolla);
     	   	this.props.listenRigaBolla(params); 
+    	   
+ 
 	}
 	
 	 componentWillUnmount() {
@@ -16,7 +18,7 @@ class TableBolla extends Component
     	params.push(this.props.idBolla);
     	this.props.offListenRigaBolla(params); 
     	this.props.resetTableBolla();
-	 }
+   	 }
    
 	
 	

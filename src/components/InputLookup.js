@@ -4,7 +4,7 @@
 //Aggiunte 2 props onCloseModal e onOpenModal per fornire info al chiamante...
 
 import React from 'react';
-import { Input,Icon} from 'antd';
+import { Input,Icon, Modal} from 'antd';
 //import ReactModal from 'react-modal';
 import ReactModal from 'react-responsive-modal';
 
@@ -77,9 +77,9 @@ constructor(props) {
     	
     
     </Input> : null}
-   	 <ReactModal open={this.state.showModal} onClose={this.onCloseModalInner}>
+   	 <Modal   style={{top: 44}} width={this.props.width} footer={null} visible={this.state.showModal} onCancel={this.onCloseModalInner}>
     	   {this.lookupElementDecorator(this.props.lookupElement)}
-    	</ReactModal>
+    	</Modal>
     
     </div>	
   );
@@ -87,3 +87,8 @@ constructor(props) {
 }
 
 export default InputLookup;
+/*
+<ReactModal open={this.state.showModal} onClose={this.onCloseModalInner}>
+    	   {this.lookupElementDecorator(this.props.lookupElement)}
+    	</ReactModal>
+ */   

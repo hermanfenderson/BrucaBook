@@ -131,7 +131,7 @@ SortNumericDescSvg = () => (
 calcHeader2 = (header) =>
 	{
 	let header2= [...header];
-	(this.props.actionFirst) ? header2.unshift({label: 'Sel', width: this.props.actionWidth || SEL_W}) : header2.push({label: 'Sel', width: this.props.actionWidth || SEL_W})
+	if (!this.props.noSel) (this.props.actionFirst) ? header2.unshift({label: 'Sel', width: this.props.actionWidth || SEL_W}) : header2.push({label: 'Sel', width: this.props.actionWidth || SEL_W})
 	if (this.props.subTables) header2.unshift({label: '', width:  SUB_W})
 	
 	return(header2);	

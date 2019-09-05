@@ -370,10 +370,11 @@ this.STORE_MEASURE = 'STORE_MEASURE';
       case 'ADDED_ITEM_MAGAZZINO':
       case	'CHANGED_ITEM_MAGAZZINO':
       	    let ean = action.payload.key;
-      	    let createdAt = action.payload.val().createdAt;
+      	    //Per gli item cambiati... non va bene il created at....
+      	    let timestamp = ( action.payload.val().changedAt) ?  action.payload.val().changedAt : action.payload.val().createdAt;
       	    
       	    //Se ero in ascolto...smettto di ascoltare e metto il messaggio nel buffer...
-      	    if (state.eanListeners && state.eanListeners[ean] && state.eanListeners[ean] < createdAt )
+      	    if (state.eanListeners && state.eanListeners[ean] && state.eanListeners[ean] < timestamp )
 	      	   {
 	      	   	   let pezzi = action.payload.val().pezzi;
       		   let titolo = action.payload.val().titolo;
@@ -394,7 +395,6 @@ this.STORE_MEASURE = 'STORE_MEASURE';
       	   let listeners = {...state.eanListeners}
            listeners[action.ean] = action.timestamp;
            newState = {...state, eanListeners: listeners};
-           
            break;
            
 
@@ -442,7 +442,7 @@ this.STORE_MEASURE = 'STORE_MEASURE';
         		newState =  state;
     		break;
 			}
-	 
+
 	return(newState);	
 	}
 

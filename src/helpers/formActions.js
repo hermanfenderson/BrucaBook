@@ -8,7 +8,9 @@ import request from 'superagent';
 import {isComplete} from './catalog';
 
 import {urlFactory, getServerTime} from './firebase';
-import {isInternalEAN} from './ean';
+import {isInternalEAN, isValidEAN, generateEAN} from './ean';
+import {isValidBookCode} from '../helpers/validators';
+
 import {getListeningMagazzino, getDataMagazzino}  from '../reducers';
 
 import {magazzinoFA} from '../actions/magazzino'
@@ -19,6 +21,7 @@ import {magazzinoFA} from '../actions/magazzino'
 //Se devo usare timeStamp
 
 export const stdListenItem = (params) => {
+	
  const type1 = params.added_item;
    const type2 = params.changed_item;
    const type3 = params.deleted_item;
@@ -28,8 +31,7 @@ export const stdListenItem = (params) => {
    const itemsUrl = params.itemsUrl;
    const urlParams = params.urlParams;
    const sideActions = params.sideActions;
-   
-  return function(dispatch, getState) {
+   return function(dispatch, getState) {
   	const url = (params.url) ? params.url : urlFactory(getState,itemsUrl, urlParams);
      
   	if (url)
@@ -55,6 +57,12 @@ export const stdListenItem = (params) => {
 	   
 	   });
 	   ref.once('value', snapshot => {
+	   	 dispatch({
+	        type: type4,
+	        payload: snapshot
+	      });
+	      if (sideActions) dispatch(sideActions(type4, snapshot)); 
+		  
 	   	  	if (!onEAN)
     		{
     		let first = (snapshot.val()) ? true : false; //In questo modo non carico due volte ma carico la prima se il data set di initial load è vuoto...
@@ -83,12 +91,7 @@ export const stdListenItem = (params) => {
 		      if (sideActions) dispatch(sideActions(type1, snapshot)); 
 		    });	
 	      }
-	      dispatch({
-	        type: type4,
-	        payload: snapshot
-	      });
-	      if (sideActions) dispatch(sideActions(type4, snapshot)); 
-		  
+	     
 	   });
 	   dispatch({
 	   	type: typeListen,
@@ -159,7 +162,7 @@ this.preparaItem = params.preparaItem;
 this.rigaTestataUrl = params.rigaTestataUrl;
 this.stockMessageQueue = params.stockMessageQueue;
 this.onEAN = params.onEAN;
-this.gestStock =params.getStock;
+this.getStock =params.getStock;
 this.itemsSideActions = params.itemsSideActions;
 
 }
@@ -356,22 +359,14 @@ this.foundCatalogItem = (ean,item) =>
 {
 //Qui prendo il valore dello stock a magazzino... se richiesto.
 let type = this.FOUND_CATALOG_ITEM;
-if (this.getStock) 
-{
-	return function(dispatch, getState) {
-       	const url = urlFactory(getState,'magazzino',null,ean);
-		Firebase.database().ref(url).once('value', snapshot => {
-		 let itemCpy = {...item, ean: ean, stock: snapshot.val() ? snapshot.val().pezzi : 0}
-	      dispatch({
-	        type: type,
-	        item: itemCpy
-	      })
-	      });
-	 }   
-}
-else return({
+let newItem = {...item};
+let stock = item.pezzi;
+delete newItem.pezzi;
+delete newItem.key;
+if (this.getStock) newItem.ora = stock;
+return({
   type: this.FOUND_CATALOG_ITEM,
-  item: {...item, ean: ean}
+  item: {...newItem, ean: ean}
    }
   );
 };
@@ -537,8 +532,18 @@ this.searchCatalogItem = (ean) =>
  
    return function(dispatch, getState) {
    dispatch({type: type});
+      
       var promise = new Promise( function (resolve, reject) {
-          Firebase.database().ref(urlFactory(getState, 'catalogoLocale',null,ean)).once('value').then(
+      	  let magazzinoIndex = getState().magazzino.itemsArrayIndex;
+      	  if (magazzinoIndex[ean] !== undefined)
+      			{
+      			let index = magazzinoIndex[ean];
+      			let items = getState().magazzino.itemsArray;
+      			let values = items[index];
+      			dispatch(foundCatalogItem(ean,values));	
+      			resolve(values);
+      			}
+          else Firebase.database().ref(urlFactory(getState, 'catalogoLocale',null,ean)).once('value').then(
                  (payload) => {
                        if (payload.val()) dispatch(foundCatalogItem(ean,payload.val()));
                        else {
@@ -649,7 +654,7 @@ this.stockMessageQueueListener = (valori) =>
 {
 //Riscritto per gestire il timestamp...
 //Qui se non sto ascoltando i magazzini... devo cominciare a farlo...!
-	const type1 = this.ADD_EAN_LISTENER;
+  	const type1 = this.ADD_EAN_LISTENER;
 	 let now = getServerTime(Firebase.database().ref('/'))();
     return ({type: type1, ean: valori.ean, timestamp: now })  
 }
@@ -776,11 +781,16 @@ this.resetEditedItem = () => {
 //Funzione chiamata quando cambia un campo del form...
 //Mando un oggetto nel formato... campo e valore
 this.changeEditedItem = (name,value) => {
-	   	return {
-			type: this.CHANGE_EDITED_ITEM,
+	let type = this.CHANGE_EDITED_ITEM;
+	let search = this.searchCatalogItem;
+	   	 return function(dispatch,getState) {
+		dispatch( {
+			type: type,
 	    	name: name,
 	    	value: value
-			}
+			})
+		if (name==='ean' && isValidEAN(value)) dispatch(search(value));	
+		}
 	}
 
 
@@ -797,12 +807,14 @@ this.submitEditedItem = (isValid,selectedItem,params,valori) => {
 	      const type = this.SUBMIT_EDITED_ITEM;
 	      const aggiornaItem = this.aggiornaItem;
 	      const aggiungiItem = this.aggiungiItem;
+	      const changeEditedItem = this.changeEditedItem;
 	      var key = null;
 	      const itemId = selectedItem ? selectedItem.key : null;
 	      return function(dispatch, getState) {
 			dispatch({type: type});
 			if (selectedItem && isValid) key=dispatch(aggiornaItem(params, itemId, valori));
 			else if(isValid) key=dispatch(aggiungiItem(params,valori));
+			else if(isValidBookCode(valori.ean)) dispatch(changeEditedItem('ean', generateEAN(valori.ean)));
 			return(key);
 	      }
 	}

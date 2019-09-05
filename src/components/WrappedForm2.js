@@ -29,11 +29,13 @@ const FormItem = Form.Item; //Per semplicità
 //Gestisco pmChange separatamente per consentire l'over-ride della funzione onChange...
 const renderChildren = (props) => {
 let children = React.Children.map(props.children, child => {
+	          if (child)
+	        	{
 	    	   let childProps = child.props;
 	    	   let top = childProps.coord.top;
 	    	 return <FixBlock width={childProps.coord.width} top={top} left={childProps.coord.left} height={childProps.coord.height}  >
 	                {React.cloneElement(child, {disableAllColon: props.disableAllColon, onChange: props.onChange, errorMessages: props.errorMessages, readOnlyForm: props.readOnlyForm, formValues: props.formValues, setFocus: props.setFocus})}
-			        </FixBlock> })
+			        </FixBlock> }})
    return(children);
 }
 

@@ -34,7 +34,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ shiftMessage, resetBolla, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataBolla, unlistenTestataBolla, storeMeasure, setHeaderInfo, setFilter, resetFilter}, dispatch);
+  listenTestataBolla, unlistenTestataBolla, setHeaderInfo, setFilter, resetFilter}, dispatch);
 }
 
 const Bolla = connect(mapStateToProps, mapDispatchToProps)(BollaComponent)

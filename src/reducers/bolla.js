@@ -228,15 +228,12 @@ function transformAndValidateEditedRigaBolla(cei, name, value)
    	    ((value) => {return !isAmount(value)})(cei.values.prezzoUnitario), 
    	    ((value) => {return (value.length>0 && !isAmount(value))})(cei.values.prezzoUnitario));
    	    
-    errMgmt(cei, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.pezzi));
-  	errMgmt(cei, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.gratis));
+    errMgmt(cei, 'pezzi','notPositive','num. intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.pezzi));
+  	errMgmt(cei, 'gratis','notPositive','num. intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.gratis));
   
   
 
-
-    errMgmt(cei, 'pezzi','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.pezzi));
-  	errMgmt(cei, 'gratis','notPositive','numero intero',  ((value) => {return !isNotNegativeInteger(value)})(cei.values.gratis));
-  	//Così si accendono i campi vuoti quando valida...
+	//Così si accendono i campi vuoti quando valida...
   	
   	errMgmt(cei, 'pezzi','noItems','',  ((pezzi,gratis) => {return (!((pezzi>=0) && (gratis>=0) && (pezzi+gratis>0)))})(cei.values.pezzi,cei.values.gratis), false);
   	errMgmt(cei, 'gratis','noItems','',  ((pezzi,gratis) => {return (!((pezzi>=0) && (gratis>=0) && (pezzi+gratis>0)))})(cei.values.pezzi,cei.values.gratis), false);

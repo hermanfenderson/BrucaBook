@@ -12,8 +12,10 @@ const editedInventarioValuesInitialState =
 				titolo: '',
 				autore: '',
 				prezzoListino: '',
-				stock: 0,
 				pezzi: 0,
+				prima: 0,
+				dopo: 0,
+				ora: 0,
 				imgUrl: ''	
 	};
 	
@@ -66,10 +68,10 @@ let geometryParams = {cal: {
 										{name: 'titolo', label: 'Titolo', min: 250,sort:'string', ellipsis: true},
 										{name: 'autore', label: 'Autore', min: 110,sort:'string', ellipsis: true},
 										{name: 'prezzoListino', label: 'Prezzo', min: 60, max: 60},
-										{name: 'prima', label: 'prima', min: 50, max: 50},
+										{name: 'prima', label: 'Prima', min: 50, max: 50},
 										{name: 'pezzi', label: 'Variaz.', min: 50, max: 50},
-										{name: 'dopo', label: 'dopo', min: 50, max: 50},
-										{name: 'ora', label: 'ora', min: 50, max: 50},
+										{name: 'dopo', label: 'Dopo', min: 50, max: 50},
+										{name: 'ora', label: 'Ora', min: 50, max: 50},
 										
 
 									 ],
@@ -134,10 +136,12 @@ const rigaInventarioR = new FormReducer(
 var stockMap = new Map();
 
 
-
 //In input il nuovo campo... in output il nuovo editedRigaBolla
 function transformAndValidateEditedRigaInventario(cei, name, value)
 {  	
+	let oldPezzi = null;
+	if (name === 'pezzi' && Number.isInteger(cei.values.pezzi)) oldPezzi = cei.values.pezzi;
+	if (oldPezzi === '') oldPezzi = 0;
 	cei.values[name] = value;
 	//Gestione cambiamenti... forse non serve...
     switch (name) {
@@ -164,7 +168,13 @@ function transformAndValidateEditedRigaInventario(cei, name, value)
 	    updateEANErrors(cei);
 		}
 
-  
+    if (name === 'pezzi')
+    	{
+        console.log(oldPezzi);
+       	if (Number.isInteger(value)) cei.values.dopo = value + cei.values.prima;	
+       	let ora =  value - oldPezzi + cei.values.ora; //Lavoro per differenza...
+        if (Number.isInteger(value)) cei.values.ora = ora;  //non modifico se non ho un valore... valido
+    	}
 		
      errMgmt(cei, 'pezzi','notInteger','numero intero',  ((value) => {return !isInteger(value)})(cei.values.pezzi));
   	
@@ -270,27 +280,40 @@ export default function inventario(state = initialState(), action) {
 	        if (action.name === 'ean' && newState.editedItem.eanState === 'VALID' && state.itemsArrayIndex[action.value] >=0 ) newState.tableScrollByKey = action.value;
 	    	break;	    
 	    
-	    case rigaInventarioR.INITIAL_LOAD_ITEM_STORICO_MAGAZZINO:
+	    case rigaInventarioR.DATI_STORICO_MAGAZZINO:
 	    	{newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
              let objStockStorico = newState.stock;
-		    
-		    let iA = newState.itemsArray;
-		    for (let i=0; i<iA; i++)
+		     let iA =[...newState.itemsArray];
+		    for (let i=0; i<iA.length; i++)
 		    	{
 		    	let ean = iA[i].ean;	
 		    	let variaz = (iA[i].pezzi) ? iA[i].pezzi : 0; 
 		    	if (objStockStorico[ean]!==null) {let prima = objStockStorico[ean]; iA[i].prima = prima; iA[i].dopo = prima+variaz;}  
 		    	}
+		    newState.itemsArray = iA;	
 	    	}
 	    	break;
-		
+		case 'CHANGED_ITEM_MAGAZZINO':
+	        {newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
+	         if (action.payload.key)   {
+             			           let itemsArray = [...newState.itemsArray];
+        						   let itemsArrayIndex = newState.itemsArrayIndex;
+        						   let ora = action.payload.val().pezzi;
+        						   let ean = action.payload.key;
+        						   let index =itemsArrayIndex[ean];
+        						   if (index !== undefined) itemsArray[index].ora = ora;
+        						   newState.itemsArray = itemsArray;
+            					}
+             
+	        }
+			break;
 	    case 'ADDED_ITEM_INVENTARIO_SIDE':
 	    case 'CHANGED_ITEM_INVENTARIO_SIDE':
 	    case 'INITIAL_LOAD_ITEM_INVENTARIO_SIDE':
 	       {
 	       let stockOra ={...state.stockOra};
 	       let itemsArray = [...state.itemsArray];
-           let itemsArrayIndex = {...state.itemsArrayIndex};
+           let itemsArrayIndex = state.itemsArrayIndex;
 	       let deltaArray = Object.entries(action.deltaStockOra);  
 	       for (let i=0; i<deltaArray.length; i++)
 	    		{   let ean = deltaArray[i][0];
@@ -299,6 +322,17 @@ export default function inventario(state = initialState(), action) {
 	    			let index = itemsArrayIndex[ean];
 	    			
 	    			itemsArray[index].ora=ora;
+	    			if (action.type === 'CHANGED_ITEM_INVENTARIO_SIDE') 
+		    			{
+		    			if (state.stock[ean] !== null)
+		    				{
+		    				let prima = state.stock[ean];	
+		    				itemsArray[index].prima=prima;
+		    				itemsArray[index].dopo=prima + itemsArray[index].pezzi;
+		    				}
+		    		  
+		    		       
+		    			}
 	    		}
 	       newState = {...state, stockOra: stockOra, itemsArray: itemsArray};		
 	       }		
@@ -313,6 +347,11 @@ export default function inventario(state = initialState(), action) {
 	       newState = {...state, stockOra: stockOra};	
 	       }	
 	    	break;
+	    
+	    case 'FOUND_CATALOG_ITEM_INVENTARIO':
+	      newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
+	      if (newState.stock[action.item.ean] !== undefined) {newState.editedItem.values.prima = newState.stock[action.item.ean]; newState.editedItem.values.dopo = newState.stock[action.item.ean];}
+	      break;
    	    	    
       default:
     

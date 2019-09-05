@@ -16,6 +16,7 @@ let geometryParams = {cal: {
 										{name: 'nomeCategoria', min: 60},
 									
 										{name: 'reset', min: 120, max: 120},
+										{name: 'save', min: 120, max: 120},
 									
 										],
 										
@@ -49,7 +50,9 @@ let geometryParams = {cal: {
 				  	   ],
 				 geo: [ 
 	
-
+                        {containerCoors: (cal) =>  {return({height: cal.h , width: cal.w, top: 0, left: 0})}},
+                        {modalContainerCoors: (cal) =>  {return({height: cal.h -100, width: cal.w -100, top: 0, left: 0})}},
+                        
      		    		{formSearchCoors: (cal) =>  {return({height: cal.formSearchHeight - FMH, width: cal.formSearchWidth -FMW, top: 0, left: 10})}},
     				
      		    		{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}},
