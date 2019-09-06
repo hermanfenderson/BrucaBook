@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import WrappedTable from '../../../components/WrappedVirtualizedTable'
 import TableDettagliResa from './TableDettagliResa'
 import ModalDettagli from '../containers/ModalDettagli'
-import {getDetailsInMatrix} from '../../../helpers/form'
 
 
 			   

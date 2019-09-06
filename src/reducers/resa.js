@@ -14,9 +14,6 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 		DELETED_RIGABOLLA_IN_RESA,  
 		INITIAL_LOAD_RIGABOLLA_IN_RESA,
 		UNLISTEN_BOLLA_IN_RESA, 
-		LISTEN_DETTAGLI_EAN,
-		UNLISTEN_DETTAGLI_EAN,
-		GET_DETTAGLI_EAN,
 		SET_ACTIVE_MODAL,
 		SET_PERIOD_RESA,
 		SET_MODAL_DETAILS
@@ -26,7 +23,7 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 
 
 import {isNotNegativeInteger} from '../helpers/validators';
-import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem,   insertRow, removeRow, getStock} from '../helpers/form';
+import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem,   insertRow, removeRow} from '../helpers/form';
 import {calcHeaderFix, initCalcGeometry} from '../helpers/geometry';
 
 
@@ -257,7 +254,6 @@ function calcRigaBolla(state, action)
 	   	let indiceEAN = {...state.indiceEAN};
 	   	let tabellaEAN = [...state.tabellaEAN];
 	   	let tabelleRigheEAN = {...state.tabelleRigheEAN};
-	   	let dettagliEAN = state.dettagliEAN;
 	   //	console.log(state.stock);   
    		for (let i=0; i<righe.length; i++)
    			{
@@ -346,7 +342,6 @@ export default function resa(state = initialState(), action) {
    	    newState = {...state, dettagliEAN: dettagliEAN};
    	    }
    	    break;	  
-	*/    
    //Anche qui aggiorno il valore dello stock	    
    case GET_DETTAGLI_EAN:
    	    {let dettagliEAN = {...state.dettagliEAN};
@@ -357,6 +352,8 @@ export default function resa(state = initialState(), action) {
    	    newState = {...state, dettagliEAN: dettagliEAN}	
    	    }
    	    break;
+	*/    
+
    //Ascolto le bolle in resa aggiungendole a un elenco di bolle osservate...
    case LISTEN_BOLLA_IN_RESA:
    		{
@@ -399,9 +396,9 @@ export default function resa(state = initialState(), action) {
     
     
     case INITIAL_LOAD_RIGABOLLA_IN_RESA: 
-		{
+		
 		newState = calcRigaBolla(state, action);
-		}
+		
     break;
    	case ADDED_RIGABOLLA_IN_RESA: 
    	case CHANGED_RIGABOLLA_IN_RESA:

@@ -4,10 +4,8 @@ import {getEditedCatalogItem, getSaveGeneral, getSelettoreIVA, getLibreria, getC
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
-import {store} from '../../../index.js';
 
 const changeEditedCatalogItem = catalogoFA.changeEditedItem;
-const searchCatalogItem = catalogoFA.searchCatalogItem;
 
 
 //Passa lo stato modificato come previsto ma intercetta un cambiamento di ean e scatena azioni...

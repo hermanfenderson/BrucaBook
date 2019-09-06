@@ -176,22 +176,22 @@ export function forzaAggiornaMagazzino() {
 			        			let values = rowsData[j]; 
 			        			let ean = values.ean;
 			        			let pezzi =  (eanInfo[ean]) ? eanInfo[ean].pezzi : 0;
-			        			if (values.tipo == "bolle")
+			        			if (values.tipo === "bolle")
 				  					{
-					    			pezzi = parseInt(values.pezzi) + parseInt(values.gratis)+ pezzi;
+					    			pezzi = parseInt(values.pezzi,10) + parseInt(values.gratis,10)+ pezzi;
 					    			}
-								 if (values.tipo == "rese")
+								 if (values.tipo === "rese")
 				  					{
-					    			pezzi = pezzi - (parseInt(values.pezzi) + parseInt(values.gratis));
+					    			pezzi = pezzi - (parseInt(values.pezzi,10) + parseInt(values.gratis,10));
 					    			}	
-								if (values.tipo == "scontrini")
+								if (values.tipo === "scontrini")
 				  					{
-				  					pezzi = pezzi - parseInt(values.pezzi);
+				  					pezzi = pezzi - parseInt(values.pezzi,10);
 					    			}
 									
-								if (values.tipo == "inventari")
+								if (values.tipo === "inventari")
 				  					{
-				  					pezzi = pezzi + parseInt(values.pezzi);
+				  					pezzi = pezzi + parseInt(values.pezzi,10);
 					    			}
 				        		eanInfo[ean] = {ean: (values.ean) ? values.ean : '', 
         													 titolo: (values.titolo) ? values.titolo : '',

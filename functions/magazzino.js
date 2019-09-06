@@ -19,22 +19,22 @@ const calcolaMagazzino = (registro) =>
 	    	if (i===0 && numRows > 1) isNew = false;
 		       	for (let j=0; j<numRows;j++)
 		    	   {let riga = righePerData[i][1][j];
-		            			if (riga.tipo == "bolle")
+		            			if (riga.tipo === "bolle")
 				  					{
-					    			totalePezzi = parseInt(riga.pezzi) + parseInt(riga.gratis)+ totalePezzi;
+					    			totalePezzi = parseInt(riga.pezzi,10) + parseInt(riga.gratis,10)+ totalePezzi;
 					    			}
-							    if (riga.tipo == "rese")
+							    if (riga.tipo === "rese")
 				  					{
-					    			totalePezzi = totalePezzi - (parseInt(riga.pezzi) + parseInt(riga.gratis));
+					    			totalePezzi = totalePezzi - (parseInt(riga.pezzi,10) + parseInt(riga.gratis,10));
 					    			}	
-								if (riga.tipo == "scontrini")
+								if (riga.tipo === "scontrini")
 				  					{
-				  					totalePezzi = totalePezzi - parseInt(riga.pezzi);
+				  					totalePezzi = totalePezzi - parseInt(riga.pezzi,10);
 					    			}
 									
-								if (riga.tipo == "inventari")
+								if (riga.tipo === "inventari")
 				  					{
-				  					totalePezzi = totalePezzi + parseInt(riga.pezzi);
+				  					totalePezzi = totalePezzi + parseInt(riga.pezzi,10);
 					    			}
 		    	   }
 	    		}   

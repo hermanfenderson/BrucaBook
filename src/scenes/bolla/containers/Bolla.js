@@ -1,7 +1,7 @@
 import BollaComponent from '../components/Bolla'
 import {rigaBollaFA} from '../../../actions/bolla'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
-import {storeMeasure, setHeaderInfo} from '../../../actions'
+import {setHeaderInfo} from '../../../actions'
 
 import {getMessageBufferBolla, getShowCatalogModal, getEditedCatalogItem, getTestataBolla, getOrdiniModalVisible, getListeningTestataBolla, isStaleTotali, getEditedRigaBolla, getTotaliBolla, getFiltersBolla, getGeometry} from '../../../reducers'
 import { connect} from 'react-redux'

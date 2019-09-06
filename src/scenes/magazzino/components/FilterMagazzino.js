@@ -14,8 +14,8 @@ const FilterMagazzino = (props) =>
         <WrappedForm.Input field='editore' label='Editore'  coord={cols.editore} />
         
          <WrappedForm.Input field='nomeCategoria' label='Categoria'  coord={cols.nomeCategoria} />
-        <WrappedForm.Button type={'button'} coord={cols.reset} onClock={props.resetFilter}>Reset </WrappedForm.Button>
-      {!props.inModal && ( <WrappedForm.Button type={'button'} coord={cols.save} onClock={props.saveMagazzino}>Salva </WrappedForm.Button> )}
+        <WrappedForm.Button type={'button'} coord={cols.reset} onClick={props.resetFilter}>Reset </WrappedForm.Button>
+      {!props.inModal && ( <WrappedForm.Button type={'button'} coord={cols.save} onClick={props.saveMagazzino}>Salva </WrappedForm.Button> )}
       		
            </WrappedForm> 
 		)

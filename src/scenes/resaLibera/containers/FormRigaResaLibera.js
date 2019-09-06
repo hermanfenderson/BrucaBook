@@ -4,12 +4,10 @@ import {getEditedRigaResaLibera} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
-import {store} from '../../../index.js';
 
 const changeEditedRigaResa = rigaResaFA.changeEditedItem;
 const submitEditedRigaResa = rigaResaFA.submitEditedItem;
 const resetEditedRigaResa = rigaResaFA.resetEditedItem;
-const searchCatalogItem = rigaResaFA.searchCatalogItem;
 const focusSet = rigaResaFA.focusSet;
 //Passa lo stato modificato come previsto ma intercetta un cambiamento di ean e scatena azioni...
 const getEditedRigaResaSideEffects= (state) => {

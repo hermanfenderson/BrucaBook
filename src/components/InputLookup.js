@@ -5,8 +5,6 @@
 
 import React from 'react';
 import { Input,Icon, Modal} from 'antd';
-//import ReactModal from 'react-modal';
-import ReactModal from 'react-responsive-modal';
 
 let textInput = null;
 

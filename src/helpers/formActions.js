@@ -11,7 +11,7 @@ import {urlFactory, getServerTime} from './firebase';
 import {isInternalEAN, isValidEAN, generateEAN} from './ean';
 import {isValidBookCode} from '../helpers/validators';
 
-import {getListeningMagazzino, getDataMagazzino}  from '../reducers';
+import {getListeningMagazzino}  from '../reducers';
 
 import {magazzinoFA} from '../actions/magazzino'
 
@@ -365,7 +365,7 @@ delete newItem.pezzi;
 delete newItem.key;
 if (this.getStock) newItem.ora = stock;
 return({
-  type: this.FOUND_CATALOG_ITEM,
+  type: type,
   item: {...newItem, ean: ean}
    }
   );
@@ -826,7 +826,6 @@ this.datiStoricoMagazzino = (date) => {
 //	 	let storicoMagazzinoRef = Firebase.database().ref(urlFactory(getState, 'allStoricoMagazzino'));
 //	 	let dateStoricoRef = Firebase.database().ref(urlFactory(getState, 'dateStoricoMagazzino'));
 	 	
-	 	let magazzinoRef = Firebase.database().ref(urlFactory(getState, 'magazzino'));
 	 	let eanInfo = {};
 	 	Firebase.database().ref(urlFactory(getState, 'registroData')).once('value', snapshot => {
 	 				let registroData = Object.entries(snapshot.val());
@@ -843,22 +842,22 @@ this.datiStoricoMagazzino = (date) => {
 			        			let values = rowsData[j]; 
 			        			let ean = values.ean;
 			        			let pezzi =  (eanInfo[ean]) ? eanInfo[ean].pezzi : 0;
-			        			if (values.tipo == "bolle")
+			        			if (values.tipo === "bolle")
 				  					{
-					    			pezzi = parseInt(values.pezzi) + parseInt(values.gratis)+ pezzi;
+					    			pezzi = parseInt(values.pezzi,10) + parseInt(values.gratis,10)+ pezzi;
 					    			}
-								 if (values.tipo == "rese")
+								 if (values.tipo === "rese")
 				  					{
-					    			pezzi = pezzi - (parseInt(values.pezzi) + parseInt(values.gratis));
+					    			pezzi = pezzi - (parseInt(values.pezzi,10) + parseInt(values.gratis,10));
 					    			}	
-								if (values.tipo == "scontrini")
+								if (values.tipo === "scontrini")
 				  					{
-				  					pezzi = pezzi - parseInt(values.pezzi);
+				  					pezzi = pezzi - parseInt(values.pezzi,10);
 					    			}
 									
-								if (values.tipo == "inventari")
+								if (values.tipo === "inventari")
 				  					{
-				  					pezzi = pezzi + parseInt(values.pezzi);
+				  					pezzi = pezzi + parseInt(values.pezzi,10);
 					    			}
 				        		eanInfo[ean] = {ean: (values.ean) ? values.ean : '', 
         													 titolo: (values.titolo) ? values.titolo : '',
@@ -902,10 +901,3 @@ const aggiornaRigheInventario = (params, getState, itemId) =>
     	Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
     	};
 
-const aggiornaOccorrenzeInventario = (getState) =>
-    	{
-		let updatedTotali = {magazzino: getState().inventario.totaleOccorrenze};
-		let idInventario = getState().inventario.listeningItem;
-	    if (idInventario) Firebase.database().ref(urlFactory(getState,'totaliInventario', idInventario)).update(updatedTotali);
-		};
-		

@@ -133,7 +133,6 @@ const rigaInventarioR = new FormReducer(
 								calcGeometry: calcGeometry}); 
 
 
-var stockMap = new Map();
 
 
 //In input il nuovo campo... in output il nuovo editedRigaBolla
@@ -294,7 +293,7 @@ export default function inventario(state = initialState(), action) {
 	    	}
 	    	break;
 		case 'CHANGED_ITEM_MAGAZZINO':
-	        {newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
+	        newState = rigaInventarioR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaInventario);
 	         if (action.payload.key)   {
              			           let itemsArray = [...newState.itemsArray];
         						   let itemsArrayIndex = newState.itemsArrayIndex;
@@ -305,7 +304,7 @@ export default function inventario(state = initialState(), action) {
         						   newState.itemsArray = itemsArray;
             					}
              
-	        }
+	        
 			break;
 	    case 'ADDED_ITEM_INVENTARIO_SIDE':
 	    case 'CHANGED_ITEM_INVENTARIO_SIDE':

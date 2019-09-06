@@ -5,12 +5,10 @@ import {getEditedRigaBolla, getEanTreeBolla, getShowOrdiniApertiModal, getOrdini
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
-import {store} from '../../../index.js';
 
 const changeEditedRigaBolla = rigaBollaFA.changeEditedItem;
 const submitEditedRigaBolla = rigaBollaFA.submitEditedItem;
 const resetEditedRigaBolla = rigaBollaFA.resetEditedItem;
-const searchCatalogItem = rigaBollaFA.searchCatalogItem;
 const focusSet = rigaBollaFA.focusSet;
 //Passa lo stato modificato come previsto ma intercetta un cambiamento di ean e scatena azioni...
 const getEditedRigaBollaSideEffects= (state) => {

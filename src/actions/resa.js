@@ -1,7 +1,7 @@
 import {FormActions} from '../helpers/formActions';
 import {addCreatedStamp,addChangedStamp, urlFactory} from '../helpers/firebase';
 import Firebase from 'firebase';
-import {getBolleOsservate, getIndiceEAN, getDettagliEANResa} from '../reducers';
+import {getBolleOsservate} from '../reducers';
 import {getDetailsInMatrix} from '../helpers/form'
 
 export const SCENE = 'RESA';

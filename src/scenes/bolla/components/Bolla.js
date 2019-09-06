@@ -10,7 +10,6 @@ import OrdiniModalTable from '../../ordine/containers/OrdiniModalTable'
 
 
 import React, {Component} from 'react'
-import ReactDOM from 'react-dom';
 import moment from 'moment';
 import 'moment/locale/it';
 

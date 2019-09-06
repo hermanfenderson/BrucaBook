@@ -1,7 +1,6 @@
 import TableMagazzino from '../containers/TableMagazzino';
 import FilterMagazzino from './FilterMagazzino';
 import React, {Component} from 'react'
-import classNames from 'classnames';
 
 
 import FixBlock from '../../../components/FixBlock'
