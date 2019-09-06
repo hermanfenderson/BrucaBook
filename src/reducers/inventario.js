@@ -241,7 +241,7 @@ export default function inventario(state = initialState(), action) {
 		    let objStockOra = state.stockOra;
 		    
 		    let iA = newState.itemsArray;
-		    for (let i=0; i<iA; i++)
+		    for (let i=0; i<iA.length; i++)
 		    	{
 		    	let ean = iA[i].ean;	
 		    	let variaz = (iA[i].pezzi) ? iA[i].pezzi : 0; 

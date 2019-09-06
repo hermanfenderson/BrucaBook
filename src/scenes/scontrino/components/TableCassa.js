@@ -93,7 +93,8 @@ class TableCassa extends Component
 				'prezzoTotale': (text, record, index) => {return(this.customRenderFunc(text,record,3))},
 					
 				}
-		
+   noAction = (rowData, rowIndex) => {if (rowData.tipo ==='rigaScontrino') return true; else return false;};  			
+	
     	render() { 
         let props = {...this.props};
     	let selectedItemKey = null;
@@ -112,7 +113,7 @@ class TableCassa extends Component
 			<WrappedTable2 {...props} 	
 			height={height} 
 			width={width} 
-			noAction={(rowData, rowIndex) => {if (rowData.tipo ==='rigaScontrino') return true; else return false;}}  
+			noAction={this.noAction}
 		
 		 titoloWidth={this.props.geometry.tableCassaTitoloWidth} 
 		 actionWidth={30} 

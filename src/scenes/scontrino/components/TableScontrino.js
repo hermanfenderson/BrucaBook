@@ -95,7 +95,6 @@ class TableScontrino extends Component
 			   ];
     	*/
     	let header = this.props.geometry.header;
-    	let customRowRender = {};
     		
     		     //'ean' : (text, record, index) => { return(<div style={{width: colsW.ean - 10}}> {text}</div>)},
     		//	'titolo' : (text, record, index) => { return(<div style={{width: colsW.titolo-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
@@ -108,7 +107,7 @@ class TableScontrino extends Component
     	delete props['deleteRigaScontrino']; //Non la passo liscia...
     	delete props['setSelectedRigaScontrino']; //Idem
     	  return(
-			<WrappedTable {...props} height={height} width={width} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow}  ordiniRow={this.ordiniRow} selectRow={this.editRow} header={header} customRowRender={customRowRender}/>
+			<WrappedTable {...props} height={height} width={width} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow}  ordiniRow={this.ordiniRow} selectRow={this.editRow} header={header} />
 			)}
     }		
 	
