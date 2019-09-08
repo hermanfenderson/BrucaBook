@@ -30,9 +30,14 @@ class Scontrino extends Component {
 
  componentDidMount() {
      this.props.listenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa); //In modo da acoltare il valore giusto...
+     this.props.listenScontrini([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa]);
+     this.props.listenElencoScontrini([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa]);
+     
 	if (this.props.match.params.scontrino) 
 			{
-				this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+			//	this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+				this.props.setScontrinoId(this.props.match.params.scontrino); 
+				
 			}
  	
     }
@@ -60,10 +65,10 @@ componentDidUpdate = (oldProps) => {
 	    		if (oldIdScontrino)
 	    			{
 	    			//this.props.setSelectedRigaCassa(null);
-					 this.props.resetScontrino(oldIdScontrino);	
-					 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  oldIdScontrino);
+				//	 this.props.resetScontrino(oldIdScontrino);	
+				//	 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  oldIdScontrino);
 	    			}
-	    	 if (idScontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
+	    	 //if (idScontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
 				
 	    	}
 	    var header = "Cassa ";
@@ -79,11 +84,14 @@ componentWillUnmount = () =>{
 	
   if (this.props.match.params.scontrino) 
 		{this.props.setSelectedRigaCassa(null);
-		 this.props.resetScontrino(this.props.match.params.scontrino);	//Serve?
-		  this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino);
+	//	 this.props.resetScontrino(this.props.match.params.scontrino);	//Serve?
+	//	  this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino);
 		}
   	this.props.resetCassa(this.props.match.params.cassa);
 	 this.props.unlistenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa);
+	 this.props.offListenScontrini([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa]);
+     this.props.offListenElencoScontrini([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa]);
+     
 }
 
 resetEditedCatalogItem = () => {
@@ -99,6 +107,7 @@ submitRigaCassa = (e) => {
 	e.preventDefault();
     let key = this.props.submitRigaCassa(true, null, [this.props.match.params.anno, this.props.match.params.mese, this.props.match.params.cassa],{});
     this.props.history.push('/scontrino/'+ period2month([this.props.match.params.anno, this.props.match.params.mese]) + '/' +this.props.match.params.cassa + '/'+key  );
+    this.props.setScontrinoId(key);
 }  
 
 handleKeyPress = (e) =>
@@ -134,7 +143,7 @@ return (
  	
  
   <FixBlock  style={{backgroundColor: 'white'}} coors={this.props.geometryC.tableCoors}>
- 	    <TableCassa  geometry={this.props.geometryC}  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+ 	    <TableCassa  setScontrinoId={this.props.setScontrinoId} geometry={this.props.geometryC}  filters={this.props.filters} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	</FixBlock>
  </FixBlock>
  

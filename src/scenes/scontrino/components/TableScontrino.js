@@ -34,15 +34,16 @@ class TableScontrino extends Component
     
     
     componentDidMount() {
-    	this.listenScontrino(null, this.props);   		
+    	//this.listenScontrino(null, this.props);   		
     		}
 	
 	componentDidUpdate = (oldProps) => {
-		this.listenScontrino(oldProps, this.props);
+		//this.listenScontrino(oldProps, this.props);
 	
 	}
 	
 	 componentWillUnmount() {
+	 	/*
 	 	if (this.props.listeningItemScontrino && this.props.listeningItemScontrino[3])
     			{  
     				let currentListenedIdScontrino = this.props.listeningItemScontrino[3];
@@ -51,7 +52,7 @@ class TableScontrino extends Component
     	   			params.push(currentListenedIdScontrino);
                    	this.props.offListenRigaScontrino(params, this.props.listenersItemScontrino); 
     	   		}
-    	   	
+    	 */  	
 	}
 	
 	

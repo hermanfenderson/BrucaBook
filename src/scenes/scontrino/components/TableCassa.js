@@ -11,28 +11,11 @@ class TableCassa extends Component
     {
     componentDidMount() {
      
-    let params = [...this.props.period];
-   	params.push(this.props.cassa);
-   	this.props.listenRigaCassa(params); 
-   	
-     //Non ho la minima idea di cosa faccia questa if!!!
-       if ((this.props.scontrino && !this.props.selectedItem) || (this.props.scontrino && this.props.selectedItem && (this.props.scontrino !== this.props.selectedItem.key))) {
-     	 	if (this.props.index.chiavi && (this.props.index.chiavi[this.props.scontrino]>=0) && this.props.data[this.props.index.chiavi[this.props.scontrino]]) 
-    			{this.editRow(this.props.data[this.props.index.chiavi[this.props.scontrino]]);
-    			}
-       }	
      	
      		   	
 	}
 	
   componentWillUnmount() {
-  if (this.props.listeningItemCassa[2]) 
-    	   		{
-    	   		let params = [...this.props.period];
-    	   		params.push(this.props.listeningItemCassa[2]);
-    
-    	   		this.props.offListenRigaCassa(params, this.props.listenersItemCassa ); 
-    	   		}
   }	
   
  	deleteRow = (row) => {
@@ -65,10 +48,12 @@ class TableCassa extends Component
 	editRow = (row) => {
 		if (row.tipo==='scontrino')
 			{
+			console.log(row);	
 			let params = [...this.props.period];
     		params.push(this.props.cassa);
     		this.props.setSelectedRigaCassa(row);
     		this.props.history.push('/scontrino/'+ period2month(this.props.period) + '/' +this.props.cassa + '/'+row.scontrinoKey  );
+    		this.props.setScontrinoId(row.scontrinoKey); 
 			}
 	}
     
@@ -79,6 +64,10 @@ class TableCassa extends Component
     	let value=text;
     	if (!isScontrino && pos===1) value='';
     	let isTitolo = (!isScontrino && pos===0);
+    	if (isTitolo) value=record.titolo;
+    	if (isScontrino && pos===2) value=record.totali.pezzi;
+    	if (isScontrino && pos===3) value=record.totali.prezzoTotale;
+    	
     	let style={width: width};
     	if (isTitolo) style.marginLeft=-30;
     	return(<div style={style} className={classNames({'vtCellCassaScontrino': isScontrino, 'vtCellCassaRiga': !isScontrino, 'vtCellValue': true, 'vtCellSmall': true,'vtCellEllipsis': isTitolo })} >{value}</div>)

@@ -53,7 +53,7 @@ export function urlFactory(getState, destination, params, itemId)
 				case "righeElencoRese": url = prefissoNegozio(getState)+'elencoRese/'+params[0]+'/'+params[1]; break;
 				case "righeResa": url = prefissoNegozio(getState)+'rese/'  +params[0]+'/'+params[1] + '/'+params[2] ; break;
 			
-				case "righeElencoScontrini": url = prefissoNegozio(getState)+'elencoScontrini/'+params[0]+'/'+params[1] + '/'+params[2]; break;
+				case "righeElencoScontrini": url = prefissoNegozio(getState)+'elencoScontrini/'+params[0]+'/'+params[1] + '/'+params[2];  break;
 				
 				//Elenco di tutte le info di una cassa...
 			    case "righeCassa": url = prefissoNegozio(getState)+'scontrini/'+params[0]+'/'+params[1]+'/'+params[2]; break;
@@ -377,5 +377,36 @@ export const encodeSlash = (path) => {
 export const decodeSlash = (key) => {
 	return(key.replace(/,/g, "/"));
 }
-
-
+//Dato un initial load, added, changed o deleted tiene in memoria una copia 
+//I tipi sono INITIAL, ADDED, CHANGED, DELETED e sono dedotti magicamente dal tipo passato... 
+export const persistTree = (params) =>
+{
+	let state = params.state;
+	let type = params.type;
+	let payload = params.payload;
+	//Il nome dell'oggetto dello stato da manipolare...
+	let objName = params.objName;
+	let obj = {...state[objName]};
+	switch(type.split('_')[0])
+	{
+		case 'INITIAL':
+			let array = Object.entries(payload.val());
+			for (let i=0; i<array.length; i++) obj[array[i][0]] = array[i][1];
+		break;
+		
+		case 'ADDED':
+		case 'CHANGED':
+			obj[payload.key] = payload.val();
+		break;
+		
+		case 'DELETED':
+			delete obj[payload.key];
+		break;
+		default:
+		console.error("qualcosa è andato storto");
+		break;
+	}
+	let newState = {...state};
+	newState[objName] = obj;
+	return(newState);
+}

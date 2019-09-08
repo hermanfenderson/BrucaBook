@@ -1,6 +1,6 @@
 import ScontrinoComponent from '../components/Scontrino'
-import {rigaScontrinoFA} from '../../../actions/scontrino'
-import {cassaFA} from '../../../actions/cassa'
+import {rigaScontrinoFA, setScontrinoId} from '../../../actions/scontrino'
+import {cassaFA, listenScontrini, listenElencoScontrini, offListenScontrini, offListenElencoScontrini} from '../../../actions/cassa'
 
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {setHeaderInfo} from '../../../actions'
@@ -56,8 +56,8 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ resetFilter, setFilter, shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataScontrino, unlistenTestataScontrino, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa}, dispatch);
+  return bindActionCreators({ listenScontrini, listenElencoScontrini, offListenScontrini, offListenElencoScontrini, resetFilter, setFilter, shiftMessage, resetScontrino, resetTableScontrino, submitEditedCatalogItem, resetEditedCatalogItem, 
+  listenTestataScontrino, unlistenTestataScontrino, setHeaderInfo, submitRigaCassa, listenTestataCassa, unlistenTestataCassa, resetCassa, setSelectedRigaCassa, setScontrinoId}, dispatch);
 }
 
 const Scontrino = connect(mapStateToProps, mapDispatchToProps)(ScontrinoComponent)

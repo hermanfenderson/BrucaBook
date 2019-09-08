@@ -3,6 +3,8 @@ import {FormActions} from '../helpers/formActions';
 export const SCENE = 'SCONTRINO';
 export const SET_SCONTO_SCONTRINO = 'SET_SCONTO_SCONTRINO';
 export const SET_EAN_LOOKUP_OPEN = 'SET_EAN_LOOKUP_OPEN';
+export const SET_SCONTRINO_ID = 'SET_SCONTRINO_ID';
+
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
 function preparaItem(riga)
@@ -17,6 +19,11 @@ function preparaItem(riga)
      	
     
    }
+export const setScontrinoId = (scontrinoId) =>
+{
+console.log(scontrinoId);	
+ return({type: SET_SCONTRINO_ID, scontrinoId: scontrinoId});	
+}
 
 export const setEanLookupOpen = (bool) =>
 {

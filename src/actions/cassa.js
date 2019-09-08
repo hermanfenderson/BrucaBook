@@ -1,14 +1,27 @@
-import {FormActions} from '../helpers/formActions';
+import {FormActions, stdListenItem, stdOffListenItem} from '../helpers/formActions';
 import Firebase from 'firebase';
 import {urlFactory, addCreatedStamp,addChangedStamp} from '../helpers/firebase';
+import {getListeningMagazzino}  from '../reducers';
+import {magazzinoFA} from '../actions/magazzino'
 
 import moment from 'moment';
 export const SCENE = 'CASSA';
-export const ADDED_RIGASCONTRINO = 'ADDED_RIGASCONTRINO';
-export const CHANGED_RIGASCONTRINO = 'CHANGED_RIGASCONTRINO';
-export const DELETED_RIGASCONTRINO = 'DELETED_RIGASCONTRINO';
-export const LISTEN_RIGASCONTRINO = 'LISTEN_RIGASCONTRINO';
-export const OFF_LISTEN_RIGASCONTRINO = 'OFF_LISTEN_RIGASCONTRINO';
+
+//Per sentire le testate di tutti gli scontrini di una cassa
+export const INITIAL_LOAD_ITEM_ELENCOSCONTRINI = 'INITIAL_LOAD_ITEM_ELENCOSCONTRINI';
+export const ADDED_ITEM_ELENCOSCONTRINI = 'ADDED_LOAD_ITEM_ELENCOSCONTRINI';
+export const CHANGED_ITEM_ELENCOSCONTRINI = 'CHANGED_LOAD_ITEM_ELENCOSCONTRINI';
+export const DELETED_ITEM_ELENCOSCONTRINI = 'DELETED_LOAD_ITEM_ELENCOSCONTRINI';
+export const LISTEN_ELENCOSCONTRINI = 'LISTEN_ELENCOSCONTRINI';
+export const OFF_LISTEN_ELENCOSCONTRINI = 'OFF_LISTEN_ELENCOSCONTRINI';
+
+export const INITIAL_LOAD_ITEM_SCONTRINI = 'INITIAL_LOAD_ITEM_SCONTRINI';
+export const ADDED_ITEM_SCONTRINI = 'ADDED_LOAD_ITEM_SCONTRINI';
+export const CHANGED_ITEM_SCONTRINI = 'CHANGED_LOAD_ITEM_SCONTRINI';
+export const DELETED_ITEM_SCONTRINI = 'DELETED_LOAD_ITEM_SCONTRINI';
+export const LISTEN_SCONTRINI = 'LISTEN_SCONTRINI';
+export const OFF_LISTEN_SCONTRINI = 'OFF_LISTEN_SCONTRINI';
+
 
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
@@ -23,7 +36,69 @@ function preparaItem(riga)
 
    
 
+export const listenScontrini = (params) => {
+return function(dispatch, getState) {
+  	if (getListeningMagazzino(getState()) === null) //Ascolto il magazzino... serve a farlo al refresh...
+		{    
+				dispatch(magazzinoFA.listenItem());
+		}
+	dispatch(stdListenItem({ added_item: ADDED_ITEM_SCONTRINI,
+					changed_item: CHANGED_ITEM_SCONTRINI,
+					deleted_item: DELETED_ITEM_SCONTRINI,
+					initial_load_item: INITIAL_LOAD_ITEM_SCONTRINI,
+					listen_item: LISTEN_SCONTRINI,
+					itemsUrl: 'righeCassa',
+					urlParams : params,
+					}));	
+  }
+};
 
+export const listenElencoScontrini = (params) => {
+	return function(dispatch, getState) {
+  	dispatch(stdListenItem({ added_item: ADDED_ITEM_ELENCOSCONTRINI,
+					changed_item: CHANGED_ITEM_ELENCOSCONTRINI,
+					deleted_item: DELETED_ITEM_ELENCOSCONTRINI,
+					initial_load_item: INITIAL_LOAD_ITEM_ELENCOSCONTRINI,
+					listen_item: LISTEN_ELENCOSCONTRINI,
+					itemsUrl: 'righeElencoScontrini',
+					urlParams : params,
+					}));	
+  }
+};
+
+export const offListenScontrini = (params, listeners=null) =>
+{   
+	const itemsUrl = 'righeCassa';
+    const typeUnlisten = OFF_LISTEN_SCONTRINI ;
+	
+	return function(dispatch, getState) {
+		dispatch(stdOffListenItem({
+			            listeners: listeners,
+			            itemsUrl: itemsUrl,
+			            urlParams: params,
+			            off_listen_item: typeUnlisten,
+						}));
+
+	 }
+    
+}
+
+export const offListenElencoScontrini = (params, listeners=null) =>
+{   
+	const itemsUrl = 'righeCassa';
+    const typeUnlisten = OFF_LISTEN_ELENCOSCONTRINI ;
+	
+	return function(dispatch, getState) {
+		dispatch(stdOffListenItem({
+			            listeners: listeners,
+			            itemsUrl: itemsUrl,
+			            urlParams: params,
+			            off_listen_item: typeUnlisten,
+						}));
+
+	 }
+    
+}
 
 //METODI DEL FORM anche qui visualizzo i totali...
 export const cassaFA = new FormActions(SCENE, preparaItem, 'righeElencoScontrini','righeElencoCasse');
@@ -191,149 +266,4 @@ const typeDelete = cassaFA.DELETE_ITEM;
   }
 	
 
-const listenRigheScontrino = (cassaParams, scontrinoKey) =>
-{
-//Genero tre listener... come un'unica funzione...
-
- const type1 = ADDED_RIGASCONTRINO;
-   const type2 = CHANGED_RIGASCONTRINO;
-   const type3 = DELETED_RIGASCONTRINO;
-   const typeListen = LISTEN_RIGASCONTRINO;
-   
-   const itemsUrl = 'righeScontrino';	
-   const params = [...cassaParams]
-   params.push(scontrinoKey);
-   
-   return function(dispatch, getState) {
-  	const url = urlFactory(getState,itemsUrl, params);
-  	if (url)
-    {  
-       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
-	      dispatch({
-	        type: type1,
-	        payload: snapshot,
-	        scontrinoKey: scontrinoKey
-	      })
-	    });
-	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
-	      dispatch({
-	        type: type2,
-	        payload: snapshot,
-	        scontrinoKey: scontrinoKey
-	      })  
-	   });
-	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
-	      dispatch({
-	        type: type3,
-	        payload: snapshot
-	      })  
-	   });
-	   dispatch({
-	   	type: typeListen,
-	   	params: params,
-	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
-	   })
-	}   
-	else dispatch({
-	   	type: typeListen,
-	   	params: null,
-	   })   
-  }
-
-
-
-};
-
-
-//Smetto di ascoltare tutto... qui ci vado perchè ho cancellato lo scontrino...oppure perchè cambio cassa...
-const offListenRigheScontrino = (cassaParams, scontrinoKey) =>
-{  
-    const typeUnlisten = OFF_LISTEN_RIGASCONTRINO;
-   const itemsUrl = 'righeScontrino';	
-   const params = [...cassaParams]
-   params.push(scontrinoKey);
- 	return function(dispatch, getState) {
-	Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
-	dispatch({
-	   	type: typeUnlisten,
-	   	params: params,
-	   	scontrino: scontrinoKey,
-	   })
-    }
-}
-
-//Genero tre listener... come un'unica funzione...
-cassaFA.listenItem = (params) => {
- const type1 = cassaFA.ADDED_ITEM;
-   const type2 = cassaFA.CHANGED_ITEM;
-   const type3 = cassaFA.DELETED_ITEM;
-   const typeListen = cassaFA.LISTEN_ITEM;
-   
-   const itemsUrl = cassaFA.itemsUrl;	
-  return function(dispatch, getState) {
-  	const url = urlFactory(getState,itemsUrl, params);
-  	if (url)
-    {  
-       const listener_added = Firebase.database().ref(url).on('child_added', snapshot => {
-	      dispatch({
-	        type: type1,
-	        payload: snapshot
-	      });
-	      //Su added... mi metto ad ascoltare i figli...tutti e 3 i tipi...
-	      dispatch(listenRigheScontrino(params, snapshot.key));
-	      
-	    });
-	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
-	      dispatch({
-	        type: type2,
-	        payload: snapshot
-	      });
-	     //Su changed... non devo fare nulla... 
-	      
-	   });
-	   const listener_removed = Firebase.database().ref(url).on('child_removed', snapshot => {
-	      dispatch({
-	        type: type3,
-	        payload: snapshot
-	      });
-	    //Su deleted... devo smettere di ascoltare i figli...e li cancellerò poi dalla tabella...   
-	    dispatch(offListenRigheScontrino(params, snapshot.key));
-	     
-	   });
-	   dispatch({
-	   	type: typeListen,
-	   	params: params,
-	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
-	   })
-	}   
-	else dispatch({
-	   	type: typeListen,
-	   	params: null,
-	   })   
-  }
-}
-
-//Quando smetto di ascoltare... dovrò smettere di ascoltare tutti i figli... va cambiata...
-//Non ritorna nessuna azione e non crea nessuna actionCreator
-cassaFA.offListenItem = (params, listeners=null) =>
-{   const itemsUrl = cassaFA.itemsUrl;
-    const typeUnlisten = cassaFA.OFF_LISTEN_ITEM;
-	return function(dispatch, getState) {
-	if (listeners) 
-		{ 
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_added',listeners.added);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_changed',listeners.changed);
-			Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off('child_removed',listeners.removed);
-			for (let scontrino in listeners.scontrini)
-				{
-					dispatch(offListenRigheScontrino(params, scontrino));
-				}
-		}
-	else Firebase.database().ref(urlFactory(getState,itemsUrl, params)).off();
-	dispatch({
-	   	type: typeUnlisten,
-	   	params: params
-	   })
-    }
-}
 

@@ -1,9 +1,23 @@
 //Per pura pigrizia lascio rigabolla qua e la....
 
 import FormReducer from '../helpers/formReducer'
-import {SET_SCONTO_SCONTRINO, SET_EAN_LOOKUP_OPEN} from '../actions/scontrino';
+import {
+INITIAL_LOAD_ITEM_ELENCOSCONTRINI, 
+ADDED_ITEM_ELENCOSCONTRINI, 
+CHANGED_ITEM_ELENCOSCONTRINI, 
+DELETED_ITEM_ELENCOSCONTRINI, 
+INITIAL_LOAD_ITEM_SCONTRINI, 
+ADDED_ITEM_SCONTRINI, 
+CHANGED_ITEM_SCONTRINI, 
+DELETED_ITEM_SCONTRINI, 	
+} from '../actions/cassa';
+
+
+import {SET_SCONTO_SCONTRINO, SET_EAN_LOOKUP_OPEN, SET_SCONTRINO_ID} from '../actions/scontrino';
 import {COL_H_S, COL_H, FORM_COL_H, GE_H,FMH, FMW, initCalcGeometry, calcHeaderFix, calcFormColsFix, calcGeneralError} from '../helpers/geometry'
 
+import {persistTree} from '../helpers/firebase';
+import memoizeOne from 'memoize-one';
 
 
 import {isAmount, isNotZeroInteger,  isPercentage} from '../helpers/validators';
@@ -140,6 +154,9 @@ const initialState = () => {
 	return initialStateHelper(eiis,{geometry: calcGeometry(),
 									defaultSconto: '', 
 									eanLookupOpen: false,
+									scontrinoId: null,
+									scontrini: {},
+									elencoScontrini: {},
 									totali: {pezzi: 0, prezzoTotale: 0.00}});
     }
     
@@ -290,7 +307,11 @@ export default function scontrino(state = initialState(), action) {
 		        cei.values.sconto = newState.defaultSconto;
   				newState = {...newState, editedItem: cei};
   			}	
+  		break
+  	case SET_SCONTRINO_ID:
+  		 newState ={...state, scontrinoId: action.scontrinoId};
   		break;
+  		
     case scontrinoR.TESTATA_CHANGED:
   		newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino);
   		//Forzo qui lo stato dello sconto al valore di default 
@@ -311,6 +332,22 @@ export default function scontrino(state = initialState(), action) {
 	    newState = {...newState, editedItem: cei};
     	}
   	    break;
+  	    
+  	case INITIAL_LOAD_ITEM_ELENCOSCONTRINI:
+	case ADDED_ITEM_ELENCOSCONTRINI:
+	case CHANGED_ITEM_ELENCOSCONTRINI:
+	case DELETED_ITEM_ELENCOSCONTRINI:
+			newState = persistTree({state: state, type: action.type, payload: action.payload, objName: 'elencoScontrini'});
+    
+			break;
+			
+	case INITIAL_LOAD_ITEM_SCONTRINI:
+	case ADDED_ITEM_SCONTRINI:
+	case CHANGED_ITEM_SCONTRINI:
+	case DELETED_ITEM_SCONTRINI:
+			newState = persistTree({state: state, type: action.type, payload: action.payload, objName: 'scontrini'});
+			break;
+	  
       default:
         newState = scontrinoR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaScontrino, calcolaTotali);
         //newState =  state;
@@ -325,7 +362,7 @@ export default function scontrino(state = initialState(), action) {
  export const getTotali = (state) => {return state.totali};  
  export const getItems = (state) => {return state.itemsArray};  
  export const getEditedItem = (state) => {return state.editedItem};  
- export const getTestataScontrino = (state) => {return state.testata};
+ //export const getTestataScontrino = (state) => {return state.testata};
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
  export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
@@ -340,6 +377,17 @@ export const getEanLookupOpen = (state) => {return state.eanLookupOpen};
  //export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  
 
+
+  const calcScontrinoItems = (scontrino) =>
+  {
+    if (scontrino) return(Object.values(scontrino));
+    else return [];
+  }
+  //Lo memoizzo in modo che se non cambia lo scontrino ma ne cambia un altro... non aggiorno inutilmente
+  const memoizedCalcScontrinoItems = memoizeOne(calcScontrinoItems);	
+  
+  export const getItemsScontrino = (state) => {return memoizedCalcScontrinoItems(state.scontrini[state.scontrinoId])}
+  export const getTestataScontrino = (state) => {return state.elencoScontrini[state.scontrinoId]}
  
  
       

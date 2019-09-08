@@ -249,6 +249,8 @@ export const getEditedRigaCassa = (state) => {return fromCassa.getEditedItem(sta
 export const getTestataCassa = (state) => {return fromCassa.getTestataCassa(state.cassa)};
 export const getTableHeightCassa = (state) => {return fromCassa.getTableHeight(state.cassa)};
 export const getTableScrollCassa = (state)  => {return fromCassa.getTableScroll(state.cassa)};
+export const getItemsCassa = (state) => {return fromCassa.getItemsCassa(state.cassa)};
+
 
 //export const getTableScrollByKeyCassa = (state)  => {return fromCassa.getTableScrollByKey(state.cassa)};
 
@@ -262,7 +264,7 @@ export const getTotaliCassa = (state) => { return fromCassa.getTotaliCassa(state
 
 
 //Scene Scontrino
-export const getRigheScontrino = (state) => {return fromScontrino.getItems(state.scontrino)};
+//export const getRigheScontrino = (state) => {return fromScontrino.getItems(state.scontrino)};
 export const getEditedRigaScontrino = (state) => {return fromScontrino.getEditedItem(state.scontrino)};
 export const getTestataScontrino = (state) => {return fromScontrino.getTestataScontrino(state.scontrino)};
 export const getShowCatalogModalScontrino = (state) => {return fromScontrino.getShowCatalogModal(state.scontrino)};
@@ -276,6 +278,7 @@ export const isStaleTotaliScontrino = (state) => {return fromScontrino.isStaleTo
 export const getMessageBufferScontrino = (state) => {return fromBolla.getMessageBuffer(state.scontrino)};
 export const getTotaliScontrino = (state) => {return fromScontrino.getTotali(state.scontrino)};
 export const getEanLookupOpen = (state) => {return fromScontrino.getEanLookupOpen(state.scontrino)};
+export const getRigheScontrino = (state) => {return fromScontrino.getItemsScontrino(state.scontrino)};
 
 
 //Scene Catalogo

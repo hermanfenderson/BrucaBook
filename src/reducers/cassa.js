@@ -1,10 +1,22 @@
+/*Completamente riscritta... in sostanza carico elencoScontrini e Scontrini per quella cassa e calcolo tutto al volo*/
 import FormReducer from '../helpers/formReducer'
-import {ADDED_RIGASCONTRINO, CHANGED_RIGASCONTRINO, DELETED_RIGASCONTRINO, LISTEN_RIGASCONTRINO, OFF_LISTEN_RIGASCONTRINO} from '../actions/cassa';
+import {
+INITIAL_LOAD_ITEM_ELENCOSCONTRINI, 
+ADDED_ITEM_ELENCOSCONTRINI, 
+CHANGED_ITEM_ELENCOSCONTRINI, 
+DELETED_ITEM_ELENCOSCONTRINI, 
+INITIAL_LOAD_ITEM_SCONTRINI, 
+ADDED_ITEM_SCONTRINI, 
+CHANGED_ITEM_SCONTRINI, 
+DELETED_ITEM_SCONTRINI, 	
+} from '../actions/cassa';
 
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem} from '../helpers/form';
 import {isPositiveInteger, isPercentage} from '../helpers/validators'
 import {COL_H_S, SEL_W_S,FMW, initCalcGeometry, calcFormColsFix, calcHeaderFix} from '../helpers/geometry'
 import moment from 'moment';
+import {persistTree} from '../helpers/firebase';
+import memoizeOne from 'memoize-one';
 
 
 const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
@@ -24,48 +36,33 @@ const DELETE_ITEM_SCONTRINO = 'DELETE_ITEM_SCONTRINO';
 
 const aggiornaTotaliLocale = (newState) =>
 {
-let righe = [...newState.itemsArray];
-let totalePezzi = 0;
-let totaleImporto = 0.00;
+let elencoScontrini = {...newState.elencoScontrini};
+let scontrini = newState.scontrini;
+let elencoScontriniArray = Object.entries(elencoScontrini);
 let totalePezziGen = 0;
 let totaleImportoGen = 0.00;
-let scontrini = 0;
-let scontrinoKey = null;
-for (let propt=righe.length-1; propt>=0; propt--)
+let numScontrini = 0;
+
+for (let i=0; i<elencoScontriniArray.length;i++)
 	{
-			if (righe[propt].tipo==='scontrino') 
-				{
-				righe[propt].pezzi =  totalePezzi;
-				righe[propt].prezzoTotale =totaleImporto.toFixed(2); 
-				
-						
+	let totalePezzi = 0;
+	let totaleImporto = 0.00;
+	let scontrinoKey = elencoScontriniArray[i][0];
+	let righe = [];
+	if (scontrini[scontrinoKey]) righe=Object.values(scontrini[scontrinoKey]);
+	for (let propt=0; propt<righe.length;  propt++)
+		{
+				totalePezzi = parseInt(righe[propt].pezzi, 10) + totalePezzi;
+	    		totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);	
+			     			
 				totalePezziGen = totalePezziGen + totalePezzi;
 	    		totaleImportoGen =  parseFloat(totaleImportoGen) + parseFloat(totaleImporto);
-	    		scontrini++;
-				
-				totalePezzi = 0;
-				totaleImporto = 0.00;
-				} 
-			else 
-				{
-				totalePezzi = parseInt(righe[propt].totali.pezzi, 10) + totalePezzi;
-	    		totaleImporto =  parseFloat(righe[propt].totali.prezzoTotale) + parseFloat(totaleImporto);	
-	    		}
-	    	
+	    		numScontrini++;
+		}
+	elencoScontrini[scontrinoKey].totali = {pezzi: totalePezzi, prezzoTotale: totaleImporto};	
 	}
-//Aggiungo la chiave scontrino per ogni riga...	
-for (let propt=0; propt<righe.length; propt++)
-	{
-			if (righe[propt].tipo==='scontrino') 
-				{
-				scontrinoKey = righe[propt].key;
-				}
-			righe[propt].scontrinoKey = scontrinoKey;
-	    		
-				
-	}
-
-return({...newState,  itemsArray: righe, totali: {'scontrini': scontrini, 'pezzi' : totalePezziGen, 
+	
+return({...newState,  elencoScontrini: elencoScontrini, totali: {'scontrini': numScontrini, 'pezzi' : totalePezziGen, 
 						'prezzoTotale' : totaleImportoGen.toFixed(2)} });
 //return(newState);
 }
@@ -137,6 +134,9 @@ const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {listenersItem: {scontrini: {}},
     					geometry: calcGeometry(),
+    					//Persistenza del contenuto della cassa... righe scontrini e testate scontrini...
+    					scontrini: {},
+    					elencoScontrini: {},
                   }
 	return initialStateHelper(eiis,extraState);
     }
@@ -158,288 +158,10 @@ const transformEditedCassa = (row) =>
 
 
 
-/*Struttura dati di dataIndex
-scontrini
-	scontrino -> precedente (num.scontrino), prossimo (num.scontrino), key (chiave scontrino), length (lunghezza scontrino compreso header) 
-chiavi
-    chiave -> pos_array
-*/
-//Ogni volta che devo riallineare le chiavi... 
-function updateChiavi(dataArray, dataIndex, start)
-{
-	for (var i=start; i<dataArray.length; i++)
-		{
-		dataIndex.chiavi[dataArray[i].key] = i;
-		}
-}
-
-//Queste vanno modificate per essere adattate ad avere figli...
-function childAdded(payload, state, dataArrayName, dataIndexName, transformItem, forcedTmp)
-{  //Creo un array e un indice per copia degli attuali
-   var dataArrayNew = state[dataArrayName].slice();
-   var dataIndexNew = {...(state[dataIndexName])};
-  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
-   var tmp = payload.val();
-   tmp['key'] = payload.key;
-   tmp['tipo'] = 'scontrino';
-   if (forcedTmp) tmp = forcedTmp;
-    //Se è definita una funzione di trasformazione la applico
-   if (transformItem) transformItem(tmp);
-
-   //Se è il primo scontrino a entrare inizializzo le strutture...
-   if (dataArrayNew.length === 0)
-		{
-		dataIndexNew.scontrini = {};	
-        dataIndexNew.scontrini[tmp.numero] = {'precedente': null, 'successivo': null, 'key': tmp['key'], 'leng': 1};
-        dataArrayNew[0] = tmp;
-        dataIndexNew.chiavi = {};
-        dataIndexNew.chiavi[tmp.key] = 0;
-		}
-		
-   else {
-   	    //Determino la posizione dello scontrino...
-   	    //E' un nuovo primo?  
-   	    if (tmp['numero'] < dataArrayNew[0].numero)
-   			{
-   				dataIndexNew.scontrini[tmp.numero] = {'precedente': null, 'successivo': dataArrayNew[0].numero, 'key': tmp['key'], 'leng': 1};
-   				dataIndexNew.scontrini[dataArrayNew[0].numero].precedente = tmp.numero;
-   				dataArrayNew.splice(0, 0, tmp);
-   				//Aggiorno il puntatore delle chiavi...
-		        updateChiavi(dataArrayNew, dataIndexNew, 0);
-		   	         
-   			}
-   		else {
-   			var propt = dataArrayNew[0].numero;
-	   	    while (propt)
-	   	    	{
-	   	        //Ho trovato il mio posto... dopo uno più piccolo di me e prima di null oppure di più grande di me...
-	   	         if ((propt <= tmp['numero']) && ((!dataIndexNew.scontrini[propt].successivo) || (dataIndexNew.scontrini[propt].successivo > tmp['numero'])))
-		   	        {
-		   	        	let precedente = propt;
-		   	        	let successivo = dataIndexNew.scontrini[propt].successivo;
-		   	        	let inizio = dataIndexNew.chiavi[dataIndexNew.scontrini[propt].key] + dataIndexNew.scontrini[propt].leng;
-		   	        	dataIndexNew.scontrini[propt].successivo = tmp['numero']; //Aggiorno la catena 
-		   	        	dataIndexNew.scontrini[tmp.numero] = {'precedente': precedente, 'successivo': successivo, 'key': tmp['key'], 'leng': 1};
-		   	        	dataArrayNew.splice(inizio,0, tmp);
-		   	        	updateChiavi(dataArrayNew, dataIndexNew, inizio);
-		   	         //Aggiorno il puntatore delle chiavi...
-		        	 
-		   	         break;
-		   	        }
-	   	         propt = dataIndexNew.scontrini[propt].successivo;
-	   	    	}
-   			}	
-		}	
-   
-  //Aggiorno lo stato passando nuovo array e nuovo indice
-   var newState = {...state};
-   newState[dataArrayName] = dataArrayNew;
-   newState[dataIndexName] = dataIndexNew;                    
-   return newState;
-}
-
-function childDeleted(payload, state, dataArrayName, dataIndexName, forcedNumber)
-{  //Creo un array e un indice per copia degli attuali
-   var dataArrayNew = state[dataArrayName].slice();
-   var dataIndexNew = {...(state[dataIndexName])};
-   //Cerco nell'indice la riga nell'array da cancellare  
-   var index = dataIndexNew.chiavi[payload.key];
-   var numero = payload.val().numero;
-   if (forcedNumber) numero = forcedNumber; //Gestisco la cancellazione dalla change...
-   if (forcedNumber) index = dataIndexNew.chiavi[dataIndexNew.scontrini[numero].key];
-   var leng = dataIndexNew.scontrini[numero].leng;
-   //Antirimbalzo...
-   if (index>=0) 
-		{
-	  //Sgancio dalla catena lo scontrino che cancello...
-	  var precedente = dataIndexNew.scontrini[numero].precedente;
-	  var successivo = dataIndexNew.scontrini[numero].successivo;
-	  if (precedente) dataIndexNew.scontrini[precedente].successivo = successivo;
-	  if (successivo) dataIndexNew.scontrini[successivo].precedente = precedente;
-	  delete dataIndexNew.scontrini[numero];
-	  //Per tutte le righe interessate
-	  for (var i=index; i<index+leng; i++)
-		   {	
-		  //Visto che sto tagliando l'array... ogni volta cancello nella stessa posizione!	
-		  //Cancello la riga nell'indice
-		   delete dataIndexNew.chiavi[dataArrayNew[index].key];
-		   //Cancello la riga nell'array
-		   dataArrayNew.splice(index,1);
-		   }
-	  //Aggiorno da quella posizione tutti gli indici...
-	 
-	  updateChiavi(dataArrayNew, dataIndexNew, index);
-   
-	
-	
-	   //Aggiorno lo stato passando nuovo array e nuovo indice   
-	   let newState = {...state};
-	   newState[dataArrayName] = dataArrayNew;
-	   newState[dataIndexName] = dataIndexNew;                    
-	   return newState;
-	   }
-	else return {...state};
-}
-
-function childChanged(payload, state, dataArrayName, dataIndexName, transformItem)
-{  
-   //Due casi... uno base in cui non ho cambiato lo scontrino... e uno in cui lo ho cambiato... in cui devo chiamare una insert 
-   //e una delete...	
-   //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
-   var dataArrayNew = state[dataArrayName].slice();
-   var dataIndexNew = state[dataIndexName];
- 
-  //Vedo in quale posizione devo modificare
-  var index = dataIndexNew.chiavi[payload.key];
-  var scontrino = (dataArrayNew[index]) ? dataArrayNew[index].numero : null; //se non lo trovo...l'ho cancellato
-  //Caso facile...
-  if (scontrino === payload.val().numero) 
-		{
-		   //Antirimbalzo
-		   if (index>=0) 
-				{
-				  //Prendo la riga da modificare e aggiungo una proprietà con la chiave
-				 var tmp = payload.val();
-				 tmp['key'] = payload.key;
-				 tmp['tipo'] = 'scontrino';
-   
-				 //Se è definita una funzione di trasformazione la applico
-				   if (transformItem) transformItem(tmp);
-				  
-				   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
-				  
-				  //Aggiorno lo stato passando nuovo array e nuovo indice
-				   let newState = {...state};
-				   newState[dataArrayName] = dataArrayNew;
-				   newState[dataIndexName] = dataIndexNew;                    
-				   return newState;
-				}
-			else return {...state};  
-		}
-  else 
-	{   
-		let newState = {...state};
-		if (scontrino)
-		{
-		   //Strategia alternativa.... cancello tutto ciò che ho e lo tratto alla stregua di una riga nuova (tanto arrivano i figli...)
-		   //Mi faccio una copia delle righe che mi interessano...
-		   newState = childDeleted(payload, newState, dataArrayName, dataIndexName, scontrino);
-
-		   //Se la mia destinazione esiste già... salvo le sue righe e faccio uno swap...
-		   var scontrino2 = payload.val().numero;
-		   if (dataIndexNew.scontrini[scontrino2])
-				{   
-					newState = childDeleted(payload, newState, dataArrayName, dataIndexName, scontrino2);
-
-		
-				}
-		 }
-		    newState = childAdded(payload, newState, dataArrayName, dataIndexName, transformEditedCassa);
-			return newState;
-		
-	
-		   
-		   
-	}
-	
-}
 
 
-function subChildAdded(payload, state, dataArrayName, dataIndexName, transformItem, forceTmp)
-{  //Creo un array e un indice per copia degli attuali
 
-   var dataArrayNew = state[dataArrayName].slice();
-   var dataIndexNew = {...(state[dataIndexName])};
-  //Prendo la riga da aggiungere e aggiungo una proprietà con la chiave
-   var tmp = payload.val();
-   if (forceTmp) tmp = forceTmp; 
-   if (!forceTmp) tmp['key'] = payload.key;
-   tmp['tipo'] = 'rigaScontrino';
-   var numero = tmp['numero'];
-   tmp['numero'] = tmp['titolo'];
-   tmp['totali'] = {pezzi: tmp['pezzi'], prezzoTotale: tmp['prezzoTotale']};
-   tmp['numeroScontrino'] = payload.val().numero;
-    //Se è definita una funzione di trasformazione la applico
-   if (transformItem) transformItem(tmp);
-   
-   //Lo metto nella prima posizione utile nello scontrino giusto... 
-   var posScontrino = dataIndexNew.chiavi[dataIndexNew.scontrini[numero].key];
-   var posRiga = posScontrino + dataIndexNew.scontrini[numero].leng;
-   dataIndexNew.scontrini[numero].leng++; //e allungo di uno la sua lunghezza...
-   
-   dataArrayNew.splice(posRiga,0, tmp);
-   //Aggiorno il puntatore delle chiavi...
-   updateChiavi(dataArrayNew, dataIndexNew, posRiga);
-    let newState = {...state};
-	   
-    newState[dataArrayName] = dataArrayNew;
-    newState[dataIndexName] = dataIndexNew;                    
-   return newState;
-}
 
-function subChildDeleted(payload, state, dataArrayName, dataIndexName)
-{  //Creo un array e un indice per copia degli attuali
- 
-   var dataArrayNew = state[dataArrayName].slice();
-   var dataIndexNew = {...(state[dataIndexName])};
-   //Cerco nell'indice la riga nell'array da cancellare  
-   var index = dataIndexNew.chiavi[payload.key];
-   var numero = payload.val().numero;
-    //Antirimbalzo...
-   if (index>=0) 
-		{
-	  //Cancello la riga nell'indice
-	   delete dataIndexNew.chiavi[payload.key]
-	   //Decremento la lunghezza dello scontrino
-	   dataIndexNew.scontrini[numero].leng--; //e allungo di uno la sua lunghezza...
-	  //Cancello la rigna nell'array
-	   dataArrayNew.splice(index,1);
-	  //Aggiorno da quella posizione tutti gli indici...
-	  updateChiavi(dataArrayNew, dataIndexNew, index);
-   
-	
-	
-	   //Aggiorno lo stato passando nuovo array e nuovo indice   
-	   let newState = {...state};
-	   newState[dataArrayName] = dataArrayNew;
-	   newState[dataIndexName] = dataIndexNew;                    
-	   return newState;
-	   }
-	else return {...state};
-}
-
-function subChildChanged(payload, state, dataArrayName, dataIndexName, transformItem)
-{  //Creo un array per copia dell'attuale e accedo all'indice (non mi serve cambiarlo)
-   var dataArrayNew = state[dataArrayName].slice();
-   var dataIndex = state[dataIndexName];
-  //Vedo in quale posizione devo modificare
-  var index = dataIndex.chiavi[payload.key];
-   //Antirimbalzo
-  
-   if (index>=0) 
-		{
-		   var tmp = payload.val();
-		   tmp['key'] = payload.key;
-		   tmp['tipo'] = 'rigaScontrino';
-		   tmp['numero'] = tmp['titolo'];
-		   tmp['totali'] = {pezzi: tmp['pezzi'], prezzoTotale: tmp['prezzoTotale']};
-		   tmp['numeroScontrino'] = payload.val().numero;
-  
-		    //Se è definita una funzione di trasformazione la applico
-		   if (transformItem) transformItem(tmp);
-		   
-		   dataArrayNew[index] = tmp; //Aggiorno la riga alla posizione giusta
-		  
-		  //Aggiorno lo stato passando nuovo array e nuovo indice
-		   let newState = {...state};
-	   newState[dataArrayName] = dataArrayNew;
-	   newState[dataIndexName] = dataIndex;                    
-	   return newState;
-		}
-	else return subChildAdded(payload, state, dataArrayName, dataIndexName, transformItem) ;   
-}
-
- 
     
 //Metodi reducer per le Form
 const rigaCassaR = new FormReducer(
@@ -496,61 +218,24 @@ export default function cassa(state = initialState(), action) {
    	
 	     	newState =  {...state, staleTotali: true, lastActionKey : action.key}
 	    	break;	 
-  //FACCIO OVERRIDE DEL REDUCER QUI...
   
-   case ADDED_ITEM_CASSA:
-		 	newState = {...childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa), tableScrollByKey: action.payload.key}; 
-		 		newState = aggiornaTotaliLocale(newState);	
-		 		break;
-	       
-	case DELETED_ITEM_CASSA:
-	    	newState = childDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
-	    	newState = aggiornaTotaliLocale(newState);
-	    
-	    	break;
-	   
-	case CHANGED_ITEM_CASSA:
-		    newState = {...childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", transformEditedCassa), tableScrollByKey: action.payload.key}; 
-		    	newState = aggiornaTotaliLocale(newState);
-	    
-	    	break;    
-	    	
-    case ADDED_RIGASCONTRINO:
-    	 	newState = {...subChildAdded(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
-		 		newState = aggiornaTotaliLocale(newState);
-	    
-	    	break;
-	       
-	case DELETED_RIGASCONTRINO:
-		 
-	    	newState = subChildDeleted(action.payload, state, "itemsArray", "itemsArrayIndex"); 
-	    	
-		newState = aggiornaTotaliLocale(newState);
-	    
-	    	break;
-	   
-	case CHANGED_RIGASCONTRINO:
-		    
-		    newState = {...subChildChanged(action.payload, state, "itemsArray", "itemsArrayIndex"), tableScrollByKey: action.payload.key}; 
-			newState = aggiornaTotaliLocale(newState);
-	    
-	    	break;   
-	    	
-	case LISTEN_RIGASCONTRINO:
-			{
-			let listenersItem = {...state.listenersItem};
-			listenersItem.scontrini[action.params[3]] = action.listeners;
-			newState = {...state, listenersItem: listenersItem};
-			}
+	case INITIAL_LOAD_ITEM_ELENCOSCONTRINI:
+	case ADDED_ITEM_ELENCOSCONTRINI:
+	case CHANGED_ITEM_ELENCOSCONTRINI:
+	case DELETED_ITEM_ELENCOSCONTRINI:
+			newState = persistTree({state: state, type: action.type, payload: action.payload, objName: 'elencoScontrini'});
+            newState = aggiornaTotaliLocale(newState);
+
 			break;
 			
-	case OFF_LISTEN_RIGASCONTRINO:
-			{
-			let listenersItem = {...state.listenersItem};
-			delete listenersItem.scontrini[action.scontrino];
-			newState = {...state, listenersItem: listenersItem};
-			}
+	case INITIAL_LOAD_ITEM_SCONTRINI:
+	case ADDED_ITEM_SCONTRINI:
+	case CHANGED_ITEM_SCONTRINI:
+	case DELETED_ITEM_SCONTRINI:
+			newState = persistTree({state: state, type: action.type, payload: action.payload, objName: 'scontrini'});
+			newState = aggiornaTotaliLocale(newState);
 			break;
+		
 	    	
     default:
         newState = rigaCassaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaCassa);
@@ -580,6 +265,44 @@ export default function cassa(state = initialState(), action) {
  export const getFilters = (state) => {return state.filters};
   export const getTotaliCassa = (state) => {return state.totali};
 
+  export const getScontrini = (state) => {return state.scontrini};
+  export const getElencoScontrini = (state) => {return state.elencoScontrini};
+  //Qui diventa divertente... genero sinteticamente la lista degli scontrini...
+  const calcCassaItems = (elencoScontrini, scontrini) =>
+  {
+  	let cassaItems = [];
+  	let idx = 0;
+  	let elencoScontriniArray = Object.entries(elencoScontrini);
+  	for (let i=0; i<elencoScontriniArray.length; i++)
+  		{
+  			let scontrinoKey = elencoScontriniArray[i][0];
+  			
+  			cassaItems.push(elencoScontriniArray[i][1]);
+  			cassaItems[idx].tipo = 'scontrino';
+  			cassaItems[idx].key = scontrinoKey;
+  			cassaItems[idx].scontrinoKey = scontrinoKey;
+  			
+  			idx++;
+  			//Ci sono righe per quello scontrino? 
+  			if (scontrini[scontrinoKey])
+  				{
+  					let scontriniArray = Object.entries(scontrini[scontrinoKey])
+  					for (let j=0; j<scontriniArray.length; j++) 
+  						{scontriniArray[j][1].tipo = 'rigaScontrino';
+  						scontriniArray[j][1].key = scontriniArray[j][0];
+  						scontriniArray[j][1].scontrinoKey = scontrinoKey;
+  						cassaItems.push(scontriniArray[j][1]); //tutte le righe scontrino
+  						idx++;
+  						}
+  				}	
+  		}
+  	return (cassaItems);	
+  }
+  const memoizedCalcCassaItems = memoizeOne(calcCassaItems);	
+  
+  export const getItemsCassa = (state) => {return memoizedCalcCassaItems(state.elencoScontrini, state.scontrini)}
+  	
+  
       
 
 
