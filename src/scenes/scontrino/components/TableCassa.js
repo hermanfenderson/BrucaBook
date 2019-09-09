@@ -3,7 +3,7 @@ import {period2month} from '../../../helpers/form'
 import {withRouter} from 'react-router-dom'
 import classNames from 'classnames'
 import WrappedTable2 from '../../../components/WrappedVirtualizedTable'
-
+import moment from 'moment'
 
 import {Modal} from 'antd';
 
@@ -48,7 +48,6 @@ class TableCassa extends Component
 	editRow = (row) => {
 		if (row.tipo==='scontrino')
 			{
-			console.log(row);	
 			let params = [...this.props.period];
     		params.push(this.props.cassa);
     		this.props.setSelectedRigaCassa(row);
@@ -62,6 +61,7 @@ class TableCassa extends Component
     	let width=this.props.geometry.header[pos].width;
     	if (pos===0 && !isScontrino) width=width+30+this.props.geometry.header[1]; //Tre colonne per il titolo
     	let value=text;
+    	if (isScontrino && pos===1) value=moment(text).format("HH:mm");
     	if (!isScontrino && pos===1) value='';
     	let isTitolo = (!isScontrino && pos===0);
     	if (isTitolo) value=record.titolo;
@@ -91,7 +91,7 @@ class TableCassa extends Component
     	let header=props.geometry.header;
     		let height = props.geometry.tableCoors.height;
     	let width = props.geometry.tableCoors.width;
-   
+        console.log(props);  
        	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaScontrino']; //Non la passo liscia...

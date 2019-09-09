@@ -387,26 +387,30 @@ export const persistTree = (params) =>
 	//Il nome dell'oggetto dello stato da manipolare...
 	let objName = params.objName;
 	let obj = {...state[objName]};
-	switch(type.split('_')[0])
-	{
-		case 'INITIAL':
-			let array = Object.entries(payload.val());
-			for (let i=0; i<array.length; i++) obj[array[i][0]] = array[i][1];
-		break;
-		
-		case 'ADDED':
-		case 'CHANGED':
-			obj[payload.key] = payload.val();
-		break;
-		
-		case 'DELETED':
-			delete obj[payload.key];
-		break;
-		default:
-		console.error("qualcosa è andato storto");
-		break;
-	}
-	let newState = {...state};
-	newState[objName] = obj;
-	return(newState);
+	if (payload.val())
+		{
+			switch(type.split('_')[0])
+			{
+				case 'INITIAL':
+					let array = Object.entries(payload.val());
+					for (let i=0; i<array.length; i++) obj[array[i][0]] = array[i][1];
+				break;
+				
+				case 'ADDED':
+				case 'CHANGED':
+					obj[payload.key] = payload.val();
+				break;
+				
+				case 'DELETED':
+					delete obj[payload.key];
+				break;
+				default:
+				console.error("qualcosa è andato storto");
+				break;
+			}
+		let newState = {...state};
+		newState[objName] = obj;
+		return(newState);
+		}
+	else return(state);	
 }

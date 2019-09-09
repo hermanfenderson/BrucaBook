@@ -144,17 +144,16 @@ const initialState = () => {
     
     
 const transformSelectedItem = (cei) =>
-{   var	oraScontrino = moment(cei.dataCassa);
+{  /*
+	var	oraScontrino = moment(cei.dataCassa);
     oraScontrino.hour(moment(cei.oraScontrino, "HH:mm").hour());
     oraScontrino.minute(moment(cei.oraScontrino, "HH:mm").minute());
-	cei.oraScontrino = oraScontrino;
-
+	*/
+	cei.oraScontrino = moment(cei.oraScontrino);
+   
 }
 
-const transformEditedCassa = (row) =>
-{   
-	row.oraScontrino = moment(row.oraScontrino).format("HH:mm");
-}
+
 
 
 
@@ -167,7 +166,7 @@ const transformEditedCassa = (row) =>
 const rigaCassaR = new FormReducer(
 	{							scene: 'CASSA',
 								foundCompleteItem: null,
-								transformItem: transformEditedCassa, 
+								transformItem: null, 
 								transformSelectedItem: transformSelectedItem, 
 								initialState: initialState, 
 								keepOnSubmit: true, 
