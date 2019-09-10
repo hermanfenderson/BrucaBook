@@ -9,16 +9,16 @@ export const SCENE = 'CASSA';
 
 //Per sentire le testate di tutti gli scontrini di una cassa
 export const INITIAL_LOAD_ITEM_ELENCOSCONTRINI = 'INITIAL_LOAD_ITEM_ELENCOSCONTRINI';
-export const ADDED_ITEM_ELENCOSCONTRINI = 'ADDED_LOAD_ITEM_ELENCOSCONTRINI';
-export const CHANGED_ITEM_ELENCOSCONTRINI = 'CHANGED_LOAD_ITEM_ELENCOSCONTRINI';
-export const DELETED_ITEM_ELENCOSCONTRINI = 'DELETED_LOAD_ITEM_ELENCOSCONTRINI';
+export const ADDED_ITEM_ELENCOSCONTRINI = 'ADDED_ITEM_ELENCOSCONTRINI';
+export const CHANGED_ITEM_ELENCOSCONTRINI = 'CHANGED_ITEM_ELENCOSCONTRINI';
+export const DELETED_ITEM_ELENCOSCONTRINI = 'DELETED_ITEM_ELENCOSCONTRINI';
 export const LISTEN_ELENCOSCONTRINI = 'LISTEN_ELENCOSCONTRINI';
 export const OFF_LISTEN_ELENCOSCONTRINI = 'OFF_LISTEN_ELENCOSCONTRINI';
 
 export const INITIAL_LOAD_ITEM_SCONTRINI = 'INITIAL_LOAD_ITEM_SCONTRINI';
-export const ADDED_ITEM_SCONTRINI = 'ADDED_LOAD_ITEM_SCONTRINI';
-export const CHANGED_ITEM_SCONTRINI = 'CHANGED_LOAD_ITEM_SCONTRINI';
-export const DELETED_ITEM_SCONTRINI = 'DELETED_LOAD_ITEM_SCONTRINI';
+export const ADDED_ITEM_SCONTRINI = 'ADDED_ITEM_SCONTRINI';
+export const CHANGED_ITEM_SCONTRINI = 'CHANGED_ITEM_SCONTRINI';
+export const DELETED_ITEM_SCONTRINI = 'DELETED_ITEM_SCONTRINI';
 export const LISTEN_SCONTRINI = 'LISTEN_SCONTRINI';
 export const OFF_LISTEN_SCONTRINI = 'OFF_LISTEN_SCONTRINI';
 
@@ -29,9 +29,10 @@ function preparaItem(riga)
    {
    	riga['oraScontrino'] = riga['oraScontrino'].valueOf();
    	//Questi vengono calcolati... oppure servono a visualizzre...
+   /*
    	if ('totali' in riga) {delete riga.totali};
     if ('tipo' in riga) {delete riga.tipo};
-     
+   */  
    }
 
    
@@ -170,11 +171,13 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 	const anno = params[0];
 	const mese = params[1];
 	const cassa = params[2];
+	
+	const scontrino = params[3];
 	const oldNumero = valori['oldNumero'];
 	const numeroKey = valori['numeroKey'];
    
 	delete valori['oldNumero']; //Non mi serve più
-	delete valori['numeroKey']; //Non mi serve più
+	delete valori['numeroKey']; //Non so a cosa serve!!!
 	
 	
 	const numero = valori['numero'];
@@ -198,7 +201,7 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 			addChangedStamp(nuovoItem);
 			preparaItem(nuovoItem);
   
-			ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], itemId));
+			ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], scontrino));
            ref.update(nuovoItem);
 			dispatch(
    					{

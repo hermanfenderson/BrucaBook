@@ -380,7 +380,12 @@ export const getEanLookupOpen = (state) => {return state.eanLookupOpen};
 
   const calcScontrinoItems = (scontrino) =>
   {
-    if (scontrino) return(Object.values(scontrino));
+    if (scontrino) 
+    	{let scontrinoArray = Object.entries(scontrino);
+    	let result = [];
+    	for (let i=0; i<scontrinoArray.length; i++) {scontrinoArray[i][1].key = scontrinoArray[i][0]; result.push(scontrinoArray[i][1]);}
+    	return(result)
+    	}
     else return [];
   }
   //Lo memoizzo in modo che se non cambia lo scontrino ma ne cambia un altro... non aggiorno inutilmente

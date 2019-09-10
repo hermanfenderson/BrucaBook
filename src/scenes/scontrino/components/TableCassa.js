@@ -91,7 +91,6 @@ class TableCassa extends Component
     	let header=props.geometry.header;
     		let height = props.geometry.tableCoors.height;
     	let width = props.geometry.tableCoors.width;
-        console.log(props);  
        	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
     	
     	delete props['deleteRigaScontrino']; //Non la passo liscia...

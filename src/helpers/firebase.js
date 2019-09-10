@@ -393,7 +393,7 @@ export const persistTree = (params) =>
 			{
 				case 'INITIAL':
 					let array = Object.entries(payload.val());
-					for (let i=0; i<array.length; i++) obj[array[i][0]] = array[i][1];
+					for (let i=0; i<array.length; i++) {obj[array[i][0]] = array[i][1];}
 				break;
 				
 				case 'ADDED':

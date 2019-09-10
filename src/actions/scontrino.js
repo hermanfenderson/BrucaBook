@@ -21,7 +21,6 @@ function preparaItem(riga)
    }
 export const setScontrinoId = (scontrinoId) =>
 {
-console.log(scontrinoId);	
  return({type: SET_SCONTRINO_ID, scontrinoId: scontrinoId});	
 }
 

@@ -60,23 +60,14 @@ componentDidUpdate = (oldProps) => {
         let oldIdScontrino = (oldProps.match && oldProps.match.params) ? oldProps.match.params.scontrino : null;
         let idScontrino = this.props.match.params.scontrino;
         //Reset e reload scontrino? 
-        if (oldIdScontrino !== idScontrino)
-	    	{
-	    		if (oldIdScontrino)
-	    			{
-	    			//this.props.setSelectedRigaCassa(null);
-				//	 this.props.resetScontrino(oldIdScontrino);	
-				//	 this.props.unlistenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  oldIdScontrino);
-	    			}
-	    	 //if (idScontrino) this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
-				
-	    	}
+        
 	    var header = "Cassa ";
 	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");
 	if (scontrino && scontrino.numero) header = header + ' - scontrino n. ' + scontrino.numero;
 	
     if ((cassa && oldCassaCassa !== cassa.cassa) || (cassa && oldDataCassa !== cassa.dataCassa)  || (scontrino && oldNumero !== scontrino.numero))
 		this.props.setHeaderInfo(header);
+	if (scontrino !== oldScontrino) this.props.setSelectedRigaCassa(scontrino);
 };
 
 
@@ -115,9 +106,7 @@ handleKeyPress = (e) =>
 
 render()
 {
-
    const period = [this.props.match.params.anno, this.props.match.params.mese];
-
 return (
 <div>	
   <Modal visible={this.props.showCatalogModal} onOk={this.submitEditedCatalogItem} onCancel={this.resetEditedCatalogItem}>

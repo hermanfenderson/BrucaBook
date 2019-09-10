@@ -81,7 +81,7 @@ class TableScontrino extends Component
     
     	render() { 
       	let props = {...this.props};
-    	let selectedItemKey = null;
+      	let selectedItemKey = null;
     	let height = props.geometry.tableCoors.height;
     	let width = props.geometry.tableCoors.width;
     	
