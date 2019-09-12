@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import WrappedForm from '../../../components/WrappedForm'
+import WrappedForm from '../../../components/WrappedForm2'
 
 class FormTestataScontrino extends Component {
 //E' la classe madre che disambigua i diversi campi... checkbox da input normali...
@@ -35,22 +35,21 @@ onSubmit = (e) => {
   	const errorMessages = this.props.editedCassa.errorMessages;
   	const willFocus = this.props.editedCassa.willFocus;
   	const loading = this.props.editedCassa.loading;
+  	const frsCols1 = this.props.geometry.formTestataCols1;
+  	const frsCols2 = this.props.geometry.formTestataCols2;
+  	
   	
   	return (
       <WrappedForm focusSet={this.props.focusSet} willFocus={willFocus} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages}>
-        <WrappedForm.Group formGroupLayout={{gutter:8}}>
-        <WrappedForm.InputNumber   disabled={!this.props.canChangeNumber} className='input-numero-scontrino' formColumnLayout={{width:55}} field='numero'  />
-        <WrappedForm.TimePicker   className='input-ora-scontrino' formColumnLayout={{width:70}} field='oraScontrino'  format="HH:mm" allowClear={false}/>
+        <WrappedForm.InputNumber  coord={frsCols1.numero} disabled={!this.props.canChangeNumber}   field='numero'  />
+        <WrappedForm.TimePicker   coord={frsCols1.oraScontrino} className='input-ora-scontrino' field='oraScontrino'  format="HH:mm" allowClear={false}/>
         
-        <WrappedForm.Button  buttonItemLayout={{style:{paddingTop: '0px'}}} icon='edit' formColumnLayout={{width:40}} type="primary" htmlType="submit" />
-        </WrappedForm.Group>
-          <WrappedForm.Group formGroupLayout={{gutter:8}}>
-       <WrappedForm.Input  formColumnLayout={{width:92}} field='sconto'  />
+        <WrappedForm.Button  coord={frsCols1.edit} icon='edit'  type="primary" htmlType="submit" />
+          <WrappedForm.Input  coord={frsCols2.sconto} field='sconto'  /> 
        
-        <WrappedForm.Button  buttonItemLayout={{style:{paddingTop: '0px'}}} formColumnLayout={{width:80}} type="primary" htmlType="submit">Sconto </WrappedForm.Button>
+        <WrappedForm.Button coord={frsCols2.submit}   type="primary" htmlType="submit">Sconto </WrappedForm.Button>
        
-        </WrappedForm.Group>
-       
+        
        </WrappedForm>
     )
   }

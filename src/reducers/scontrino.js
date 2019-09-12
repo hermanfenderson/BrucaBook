@@ -75,7 +75,7 @@ let geometryParams = {cal: {
 						formWidth: 190,
 						scontoFormWidth: 190,
 						restoFormWidth: 190,
-						
+						formTestataWidth: 190,
 						
 						colParams1: [
 									{name: 'ean', min: 200, max: 200},
@@ -96,6 +96,20 @@ let geometryParams = {cal: {
 									{name: 'aggiungi', min: 120, max: 240}
 									
 									],
+									
+						colTestataParams1: [
+									{name: 'numero', min: 52, max: 52},
+									{name: 'oraScontrino', min: 78, max: 78},
+									{name: 'edit', min: 30, max: 30},
+									
+									],
+						colTestataParams2: [
+									{name: 'sconto', min: 60, max: 60},
+									{name: 'submit', min: 80, max: 80},
+									
+									
+									],
+									
 						headerParams: [
 									  {name: 'ean', label: 'EAN', min: 130, max: 130},
 									  {name: 'titolo', label: 'Titolo', min: 212, ellipsis: true},
@@ -109,8 +123,7 @@ let geometryParams = {cal: {
 						
 						},
 				  tbc: [{cassaWidth: (cal) => {return(cal.w/4-2)}},
-				  	    
-				  		{scontrinoWidth: (cal) => {return(3*cal.cassaWidth)}},
+				  	   	{scontrinoWidth: (cal) => {return(3*cal.cassaWidth)}},
 				  	    {scontrinoHeight: (cal) =>  {return(cal.h)}},
 				  	     
 				  	    {tableWidth: (cal) => {return(cal.scontrinoWidth-cal.totaliWidth)}},
@@ -136,6 +149,8 @@ let geometryParams = {cal: {
      		    		{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW -10, top: cal.tableHeight, left: 0})}},
     				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth-10, offset: 0}))}}, 
     				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth-10, offset: 1}))}}, 
+    					{formTestataCols1: (cal) =>  {let cols1 = calcFormColsFix({colParams: cal.colTestataParams1, width: cal.formTestataWidth-10, offset: 0});  cols1.edit.top = -30; return(cols1)}}, 
+    				    {formTestataCols2: (cal) =>  {let cols2 = calcFormColsFix({colParams: cal.colTestataParams2, width: cal.formTestataWidth-10, offset: 1}); cols2.submit.top = cols2.submit.top -50;  cols2.sconto.top = cols2.sconto.top -20; return(cols2)}}, 
     					
     					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth-10, offset: 2}))}},	 
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 

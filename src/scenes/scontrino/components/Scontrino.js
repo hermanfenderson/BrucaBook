@@ -47,7 +47,6 @@ class Scontrino extends Component {
 
  
 componentDidUpdate = (oldProps) => {
-	  console.log(this.props);
 	    let scontrino = this.props.testataScontrino;
 		let cassa = this.props.testataCassa;
         let oldScontrino = oldProps.testataScontrino;
@@ -57,9 +56,7 @@ componentDidUpdate = (oldProps) => {
 		let oldDataCassa = oldCassa ? oldCassa.dataCassa : null;
 		let oldNumero = oldScontrino ? oldScontrino.numero : null;
 		
-        let oldIdScontrino = (oldProps.match && oldProps.match.params) ? oldProps.match.params.scontrino : null;
-        let idScontrino = this.props.match.params.scontrino;
-        //Reset e reload scontrino? 
+          //Reset e reload scontrino? 
         
 	    var header = "Cassa ";
 	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");
@@ -145,7 +142,7 @@ return (
     	</FixBlock>
     	<FixBlock  coors={this.props.geometryS.editScontrinoCoors}>
     	
-			<FormTestataScontrino period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} data={this.props.data}  ref='formTestataScontrino'/>
+			<FormTestataScontrino geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino} data={this.props.data}  ref='formTestataScontrino'/>
 			
     	</FixBlock>
     	<FixBlock coors={this.props.geometryS.totaliCoors}>

@@ -156,6 +156,39 @@ export function caricaAnagrafiche() {
 	  }	
 }
 
+export function pulisciCatalogo() {
+return function(dispatch, getState) {
+let catalogoRef = 	Firebase.database().ref('/catalogo');
+catalogoRef.once('value', snapshot => {
+	let catalogo = Object.entries(snapshot.val());
+	let sbagliati = {};
+	let patt1 = /\r?\n|\r/g;
+	for (let i=0; i<catalogo.length; i++) 
+		{
+			if (catalogo[i][1].titolo.search(patt1) > -1) 
+				{sbagliati[catalogo[i][0]] = {titolo: catalogo[i][1].titolo.replace(patt1," ").trim()};
+				 }
+		}
+	console.log(sbagliati);
+	let sbagliatiArray = Object.entries(sbagliati);
+    let sbagliatiArray2 = [];
+     let j=-1;
+    for (let i=0; i<sbagliatiArray.length; i++) 
+    	{  
+    		if ((i % 100) === 0) 
+    			{sbagliatiArray2.push({});
+    			
+    			j++;
+    					
+    			}
+    		sbagliatiArray2[j][sbagliatiArray[i][0]] = sbagliatiArray[i][1]; //A gruppi di 100	
+    		
+    	}
+    //for (let j=0; j<sbagliatiArray2.length; j++) catalogoRef.update(sbagliatiArray2[j]);
+})
+}
+}
+
 
 export function forzaAggiornaMagazzino() {
 	 return function(dispatch, getState) {

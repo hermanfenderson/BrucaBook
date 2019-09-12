@@ -3,7 +3,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const moment = require('moment');
-const {purge, aggiornaRegistro, update, calcolaTotali, calcolaTotaliNew} = require('./generic');
+const {purge, aggiornaRegistro, update, calcolaTotaliNew} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
 const {aggiornaMagazzinoEANFull, creaMagazzinoDaCatalogo} = require('./magazzino');

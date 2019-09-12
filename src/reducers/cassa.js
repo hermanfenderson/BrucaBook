@@ -23,10 +23,6 @@ const ADD_ITEM_CASSA = 'ADD_ITEM_CASSA';
 const CHANGE_ITEM_CASSA = 'CHANGE_ITEM_CASSA';
 const DELETE_ITEM_CASSA = 'DELETE_ITEM_CASSA';
 
-const ADDED_ITEM_CASSA = 'ADDED_ITEM_CASSA';
-const CHANGED_ITEM_CASSA = 'CHANGED_ITEM_CASSA';
-const DELETED_ITEM_CASSA = 'DELETED_ITEM_CASSA';
-
 
 
 const ADD_ITEM_SCONTRINO = 'ADD_ITEM_SCONTRINO';
@@ -190,7 +186,7 @@ function transformAndValidateEditedRigaCassa(cei, name, value, itemsArray, state
     cei.errors = {};
     errMgmt(cei, 'oraScontrino','invalidTime','Ora',  (!cei.values.oraScontrino.isValid()));
     errMgmt(cei, 'numero','notPositive','N.>0',  (!isPositiveInteger(cei.values.numero) ));
-   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((cei.values.sconto) && (cei.values.sconto !== '') &&((value) => {return !isPercentage(value)})(cei.values.sconto)));
+   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((cei.values.sconto)  &&((value) => {return !isPercentage(value)})(cei.values.sconto)));
    //Se arrivo qui... devo capire se sto andando a scrivere su uno scontrino che c'e' già...escluso me stesso... che va ovviamente bene... 
    if (name==='numero') 
 	{

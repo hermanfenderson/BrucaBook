@@ -21,6 +21,8 @@ class Help extends React.Component
         
       />
       <button onClick={this.props.forzaAggiornaMagazzino}>Forza</button> 
+      <button onClick={this.props.pulisciCatalogo}>Pulisci</button>
+      
      </div>
     
   );
