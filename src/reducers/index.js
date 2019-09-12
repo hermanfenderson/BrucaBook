@@ -250,7 +250,7 @@ export const getTestataCassa = (state) => {return fromCassa.getTestataCassa(stat
 export const getTableHeightCassa = (state) => {return fromCassa.getTableHeight(state.cassa)};
 export const getTableScrollCassa = (state)  => {return fromCassa.getTableScroll(state.cassa)};
 export const getItemsCassa = (state) => {return fromCassa.getItemsCassa(state.cassa)};
-
+export const canChangeNumber = (state) => {return fromCassa.canChangeNumber(state.cassa)};
 
 //export const getTableScrollByKeyCassa = (state)  => {return fromCassa.getTableScrollByKey(state.cassa)};
 

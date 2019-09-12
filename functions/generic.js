@@ -85,13 +85,17 @@ return (destRef.update(updates).then(()=>{console.info("Modifiche registro: "+ke
 
 const update = (change, context, part) =>
 {
-	 let oldTot = change.before.child('totali');
-     let newTot = change.after.child('totali');
-     let oldSconto = change.before.child('sconto').val();
+	 let oldSconto = change.before.child('sconto').val();
      let newSconto = change.after.child('sconto').val();
-      if ((oldSconto === newSconto) && (equal(oldTot, newTot))) //Per discernere cambiamenti genuini in testata
+     let oldPezzi = change.before.child('totali').child('pezzi').val();
+     let newPezzi = change.after.child('totali').child('pezzi').val();
+     let oldPrezzo = change.before.child('totali').child('prezzoTotale').val();
+     let newPrezzo = change.after.child('totali').child('prezzoTotale').val();
+     
+     
+      if ((oldSconto === newSconto) && (oldPezzi === newPezzi) && (oldPrezzo === newPrezzo)) //Per discernere cambiamenti genuini in testata
             {	
-	            const key = context.params.id;	
+               const key = context.params.id;	
 	            const anno = context.params.anno;
 	            const mese = context.params.mese;
 	            const cassa = context.params.prefixId;
@@ -202,6 +206,70 @@ const calcolaTotali = (change, context, part) =>
             
         
                 }	
+
+//Ti passo direttamente il pezzo di dati su cui calcolare...DA FINIRE      	   
+const calcolaTotaliNew = (change, context, part) =>
+{
+           
+             const cassa = context.params.prefixId;
+             const anno = context.params.anno;
+             const mese = context.params.mese;
+             const key = context.params.id;
+			 //Se calcolo la somma di scontrini salgo di due (sto osservando i totali...)
+			 const items = change.after.val();
+			 const righe = (items) ? Object.values(items) : [];
+              	
+			var totalePezzi = 0;
+			var totaleImporto = 0.0;
+	        var scontrini = 0;
+	        var totaleGratis= 0;
+	        var totali;
+	        for(let propt=0; propt<righe.length; propt++)
+		    			{
+		    			totalePezzi = (part === 'elencoCasse') ? parseInt(righe[propt].totali.pezzi) + totalePezzi : parseInt(righe[propt].pezzi) + totalePezzi;
+	    				totaleImporto =  (part === 'elencoCasse') ? parseFloat(righe[propt].totali.prezzoTotale) + parseFloat(totaleImporto) : parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+	    				if (part === 'elencoBolle' || part==='elencoRese')  totaleGratis =  parseInt(righe[propt].gratis) + totaleGratis;
+	    				if (part === 'elencoCasse') scontrini++;	
+		    			}
+		    switch(part)
+		    			{
+		    			case 'elencoBolle':
+		    			case 'elencoRese':
+		    				totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis, 'prezzoTotale' : totaleImporto.toFixed(2)}; 
+		    			    ref = change.after.ref.parent.parent.parent.parent.child(part).child(anno).child(mese).child(key);
+		    			break;
+		    			case 'elencoCasse':
+		    				totali = {'pezzi' : totalePezzi, 'scontrini' : scontrini,
+									'prezzoTotale' : totaleImporto.toFixed(2)}; 
+									ref = change.after.ref.parent.parent.parent.parent.child('elencoCasse').child(anno).child(mese).child(key);
+		    			break;
+		    			case 'elencoScontrini':
+		    				totali = {'pezzi' : totalePezzi, 'prezzoTotale' : totaleImporto.toFixed(2)};
+		    				ref = change.after.ref.parent.parent.parent.parent.parent.child('elencoScontrini').child(anno).child(mese).child(cassa).child(key);
+		    			break;
+		    			case 'elencoOrdini': 
+		    				console.log(totaleImporto);
+		    				totali = {'pezzi' : totalePezzi,  'prezzoTotale' : totaleImporto.toFixed(2), lastActionKey : idItem}; 
+		    			    ref = change.after.ref.parent.parent.parent.child(part).child(context.params.cliente).child(key);
+		                break;
+		    			default:
+		    			break;
+		    			}
+		   	        let pezziTot = (part==='elencoBolle' || part==='elencoRese') ? totalePezzi + totaleGratis : totalePezzi;
+					if (pezziTot > 0) return(ref.child('totali').set(totali).then(console.info("aggiornati totali "+part+" chiave: "+key ))); //Per non perdere tempo...
+					//Se sono a zero pezzi ... aggiorno i totali... se non è vuoto elencoBolle...
+					else 
+						{
+						return(ref.once("value")
+								.then(function(snapshot) {
+									var notEmpty = snapshot.hasChildren(); 
+				    				if (notEmpty) ref.child('totali').set(totali).then(console.info("aggiornati totali "+part+" chiave: "+key ));
+				    				else console.info("Record vuoto: "+part+" chiave: "+key);
+									 }));
+				    	}
+		    	
+        
+                }	
         	   
 
 module.exports = {
@@ -209,6 +277,7 @@ module.exports = {
  aggiornaRegistro: aggiornaRegistro,
  update : update,
  calcolaTotali: calcolaTotali,
+ calcolaTotaliNew: calcolaTotaliNew
 }
 
 

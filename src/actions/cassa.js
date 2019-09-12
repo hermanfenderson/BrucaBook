@@ -120,6 +120,8 @@ cassaFA.aggiungiItem = (params, valori) => {
 	   {
 	   	const ref = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa])).push();
 	   	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
+		//Prendo il numero più alto disponiibile... migliorato rispetto al precedente... se ho cancellato scontrini me li fa riusare
+		//Devo però cambiare qualcosa nel modello dati...
 		refCassa.transaction( function(cassa) {
     		if (cassa) 
     			{
@@ -130,6 +132,8 @@ cassaFA.aggiungiItem = (params, valori) => {
     			oraScontrino = moment(dataCassa);
     			oraScontrino.hour(moment().hour());
     			oraScontrino.minute(moment().minute());
+    			if (!cassa.numeriScontrino) cassa.numeriScontrino = {}; //Se è il primo scontrino nella cassa creo anche il contenitore...
+    			cassa.numeriScontrino[ref.key] = numero;
     			}
     		return cassa;
 			}).then(function(success) {
@@ -137,6 +141,7 @@ cassaFA.aggiungiItem = (params, valori) => {
 			valori.numero = numero;
 			valori.dataCassa = dataCassa;
 			valori.oraScontrino = oraScontrino.valueOf();
+			valori.sconto = 0;
 			const typeAdd =  cassaFA.ADD_ITEM;
 			var nuovoItem = {...valori}; //Fix del baco in cancellazione di scontrino vuoto...
 	        addCreatedStamp(nuovoItem);
@@ -153,7 +158,7 @@ cassaFA.aggiungiItem = (params, valori) => {
    					}
    					)  	
 			nuovoItem['key'] = ref.key;
-			nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
+			//nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
 			dispatch(cassaFA.setSelectedItem(nuovoItem));
 			
 			})
@@ -173,63 +178,88 @@ cassaFA.aggiornaItem = (params,itemId, valori) => {
 	const cassa = params[2];
 	
 	const scontrino = params[3];
-	const oldNumero = valori['oldNumero'];
-	const numeroKey = valori['numeroKey'];
-   
-	delete valori['oldNumero']; //Non mi serve più
-	delete valori['numeroKey']; //Non so a cosa serve!!!
-	
-	
-	const numero = valori['numero'];
 
-	return function(dispatch,getState) 
-	   {
-	   	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
+	var numero = valori.numero;
+    
+	var dataCassa = valori.dataCassa;
+	var oraScontrino;
+	var oldNumero = valori.oldNumero;
+    
+    //Gestione dell'ora scontrino
+    var tmpOraScontrino = moment(valori.oraScontrino);
+     oraScontrino = moment(dataCassa);
+     oraScontrino.hour(moment(tmpOraScontrino).hour());
+     oraScontrino.minute(moment(tmpOraScontrino).minute());
+    var nuovoItem = {...valori};
+    //Non mi servono più
+    delete nuovoItem.oldNumero;
+	delete nuovoItem.dataCassa;
+    if (!nuovoItem.sconto) nuovoItem.sconto = 0;
+    
+	//Appena calcolato	
+	nuovoItem.oraScontrino = oraScontrino;	   
+    
+    //Gestione del numero cassa (se è cambiato)
+    if (oldNumero !== numero)
+    	{
+    		return function(dispatch,getState) 
+	    	{
+	   		const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
 	   		var ref; 
-		refCassa.transaction( function(cassa) {
-    		if (cassa) 
-    			{
-    			if (numero > cassa.ultimoScontrino) cassa.ultimoScontrino = numero;
-    			}
-    		return cassa;
-			}).then(function(success) {
-		   //Se devo swappare i numeri lo faccio qui...
-			
+			refCassa.transaction( function(cassa) {
+    			if (cassa) 
+    				{
+    				if (numero > cassa.ultimoScontrino) cassa.ultimoScontrino = numero;
+    				if (cassa.numeriScontrino) cassa.numeriScontrino[scontrino] = numero;
+    				}
+    			return cassa;
+				}).then(function(success) {
 		   		
-		   const typeChange =  cassaFA.CHANGE_ITEM;
-			var nuovoItem = {...valori};
-			addChangedStamp(nuovoItem);
-			preparaItem(nuovoItem);
-  
-			ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], scontrino));
-           ref.update(nuovoItem);
-			dispatch(
-   					{
-   					type: typeChange,
-   					key: ref.key
-   					}
-   					)  	
-			nuovoItem['key'] = ref.key;
-			nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
+				   const typeChange =  cassaFA.CHANGE_ITEM;
+			
+				   addChangedStamp(nuovoItem);
+				   preparaItem(nuovoItem);
+		   	
+        		   ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], scontrino));
+            	   ref.update(nuovoItem);
+				   dispatch(
+   						{
+   						type: typeChange,
+   						key: ref.key
+   						}
+   						)  	
+				   nuovoItem['key'] = scontrino;
+			//nuovoItem.oraScontrino = moment(nuovoItem.oraScontrino).format('HH:mm');
 		
-			dispatch(cassaFA.setSelectedItem(nuovoItem));
+					dispatch(cassaFA.setSelectedItem(nuovoItem));
 			
-			
-			
-			})
-            	if (numeroKey)
-				{
-				ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], numeroKey));	
-				ref.update({'numero' : oldNumero});	
+					}
+				)
+	    		}
+    	    }	
+			//Se non è cambiato il numero vado liscio...
+			else
+				{	return function(dispatch,getState) 
+				   {
+				   	 const typeChange =  cassaFA.CHANGE_ITEM;
+				   	addChangedStamp(nuovoItem);
+					preparaItem(nuovoItem);
+		   	
+        		    let ref  = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini', [anno,mese,cassa], scontrino));
+            		ref.update(nuovoItem);
+					dispatch(
+   						{
+   						type: typeChange,
+   						key: ref.key
+   						}
+   						)  	
+					nuovoItem['key'] = scontrino;
+					dispatch(cassaFA.setSelectedItem(nuovoItem));
+				   }
+					
 				}
-		
-
-            
-			//Non mi serve chiamare la funzione originale...
-			//dispatch(aggiungiItemSuper(params, valori));
-		
-		}
 }
+
 
 
 cassaFA.deleteItem = (params, itemId) => {
@@ -250,18 +280,23 @@ const typeDelete = cassaFA.DELETE_ITEM;
 	const anno = params[0];
 	const mese = params[1];
 	const cassa = params[2];
+	const scontrino = itemId;
 
 	const refCassa = Firebase.database().ref(urlFactory(getState,'righeElencoCasse',[anno,mese],cassa));
 		refCassa.transaction( function(cassa) {
     		if (cassa) 
     			{
-    			const refScontrini = Firebase.database().ref(urlFactory(getState,'righeElencoScontrini',params));
-    			let ultimoScontrinoAttuale = 0;
-    			refScontrini.once('value', snapshot => {
-    				let scontrini = snapshot.val();
-    				for (var propt in scontrini) {if (scontrini[propt].numero > ultimoScontrinoAttuale) ultimoScontrinoAttuale = scontrini[propt].numero;}
-    				});
-    			cassa.ultimoScontrino = ultimoScontrinoAttuale;
+    		    if (cassa.numeriScontrino) 
+    		    	{delete cassa.numeriScontrino[scontrino];
+    				let numeriScontrinoArray = Object.values(cassa.numeriScontrino);
+    				let ultimoScontrino = 0;
+    				//Trovo il massimo...
+    				for (let i=0; i<numeriScontrinoArray.length; i++)
+    					{
+    					if (numeriScontrinoArray[i] > ultimoScontrino)	ultimoScontrino = numeriScontrinoArray[i];
+    					}
+    				cassa.ultimoScontrino = ultimoScontrino;
+    		    	}
     			}
     		return cassa;
 			})

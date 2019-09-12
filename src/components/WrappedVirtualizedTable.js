@@ -149,21 +149,26 @@ memoizedCalcColumnWidth = memoizeOne(this.calcColumnWidth);
 
 filterData = (data, filters) =>
 {
-	let dataCpy = [...data]; //Shallow copy utile per il sort...
+   let dataCpy = [...data]; //Shallow copy utile per il sort...
    let itemData = (filters) ? 
   		dataCpy.map((record) => 
   			{
   			//Il record è buono... se non esiste quel campo nel record oppure esiste e la regex è rispettata	
-  			let good = true;
+  			//Ma posso passare una funzione filtro alternativa...
   			
-  			for (var prop in filters)
-  					
-  				{  let regex = new RegExp(filters[prop],'i');
-  				
-  					if (filters[prop] && (record[prop]!==undefined) && (!record[prop].match(regex))) good = false;
-  					if (filters[prop] && ((record[prop]===undefined) || record[prop].length===0)) good = false;
-  				}
-  			return (good ? {...record} : null) 
+  			if (this.props.customFilterFunc) return (this.props.customFilterFunc(record, filters))
+  			else
+  				{
+  				let good = true;	
+	  			for (var prop in filters)
+	  					
+	  				{  let regex = new RegExp(filters[prop],'i');
+	  				
+	  					if (filters[prop] && (record[prop]!==undefined) && (!record[prop].match(regex))) good = false;
+	  					if (filters[prop] && ((record[prop]===undefined) || record[prop].length===0)) good = false;
+	  				}
+	  			return (good ? {...record} : null) 
+	  			}
   			}).filter((record => !!record)) :
   			dataCpy;
    return(itemData);

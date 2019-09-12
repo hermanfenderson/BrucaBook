@@ -3,7 +3,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const moment = require('moment');
-const {purge, aggiornaRegistro, update, calcolaTotali} = require('./generic');
+const {purge, aggiornaRegistro, update, calcolaTotali, calcolaTotaliNew} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
 
 const {aggiornaMagazzinoEANFull, creaMagazzinoDaCatalogo} = require('./magazzino');
@@ -111,21 +111,21 @@ exports.creaMagazzinoDaCatalogoLocale = functions.database.ref('{catena}/{negozi
 			
 
 			
-exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{prefixId}/{id}/totali')
-    .onWrite((change, context) => {return(calcolaTotali(change, context, 'elencoCasse'))});
+exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{id}')
+    .onWrite((change, context) => {return(calcolaTotaliNew(change, context, 'elencoCasse'))});
    
 
-exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}/{idItem}')
-    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoScontrini'))});
+exports.calcolaTotaleScontrino = functions.database.ref('{catena}/{negozio}/scontrini/{anno}/{mese}/{prefixId}/{id}')
+    .onWrite((change, context) =>  {return(calcolaTotaliNew(change, context, 'elencoScontrini'))});
           
-exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}/{idItem}')
-    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoBolle'))});
+exports.calcolaTotaleBolla = functions.database.ref('{catena}/{negozio}/bolle/{anno}/{mese}/{id}')
+    .onWrite((change, context) =>  {return(calcolaTotaliNew(change, context, 'elencoBolle'))});
      
-exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}/{idItem}')
-    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoRese'))});
+exports.calcolaTotaleResa = functions.database.ref('{catena}/{negozio}/rese/{anno}/{mese}/{id}')
+    .onWrite((change, context) =>  {return(calcolaTotaliNew(change, context, 'elencoRese'))});
 
-exports.calcolaTotaleOrdine = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')
-    .onWrite((change, context) =>  {return(calcolaTotali(change, context, 'elencoOrdini'))});
+exports.calcolaTotaleOrdine = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}')
+    .onWrite((change, context) =>  {return(calcolaTotaliNew(change, context, 'elencoOrdini'))});
 
 //Chiusura ordine...se ha tutte le righe consegnate
 exports.chiudiOrdine = functions.database.ref('{catena}/{negozio}/ordini/{cliente}/{id}/{idItem}')

@@ -35,7 +35,6 @@ class Scontrino extends Component {
      
 	if (this.props.match.params.scontrino) 
 			{
-			//	this.props.listenTestataScontrino([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa],  this.props.match.params.scontrino); //In modo da acoltare il valore giusto..
 				this.props.setScontrinoId(this.props.match.params.scontrino); 
 				
 			}
@@ -48,6 +47,7 @@ class Scontrino extends Component {
 
  
 componentDidUpdate = (oldProps) => {
+	  console.log(this.props);
 	    let scontrino = this.props.testataScontrino;
 		let cassa = this.props.testataCassa;
         let oldScontrino = oldProps.testataScontrino;
@@ -63,9 +63,9 @@ componentDidUpdate = (oldProps) => {
         
 	    var header = "Cassa ";
 	    if (cassa) header = header + cassa.cassa + ' del ' + moment(cassa.dataCassa).format("L");
-	if (scontrino && scontrino.numero) header = header + ' - scontrino n. ' + scontrino.numero;
+   	if (scontrino && scontrino.numero) header = header + ' - scontrino n. ' + scontrino.numero;
 	
-    if ((cassa && oldCassaCassa !== cassa.cassa) || (cassa && oldDataCassa !== cassa.dataCassa)  || (scontrino && oldNumero !== scontrino.numero))
+    if ((cassa && oldCassaCassa !== cassa.cassa) || (cassa && oldDataCassa !== cassa.dataCassa)  || (scontrino && oldNumero !== scontrino.numero) || (!scontrino)) 
 		this.props.setHeaderInfo(header);
 	if (scontrino !== oldScontrino) this.props.setSelectedRigaCassa(scontrino);
 };

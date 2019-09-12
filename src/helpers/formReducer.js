@@ -232,9 +232,9 @@ this.STORE_MEASURE = 'STORE_MEASURE';
 		case this.RESET_EDITED_ITEM:
 	   	    newState = {...state, editedItem: {...editedItemInitialState()}}; //Reset dello stato della riga bolla...basta la copia superficiale
 	   	    break;
-	   	    
+	   //Consento un accesso a tutto lo stato per una validazione di contesto... la uso se serve...	    
 	   case this.CHANGE_EDITED_ITEM:
-	      	newState =  {...state, editedItem: transformAndValidateEditedItem(editedItemCopy(state.editedItem), action.name, action.value, state.itemsArray)};
+	      	newState =  {...state, editedItem: transformAndValidateEditedItem(editedItemCopy(state.editedItem), action.name, action.value, state.itemsArray, state)};
 			break;
 		
 	   case this.SET_SELECTED_ITEM:

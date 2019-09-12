@@ -48,18 +48,20 @@ for (let i=0; i<elencoScontriniArray.length;i++)
 	let totalePezzi = 0;
 	let totaleImporto = 0.00;
 	let scontrinoKey = elencoScontriniArray[i][0];
-	let righe = [];
+		let righe = [];
 	if (scontrini[scontrinoKey]) righe=Object.values(scontrini[scontrinoKey]);
 	for (let propt=0; propt<righe.length;  propt++)
 		{
 				totalePezzi = parseInt(righe[propt].pezzi, 10) + totalePezzi;
 	    		totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);	
 			     			
-				totalePezziGen = totalePezziGen + totalePezzi;
-	    		totaleImportoGen =  parseFloat(totaleImportoGen) + parseFloat(totaleImporto);
-	    		numScontrini++;
+			
+	    		
 		}
-	elencoScontrini[scontrinoKey].totali = {pezzi: totalePezzi, prezzoTotale: totaleImporto};	
+	elencoScontrini[scontrinoKey].totali = {pezzi: totalePezzi, prezzoTotale: totaleImporto.toFixed(2)};	
+	totalePezziGen = totalePezziGen + totalePezzi;
+	totaleImportoGen =  parseFloat(totaleImportoGen) + parseFloat(totaleImporto);
+	numScontrini++;
 	}
 	
 return({...newState,  elencoScontrini: elencoScontrini, totali: {'scontrini': numScontrini, 'pezzi' : totalePezziGen, 
@@ -71,6 +73,7 @@ return({...newState,  elencoScontrini: elencoScontrini, totali: {'scontrini': nu
 const editedRigaCassaValuesInitialState = 
 	  {			
 	            oraScontrino: null,
+	            sconto: 0,
 	};
 	
 	
@@ -176,16 +179,30 @@ const rigaCassaR = new FormReducer(
 
 
 
-//In input il nuovo campo... in output il nuovo editedRigaBolla
-function transformAndValidateEditedRigaCassa(cei, name, value)
+//In input il nuovo campo... in output il nuovo editedRigaCassa
+//di itemsArray qui non mi frega niente...  ma mi interessa lo stato...
+function transformAndValidateEditedRigaCassa(cei, name, value, itemsArray, state)
 {  	
+	
 	cei.values[name] = value;
     //I messaggi vengono ricalcolati a ogni iterazione...
     cei.errorMessages = {};
+    cei.errors = {};
     errMgmt(cei, 'oraScontrino','invalidTime','Ora',  (!cei.values.oraScontrino.isValid()));
-    errMgmt(cei, 'numero','notPositive','N.>0',  (!isPositiveInteger(cei.values.numero)));
-   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((value) => {return !isPercentage(value)})(cei.values.sconto));
-  
+    errMgmt(cei, 'numero','notPositive','N.>0',  (!isPositiveInteger(cei.values.numero) ));
+   errMgmt(cei, 'sconto','invalidPercentage','0-99',  ((cei.values.sconto) && (cei.values.sconto !== '') &&((value) => {return !isPercentage(value)})(cei.values.sconto)));
+   //Se arrivo qui... devo capire se sto andando a scrivere su uno scontrino che c'e' già...escluso me stesso... che va ovviamente bene... 
+   if (name==='numero') 
+	{
+		let numeroAttuale = cei.selectedItem.numero;
+		//Solo nel caso sia diverso dal numero attuale vedo se c'e' un problema... se è lo stesso... non mi allarmo
+		if (value !== numeroAttuale)
+			{
+			let numeriScontrinoValues = Object.values(state.testata.numeriScontrino); //Array con tutti gli scontrini che già esistono...so che numeriScontrino c'e' altrimenti non potrei cambiare il numero...
+			for (let i=0; i<numeriScontrinoValues.length; i++) if (numeriScontrinoValues[i] === value) errMgmt(cei, 'numero', 'exist','Esiste', true); //se c'e' già... non posso far salvare...
+			}
+		
+	}
   	
     //Se ho anche solo un errore... sono svalido.
     cei.isValid = isValidEditedItem(cei);
@@ -300,6 +317,20 @@ export default function cassa(state = initialState(), action) {
   const memoizedCalcCassaItems = memoizeOne(calcCassaItems);	
   
   export const getItemsCassa = (state) => {return memoizedCalcCassaItems(state.elencoScontrini, state.scontrini)}
+  
+  //Decido sulla base del fatto che ho un numero di numeroScontrini pari a quello che ho in totale se posso consentire la modifica del numero scontrino
+  export const canChangeNumber = (state) => {
+  	let numScontTotali = (state.totali) ? state.totali.scontrini : null;
+  	if (!numScontTotali) return false; //se ho zero scontrini oppure non è definito il totale... non vado avanti...
+  	
+  	let numeriScontrino = (state.testata) ? state.testata.numeriScontrino : null;
+  	if (!numeriScontrino) return false; //Se proprio non ho numeriScontrino... non vado avanti...
+  	
+  	let numScontNumeri = Object.keys(numeriScontrino).length;
+  	if (numScontNumeri !== numScontTotali) return false;
+  	return true; //se il numero è uguale.. ritorno true
+  	
+  }
   	
   
       

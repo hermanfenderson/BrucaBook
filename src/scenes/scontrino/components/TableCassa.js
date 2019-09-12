@@ -83,7 +83,18 @@ class TableCassa extends Component
 					
 				}
    noAction = (rowData, rowIndex) => {if (rowData.tipo ==='rigaScontrino') return true; else return false;};  			
-	
+  //Funzione filtro custom per lasciare vive le testate
+   customFilterFunc = (record, filters) => {
+   		let good = true;
+   		let prop = 'titolo';
+   		let regex = new RegExp(filters[prop],'i');
+   		if (record.tipo === 'rigaScontrino')	
+   			{
+	  		if (filters[prop] && (record[prop]!==undefined) && (!record[prop].match(regex))) good = false;
+	    	if (filters[prop] && ((record[prop]===undefined) || record[prop].length===0)) good = false;
+   			}
+	    return (good ? {...record} : null) 
+   }
     	render() { 
         let props = {...this.props};
     	let selectedItemKey = null;
@@ -102,7 +113,7 @@ class TableCassa extends Component
 			height={height} 
 			width={width} 
 			noAction={this.noAction}
-		
+		 customFilterFunc = {this.customFilterFunc}
 		 titoloWidth={this.props.geometry.tableCassaTitoloWidth} 
 		 actionWidth={30} 
 		 actionFirst={true} 
