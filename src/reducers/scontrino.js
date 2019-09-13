@@ -23,6 +23,25 @@ import memoizeOne from 'memoize-one';
 import {isAmount, isNotZeroInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
 
+const aggiornaTotaliLocale = (newState) =>
+{
+let scontrini = newState.scontrini;
+let scontrinoId = newState.scontrinoId;
+if (!scontrinoId) return(newState); //Non calcolo se non ho uno scontrino
+let righe = memoizedCalcScontrinoItems(scontrini[scontrinoId]);
+if (!righe) return(newState); //Non calcolo se non ho uno scontrino
+let totalePezzi = 0;
+let totaleImporto = 0.00;
+
+	for (let propt=0; propt<righe.length;  propt++)
+		{
+				totalePezzi = parseInt(righe[propt].pezzi, 10) + totalePezzi;
+	    		totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);	
+		}
+	
+	
+return({...newState,  totali: {'pezzi' : totalePezzi, 'prezzoTotale' : totaleImporto.toFixed(2)}} );
+}
 
 const editedRigaBollaValuesInitialState = 
 	  {			ean: '',
@@ -66,6 +85,7 @@ let geometryParams = {cal: {
 						infoHeight : COL_H_S,
 						editScontrinoHeight: COL_H,
 						nuovoScontrinoHeight : COL_H_S,
+						nuovoScontrinoWidth: 170,
 						scontoFormHeight: COL_H,
 							restoFormHeight: FORM_COL_H,
 					
@@ -74,7 +94,7 @@ let geometryParams = {cal: {
 						immagineHeight: 200,
 						formWidth: 190,
 						scontoFormWidth: 190,
-						restoFormWidth: 190,
+						restoFormWidth: 170,
 						formTestataWidth: 190,
 						
 						colParams1: [
@@ -133,15 +153,15 @@ let geometryParams = {cal: {
 				 geo: [ 
 				  	   	{scontrinoCoors: (cal) => {return({height: cal.scontrinoHeight, width: cal.scontrinoWidth, top: 0, left: cal.cassaWidth+5})}},
     				     //Tutti gli altri sono relativi...
-     		    		{infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 0})}},
-    				    {editScontrinoCoors: (cal) => {return({height: cal.editScontrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight, left: 0})}},
-    				    {scontoFormCoors: (cal) => {return({height: cal.scontoFormHeight, width: cal.infoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.emptyHeight, left: 0})}},
-    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight, left: 0})}},
+     		    		{infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 5})}},
+    				    {editScontrinoCoors: (cal) => {return({height: cal.editScontrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight, left: 5})}},
+    				    {scontoFormCoors: (cal) => {return({height: cal.scontoFormHeight, width: cal.infoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.emptyHeight, left: 5})}},
+    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight, left: 5})}},
     				
-    				    {restoFormCoors: (cal) => {return({height: cal.restoFormHeight, width: cal.restoFormWidth, top:  cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight, left: 0})}},
-    					{nuovoScontrinoCoors: (cal) => {return({height: cal.nuovoSContrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight+cal.restoFormHeight, left: 0})}},
+    				    {restoFormCoors: (cal) => {return({height: cal.restoFormHeight, width: cal.restoFormWidth, top:  cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight, left: 5})}},
+    					{nuovoScontrinoCoors: (cal) => {return({height: cal.nuovoScontrinoHeight, width: cal.nuovoScontrinoWidth, top: cal.infoHeight+cal.editScontrinoHeight+cal.scontoFormHeight+cal.totaliHeight+cal.restoFormHeight, left: 5})}},
     				    
-    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h - cal.formHeight -cal.immagineHeight, left: 0})}},
+    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h - cal.formHeight -cal.immagineHeight, left: 5})}},
 						{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
     				
 					    {tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.totaliWidth})}},
@@ -361,6 +381,8 @@ export default function scontrino(state = initialState(), action) {
 	case CHANGED_ITEM_SCONTRINI:
 	case DELETED_ITEM_SCONTRINI:
 			newState = persistTree({state: state, type: action.type, payload: action.payload, objName: 'scontrini'});
+			newState = aggiornaTotaliLocale(newState);
+		
 			break;
 	  
       default:

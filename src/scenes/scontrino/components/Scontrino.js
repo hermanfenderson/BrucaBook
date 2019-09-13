@@ -113,7 +113,7 @@ return (
 
   <FixBlock  style={{'backgroundColor': '#F0F0F0'}} coors={this.props.geometryC.cassaCoors}>
 	
-    <FixBlock className='header-cassa' coors={this.props.geometryC.headerCassaCoors}>
+    <FixBlock className='header-cassa' coors={this.props.geometryC.infoCoors}>
   
     Cassa {this.props.testataCassa ? this.props.testataCassa.cassa : ''}
     </FixBlock>
@@ -159,15 +159,16 @@ return (
     	<BookImg eanState={this.props.editedRigaScontrino.eanState} ean={this.props.editedRigaScontrino.values.ean} imgUrl={this.props.editedRigaScontrino.values.imgFirebaseUrl}  />
         </FixBlock>
 	
-	     <FixBlock coors={this.props.geometryS.tableCoors}>
+	     <FixBlock className={'tableScontrino'} coors={this.props.geometryS.tableCoors}>
     
 	
 		   <Spin spinning={!this.props.testataScontrino}>	
-   	
-			
+  			
 					<TableScontrino geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
+	 
+
 	     </Spin>
-	   	</FixBlock>
+	    	</FixBlock>
 
 <FixBlock className='bottom-form2' coors={this.props.geometryS.formCoors} >
    

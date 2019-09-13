@@ -106,7 +106,7 @@ let geometryParams = {cal: {
 				  		{infoWidth: (cal) => {return(cal.cassaWidth/3)}},
 				  	    {nuovoScontrinoWidth: (cal) => {return(cal.cassaWidth*2/3)}},
 				  	    
-				  	    {tableWidth: (cal) => {return(cal.w/4-10)}},
+				  	    {tableWidth: (cal) => {return(cal.w/4)}},
 				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formSearchHeight- cal.totaliHeight-cal.infoHeight)}},
 				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
 				  	   ],
@@ -115,7 +115,7 @@ let geometryParams = {cal: {
     					
      		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight+cal.totaliHeight+cal.infoHeight, left: 5})}},
     				
-    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW, sel_w: SEL_W_S}))}},
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth, sel_w: SEL_W_S}))}},
     				    {infoCoors: (cal) => {return({height: cal.infoHeight, width: cal.infoWidth, top: 0, left: 5})}},
     				    {nuovoScontrinoCoors: (cal) => {return({height: cal.testataHeight, width: cal.nuovoScontrinoWidth-5, top: 0, left: cal.infoWidth})}},
     				    {testataCoors: (cal) => {return({height: cal.totaliHeight+cal.formSearchHeight, width: cal.cassaWidth, top: cal.infoHeight, left: 5})}},

@@ -251,6 +251,10 @@ font-weight: bold;
     margin-bottom: 10px;
 }
 
+.ant-input[disabled]{
+	color: black;
+}
+
 .ReactVirtualized__Table__headerTruncatedText{
 	text-transform: none;
 	

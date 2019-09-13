@@ -1,5 +1,4 @@
 import React from 'react'
-import {Row,Spin} from 'antd'
 
 
 const TotaliScontrino = (props) => 
@@ -8,12 +7,11 @@ const TotaliScontrino = (props) =>
     	 if (totali) return(
 	
 			<div>
-			<Row> Copie: {totali.pezzi} </Row>
-				<Row> Totale: {totali.prezzoTotale} </Row>
+			<div> Copie: {totali.pezzi} </div>
+				<div> Totale: {totali.prezzoTotale} </div>
 			</div>
 			
 			)
-    	 else return   <Spin spinning={true} />		
     }		
 	
 export default TotaliScontrino;

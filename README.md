@@ -14,7 +14,10 @@ Storia delle versioni
 ### Versione 0.13.1
 * Fix di recod errati in catalogo (ritorni carrello)
 * Modifca a cassa per usare nuovo tipo form
+* Baco: errato calcolo totali
+* Maggiore leggibilità campi disabilitati
 * Eliminazione warning 
+
 
 ### Versione 0.13.0
 * Release candidate per la versione 1.0.0
