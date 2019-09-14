@@ -11,6 +11,13 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.13.2
+* Bugfixing: lo scontrino rimane valorizzato quando si esce e si rientra con un'altra cassa
+* Eliminato spin per tableScontrino
+* Versioni mostrate direttamente in pagina principale
+* Fix dettagli libro (non scrollava oltre il bordo inferiore)
+* Fix su spin nuovo (rimaneva non selezionabile il resto del menu...)
+
 ### Versione 0.13.1
 * Fix di recod errati in catalogo (ritorni carrello)
 * Modifca a cassa per usare nuovo tipo form

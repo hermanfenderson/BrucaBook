@@ -23,7 +23,7 @@ import {period2month} from '../../../helpers/form'
 import FixBlock from '../../../components/FixBlock'
 
 
-import {Modal, Spin, Button} from 'antd'
+import {Modal, Button} from 'antd'
 
 class Scontrino extends Component {
 
@@ -38,6 +38,7 @@ class Scontrino extends Component {
 				this.props.setScontrinoId(this.props.match.params.scontrino); 
 				
 			}
+	else this.props.setScontrinoId(null);		
  	
     }
 
@@ -79,7 +80,7 @@ componentWillUnmount = () =>{
 	 this.props.unlistenTestataCassa([this.props.match.params.anno, this.props.match.params.mese],  this.props.match.params.cassa);
 	 this.props.offListenScontrini([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa]);
      this.props.offListenElencoScontrini([this.props.match.params.anno, this.props.match.params.mese,this.props.match.params.cassa]);
-     
+     this.props.setScontrinoId(null);
 }
 
 resetEditedCatalogItem = () => {
@@ -162,13 +163,11 @@ return (
 	     <FixBlock className={'tableScontrino'} coors={this.props.geometryS.tableCoors}>
     
 	
-		   <Spin spinning={!this.props.testataScontrino}>	
-  			
+		  	
 					<TableScontrino geometry={this.props.geometryS} period={period} cassa={this.props.match.params.cassa} scontrino={this.props.match.params.scontrino}/>
 	 
 
-	     </Spin>
-	    	</FixBlock>
+	     	</FixBlock>
 
 <FixBlock className='bottom-form2' coors={this.props.geometryS.formCoors} >
    

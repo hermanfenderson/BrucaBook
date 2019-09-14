@@ -1,7 +1,7 @@
 import DettagliArticoloComponent from '../components/DettagliArticolo'
 import {setHeaderInfo} from  '../../../actions'
 import {listenEAN, offListenEAN, setPeriod} from '../../../actions/dettagliArticolo';
-import {getDettagliEAN, getHeaderEAN, getListeningEAN, getPeriodDetails} from  '../../../reducers'
+import {getDettagliEAN, getHeaderEAN, getListeningEAN, getPeriodDetails, getMeasures} from  '../../../reducers'
 import {getDetailsInMatrix} from '../../../helpers/form'
 
 import { connect} from 'react-redux'
@@ -21,7 +21,8 @@ const mapStateToProps = (state) => {
 	         headerEAN: getHeaderEAN(state),
 	         listeningEAN: getListeningEAN(state),
 	         matrixEAN: getDetailsInMatrix(getDettagliEAN(state)),
-			 period: getPeriodDetails(state)
+			 period: getPeriodDetails(state), 
+			 measures: getMeasures(state),
 	})
 }
 

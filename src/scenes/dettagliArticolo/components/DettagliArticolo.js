@@ -23,8 +23,8 @@ componentWillMount() {
 render()
 {
   return (
- <div>	
-      <Row>
+ <div style={{position: 'relative', height: this.props.measures.mainHeight, overflowY: 'scroll'}}>
+     <Row>
          {this.props.headerEAN ? this.props.headerEAN.titolo + ' - ' + this.props.headerEAN.autore + ' - in magazzino: ' +  this.props.headerEAN.pezzi : null}
       </Row>
       <Row>

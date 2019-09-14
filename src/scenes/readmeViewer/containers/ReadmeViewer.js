@@ -1,19 +1,19 @@
 import ReadmeViewerComponent from '../components/ReadmeViewer'
-import {loadReadme, setShowModal} from '../../../actions/readmeViewer'
-import {setHeaderInfo, setMenuSelectedKeys} from '../../../actions'
-import {getReadme, getReadmeHeight, getShowModal} from '../../../reducers'
+import {loadReadme} from '../../../actions/readmeViewer'
+import {setHeaderInfo} from '../../../actions'
+import {getReadme, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
 
 
 const mapStateToProps = (state) => { 
-	return ({readme: getReadme(state), readmeHeight: getReadmeHeight(state), showModal: getShowModal(state)})
+	return ({readme: getReadme(state),  measures: getMeasures(state),})
 }
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ loadReadme, setHeaderInfo, setShowModal, setMenuSelectedKeys}, dispatch);
+  return bindActionCreators({ loadReadme, setHeaderInfo}, dispatch);
 }
 
 
