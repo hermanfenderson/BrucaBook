@@ -1,4 +1,4 @@
-BrucaBook V.0.13.1
+BrucaBook V.0.13.3
 ==================
 
 Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in licenza MIT. [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
@@ -11,6 +11,9 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.13.3
+* Riscritta con nuove form e tabelle resaLibera
+
 ### Versione 0.13.2
 * Bugfixing: lo scontrino rimane valorizzato quando si esce e si rientra con un'altra cassa
 * Eliminato spin per tableScontrino

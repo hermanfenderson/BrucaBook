@@ -181,13 +181,13 @@ export const getRigheResaLibera = (state) => {return fromResaLibera.getItems(sta
 export const getEditedRigaResaLibera = (state) => {return fromResaLibera.getEditedItem(state.resaLibera)};
 export const getTestataResaLibera = (state) => {return fromResaLibera.getTestataResa(state.resaLibera)};
 export const getShowCatalogModalResaLibera = (state) => {return fromResaLibera.getShowCatalogModal(state.resaLibera)};
-export const getTableHeightResaLibera = (state) => {return fromResaLibera.getTableHeight(state.resaLibera)};
 export const getTableScrollResaLibera = (state)  => {return fromResaLibera.getTableScroll(state.resaLibera)};
 export const getListeningTestataResaLibera = (state) => {return fromResaLibera.getListeningTestataResa(state.resaLibera)};
 export const getListeningItemResaLibera = (state) => {return fromResaLibera.getListeningItemResa(state.resaLibera)};
 export const isStaleTotaliResaLibera = (state) => {return fromResaLibera.isStaleTotali(state.resaLibera)};
 export const getMessageBufferResaLibera = (state) => {return fromResaLibera.getMessageBuffer(state.resaLibera)};
 export const getFiltersResaLibera = (state) => {return fromResaLibera.getFiltersResaLibera(state.resaLibera)};
+export const getTotaliResaLibera = (state) => {return fromResaLibera.getTotali(state.resaLibera)};
 
 
 //Scene Inventario

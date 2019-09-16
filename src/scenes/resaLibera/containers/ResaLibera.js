@@ -1,9 +1,9 @@
 import ResaLiberaComponent from '../components/ResaLibera'
 import {rigaResaFA} from '../../../actions/resaLibera'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
-import {storeMeasure, setHeaderInfo} from '../../../actions'
+import {setHeaderInfo} from '../../../actions'
 
-import {getMessageBufferResaLibera, getShowCatalogModalResaLibera, getEditedCatalogItem, getTestataResaLibera, getFiltersResaLibera, getGeometry, getListeningTestataResaLibera, isStaleTotaliResaLibera, getEditedRigaResaLibera} from '../../../reducers'
+import {getMessageBufferResaLibera, getShowCatalogModalResaLibera, getEditedCatalogItem, getTestataResaLibera, getTotaliResaLibera, getFiltersResaLibera, getGeometry, getListeningTestataResaLibera, isStaleTotaliResaLibera, getEditedRigaResaLibera} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataResa = rigaResaFA.listenTestata;
@@ -25,6 +25,8 @@ const mapStateToProps = (state) => {
 	         messageBuffer: getMessageBufferResaLibera(state),
 	           geometry: getGeometry(state,'RESA_LIBERA'),
 		     filters: getFiltersResaLibera(state),
+		        totaliResa: getTotaliResaLibera(state),
+		
 		            
 		
 		
@@ -33,7 +35,7 @@ const mapStateToProps = (state) => {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ shiftMessage, resetResa, submitEditedCatalogItem, resetEditedCatalogItem, 
-  listenTestataResa, unlistenTestataResa, storeMeasure, setHeaderInfo, setFilter, resetFilter}, dispatch);
+  listenTestataResa, unlistenTestataResa, setHeaderInfo, setFilter, resetFilter}, dispatch);
 }
 
 const ResaLibera= connect(mapStateToProps, mapDispatchToProps)(ResaLiberaComponent)

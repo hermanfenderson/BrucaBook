@@ -4,56 +4,89 @@ import {STORE_MEASURE} from '../actions';
 
 import {isAmount, isNotNegativeInteger,  isPercentage} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, editedItemCopy, isValidEditedItem,  noErrors,eanState, updateEANErrors} from '../helpers/form';
-import {calcFormCols, calcHeader} from '../helpers/geometry';
+import {calcFormColsFix, calcHeaderFix, calcGeneralError, initCalcGeometry, FMH, FMW, FORM_COL_H, GE_H} from '../helpers/geometry';
 
-const formWidth = (880 -16) - 8;
-const tableWidth = (880 -16)  * 5 / 6 -8;
 
-const colSearchParams = [
-	{name: 'ean', min: 110, max: 110},
-	{name: 'titolo', min: 292},
-	{name: 'editore', min: 212},
 
-	{name: 'reset', min: 250, max: 290},
-
-	]
-	
-const colParams1 = [
-	{name: 'ean', min: 170, max: 170},
-	{name: 'titolo', min: 446 },
-	{name: 'autore', min: 180 },
-	{name: 'listino', min: 60, max: 60}
-	
-	];
-	
-const colParams2 = [
-	{name: 'man', min: 30, max: 30},
-	{name: 'sconto1', min: 60, max: 70},
-	{name: 'sconto2', min: 60, max: 70},
-	{name: 'sconto3', min: 60, max: 70},
-	{name: 'prezzo', min: 80, max: 90},
-	{name: 'pezzi', min: 70, max: 80},
-	{name: 'gratis', min: 70, max: 80},
-	{name: 'totale', min: 90, max: 100},
-
-	{name: 'annulla', min: 120, max: 240},
-	{name: 'crea', min: 120, max: 240}
-	
-	];
-		
 
 	
-const headerParams = [{name: 'ean', label: 'EAN', min: 120, max: 120},
-			    {name: 'titolo', label: 'Titolo', min: 312},
-			     {name: 'editore', label: 'Editore', min: 212},
-			   
-			    {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
-			   {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
-			    {name: 'gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
-			      {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
-			  
-			   ];
-			   
+
+
+
+//Auto-magico! Il calcolo è fatto in una funzione generalizzata... l'esito è passato a formReducer			   
+let geometryParams = {cal: {
+						formHeight: 2 * FORM_COL_H + GE_H,
+						totaliWidth: 190,
+						totaliHeight: 200,
+						immagineWidth: 190,
+						immagineHeight: 200,
+						formSearchHeight: FORM_COL_H,
+						
+						colSearchParams: [
+										{name: 'ean', min: 120, max: 120},
+										{name: 'titolo', min: 292},
+										{name: 'editore', min: 212},
+										{name: 'reset', min: 250, max: 290},
+	
+										],
+						colParams1: [
+									{name: 'ean', min: 200, max: 200},
+									{name: 'titolo', min: 446 },
+									{name: 'autore', min: 180 },
+									{name: 'listino', min: 60, max: 60}
+	
+									
+									],
+						colParams2: [
+									{name: 'man', min: 30, max: 30},
+									{name: 'sconto1', min: 60, max: 70},
+									{name: 'sconto2', min: 60, max: 70},
+									{name: 'sconto3', min: 60, max: 70},
+									{name: 'prezzo', min: 80, max: 90},
+									{name: 'pezzi', min: 70, max: 80},
+									{name: 'gratis', min: 70, max: 80},
+									{name: 'totale', min: 90, max: 100},
+								
+									{name: 'annulla', min: 120, max: 240},
+									{name: 'crea', min: 120, max: 240}
+	
+									
+									],
+						headerParams: [
+									  {name: 'ean', label: 'EAN', min: 130, max: 130},
+									  {name: 'titolo', label: 'Titolo', min: 312, sort:'string', ellipsis: true},
+									  {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
+									  {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
+									  {name: 'gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},
+									   {name: 'prezzoTotale', label: 'Totale', min: 60, max: 100},
+									 
+									 ],
+						
+						},
+				  tbc: [
+				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h-cal.formHeight-cal.formSearchHeight)}},
+				  	    {formWidth: (cal) =>  {return(cal.w)}},
+				  	    {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	   ],
+				 geo: [ 
+				  	   
+     		    		{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: cal.totaliWidth})}},
+    					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
+    					{formCoors: (cal) =>  {return({height: cal.formHeight - FMH, width: cal.formWidth -FMW, top: cal.tableHeight+cal.formSearchHeight, left: 0})}},
+    				    {formCols1: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams1, width: cal.formWidth, offset: 0}))}}, 
+    				    {formCols2: (cal) =>  {return(calcFormColsFix({colParams: cal.colParams2, width: cal.formWidth, offset: 1}))}}, 
+    					{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: cal.formSearchHeight, left: cal.totaliWidth})}},
+    				
+    					{generalError: (cal) =>  {return(calcGeneralError({width: cal.formWidth, offset: 2}))}},	 
+    		//Header ha tolleranza per barra di scorrimento in tabella e sel 
+    					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth-FMW}))}},
+    				
+    					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},
+    					{immagineCoors: (cal) => {return({height: cal.immagineHeight, width: cal.immagineWidth, top: cal.h - cal.formHeight -cal.immagineHeight, left: 0})}}
+						]
+				 }	
+const calcGeometry = initCalcGeometry(geometryParams);			   
 			   
 const editedRigaResaValuesInitialState = 
 	  {			ean: '',
@@ -84,17 +117,43 @@ const editedItemInitialState = () => {
 const initialState = () => {
     const eiis = editedItemInitialState();
     const extraState = {
-		
-    	geometry: {formSearchCols: calcFormCols(colSearchParams,8,tableWidth), formCols1: calcFormCols(colParams1,8,formWidth), formCols2: calcFormCols(colParams2,8,formWidth), header: calcHeader(headerParams, tableWidth - 60)
-    					},
-     		
+			geometry: calcGeometry()
      				}
 
 	return initialStateHelper(eiis,extraState);
     } 
     
-//Metodi reducer per le Form
-const rigaResaR = new FormReducer('RESA_LIBERA', foundCompleteItem, null, null, initialState); 
+
+const calcolaTotali = (state) =>
+{
+	let totalePezzi = 0;
+	let totaleGratis = 0;
+	let totaleImporto = 0.00;
+	let righe = state.itemsArray;
+	for (let propt=0; propt<righe.length; propt++)
+		{	
+			totalePezzi = parseInt(righe[propt].pezzi, 10) + totalePezzi;
+			totaleGratis = parseInt(righe[propt].gratis, 10) + totaleGratis;
+	    	totaleImporto =  parseFloat(righe[propt].prezzoTotale) + parseFloat(totaleImporto);
+		}
+	const totali = {'pezzi' : totalePezzi, 'gratis' : totaleGratis,
+						'prezzoTotale' : totaleImporto.toFixed(2)}; 
+	return ({...state, totali: totali});				
+};
+ 
+        
+
+const rigaResaR = new FormReducer(
+						{scene: 'RESA_LIBERA',
+						foundCompleteItem: foundCompleteItem,
+								transformItem: null, 
+								transformSelectedItem: null, 
+								initialState: initialState, 
+								keepOnSubmit: false, 
+								calcGeometry: calcGeometry}); 
+
+	
+    
 
 
 function discountPrice(prezzoListino, sconto1, sconto2, sconto3)
@@ -237,34 +296,9 @@ export default function Resa(state = initialState(), action) {
   switch (action.type) {
     
    
-  case STORE_MEASURE:
-   	    newState = state;
-   	    var measures = {...action.allMeasures};
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    measures[action.newMeasure.name] = action.newMeasure.number;
-   	    if (action.newMeasure.name==='viewPortHeight' ||  action.newMeasure.name==='headerHeight' )
-   			{
-   	    	let height = measures['viewPortHeight'] - measures['headerHeight'] - 270;
-   	    	newState = {...state, tableHeight: height};
-   			}
-   		if (action.newMeasure.name==='viewPortWidth' || action.newMeasure.name==='siderWidth')
-   	   		{
-   			let formWidth = (measures['viewPortWidth'] -measures['siderWidth'] -16) - 8;	
-   			let tableWidth = formWidth * 5 / 6 -8 ;
-   			let formSearchCols = calcFormCols(colSearchParams,8,tableWidth);
-   		
-   			let formCols1 = calcFormCols(colParams1,8,formWidth);
-   			let formCols2 = calcFormCols(colParams2,8,formWidth);
-   			let header = calcHeader(headerParams, tableWidth - 60);
-   			let geometry = {...newState.geometry};
-   			
-   		    newState = {...newState, geometry: {...geometry, formWidth: formWidth, formCols1: formCols1, formCols2: formCols2, formSearchCols: formSearchCols, header: header}};
-   			}
-   	
-        break;	
     default:
-        newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
-        //newState =  state;
+        newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa, calcolaTotali);
+       //newState =  state;
     	break;
    
   }
@@ -276,8 +310,9 @@ export default function Resa(state = initialState(), action) {
  export const getItems = (state) => {return state.itemsArray};  
  export const getEditedItem = (state) => {return state.editedItem};  
  export const getTestataResa = (state) => {return state.testata};
+  export const getTotali = (state) => {return state.totali};
+
  export const getShowCatalogModal = (state) => {return state.showCatalogModal};  
- export const getTableHeight = (state) => {return state.tableHeight};
  export const getTableScroll = (state)  => {return state.tableScroll};
  export const getListeningTestataResa = (state) => {return state.listeningTestata};
  export const getListeningItemResa = (state) => {return state.listeningItem};

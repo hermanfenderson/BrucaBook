@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import WrappedTable from '../../../components/WrappedTable'
-
+import WrappedTable from '../../../components/WrappedVirtualizedTable'
 
 
 var currentListenedIdResa = null;
@@ -10,25 +9,21 @@ var currentListenedIdResa = null;
 class TableResaLibera extends Component 
     {
     componentDidMount() {
-    	if (this.props.listeningItemResa) currentListenedIdResa = this.props.listeningItemResa[2];   
-    		//Ascolto modifiche sulle righe della Resa
-    	if (currentListenedIdResa !== this.props.idResa)
-    	   {
-    	   	if (currentListenedIdResa) 
-    	   		{
-    	   			let params = [...this.props.period];
-    	   			params.push(currentListenedIdResa);
-    
-    	   			this.props.offListenRigaResa(params); 
-    	   			this.props.resetTableResa();
-    	   		}
-    	   	//Prendo qui il mio oggetto... mi ritorna null se non ha trovato il prefissoNegozio	
-    	   	let params = [...this.props.period];
+    	 	let params = [...this.props.period];
     	   	params.push(this.props.idResa);
     	   	this.props.listenRigaResa(params); 
-    	   	}
-    	   	
+    	   
+ 
 	}
+	
+	 componentWillUnmount() {
+	 	let params = [...this.props.period];
+    	params.push(this.props.idResa);
+    	this.props.offListenRigaResa(params); 
+    	this.props.resetTableResa();
+   	 }	
+   	 
+    
 	
 	
 	
@@ -46,16 +41,6 @@ class TableResaLibera extends Component
 	}
 	
 	
-	sorterFunc = (header) => {
-	 if (header.dataField==='ean') 
-		return(function(b, a) { return(a.ean-b.ean)});
-	 if (header.dataField==='titolo') 
-		return(function(b, a) { return(a.titolo.localeCompare(b.titolo))});
-	 if (header.dataField==='editore') 
-		return(function(b, a) { return(a.editore.localeCompare(b.editore))});
-	
-	return(false);
-	};
 
 
     
@@ -64,15 +49,24 @@ class TableResaLibera extends Component
     	let props = {...this.props};
     	let selectedItemKey = null;
     	if (props.selectedItem) selectedItemKey = props.selectedItem.key;
-    	let customRowRender = {
-
-    		 	'titolo' : (text, record, index) => { return(<div style={{width: this.props.geometry.header[1].width-10, whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis'}}> {text}</div>)}}
-
+    	
     	delete props['deleteRigaResa']; //Non la passo liscia...
     	delete props['setSelectedRigaResa']; //Idem
+    		let height = props.geometry.tableCoors.height;
+    	let width = props.geometry.tableCoors.width;
+    	
     	  return(
-			<WrappedTable {...props} sorterFunc={this.sorterFunc} highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.editRow} header={this.props.geometry.header} customRowRender={customRowRender}/>
+			<WrappedTable {...props}
+			height={height} 
+			width={width} 
+			
+			highlightedRowKey={selectedItemKey} 
+			editRow={this.editRow} 
+			deleteRow={this.deleteRow} 
+			selectRow={this.editRow} 
+			header={this.props.geometry.header} />
 			)}
+    	  
     }		
 	
 export default TableResaLibera;
