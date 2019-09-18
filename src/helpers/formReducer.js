@@ -22,6 +22,7 @@ if (typeof params === 'string' || params instanceof String)
 	if (calcGeometry) this.calcGeometry = calcGeometry;
 	if (keepOnSubmit) this.keepOnSubmit = keepOnSubmit;
 	if (initialState) this.initialState = initialState;
+	
 }
 else //E' un oggetto...
 
@@ -34,6 +35,7 @@ else //E' un oggetto...
 	
 	 this.keepOnSubmit = params.keepOnSubmit;
 	  this.calcGeometry = params.calcGeometry;
+	  this.itemPrefix = params.itemPrefix;
 }
 	
 
@@ -313,7 +315,7 @@ this.STORE_MEASURE = 'STORE_MEASURE';
 	     	
 		 case this.ADDED_ITEM:
 		 	if (state.itemsArrayIndex[action.payload.key]!==undefined) newState = state;
-		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
+		 	else newState = childAdded(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem, this.itemPrefix); 
 		    if (calcolaTotali) newState = calcolaTotali(newState); //Se mi viene passata una funzione di calcolo totali la applico...
             newState.tableScrollByKey = action.payload.key;
 	    	break;
@@ -325,7 +327,7 @@ this.STORE_MEASURE = 'STORE_MEASURE';
 	    	break;
 	   
 		case this.CHANGED_ITEM:
-			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem); 
+			newState = childChanged(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem, this.itemPrefix); 
 			 if (calcolaTotali) newState = calcolaTotali(newState);
 			      newState.tableScrollByKey = action.payload.key;
 	    
@@ -333,7 +335,7 @@ this.STORE_MEASURE = 'STORE_MEASURE';
 	    	break;
 	    case this.INITIAL_LOAD_ITEM:
 	    
-	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem);
+	    	newState = initialLoading(action.payload, state, "itemsArray", "itemsArrayIndex", this.transformItem, this.itemPrefix);
 	    	newState = {...newState, tableScroll: true};
 	    	 if (calcolaTotali) newState = calcolaTotali(newState);
         

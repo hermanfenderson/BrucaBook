@@ -44,7 +44,7 @@ class Resa extends Component {
 componentDidUpdate(oldProps) {
 	if (this.props.testataResa && (this.props.testataResa !== oldProps.testataResa))
 		{
-		this.props.listenBollePerFornitore(this.props.testataResa.fornitore, this.props.testataResa.dataScarico);
+		if (this.props.testataResa && (!oldProps.testataResa || (this.props.testataResa.fornitore!==oldProps.testataResa.fornitore))) this.props.listenBollePerFornitore(this.props.testataResa.fornitore, this.props.testataResa.dataScarico);
 
 		let riga = this.props.testataResa;
 		this.props.setHeaderInfo("Rese - Doc. " + riga.riferimento + ' ' 

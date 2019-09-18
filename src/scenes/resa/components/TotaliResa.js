@@ -13,14 +13,12 @@ const TotaliResa = (props) =>
 																						}} /> 
 				</Form.Item> 
 			</Form> 
-			<Spin spinning={props.staleTotali}> 
-				<div> 
+					<div> 
 					<Row> Copie: {totali ? totali.pezzi : 0} </Row> 
 					<Row> Gratis: {totali ? totali.gratis : 0} </Row> 
 					<Row> Totale: {totali ? totali.prezzoTotale : '0.00'} </Row> 
 				</div> 
-			</Spin> 
-			</div>
+				</div>
 		:
 		<Spin spinning={true} />
 }			

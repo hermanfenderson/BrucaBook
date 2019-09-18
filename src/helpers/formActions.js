@@ -31,6 +31,7 @@ export const stdListenItem = (params) => {
    const itemsUrl = params.itemsUrl;
    const urlParams = params.urlParams;
    const sideActions = params.sideActions;
+   const listeners = {};
    return function(dispatch, getState) {
   	const url = (params.url) ? params.url : urlFactory(getState,itemsUrl, urlParams);
      
@@ -39,16 +40,15 @@ export const stdListenItem = (params) => {
     	let ref = Firebase.database().ref(url);
    if (params.extraQuery) ref=params.extraQuery(ref); //Consente di fare filtri e altre magie...
    	
-    var listener_added = null;
     //l'added lo faccio dopo...per gestire il caso del initial vuoto
-	   const listener_changed = ref.on('child_changed', snapshot => {
+	   listeners.changed = ref.on('child_changed', snapshot => {
 	      dispatch({
 	        type: type2,
 	        payload: snapshot
 	      });
 	      if (sideActions) dispatch(sideActions(type2, snapshot)); 
 	   });
-	   const listener_removed = ref.on('child_removed', snapshot => {
+	   listeners.removed = ref.on('child_removed', snapshot => {
 	      dispatch({
 	        type: type3,
 	        payload: snapshot
@@ -66,8 +66,9 @@ export const stdListenItem = (params) => {
 	   	  	if (!onEAN)
     		{
     		let first = (snapshot.val()) ? true : false; //In questo modo non carico due volte ma carico la prima se il data set di initial load è vuoto...
-	       listener_added = ref.limitToLast(1).on('child_added', snapshot => {
+	       listeners.added = ref.limitToLast(1).on('child_added', snapshot => {
 		      //Così non dovrebbe più generare due volte il primo rigo...
+		  
 		      if (first) first = false;
 		      else 
 		    	{
@@ -78,27 +79,41 @@ export const stdListenItem = (params) => {
 		    	if (sideActions) dispatch(sideActions(type1, snapshot)); 
 		    	}
 		    });
+		   dispatch({
+	   		type: typeListen,
+	   		params: urlParams,
+	   		url: url,
+	   		listeners: listeners 
+			}); 
 	      }
 	      else
 	      {
 	      let now = getServerTime(Firebase.database().ref('/'))();
 	      //Ragiono per timestamp
-	      listener_added = ref.orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
+	      listeners.added = ref.orderByChild('createdAt').startAt(now).on('child_added', snapshot => {
 		      dispatch({
 		        type: type1,
 		        payload: snapshot
 		      });
 		      if (sideActions) dispatch(sideActions(type1, snapshot)); 
 		    });	
+		 dispatch({
+	   		type: typeListen,
+	   		params: urlParams,
+	   		url: url,
+	   		listeners: listeners
+	   		});
 	      }
 	     
 	   });
+	   /*
 	   dispatch({
 	   	type: typeListen,
 	   	params: urlParams,
 	   	url: url,
 	   	listeners: {added: listener_added,changed: listener_changed, removed: listener_removed} 
 	   })
+	  */ 
 	}   
 	else dispatch({
 	   	type: typeListen,

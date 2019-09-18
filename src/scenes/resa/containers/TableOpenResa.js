@@ -2,7 +2,7 @@ import TableOpenResaComponent from '../components/TableOpenResa'
 import {rigaResaFA, setActiveModal, setModalDetails, setPeriodResa, showModalDetails} from '../../../actions/resa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaResa, getRigheResaIndexed, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa, getMatrixEAN, getHeaderEANResa, getStock} from '../../../reducers'
+import {getEditedRigaResa, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa, getMatrixEAN, getHeaderEANResa, getStock} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -19,7 +19,7 @@ const submitEditedItem = rigaResaFA.submitEditedItem;
 
 
 const mapStateToProps = (state) => {
-	return ({righeResa: getRigheResaIndexed(state), tableScroll: getTableResaScroll(state), 
+	return ({tableScroll: getTableResaScroll(state), 
 	selectedItem: getEditedRigaResa(state).selectedItem,
 	listeningItemResa: getListeningItemResa(state),
 	tabellaEAN: getTabellaEAN(state),

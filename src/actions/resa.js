@@ -57,8 +57,8 @@ function preparaItem(riga)
     
    }
 
-   
-export function listenBollePerFornitore(idFornitore, dataScarico)
+//Predisposta la gestione della primaData da cui osservare...  
+export function listenBollePerFornitore(idFornitore, dataScarico, primaData=null)
 {
 	
 //Genero tre listener... come un'unica funzione...
@@ -71,7 +71,7 @@ export function listenBollePerFornitore(idFornitore, dataScarico)
   
        const listener_added = Firebase.database().ref(url).limitToLast(1).on('child_added', snapshot => {
        	 if (first) first = false;
-	     else if (snapshot.val().dataCarico < dataScarico)
+	     else if (snapshot.val().dataCarico < dataScarico && snapshot.val().dataCarico > primaData)
        	 {
        	  dispatch({
 	        type: ADDED_BOLLE_PER_FORNITORE,
@@ -81,7 +81,7 @@ export function listenBollePerFornitore(idFornitore, dataScarico)
        	 }
 	    });
 	   const listener_changed = Firebase.database().ref(url).on('child_changed', snapshot => {
-	   	  if (snapshot.val().dataCarico < dataScarico)
+	   	  if (snapshot.val().dataCarico < dataScarico  && snapshot.val().dataCarico > primaData)
           {
 	      dispatch({
 	        type: CHANGED_BOLLE_PER_FORNITORE,
@@ -110,7 +110,7 @@ export function listenBollePerFornitore(idFornitore, dataScarico)
 	       let listaBolle = Object.values(snapshot.val());
 	       for (let i=0; i<listaBolle.length; i++)
 	    	{
-	    		if (listaBolle[i].dataCarico < dataScarico) dispatch(listenBolla(listaBolle[i].id))
+	    		if (listaBolle[i].dataCarico < dataScarico && listaBolle[i].dataCarico > primaData) dispatch(listenBolla(listaBolle[i].id))
 	    	}
 	   });
 	   
@@ -219,6 +219,7 @@ return function(dispatch, getState) {
 	}
 }
 
+/*Questa non la chiamo più
 export function getDettagliEAN(ean)
 {
 return function(dispatch, getState) {
@@ -231,6 +232,10 @@ return function(dispatch, getState) {
 	    });
 }
 }
+
+*/
+
+
 //Questa non serve più...
 /*
 export function listenDettagliEAN(ean)
