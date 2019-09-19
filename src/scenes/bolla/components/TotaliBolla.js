@@ -2,7 +2,7 @@ import React from 'react'
 
 const TotaliBolla = (props) => 
     {
-    	const totali = (props.testataBolla) ? props.testataBolla.totali : props.totaliBolla; //Uso la copia calcolata in locale finchè non arriva quella calcolata al centro...
+    	const totali = (props.testataBolla && props.testataBolla.totali) ? props.testataBolla.totali : props.totaliBolla; //Uso la copia calcolata in locale finchè non arriva quella calcolata al centro...
     	return(
     	<div>
 		<div> Copie: {totali.pezzi} </div>

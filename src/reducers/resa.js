@@ -194,6 +194,13 @@ const manageResaInfo = (state, action) =>
    	        	case 'ADDED_ITEM_RESA': 
    	        	//Se non esiste ancora quell'EAN creo la tabella EAN corrispondente
    	        	//Se non esiste ancora quell'EAN creo l'indice corrispondente
+   	        	 let row = action.payload.val();
+   	    	    let key = (row) ? row.rigaBolla : null;
+   	           let idRigaResa = action.payload.key;
+   	       
+   	           let indiceBolleRese = state.indiceBolleRese;
+   	           indiceBolleRese[key] = idRigaResa;
+   	           newState = {...state, indiceBolleRese: indiceBolleRese};	
    	        	break;
    	        	
    	        	case 'CHANGED_ITEM_RESA': 
@@ -203,6 +210,20 @@ const manageResaInfo = (state, action) =>
    	        	break;
    	        	
    	        	case 'INTIAL_LOAD_ITEM_RESA':
+   	        	{
+   	        		let indiceBolleRese = state.indiceBolleRese;
+   	           
+   	               let rows = Object.entries(action.payload.val());
+   	                 for (let i=0; i<rows.length; i++)	  
+   	                	{
+   	                	let row = rows[i][1];
+   	    	    		let key = row.rigaBolla ;
+   	        			let idRigaResa = rows[i][0];
+   	       
+   	        			indiceBolleRese[key] = idRigaResa;
+   	                	}
+   	           newState = {...state, indiceBolleRese: indiceBolleRese};	
+   	        	}	
    	        	break;
    	        	
    	        	default:
@@ -351,8 +372,7 @@ function calcRigaBolla(state, action)
 	   	     let itemsArray = state.itemsArray;
 	   	     let indiceBolleRese = state.indiceBolleRese;
 	   	     let rigaResa = {pezzi: 0, gratis: 0}; //Oggetto inizialmente vuoto
-	   	     
-	   	     if (indiceBolleRese[rigaBollaKey])  //Se ho giè una riga resa collegata a questa riga bolla
+	   	      if (indiceBolleRese[rigaBollaKey])  //Se ho giè una riga resa collegata a questa riga bolla
 	   	    	{
 	   	    		rigaResa = {...itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]].pos].values};
 	   	    		tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //Aggiorno i totali...

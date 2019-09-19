@@ -3,7 +3,7 @@ import React from 'react'
 
 const TotaliResaLibera = (props) => 
     {
-    	const totali = props.testataResa ? props.testataResa.totali : props.totaliResa;
+    	const totali = (props.testataResa &&  props.testataResa.totali) ? props.testataResa.totali : props.totaliResa;
     	 return(
 		
 			<div>

@@ -16,7 +16,6 @@ function preparaItem(riga)
    	riga['dataCarico'] = setDay(riga['dataCarico']);
    	if (riga['dataRendiconto']) riga['dataRendiconto'] = setDay(riga['dataRendiconto']);
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
-   	if ('totali' in riga) {delete riga.totali}
    	
     
      }

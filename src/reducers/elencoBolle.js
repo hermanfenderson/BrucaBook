@@ -22,7 +22,8 @@ const editedBollaValuesInitialState =
 				dataDocumento: moment(),
 				dataCarico: moment(),
 				dataRendiconto: null,
-				tipoBolla: 'A'
+				tipoBolla: 'A',
+				totali: {pezzi: 0, gratis: 0, prezzoTotale: 0}
 	};
 
 const editedItemInitialState = () => {

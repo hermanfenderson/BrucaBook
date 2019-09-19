@@ -21,6 +21,7 @@ export const editedItemInitialState = (editedItemValuesInitialState, initOverrid
 		 readOnlyForm: false,
 		 willFocus: 'ean', 
 		 eanState: 'BLANK',
+		 totali: {pezzi:0, gratis:0, prezzoTotale:0},
 		 ...initOverrides
 	}
 }

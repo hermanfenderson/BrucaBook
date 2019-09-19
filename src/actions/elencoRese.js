@@ -18,7 +18,7 @@ function preparaItem(riga)
    	riga['dataDocumento'] = setDay(riga['dataDocumento']);
    	riga['dataScarico'] = setDay(riga['dataScarico']);
    	//Non voglio persistere i totali da qui! Li calcola la funzione del database...
-   	if ('totali' in riga) {delete riga.totali}
+ //  	if ('totali' in riga) {delete riga.totali}
    	
     
      }
