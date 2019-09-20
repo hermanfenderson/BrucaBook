@@ -88,7 +88,7 @@ else return (
       <FixBlock className='bottom-form2' coors={this.props.geometry.formCoors} >
    
       
-      <FormRigaResa  geometry={this.props.geometry} idBolla={this.props.match.params.id} period={period} testataResa={this.props.testataResa} />
+      <FormRigaResa  geometry={this.props.geometry} idResa={this.props.match.params.id} period={period} testataResa={this.props.testataResa} />
         
     </FixBlock>
    

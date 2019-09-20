@@ -156,9 +156,11 @@ export function caricaAnagrafiche() {
 	  }	
 }
 
-export function pulisciCatalogo() {
+export function pulisciCatalogoOld() {
 return function(dispatch, getState) {
-let catalogoRef = 	Firebase.database().ref('/catalogo');
+let catalogoRef = 	Firebase.database().ref('/catalogoLocale');
+
+
 catalogoRef.once('value', snapshot => {
 	let catalogo = Object.entries(snapshot.val());
 	let sbagliati = {};
@@ -185,6 +187,49 @@ catalogoRef.once('value', snapshot => {
     		
     	}
     //for (let j=0; j<sbagliatiArray2.length; j++) catalogoRef.update(sbagliatiArray2[j]);
+})
+}
+}
+
+export function pulisciCatalogoOld2() {
+return function(dispatch, getState) {
+//let catalogoRef = 	Firebase.database().ref('/catalogo');
+let catalogoRef = Firebase.database().ref(urlFactory(getState, 'catalogoLocale'))
+catalogoRef.once('value', snapshot => {
+	let catalogo = Object.entries(snapshot.val());
+	for (let i=0; i<catalogo.length; i++) 
+		{
+			if (!catalogo[i][1].prezzoListino) 
+				{console.log(catalogo[i][0]);
+				catalogoRef.child(catalogo[i][0]).remove();
+					
+				}
+		}
+
+})
+}
+}
+
+export function pulisciCatalogo() {
+return function(dispatch, getState) {
+//let catalogoRef = 	Firebase.database().ref('/catalogo');
+let catalogoRef = Firebase.database().ref(urlFactory(getState, 'magazzino'))
+catalogoRef.once('value', snapshot => {
+	let catalogo = Object.entries(snapshot.val());
+	let patt1 = /\r?\n|\r/g;
+
+	for (let i=0; i<catalogo.length; i++) 
+		{
+			if (catalogo[i][1].titolo.search(patt1) > -1) 
+				{console.log(catalogo[i][0]);
+				catalogo[i][1].titolo = catalogo[i][1].titolo.replace(patt1," ").trim();
+			//	console.log(catalogo[i][1]);
+				catalogoRef.child(catalogo[i][0]).update(catalogo[i][1]);
+				//catalogoRef.child(catalogo[i][0]).remove();
+					
+				}
+		}
+
 })
 }
 }
@@ -238,7 +283,6 @@ export function forzaAggiornaMagazzino() {
 			        			}            				
         				//Qui preparo gli updates specifici della giornata...
 			        	let currentData = registroData[i][0];
-			        	console.log(currentData);
 			        	//storicoMagazzinoRef.child(currentData).update({...eanInfo});
 			        	//dateStoricoRef.child(currentData).update(Firebase.database.ServerValue.TIMESTAMP);
 			        	
