@@ -269,7 +269,8 @@ function foundCompleteItem(editedItem, action)
 		let cei = editedItemCopy(editedItem);
 		 
 		 cei.willFocus = 'pezzi';
-     
+         action.item.pezzi = 1;
+    
        	//Copio l'esito della ricerca...
        	cei.values = {...cei.values, ...action.item}
         /*

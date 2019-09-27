@@ -3,7 +3,7 @@ import {rigaInventarioFA, generaRighe} from '../../../actions/inventario'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {setHeaderInfo} from '../../../actions'
 
-import {getFilters, getMessageBufferInventario, getShowCatalogModalInventario, getEditedCatalogItem, getTestataInventario, getListeningTestataInventario, isStaleTotaliInventario, getEditedRigaInventario, getDataMagazzino, getGeometry, getMeasures} from '../../../reducers'
+import {getFilters, getMessageBufferInventario, getSaveGeneral, getShowCatalogModalInventario, getEditedCatalogItem, getTestataInventario, getListeningTestataInventario, isStaleTotaliInventario, getEditedRigaInventario, getDataMagazzino, getGeometry, getMeasures} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataInventario = rigaInventarioFA.listenTestata;
@@ -29,7 +29,8 @@ const mapStateToProps = (state) => {
 	         geometry: getGeometry(state,'INVENTARIO'),
 	         measures: getMeasures(state),
 	         formSearchCols: getGeometry(state,'INVENTARIO').formSearchCols,
-	         filters: getFilters(state,'INVENTARIO')
+	         filters: getFilters(state,'INVENTARIO'),
+	         saveGeneral: getSaveGeneral(state),
 	})
 }
 

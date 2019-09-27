@@ -5,7 +5,7 @@ import {cassaFA, listenScontrini, listenElencoScontrini, offListenScontrini, off
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {setHeaderInfo} from '../../../actions'
 
-import {getFiltersCassa, getShowCatalogModalScontrino, getEditedCatalogItem, getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, 
+import {getFiltersCassa, getShowCatalogModalScontrino, getEditedCatalogItem, getSaveGeneral,  getListenersItemScontrino, getTestataScontrino, getListeningTestataScontrino, 
 		isStaleTotaliScontrino, isStaleTotaliCassa, getEditedRigaScontrino, getEditedRigaCassa, getListeningTestataCassa, getTestataCassa,  getMessageBufferScontrino, getTotaliScontrino, getTotaliCassa, getGeometry,  getEanLookupOpen, getOrdiniModalVisible} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
@@ -49,7 +49,8 @@ const mapStateToProps = (state) => {
 			 geometryC: getGeometry(state,'CASSA'),
 			 
 			 eanLookupOpen: getEanLookupOpen(state),
-			 ordiniModalVisible: getOrdiniModalVisible(state)
+			 ordiniModalVisible: getOrdiniModalVisible(state),
+			  saveGeneral: getSaveGeneral(state),
 
 		
 	})

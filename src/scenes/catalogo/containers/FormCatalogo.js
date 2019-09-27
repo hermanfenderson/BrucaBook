@@ -1,6 +1,6 @@
 import FormCatalogoComponent from '../components/FormCatalogo'
 import {catalogoFA, submitEditedCatalogItem, resetEditedCatalogItem }  from '../../../actions/catalogo' 
-import {getEditedCatalogItem, getSaveGeneral, getSelettoreIVA, getLibreria, getCatena, getAnagraficheLocali} from '../../../reducers'
+import {getEditedCatalogItem,  getSelettoreIVA, getLibreria, getCatena, getAnagraficheLocali, getSaveGeneral} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -23,10 +23,10 @@ const getEditedCatalogItemSideEffects= (state) => {
 
 const mapStateToProps = (state) => { 
 	return ({editedCatalogItem: getEditedCatalogItemSideEffects(state), 
-	saveGeneral: getSaveGeneral(state), 
 	aliquoteIVA: getSelettoreIVA(state)	,
 	libreria: getLibreria(state),
 	catena: getCatena(state),
+	saveGeneral: getSaveGeneral(state),
 	categorie: (getAnagraficheLocali(state)) ? getAnagraficheLocali(state).categorie : null
 
 	})

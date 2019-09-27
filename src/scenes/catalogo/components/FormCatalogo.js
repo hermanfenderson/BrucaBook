@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import WrappedForm from '../../../components/WrappedForm'
 import {objSelector} from '../../../helpers/form'
+import {isValidEAN, isInternalEAN} from '../../../helpers/ean'
 
 
 class FormCatalogo extends Component {
@@ -11,6 +12,7 @@ onChange = (name, value) => {
 		
 onSubmit = (e) => {
 	e.preventDefault();
+	//la decisione se devo salvare nel catalogo generale è una prop...
 	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, this.props.scene, this.props.saveGeneral); //Per sapere cosa fare... dopo
   }
   
@@ -26,6 +28,7 @@ componentDidMount = () => {
   	const formValues = this.props.editedCatalogItem.values;
   	const errorMessages = this.props.editedCatalogItem.errorMessages;
   	const loading = this.props.editedCatalogItem.loading;
+  	const ean = this.props.editedCatalogItem.values.ean;
   	return (
      <WrappedForm layout='horizontal' readOnlyForm={false} loading={loading} onSubmit={this.onSubmit} onChange={this.onChange} formValues={formValues} errorMessages={errorMessages} >
           <WrappedForm.Input field='ean' label='EAN' readOnly={this.props.readOnlyEAN} />
@@ -34,7 +37,7 @@ componentDidMount = () => {
         <WrappedForm.Input field='editore'  label='Editore'/>
         <WrappedForm.Input field='prezzoListino'   label='Listino'/>
         <WrappedForm.SelectList field='iva' label='IVA' list={this.props.aliquoteIVA} defaultValue="a0"/>
-         <WrappedForm.ImageUploader label='Copertina' field='imgFirebaseUrl' fullName={(this.props.editedCatalogItem.eanState ==='PARTIAL') ? this.props.saveGeneral ? 'images/books/'+this.props.editedCatalogItem.values.ean+'.jpg' : 'images/books/'+this.props.catena+'/'+this.props.libreria+'/'+this.props.editedCatalogItem.values.ean+'.jpg' : ''} />
+         <WrappedForm.ImageUploader label='Copertina' field='imgFirebaseUrl' fullName={(isValidEAN(ean)) ? (this.props.saveGeneral && !(isInternalEAN(ean))) ? 'images/books/'+ean+'.jpg' : 'images/books/'+this.props.catena+'/'+this.props.libreria+'/'+ean+'.jpg' : ''} />
          <WrappedForm.AutoCompleteList field='categoria' label='Categoria' list={objSelector(this.props.categorie,'nome')}  />
       
         {this.props.isModal ? <WrappedForm.Group></WrappedForm.Group> :

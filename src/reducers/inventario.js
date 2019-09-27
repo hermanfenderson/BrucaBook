@@ -187,6 +187,8 @@ function transformAndValidateEditedRigaInventario(cei, name, value)
 function foundCompleteItem(editedItem, action) 
 	{   
 		let cei = editedItemCopy(editedItem);
+		 action.item.pezzi = 1;
+       
 		//Copio l'esito della ricerca...
 			cei.values = {...cei.values, ...action.item}
         /*

@@ -42,27 +42,33 @@ return(admin.database().ref(urlSource).once("value").then(function(snapshot)
 								}));
 	});
 });
-
+//RISCRITTA... COSI' NON MI CANCELLA IL VALORE DI STOCK
 exports.aggiornaDaCatalogo = functions.database.ref('/catalogo/{ean}')
 //Modificato... propago su tutti anche quelli che non lo avevano... 
    .onUpdate((change, context) =>
 			{
 			const ean = context.params.ean;
 			let newCatalogEntry = change.after.val();
-			let updates = {};
+			let promises = [];
 			//
 			let elencoLibrerieRef = change.after.ref.parent.parent.child('librerie').child('elencoLibrerie');
 			return(elencoLibrerieRef.once("value").then(function(snapshot)
 				{
 				let elencoLibrerie = snapshot.val();
 				for (var catena in elencoLibrerie)
-					for (var libreria in elencoLibrerie[catena].librerie) updates[catena+'/'+libreria+'/catalogo/'+ean] = newCatalogEntry;
-				change.after.ref.parent.parent.update(updates).then(()=>{console.info("Aggiornati cataloghi locali per codice "+ean)});	
+					for (var libreria in elencoLibrerie[catena].librerie) promises.push(change.after.ref.parent.parent.child(catena).child(libreria).child('magazzino').child(ean).update(newCatalogEntry));
+					
+					//updates[catena+'/'+libreria+'/catalogo/'+ean] = newCatalogEntry;
+				//change.after.ref.parent.parent.update(updates).then(()=>{console.info("Aggiornati cataloghi locali per codice "+ean)});	
+				//Così è una update...
+				Promise.all(promises).then(()=>{console.info("Aggiornati cataloghi locali per codice "+ean)});	
+					
 				}));
 			}
 			);
 
-//Da catalogo locale alle righe di bolle, scontrini, ecc...
+//Da catalogo locale alle righe di bolle, scontrini, ecc...DISABILITO E RAGIONO DIVERSAMENTE...
+/*
 exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/catalogo/{ean}')
 
    .onUpdate((change,context) =>
@@ -96,7 +102,9 @@ exports.aggiornaDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/ca
 			}
 			);
 			
-			
+*/
+//ANCHE QUESTA NON SERVE PIU'... 
+/*
 exports.creaMagazzinoDaCatalogoLocale = functions.database.ref('{catena}/{negozio}/catalogo/{ean}')
 
    .onCreate((snapshot,context) =>
@@ -108,7 +116,8 @@ exports.creaMagazzinoDaCatalogoLocale = functions.database.ref('{catena}/{negozi
 			});
 			
 			
-			
+*/
+
 
 			
 exports.calcolaTotaleCassa = functions.database.ref('{catena}/{negozio}/elencoScontrini/{anno}/{mese}/{id}')

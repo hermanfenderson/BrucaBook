@@ -89,7 +89,7 @@ resetEditedCatalogItem = () => {
 
 submitEditedCatalogItem = (e) => {
 	e.preventDefault();
-	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, 'SCONTRINO'); //Per sapere cosa fare... dopo
+	this.props.submitEditedCatalogItem(this.props.editedCatalogItem.isValid,  this.props.editedCatalogItem.values, 'SCONTRINO', this.props.saveGeneral); //Per sapere cosa fare... dopo
   }
  
 submitRigaCassa = (e) => {

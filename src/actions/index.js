@@ -278,6 +278,7 @@ export function forzaAggiornaMagazzino() {
         													 prezzoListino: (values.prezzoListino) ? values.prezzoListino : 0.00,
         													 categoria: (values.categoria) ? values.categoria : '',
         													 iva: (values.iva) ? values.iva : 'a0',
+        													 imgFirebaseUrl: (values.imgFirebaseUrl) ? values.imgFirebaseUrl : null,
         													 pezzi: pezzi
         	                                				}
 			        			}            				

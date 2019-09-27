@@ -3,7 +3,7 @@ import {rigaOrdineFA} from '../../../actions/ordine'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {storeMeasure, setHeaderInfo} from '../../../actions'
 
-import {getShowCatalogModalOrdine, getEditedCatalogItem, getTestataOrdine, getListeningTestataOrdine, isStaleTotaliOrdine, getEditedRigaOrdine, getTotaliOrdine, getFiltersOrdine, getGeometry, getAnagraficheLocali} from '../../../reducers'
+import {getShowCatalogModalOrdine, getEditedCatalogItem, getSaveGeneral, getTestataOrdine, getListeningTestataOrdine, isStaleTotaliOrdine, getEditedRigaOrdine, getTotaliOrdine, getFiltersOrdine, getGeometry, getAnagraficheLocali} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataOrdine = rigaOrdineFA.listenTestata;
@@ -24,7 +24,8 @@ const mapStateToProps = (state) => {
 	          totaliOrdine: getTotaliOrdine(state),
 		   filters: getFiltersOrdine(state),
 		   geometry: getGeometry(state,'ORDINE'),
-		   clienti: getAnagraficheLocali(state).clienti
+		   clienti: getAnagraficheLocali(state).clienti,
+		    saveGeneral: getSaveGeneral(state),
 		
 		
 	})

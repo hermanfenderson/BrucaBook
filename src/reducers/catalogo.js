@@ -11,6 +11,7 @@ import {errMgmt, initialState as initialStateHelper, editedItemInitialState as e
 const FOUND_CATALOG_ITEM = 'FOUND_CATALOG_ITEM_CATALOGO';
 const NOT_FOUND_CLOUD_ITEM = 'NOT_FOUND_CLOUD_ITEM_CATALOGO';
 const FOUND_CLOUD_ITEM = 'FOUND_CLOUD_ITEM_CATALOGO';
+const UPDATE_CATALOG_ITEM = 'UPDATE_CATALOG_ITEM_CATALOGO';
 
 
 
@@ -31,10 +32,10 @@ const editedItemInitialState = () => {
 	return(editedItemInitialStateHelper(editedCatalogValuesInitialState, {} ));
 }
 
-
+//Ho tolto saveGeneral dallo stato. Il discriminante deve essere un altro...codice non locale e non sto operando in anagrafica ma al momento del data entry...
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{ selectedCatalogItem: null, saveGeneral: false});
+	return initialStateHelper(eiis,{ selectedCatalogItem: null, saveGeneral: false });
     }
     
 
@@ -125,7 +126,7 @@ export default function catalog(state = initialState(), action) {
 		break;
   
   */
-  
+  /*
    case SUBMIT_EDITED_CATALOG_ITEM:
 	    //Posso sottomettere il form se lo stato della riga è valido
 		if (state.editedItem.isValid)
@@ -170,6 +171,7 @@ export default function catalog(state = initialState(), action) {
 	    			newState = {...state, editedItem: tbcEditedCatalogItem};	
 	    	}
         break;
+     */   
      case 'SHOW_CATALOG_FORM_ERRORS':
      	{
      	 let tbcEditedCatalogItem = {...state.editedItem};
@@ -208,27 +210,28 @@ export default function catalog(state = initialState(), action) {
     	
      	
     	//Il form e' potenzialmente valido... valuto gli errori...
-    	errMgmt(tbc3EditedCatalogItem, 'titolo','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.titolo.length===0,false);
-		errMgmt(tbc3EditedCatalogItem, 'autore','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.autore.length===0,false);
-		errMgmt(tbc3EditedCatalogItem, 'editore','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.editore.length===0,false);
+    	errMgmt(tbc3EditedCatalogItem, 'titolo','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.titolo.length===0);
+		errMgmt(tbc3EditedCatalogItem, 'autore','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.autore.length===0);
+		errMgmt(tbc3EditedCatalogItem, 'editore','emptyField','Campo obbligatorio', tbc3EditedCatalogItem.values.editore.length===0);
     	
     	//Se sono qui... EAN è sicuramente valido...
         
     	errMgmt(tbc3EditedCatalogItem, 'ean', 'invalidEAN', 'EAN non valido', false, false);
     	//E ho anche il prezzo
     
-    	errMgmt(tbc3EditedCatalogItem, 'prezzoListino','invalidAmount', 'Importo (19.99)',((value) => {return !isAmount(value)})(tbc3EditedCatalogItem.values.prezzoListino),  false);
+    	errMgmt(tbc3EditedCatalogItem, 'prezzoListino','invalidAmount', 'Importo (19.99)',((value) => {return !isAmount(value)})(tbc3EditedCatalogItem.values.prezzoListino));
     	//Valuto se sono valido... 
     
     	 tbc3EditedCatalogItem.isValid = isValidEditedItem(tbc3EditedCatalogItem);
     
     		//Salvo il nuovo stato...
-        newState = {...state, editedItem: tbc3EditedCatalogItem, saveGeneral: saveGeneral};
+        newState = {...state, saveGeneral: saveGeneral, editedItem: tbc3EditedCatalogItem};
         break;
     
     
     case RESET_EDITED_CATALOG_ITEM:
-   	    newState = {...state, editedItem: {...editedItemInitialState()}}; 
+    case UPDATE_CATALOG_ITEM:
+   	    newState = {...state, saveGeneral: false, editedItem: {...editedItemInitialState()}}; 
    	    break;
    	    
     default:
@@ -242,5 +245,5 @@ export default function catalog(state = initialState(), action) {
 
  export const getEditedCatalogItem = (state) => {return state.editedItem};  
  export const getSaveGeneral = (state) => {return state.saveGeneral};  
- 
+
 

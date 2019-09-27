@@ -558,15 +558,15 @@ this.searchCatalogItem = (ean) =>
       			dispatch(foundCatalogItem(ean,values));	
       			resolve(values);
       			}
-          else Firebase.database().ref(urlFactory(getState, 'catalogoLocale',null,ean)).once('value').then(
-                 (payload) => {
-                       if (payload.val()) dispatch(foundCatalogItem(ean,payload.val()));
-                       else {
-                       		dispatch(notFoundCatalogItem());
-                       		dispatch(searchGeneralCatalogItem(ean));
-                    		}
-                       resolve(payload);}                
-                 )})        
+      	  //Eliminato il riferimento al catalogoLocale		
+          else 
+        		{
+                dispatch(notFoundCatalogItem());
+                dispatch(searchGeneralCatalogItem(ean));
+                resolve(null);
+        		}
+      	
+    	   })                
           return promise;
   }       
 }
@@ -580,7 +580,7 @@ this.updateCatalogItem = (item) =>
   const slicedItem = {...item};
   delete slicedItem.ean;
   return function(dispatch, getState) {
-    Firebase.database().ref(urlFactory(getState,'catalogoLocale',null,ean)).update(slicedItem).then(response => {
+    Firebase.database().ref(urlFactory(getState,'magazzino',null,ean)).update(slicedItem).then(response => {
       dispatch({
         type: type,
         item: item

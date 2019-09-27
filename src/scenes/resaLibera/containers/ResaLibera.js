@@ -3,7 +3,7 @@ import {rigaResaFA} from '../../../actions/resaLibera'
 import {submitEditedCatalogItem, resetEditedCatalogItem} from '../../../actions/catalogo'
 import {setHeaderInfo} from '../../../actions'
 
-import {getMessageBufferResaLibera, getShowCatalogModalResaLibera, getEditedCatalogItem, getTestataResaLibera, getTotaliResaLibera, getFiltersResaLibera, getGeometry, getListeningTestataResaLibera, isStaleTotaliResaLibera, getEditedRigaResaLibera} from '../../../reducers'
+import {getMessageBufferResaLibera, getShowCatalogModalResaLibera, getSaveGeneral, getEditedCatalogItem, getTestataResaLibera, getTotaliResaLibera, getFiltersResaLibera, getGeometry, getListeningTestataResaLibera, isStaleTotaliResaLibera, getEditedRigaResaLibera} from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataResa = rigaResaFA.listenTestata;
@@ -26,6 +26,7 @@ const mapStateToProps = (state) => {
 	           geometry: getGeometry(state,'RESA_LIBERA'),
 		     filters: getFiltersResaLibera(state),
 		        totaliResa: getTotaliResaLibera(state),
+		         saveGeneral: getSaveGeneral(state),
 		
 		            
 		

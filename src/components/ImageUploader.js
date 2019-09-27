@@ -66,6 +66,7 @@ class ImageUploader extends React.Component {
     //if (this.props.fullName) firebaseGetDownloadURL(this.props.fullName,this.setDefaultImg); 
     return (
       <Upload
+       disabled={(this.props.fullName==='')} //Se non so ancora dove salvare... mi fermo.
         name={this.props.fullName}
         listType="picture-card"
         showUploadList={false}
