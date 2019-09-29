@@ -37,6 +37,7 @@ const editedRigaResaValuesInitialState =
 				pezzi: 0,
 				gratis: 0,
 				prezzoTotale: '',
+				rigaBolla: null, //contiene solo id della riga...
 	};
 
 
@@ -101,7 +102,7 @@ const editedItemInitialState = () => {
 
 const initialState = () => {
     const eiis = editedItemInitialState();
-	return initialStateHelper(eiis,{subTables: {}, geometry: calcGeometry(), listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}, activeModal: false, period: {anno: null, mese: null}, });
+	return initialStateHelper(eiis,{subTables: {}, geometry: calcGeometry(), listeningFornitore: null, bolleOsservate: {}, indiceBolleRese: {}, indiceEAN: {}, tabellaEAN: [], dettagliEAN: {}, estrattoStoricoMagazzino: {}, tabelleRigheEAN: {}, tabellaRighe: [], changedRigaBollaKeys: {}, changedRigaResaKeys: {}, activeModal: false, period: {anno: null, mese: null}, });
     }
     
 //In input il nuovo campo... in output il nuovo editedRigaBolla
@@ -138,24 +139,6 @@ const rigaResaR = new FormReducer({scene: 'RESA',
 								calcGeometry: calcGeometry}); 
 
 
-
-//Data una rigaBolla e una rigaResa valorizza rigaResa col massimo di pezzi e gratis che posso rendere
-const setMaxRese = (rigaBolla, rigaResa, destination) => 
-{
-	destination.maxRese = rigaBolla.pezzi;
-	destination.maxGratis = rigaBolla.gratis;
-	let rigaResaKey = rigaResa.key;
-	for (var rigaKey in rigaBolla.rese)
-		{
-			if (rigaKey !== rigaResaKey) 
-				{
-				 destination.maxRese = destination.maxRese - rigaBolla.rese[rigaKey].pezzi;
-				 destination.maxGratis = destination.maxGratis - rigaBolla.rese[rigaKey].gratis;
-				}
-		}
-	
-}
-
 const getTotaleResi = (ean, righeResa) =>
 {
 	//Prendo tutte le righe con una resa che corrispondono a quell'EAN e le totalizzo...
@@ -170,234 +153,346 @@ const getTotaleResi = (ean, righeResa) =>
 		}
 	return(totali);	
 }
+//Chiamata per una o piuù nuova rigaResa o una o più nuova rigaBolla
+const newEANEntry = (newState, newData) => {
+	 let tabelleRigheEAN = {...newState.tabelleRigheEAN};
+	 let tabellaEAN = [...newState.tabellaEAN];
+	let indiceEAN = {...newState.indiceEAN};
+	let changed = false;		
+	for (let i=0; i<newData.length; i++)
+	{
+		let values = newData[i][1];
+		let ean = values.ean;
+		
+		//Se non c'e' EAN valorizzo la struttura dati che lo ospita...
+		if (!indiceEAN[ean])
+			{   changed = true;
+			   	tabelleRigheEAN[ean] = [];
+				let stock = (newState.estrattoStoricoMagazzino[ean]) ? newState.estrattoStoricoMagazzino[ean].pezzi : 0; //Se ho valorizzato lo storico magazzino...
+			   
+			    tabellaEAN.push({key: ean, values: {ean: values.ean, 
+								titolo: values.titolo, 
+								autore: values.autore, 
+								editore: values.editore, 
+								prezzoListino: values.prezzoListino,
+								imgFirebaseUrl: values.imgFirebaseUrl,
+								stock: stock,
+							
+								}});
+								
+				indiceEAN[ean] = {pos: tabellaEAN.length - 1, righe: {}};				
+			}
+	}
+	if (changed) newState = {...newState, tabelleRigheEAN: tabelleRigheEAN, tabellaEAN: tabellaEAN, indiceEAN: indiceEAN}
 
-const updateTabelleEANFromChangedRigaResa = (row, indiceEAN, tabelleRigheEAN, tabellaEAN, itemsArray, indiceBolleRese) =>
-{
-			let ean = row.ean;
-			let key = row.rigaBolla;
-			let pezzi = parseInt(row.pezzi, 10) || 0;
-   	    	let gratis = parseInt(row.gratis, 10) || 0;
-		   	let pos = (indiceEAN[ean] && indiceEAN[ean].righe && indiceEAN[ean].righe[key].pos) ? indiceEAN[ean].righe[key].pos : null;
-		 	if (pos) {
-		 		tabelleRigheEAN[ean][pos].values.key = indiceBolleRese[key]; 
-		 		tabelleRigheEAN[ean][pos].values.pezzi = pezzi; 
-		 		tabelleRigheEAN[ean][pos].values.gratis = gratis;
-		 			}
-		 	//Aggiorno totali rese... se la riga esiste già... altrimenti aggiornerò al prossimo giro...
-		 	if (indiceEAN[ean]) tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //L'array per come sarà...
+	return(newState);
 }
 
-const manageResaInfo = (state, action) =>
-{    let newState = state;
-	 switch (action.type)
-   	        	{
-   	        	case 'ADDED_ITEM_RESA': 
-   	        	//Se non esiste ancora quell'EAN creo la tabella EAN corrispondente
-   	        	//Se non esiste ancora quell'EAN creo l'indice corrispondente
-   	        	 let row = action.payload.val();
-   	    	    let key = (row) ? row.rigaBolla : null;
-   	           let idRigaResa = action.payload.key;
-   	       
-   	           let indiceBolleRese = state.indiceBolleRese;
-   	           indiceBolleRese[key] = idRigaResa;
-   	           newState = {...state, indiceBolleRese: indiceBolleRese};	
-   	        	break;
-   	        	
-   	        	case 'CHANGED_ITEM_RESA': 
-   	        	break;
-   	        	
-   	        	case 'DELETED_ITEM_RESA':
-   	        	break;
-   	        	
-   	        	case 'INTIAL_LOAD_ITEM_RESA':
-   	        	{
-   	        		let indiceBolleRese = state.indiceBolleRese;
-   	           
-   	               let rows = Object.entries(action.payload.val());
-   	                 for (let i=0; i<rows.length; i++)	  
-   	                	{
-   	                	let row = rows[i][1];
-   	    	    		let key = row.rigaBolla ;
-   	        			let idRigaResa = rows[i][0];
-   	       
-   	        			indiceBolleRese[key] = idRigaResa;
-   	                	}
-   	           newState = {...state, indiceBolleRese: indiceBolleRese};	
-   	        	}	
-   	        	break;
-   	        	
-   	        	default:
-   	        	newState = state;
-   	        	break;
-   	        	}
-	return newState;
-};
+//Chiamata per una o piuù nuova rigaResa o una o più nuova rigaBolla... sono certo di trovare valorizzata correttamente la struttura
+const addRighe = (newState, newData, type) => {
+	 let tabelleRigheEAN = {...newState.tabelleRigheEAN};
+	let indiceEAN = {...newState.indiceEAN};
+    let itemsArray = {...newState.itemsArray};
+    let tabellaEAN = [...newState.tabellaEAN];
+	let idChanged = false;
+	let itemChanged = false;
+	let tabellaChanged = false; 
+	for (let i=0; i<newData.length; i++)
+	{
+		let values = newData[i][1];
+		let ean = values.ean;
+		//Prendo l'id della bolla. Se e' una resa e non ho rigaBolla valorizzo con l'id della resa medesima...ma devo riconoscere che è orfano...
+		let rigaBolla = (type==='bolle' || !newData[i][1].rigaBolla) ? newData[i][0] : newData[i][1].rigaBolla;
+	    let orphan=false;
+	    if (type==='rese'  && !newData[i][1].rigaBolla) orphan=true; 
+		//A questo punto vedo se ho già quella rigaBolla...
+		
+		//Se non c'e' la rigaBolla valorizzo la struttura dati che lo ospita...questo nel caso del change non dovrebbe accadere
+		if (!indiceEAN[ean].righe[rigaBolla])
+			{   idChanged = true;
+			    tabelleRigheEAN[ean].push({key: rigaBolla, values: {} }) //Creo lo spazio per i valori... se è orfano uso il valore stesso della riga resa...
+			 	let newPos = tabelleRigheEAN[ean].length - 1; //Nuova posizione finale...
+			 	indiceEAN[ean].righe[rigaBolla] = {pos: newPos};			
+			}
+	    let pos = indiceEAN[ean].righe[rigaBolla].pos;
+		let idx = newState.itemsArrayIndex[rigaBolla];
+		
+		if (type==='bolle')
+		{
+		   //Aggiungo i valori nuovi o cambiati
+		   tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, 
+													maxRese: values.pezzi,
+													maxGratis: values.gratis,
+													dataCarico: values.dataCarico,
+													dataDocumentoBolla: values.dataDocumento,
+													riferimentoBolla: values.riferimento,
+													prezzoListino: values.prezzoListino, 
+													prezzoUnitario: values.prezzoUnitario,
+		    								  }
+		   //Se non ho una resa nella riga valorizzo il default a zero per pezzi e gratis.
+		   if (!tabelleRigheEAN[ean][pos].values.pezzi) tabelleRigheEAN[ean][pos].values.pezzi = 0;
+		   if (!tabelleRigheEAN[ean][pos].values.gratis) tabelleRigheEAN[ean][pos].values.gratis = 0;
+		   //Vedo se posso agire su itemsArray
+		   if (idx >=0)
+			{
+				itemChanged = true;
+				itemsArray[idx].maxRese = values.pezzi;
+				itemsArray[idx].maxGratis = values.gratis;
+			}
+		}	
+	   if (type==='rese')
+		{
+		   //Aggiungo i valori nuovi o cambiati DEVO GESTIRE GLI ORFANI!
+		   tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, 
+													pezzi: values.pezzi,
+													gratis: values.gratis,
+		   										}
+		   //Se arrivano nuove rese ricalcolo il totale dei resi...
+		   let resi = getTotaleResi(ean, newState.itemsArray);
+		   
+		   tabellaEAN[indiceEAN[ean].pos].values.resi = resi;
+		   tabellaChanged = true; //Sto ricalcolando i totali...	   										
+		   //Questa dovrebbe normalmente non andare a buon fine...
+		   if ((idx >=0) && (tabelleRigheEAN[ean][pos].values.pezzi > 0 || tabelleRigheEAN[ean][pos].values.gratis > 0 ))
+			{
+				itemChanged = true;
+				itemsArray[idx].maxRese = tabelleRigheEAN[ean][pos].values.pezzi;
+				itemsArray[idx].maxGratis = tabelleRigheEAN[ean][pos].values.gratis;
+			}
+		}		
+	}
+	
+	//Solo se l'indice è cambiato...
+	if (idChanged) newState = {...newState, indiceEAN: indiceEAN}
+    if (itemChanged) newState = {...newState, itemsArray: itemsArray}
+	 if (tabellaChanged) newState = {...newState, tabellaEAN: tabellaEAN}
 
+	newState = {...newState, tabelleRigheEAN: tabelleRigheEAN}
 
-const manageBollaInfo = (state, action) =>
-{    let newState = null;
-	 switch (action.type)
-   	        	{
-   	        	case ADDED_RIGABOLLA_IN_RESA: 
-   	        	//Se non esiste ancora quell'EAN creo la tabella EAN corrispondente
-   	        	break;
-   	        	
-   	        	case  CHANGED_RIGABOLLA_IN_RESA: 
-   	        	break;
-   	        	
-   	        	case DELETED_RIGABOLLA_IN_RESA:
-   	        	break;
-   	        	
-   	        	case INITIAL_LOAD_RIGABOLLA_IN_RESA:
-   	        	break;
-   	        	
-   	        	default:
-   	        	newState = state;
-   	        	break;
-   	        	}
-	return newState;
-};
-
-
-//Prendo in input lo stato e gestisco i tre casi di cambiamento di rigaresa (aggiungi, cancella, modifica). Torno stato modificato. DEVO RENDERLA DEL TUTTO STALE
-const manageChangedRigaResa = (state, action) =>
-{
-			let itemsArray = [...state.itemsArray];
-			let itemsArrayIndex = {...state.itemsArrayIndex};
-			let tabelleRigheEAN = {...state.tabelleRigheEAN};
-   	        let indiceEAN = state.indiceEAN;
-   	        let indiceBolleRese = {...state.indiceBolleRese};
-   	        let tabellaEAN = [...state.tabellaEAN];
-   	        let tabellaRighe = [...state.tabellaRighe];
-   	        let idRigaResa = action.payload.key;
-   	        let row = action.payload.val();
-   	        let key = (row) ? row.rigaBolla : null;
-   	        switch (action.type)
-   	        	{
-   	        	case 'ADDED_ITEM_RESA': 
-   	        		insertRow(itemsArrayIndex, itemsArray, row, idRigaResa, 'pos', 'key');
-   	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos] = {};
-   	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos].values = {...row};
-   	        		tabellaRighe[itemsArrayIndex[idRigaResa].pos].key = idRigaResa;
-   	        		indiceBolleRese[key] = idRigaResa;
-   	        		break;
-   	        	case 'CHANGED_ITEM_RESA': 
-   	        	    itemsArray[itemsArrayIndex[idRigaResa].pos].values = {...row};
-   	        	    tabellaRighe[itemsArrayIndex[idRigaResa].pos].values = {...row};
-   	        		break;
-   	        	case 'DELETED_ITEM_RESA': 
-   	        		row = {rigaBolla: itemsArray[itemsArrayIndex[idRigaResa].pos].values.rigaBolla, ean: itemsArray[itemsArrayIndex[idRigaResa].pos].values.ean}; //Riga finta... con solo EAN
-   	        		tabellaRighe.splice(itemsArrayIndex[idRigaResa].pos, 1);
-   	        		removeRow(itemsArrayIndex, itemsArray, idRigaResa, 'pos', 'key');
-   	        		delete tabelleRigheEAN[row.ean][indiceEAN[row.ean].righe[key].pos].values.key;
-   	        		delete indiceBolleRese[key];
-   	        		break;
-		 		default: break;
-   	        	}
-   	    	updateTabelleEANFromChangedRigaResa(row, indiceEAN, tabelleRigheEAN, tabellaEAN, itemsArray, indiceBolleRese);	 
-			let newState = {...state, tabellaEAN: tabellaEAN, tabellaRighe: tabellaRighe, itemsArray: itemsArray, itemsArrayIndex: itemsArrayIndex, tabelleRigheEAN: tabelleRigheEAN, indiceBolleRese: indiceBolleRese};	
-		 	return(newState);
+	return(newState);
 }
 
 
-//Per consentire di essere richiamata da entrambi i metodi (initial load e added)
-function calcRigaBolla(state, action)
-{
-	let anno = action.payload.ref.path.pieces_[3];
-   		let mese = action.payload.ref.path.pieces_[4];
-   	    
-   		let bolla = action.payload.ref.path.pieces_[5];
-   		//da qui ho un loop... se ho una added... è un loop di uno...
-   		//Singola riga?
-   		let righe = [];
-   		let rows = [];
-   		if (action.payload.ref.path.pieces_[6])
-   		{
-   			righe[0] = action.payload.ref.path.pieces_[6];
-   			rows[0] = action.payload.val();
-   		}
-   		else
-   		{//per gestire una bolla senza righe...
-   		 if (action.payload.val())
-   		 {righe = Object.keys(action.payload.val());
-   		 rows = Object.values(action.payload.val());
-   		 }
-   		}
-   		let bolleOsservate = {...state.bolleOsservate};
-	   	let indiceEAN = {...state.indiceEAN};
-	   	let tabellaEAN = [...state.tabellaEAN];
-	   	let tabelleRigheEAN = {...state.tabelleRigheEAN};
-	   //	console.log(state.stock);   
-   		for (let i=0; i<righe.length; i++)
-   			{
-	   		let riga = righe[i];
-	   		let idRigaBolla = anno + '/' + mese + '/' + bolla + '/' + riga;
-	   	    let row = rows[i];
-	   	     //Ne copio i contenuti in bolleOsservate...
-	   	    if (!bolleOsservate[bolla].righe) bolleOsservate[bolla].righe = {};
-	   	    bolleOsservate[bolla].righe[riga] = row;
-	   	    let ean = row.ean;
-	   	    //Creazione della testata EAN...
-	   	    if (!indiceEAN[ean]) 
-	   	    	{indiceEAN[ean] = {};
-	   	    	 //tabellaEAN[key] = ean;
-	   	    	//insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, imgFirebaseUrl: row.imgFirebaseUrl, stock: getStock(dettagliEAN[ean], null,null, state.testata.dataScarico - 1), resi: 0}, ean, 'pos', 'ean');
-	   	    	let stock = (state.stock[ean] !== undefined) ? state.stock[ean] : '';
-	   	    	insertRow(indiceEAN, tabellaEAN, {ean: ean, titolo: row.titolo, autore: row.autore, prezzoListino: row.prezzoListino, imgFirebaseUrl: row.imgFirebaseUrl, stock: stock, resi: 0}, ean, 'pos', 'ean');
-	   	    	
-	   	    		
-	   	    	}
-	   	    if (!indiceEAN[ean].righe) indiceEAN[ean].righe = {};
-	   	    let rigaBollaKey = bolla+'/'+riga;
-	   	    if (!indiceEAN[ean].righe[rigaBollaKey]) indiceEAN[ean].righe[rigaBollaKey] = {'pos': -1}; //Non è in mostra...
-	   	   	 
-	   	     if (!tabelleRigheEAN[ean]) tabelleRigheEAN[ean] = [];
-	   	     
-					
-	   	     let rigaBolla = {'ean': ean, 
-	   	    				  'rigaBolla': rigaBollaKey, 
-	   	    				  'idRigaBolla': idRigaBolla, 
-	   	    				  'riferimentoBolla': row.riferimento, 
-	   	    				  'dataDocumentoBolla': row.dataDocumento, 
-	   	    				  'dataCarico': row.dataCarico, 
-	   	    				  'prezzoUnitario': row.prezzoUnitario,
-	   	     	               'titolo': row.titolo,
-	   	     	               'autore': row.autore,
-	   	     	               'prezzoListino': row.prezzoListino,
-	   	     	               'pezzi': row.pezzi,
-	   	     	               'gratis': row.gratis,
-	   	     	               'rese': row.rese
-	   	     	               	}
-	   	     let itemsArrayIndex = state.itemsArrayIndex; //Non devo modificarle!
-	   	     let itemsArray = state.itemsArray;
-	   	     let indiceBolleRese = state.indiceBolleRese;
-	   	     let rigaResa = {pezzi: 0, gratis: 0}; //Oggetto inizialmente vuoto
-	   	      if (indiceBolleRese[rigaBollaKey])  //Se ho giè una riga resa collegata a questa riga bolla
-	   	    	{
-	   	    		rigaResa = {...itemsArray[itemsArrayIndex[indiceBolleRese[rigaBollaKey]].pos].values};
-	   	    		tabellaEAN[indiceEAN[ean].pos].values.resi = getTotaleResi(ean, itemsArray); //Aggiorno i totali...
-			 	    rigaResa.key = indiceBolleRese[rigaBollaKey];
-	   	    		//Se ho elementi a blank... li valorizzo
-	   	    	}
-	   	     setMaxRese(rigaBolla, rigaResa, rigaResa ); //Calcolo quante rese posso fare... se non ho nessuna resa in memoria le prendo tutte...
-	         
-	   	     let blendedRiga = {...rigaBolla, ...rigaResa}; //Prevalenza di resa su bolla...
-	   	     if (action.type !== CHANGED_RIGABOLLA_IN_RESA) insertRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], blendedRiga, rigaBollaKey, 'pos', 'rigaBolla' );
-	   	     else 
-	   	    	{   let pos = indiceEAN[ean].righe[rigaBollaKey].pos;
-	   	    		tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, ...blendedRiga}; //Prevalenza di rigaresa su rigabolla!
-	   	    	}
-   			}
-   	    let newState = {...state, bolleOsservate: bolleOsservate, indiceEAN: indiceEAN, tabellaEAN: tabellaEAN, tabelleRigheEAN: tabelleRigheEAN};
-   	    return(newState);
-}
 
+//Chiamata per una riga cancellata...
+const deleteRiga = (newState, key, type) => {
+	 let tabelleRigheEAN = {...newState.tabelleRigheEAN};
+	let indiceEAN = {...newState.indiceEAN};
+    let itemsArray = {...newState.itemsArray};
+    let tabellaEAN = [...newState.tabellaEAN];
+
+	let idChanged = false;
+	let itemChanged = false;
+	let tabellaChanged = false;
+	let changed = false; //TabelleRigheEAN
+	let orfano = false;    
+		
+		
+	   if (type==='rese')
+		{
+			//Caso facile. Devo porre a zero pezzi e gratis in tabella...e ricalcolare il totale delle rese...
+	       	let idx = newState.itemsArrayIndex[key];
+			//Se non c'è è successo qualcosa di strano e non faccio nulla...
+			if (idx >= 0)
+				{
+				//Se non trovo rigaBolla è un orfano... e uso come chiave di rigaBolla la chiave stessa della rigaResa	
+				let riga = itemsArray[idx];
+				let rigaBolla = (riga.rigaBolla) ? riga.rigaBolla : key;
+				let ean = riga.ean;
+				orfano = (riga.rigaBolla) ? false : true; //decido se ho un orfano...
+			    let pos = indiceEAN[ean].righe[rigaBolla].pos;
+			    //Se non c'è è successo qualcosa di strano e non faccio nulla...
+			    if (pos >=0)
+			    	{   changed = true;
+			    	    tabellaChanged = true;
+			    	    
+			    		tabelleRigheEAN[ean][pos].values.pezzi = 0;
+			    		tabelleRigheEAN[ean][pos].values.gratis = 0;
+			    		itemsArray.splice(idx,1); //adesso posso cancellare la riga cancellata e ricalcolare i resi...
+			    		let resi = getTotaleResi(ean, itemsArray);
+						tabellaEAN[indiceEAN[ean].pos].values.resi = resi;
+		   
+			    	}
+		
+				}
+		}	
+		
+		if (type==='bolle' || orfano)
+		{
+		   let rigaBolla = key;
+		   let pos = null;
+		   let ean = null;
+		   //Devo necessariamente spazzolare tutto indiceEAN...
+		   let indiceEANMatrix = Object.entries(indiceEAN);
+		   for (let i=0; i<indiceEANMatrix.length; i++)
+				{
+					if (indiceEANMatrix[i][1][rigaBolla])
+						{   pos = indiceEANMatrix[i][1][rigaBolla].pos;
+							ean = indiceEANMatrix[i][0];
+							break;
+						}
+				}
+		   //Se non l'ho trovato... mi fermo... c'e' qualcosa di strano...	
+		   if (pos >=0 && ean)	
+				{
+				idChanged = true;
+				changed = true;
+				tabelleRigheEAN[ean].splice(pos,1);
+				//Aggiorno gli indici di quell'EAN...
+				delete indiceEAN[ean].righe[rigaBolla];
+				for (let i=0; i<tabelleRigheEAN[ean].length; i++)
+					{
+						let key = tabelleRigheEAN[ean][i].key;
+						indiceEAN[ean].righe[key].pos = i; //Rigenero l'indice...
+					}
+				}
+				
+		}	
+
+		 
+		
+	
+	//Solo se l'indice è cambiato...
+	if (idChanged) newState = {...newState, indiceEAN: indiceEAN}
+    if (tabellaChanged) newState = {...newState, tabellaEAN: tabellaEAN}
+
+	if (changed) newState = {...newState, tabelleRigheEAN: tabelleRigheEAN}
+	return(newState);
+}
 
 export default function resa(state = initialState(), action) {
   var newState;
   switch (action.type) {
     
 
+    case rigaResaR.ADDED_ITEM:
+    case rigaResaR.INITIAL_LOAD_ITEM:
+    {	
+    //Comportamento standard... 
+	newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+	//Creo una matrice di uno (caso ADDED_ITEM) o n valori (caso INTIAL_LOAD)
+	let newData = [];
+	if (action.type === rigaResaR.ADDED_ITEM)
+		{
+		let key = action.payload.key;
+   		let val = action.payload.val();
+   		newData.push([key, val]);
+		}
+	else newData = Object.entries(action.payload.val());	
+	//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
+	newState = newEANEntry(newState, newData);
+	//Aggiungo righe distinguendo i casi resa e bolla...
+	newState = addRighe(newState, newData, 'rese');
+	
+    }
+	break;    	 	
+
+	case rigaResaR.CHANGED_ITEM:
+	{	
+	newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+	let newData = [];
+	let key = action.payload.key;
+   	let val = action.payload.val();
+   	newData.push([key, val]);
+	newState = addRighe(newState, newData, 'rese');
+	}
+    break;    
+    
+	case rigaResaR.DELETED_ITEM:
+	//Faccio prima la cancellazione non standard altrimenti non avrei i dati della riga...	
+	newState = 	deleteRiga(state, action.payload.key, 'rese');
+	newState = rigaResaR.updateState(newState,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+		 	
+
+    break;    
+
+    //ADDED_RIGABOLLA
+    
+    //Per ogni riga bolla potenzialmente potrei associare una riga resa...
+    
+    
+    case INITIAL_LOAD_RIGABOLLA_IN_RESA: 
+    case ADDED_RIGABOLLA_IN_RESA: 
+    {	
+    newState = state;	
+   	//Creo una matrice di uno (caso ADDED_ITEM) o n valori (caso INTIAL_LOAD)
+	let newData = [];
+	if (action.type === ADDED_RIGABOLLA_IN_RESA)
+		{
+		let key = action.payload.key;
+   		let val = action.payload.val();
+   		newData.push([key, val]);
+		}
+	else newData = Object.entries(action.payload.val());	
+	//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
+    newState = newEANEntry(newState, newData);
+    newState = addRighe(newState, newData, 'bolle');
+	
+    }	
+	
+		
+    break;
+   	case CHANGED_RIGABOLLA_IN_RESA:
+   	{
+   	 newState = state;	
+   	
+   	let newData = [];
+	let key = action.payload.key;
+   	let val = action.payload.val();
+   	newData.push([key, val]);
+
+   	 newState = addRighe(newState, newData, 'bolle');
+   	}
+   	
+        break;
+     
+        
+   case DELETED_RIGABOLLA_IN_RESA:
+  	    newState = 	deleteRiga(state, action.payload.key, 'bolle');
+  	    break;  
+  	    
+ 
+  	    
+   case UNLISTEN_BOLLE_PER_FORNITORE:
+   	    newState = {...state, listeningFornitore : null};
+   	    break;
+   
+   	case INITIAL_LOAD_BOLLE_PER_FORNITORE: 
+		{
+			let listaBolleArr = Object.entries(action.payload.val());
+			let bolleOsservate = {...state.bolleOsservate};
+			for (let i=0; i<listaBolleArr.length; i++)
+				{
+				let key = listaBolleArr[i][0];
+				let val = listaBolleArr[i][1];
+				bolleOsservate[key] = {...val};
+				}
+			newState = {...state, bolleOsservate : bolleOsservate};
+   	
+		}
+		break;
+   	
+   	case ADDED_BOLLE_PER_FORNITORE: 
+   	case CHANGED_BOLLE_PER_FORNITORE:
+   		{
+   		let key = action.payload.key;
+   		let val = action.payload.val();
+   		let bolleOsservate = {...state.bolleOsservate};
+   		bolleOsservate[key] = {...val};
+   		newState = {...state, bolleOsservate : bolleOsservate};
+   		}
+        break;
+   
+   
+   case DELETED_BOLLE_PER_FORNITORE:
+  	    {
+  	    let key = action.payload.key;
+   		let bolleOsservate = {...state.bolleOsservate};
+   		delete bolleOsservate[key];
+   		newState = {...state, bolleOsservate : bolleOsservate};	
+  	    }
+  	    break;
+   
    //Ascolto tutte le bolle collegate a un fornitore... 
    case LISTEN_BOLLE_PER_FORNITORE:
    	    newState = {...state, listeningFornitore : action.params};
@@ -439,83 +534,7 @@ export default function resa(state = initialState(), action) {
   	   		
    		}
    		break;	
-
-    //ADDED_RIGABOLLA
-    
-    //Per ogni riga bolla potenzialmente potrei associare una riga resa...
-    
-    
-    case INITIAL_LOAD_RIGABOLLA_IN_RESA: 
-		
-		newState = calcRigaBolla(state, action);
-		
-    break;
-   	case ADDED_RIGABOLLA_IN_RESA: 
-   	case CHANGED_RIGABOLLA_IN_RESA:
    		
-   		newState = calcRigaBolla(state, action);
-   	
-        break;
-        
-   case DELETED_RIGABOLLA_IN_RESA:
-  	    {
-  	    let bolla = action.payload.ref.path.pieces_[5];
-   		let riga = action.payload.ref.path.pieces_[6];
-   		let rigaBollaKey = bolla+'/'+riga;
-   	    
-   	    let bolleOsservate = {...state.bolleOsservate};
-   	    let indiceEAN = {...state.indiceEAN};
-   	    let ean = bolleOsservate[bolla].righe[riga].ean;
-   	    let tabellaEAN = [...state.tabellaEAN];
-   	     let tabelleRigheEAN = {...state.tabelleRigheEAN};
-   	   
-   	    delete bolleOsservate[bolla].righe[riga];
-   	    removeRow(indiceEAN[ean].righe, tabelleRigheEAN[ean], rigaBollaKey,'pos','rigaBolla');
-   	    delete indiceEAN[ean].righe[rigaBollaKey];
-   	   if (Object.keys(indiceEAN[ean].righe).length === 0) 
-   	    	{   removeRow(indiceEAN, tabellaEAN, ean, 'pos','ean');
-   	    		delete indiceEAN[ean];
-   	    	}
-   	    newState = {...state, tabellaEAN: tabellaEAN, indiceEAN: indiceEAN, tabelleRigheEAN: tabelleRigheEAN};	
-  	    }
-  	    break;  
-  	    
-   case UNLISTEN_BOLLE_PER_FORNITORE:
-   	    newState = {...state, listeningFornitore : null};
-   	    break;
-   
-   	case INITIAL_LOAD_BOLLE_PER_FORNITORE: 
-		{
-			let listaBolleArr = Object.entries(action.payload.val());
-			let bolleOsservate = {...state.bolleOsservate};
-			for (let i=0; i<listaBolleArr.length; i++)
-				{
-				let key = listaBolleArr[i][0];
-				let val = listaBolleArr[i][1];
-				bolleOsservate[key] = {...val};
-				}
-			newState = {...state, bolleOsservate : bolleOsservate};
-   	
-		}
-		break;
-   	case ADDED_BOLLE_PER_FORNITORE: 
-   	case CHANGED_BOLLE_PER_FORNITORE:
-   		{
-   		let key = action.payload.key;
-   		let val = action.payload.val();
-   		let bolleOsservate = {...state.bolleOsservate};
-   		bolleOsservate[key] = {...val};
-   		newState = {...state, bolleOsservate : bolleOsservate};
-   		}
-        break;
-   case DELETED_BOLLE_PER_FORNITORE:
-  	    {
-  	    let key = action.payload.key;
-   		let bolleOsservate = {...state.bolleOsservate};
-   		delete bolleOsservate[key];
-   		newState = {...state, bolleOsservate : bolleOsservate};	
-  	    }
-  	    break;
    case rigaResaR.CHANGE_EDITED_ITEM:
    	    {
    		let tabelleRigheEAN = {...state.tabelleRigheEAN};
@@ -546,19 +565,7 @@ export default function resa(state = initialState(), action) {
    	    }
    	    break;
    	    
-	case rigaResaR.ADDED_ITEM:
-	case rigaResaR.DELETED_ITEM:
-	case rigaResaR.CHANGED_ITEM:
-	case rigaResaR.INITIAL_LOAD_ITEM:
-		//Comportamento standard... o quasi... 
-		
-		 newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
-		 //Ha il compito di aggiornare 
-		 newState = manageResaInfo(newState, action);
-		 
-        //
-		    //newState = manageChangedRigaResa(state, action);
-			break;
+
      case SET_PERIOD_RESA:
      	newState =  {
      		...state,
@@ -571,6 +578,7 @@ export default function resa(state = initialState(), action) {
      	 	activeModal: action.activeModal
      	 }
      	 break;
+     
      case SET_MODAL_DETAILS: 
      	 newState = {
      	 	...state,
@@ -579,34 +587,14 @@ export default function resa(state = initialState(), action) {
      	 }	 
      	  break;
      	  
-      case rigaResaR.INITIAL_LOAD_STORICO_MAGAZZINO:
-  	  case rigaResaR.ADDED_STORICO_MAGAZZINO:
-  	  case rigaResaR.CHANGED_STORICO_MAGAZZINO:
-  	  case rigaResaR.DELETED_STORICO_MAGAZZINO:
-  	   {
-  	   newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
-       //Aggiorno solo gli stock da cambiare...
-       let tabellaEAN = [...newState.tabellaEAN];
-       let indiceEAN = newState.indiceEAN;
-       if (action.type ===  rigaResaR.INITIAL_LOAD_STORICO_MAGAZZINO)
-    		{
-    			
-    		 let allStocks = Object.entries(action.payload.val());
-    		 for (let i=0; i < allStocks.length; i++) 
-    			{   let ean = allStocks[i][0];
-    			    let stock = allStocks[i][1].pezzi;
-    			    
-    				if (indiceEAN[ean]!==undefined) tabellaEAN[indiceEAN[ean].pos].values.stock = stock;
-    			}
-    		}
-  	   newState.tabellaEAN = tabellaEAN;
-  	   }
-      break;
-       case rigaResaR.DATI_STORICO_MAGAZZINO:
-       	{
-       newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+     
       
-       	let tabellaEAN = [...newState.tabellaEAN];
+      case rigaResaR.DATI_STORICO_MAGAZZINO:
+       	{
+       //I valori di stock vanno per default in estratto storico magazzino...		
+       newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
+      //ma li metto anche nella tabella tabellaEAN... se per caso fosse arrivata questa info dopo...
+       let tabellaEAN = [...newState.tabellaEAN];
        let indiceEAN = newState.indiceEAN;
        	  	 let allStocks = Object.values(action.values);
     	
