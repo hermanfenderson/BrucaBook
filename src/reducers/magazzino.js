@@ -125,6 +125,13 @@ export default function magazzino(state = initialState(), action) {
  export const getListeningItem = (state) => {return state.listeningItem};
  export const getFilters = (state) => {return state.filters};
  
+ //Funzione capace di calcolare una anagrafica dal magazzino...
+ export const getItem = (state) => {return function getItem(ean) {
+ 	let itemsArrayIndex = state.itemsArrayIndex;
+ 	if (itemsArrayIndex[ean] >= 0)  return state.itemsArray[itemsArrayIndex[ean]];
+ 	return null;
+   };
+ };
 
       
 

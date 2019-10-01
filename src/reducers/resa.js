@@ -200,6 +200,7 @@ const addRighe = (newState, newData, type) => {
 	for (let i=0; i<newData.length; i++)
 	{
 		let values = newData[i][1];
+		let key = newData[i][0];
 		let ean = values.ean;
 		//Prendo l'id della bolla. Se e' una resa e non ho rigaBolla valorizzo con l'id della resa medesima...ma devo riconoscere che è orfano...
 		let rigaBolla = (type==='bolle' || !newData[i][1].rigaBolla) ? newData[i][0] : newData[i][1].rigaBolla;
@@ -221,6 +222,7 @@ const addRighe = (newState, newData, type) => {
 		{
 		   //Aggiungo i valori nuovi o cambiati
 		   tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, 
+													ean: values.ean,
 													maxRese: values.pezzi,
 													maxGratis: values.gratis,
 													dataCarico: values.dataCarico,
@@ -228,7 +230,18 @@ const addRighe = (newState, newData, type) => {
 													riferimentoBolla: values.riferimento,
 													prezzoListino: values.prezzoListino, 
 													prezzoUnitario: values.prezzoUnitario,
+													sconto1: values.sconto1,
+													sconto2: values.sconto2,
+													sconto3: values.sconto3,
+													manSconto: values.manSconto,
+													idRigaBolla: values.idRigaBolla,
+													rigaBolla: key,
+													
+													
+													
 		    								  }
+		    tabelleRigheEAN[ean][pos].values.bolla = {...values}; //Una copia di tutto 								  
+		    								  
 		   //Se non ho una resa nella riga valorizzo il default a zero per pezzi e gratis.
 		   if (!tabelleRigheEAN[ean][pos].values.pezzi) tabelleRigheEAN[ean][pos].values.pezzi = 0;
 		   if (!tabelleRigheEAN[ean][pos].values.gratis) tabelleRigheEAN[ean][pos].values.gratis = 0;
@@ -246,6 +259,7 @@ const addRighe = (newState, newData, type) => {
 		   tabelleRigheEAN[ean][pos].values = {...tabelleRigheEAN[ean][pos].values, 
 													pezzi: values.pezzi,
 													gratis: values.gratis,
+													key: key, //Consente di distinguere insert e update...
 		   										}
 		   //Se arrivano nuove rese ricalcolo il totale dei resi...
 		   let resi = getTotaleResi(ean, newState.itemsArray);
@@ -258,6 +272,7 @@ const addRighe = (newState, newData, type) => {
 				itemChanged = true;
 				itemsArray[idx].maxRese = tabelleRigheEAN[ean][pos].values.pezzi;
 				itemsArray[idx].maxGratis = tabelleRigheEAN[ean][pos].values.gratis;
+				itemsArray[idx].key = key; //consente di distinguere insert e update...
 			}
 		}		
 	}
@@ -421,9 +436,13 @@ export default function resa(state = initialState(), action) {
 		{
 		let key = action.payload.key;
    		let val = action.payload.val();
+   		val.idRigaBolla = action.payload.ref.toString(); //prendo il path completo delle righe
    		newData.push([key, val]);
 		}
-	else newData = Object.entries(action.payload.val());	
+	else {
+		  newData = Object.entries(action.payload.val());
+		  for (let i=0; i<newData.length; i++) newData[i][1].idRigaBolla = action.payload.ref.toString() + '/' + newData[i][0]; //Prendo il path completo delle righe
+		 } 
 	//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
     newState = newEANEntry(newState, newData);
     newState = addRighe(newState, newData, 'bolle');
@@ -439,6 +458,8 @@ export default function resa(state = initialState(), action) {
    	let newData = [];
 	let key = action.payload.key;
    	let val = action.payload.val();
+   	val.idRigaBolla = action.payload.ref.toString(); //prendo il path completo delle righe
+   	
    	newData.push([key, val]);
 
    	 newState = addRighe(newState, newData, 'bolle');
@@ -534,7 +555,7 @@ export default function resa(state = initialState(), action) {
   	   		
    		}
    		break;	
-   		
+   //BACO DA SANARE...		
    case rigaResaR.CHANGE_EDITED_ITEM:
    	    {
    		let tabelleRigheEAN = {...state.tabelleRigheEAN};
@@ -643,16 +664,26 @@ export default function resa(state = initialState(), action) {
  export const getPeriod = (state) => {return state.period};
  export const getMatrixEAN = (state) => {return state.matrixEAN};
   export const getHeaderEAN = (state) => {return state.headerEAN};
-/*
+
  export const getRigheResaIndexed = (state) => {
  	let righeResaIndexed = {}
  	for (var index in state.itemsArrayIndex)
  		{
- 			righeResaIndexed[index] = {...state.itemsArray[state.itemsArrayIndex[index].pos].values};
+ 			righeResaIndexed[index] = {...state.itemsArray[state.itemsArrayIndex[index]].values};
  		}
  	return(righeResaIndexed);	
  }
- */
+
+export const getRigaBolla = (state) => {
+ 	
+ 	return(function getRigaBolla(ean,rigaBolla) {
+ 	  if (state.indiceEAN[ean])
+ 		{   let idx = state.indiceEAN[ean].righe[rigaBolla].pos;
+ 			if (idx >=0) return state.tabelleRigheEAN[ean][idx].values.bolla; //La copia che ho salvato...
+ 		}
+ 	  return null;	
+ 	});	
+ }
  
  export const getTableScrollByKey = (state)  => {return state.tableScrollByKey};
  

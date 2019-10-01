@@ -38,9 +38,20 @@ class TableDettagliResa extends Component
   onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, record.values.ean))}
   onSave = (record, index) => { 
   								let selectedItem = (record.values.key) ? {key: record.values.key} : null;  
+  								let ean = record.values.ean;
+  							  
   								record.values.gratis = parseInt(record.values.gratis, 10) || 0;
   							    record.values.pezzi = parseInt(record.values.pezzi, 10) || 0;
   							    record.values.testata = this.props.testataResa;
+  							    
+  							    record.values.rigaMagazzino = this.props.getMagazzinoItem(ean); 
+  							    
+  							    record.values.rigaResa = this.props.righeResa[record.values.key];
+  							    record.values.bolla = this.props.getRigaBolla(ean,record.values.rigaBolla);
+  							
+  							   
+  							    //Persisto sempre il valore a magazzino...
+  							    //e mando anche il valore dei dettagli...
   							    if ((record.values.gratis + record.values.pezzi) > 0) this.props.submitEditedItem(record.isValid, selectedItem , this.props.listeningItemResa, record.values);
   								else this.props.deleteRigaResa(this.props.listeningItemResa, record.values.key, record.values); //Se a zero cancello la riga resa...
 								};

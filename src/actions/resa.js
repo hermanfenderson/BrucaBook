@@ -34,26 +34,67 @@ export const SET_MODAL_DETAILS = 'SET_MODAL_DETAILS';
 
 //FUNZIONI DA VERIFICARE
 //Prepara riga con zeri ai fini della persistenza... resta così
-function preparaItem(riga)
+function preparaItem(rigaInput)
    {
-        riga['pezzi'] = parseInt(riga['pezzi'],10) || 0;
-      riga['gratis'] = parseInt(riga['gratis'],10) || 0;
-      riga['prezzoUnitario'] = parseFloat(riga['prezzoUnitario']).toFixed(2);
-     riga['prezzoTotale'] = parseFloat(riga['prezzoTotale']).toFixed(2);
-     //Pulizia...
-     riga['dataDocumento'] = riga.testata.dataDocumento;
-     riga['dataScarico'] = riga.testata.dataScarico;
-     riga['fornitore'] = riga.testata.fornitore;
-     riga['nomeFornitore'] = riga.testata.nomeFornitore;
-     riga['riferimento'] = riga.testata.riferimento;
-     riga['data'] = riga['dataScarico'];
+   	//Genero integralmente la riga... ex novo. E' decisamente meno rischioso. La maschera mi porta tutte le info che mi servono...
+   	//Se ho una rigaResa... sono in update... altrimenti sono in insert. In entrambi i casi... so cosa fare.
+  
+   	let riga = {};
+   	riga['pezzi'] = parseInt(rigaInput['pezzi'],10) || 0;
+    riga['gratis'] = parseInt(rigaInput['gratis'],10) || 0;
+    
+    //Dati che vengono dal magazzino...
+    let mag = rigaInput.rigaMagazzino;
+    riga.autore = mag.autore;
+	riga.categoria = mag.categoria;
+	riga.ean = mag.ean;
+	riga.editore = mag.editore;
+	riga.imgFirebaseUrl = mag.imgFirebaseUrl;
+	riga.iva = mag.iva;
+	riga.prezzoListino = mag.prezzoListino;
+	riga.titolo = mag.titolo;
+	 
+	 //Dati che vengono dalla testata...
+    let tes = rigaInput.testata;
+   
+	riga.data = tes.dataScarico;
+	riga.dataDocumento = tes.dataDocumento;
+	riga.dataScarico = tes.dataScarico;
+	riga.stato = tes.stato;
+	riga.riferimento = tes.riferimento;
+	riga.fornitore = tes.fornitore;
+	riga.nomeFornitore = tes.nomeFornitore;
+	
+	
+	//Dati che vengono dalla bolla...
+	let bolla = rigaInput.bolla;
+riga.manSconto = bolla.manSconto;
+ riga['prezzoUnitario'] = parseFloat(bolla['prezzoUnitario']).toFixed(2);
+ 
+riga.sconto1 = bolla.sconto1;
+riga.sconto2 = bolla.sconto2;
+riga.sconto3 = bolla.sconto3;
+riga.dataDocumentoBolla = bolla.dataDocumentoBolla;
+riga.dataCarico = bolla.dataCarico;
+riga.idRigaBolla = bolla.idRigaBolla;
+riga.rigaBolla = bolla.rigaBolla;
+riga.riferimentoBolla = bolla.riferimentoBolla;
+	let resa = rigaInput.rigaResa; //E' null per nuovi inserimenti...
+   	//prendo solo il dato di creazione...
+   	if (resa)
+   		{
+   			riga.createdAt = resa.createdAt;
+   			riga.createdBy = resa.createdBy;
+   			
+   		}
+   	//elementi calcolati  
+    riga['prezzoTotale'] =(riga.prezzoUnitario*riga.pezzi).toFixed(2);
+  	
+   	console.log(riga);
+   	
+         
      
-     
-      delete riga['testata'];
-      delete riga['maxPezzi'];
-      delete riga['maxGratis'];
-      delete riga['rese'];
-      
+        
     
    }
 
@@ -348,12 +389,12 @@ rigaResaFA.aggiungiItem = (params, valori) => {
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
    var ref; 
     ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
-    ref.set(nuovoItem);
-    let idRigaBolla = valori.idRigaBolla;
-    let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
-    let updatedRese = {};
-    updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
-    Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+    //ref.set(nuovoItem);
+   // let idRigaBolla = valori.idRigaBolla;
+    //let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
+    //let updatedRese = {};
+   // updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
+    //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
    
     
    dispatch(
@@ -380,13 +421,13 @@ rigaResaFA.aggiornaItem = (params,itemId, valori) => {
       return function(dispatch,getState) {
 
     const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
-    ref.update(nuovoItem);
+   // ref.update(nuovoItem);
     let idRigaBolla = valori.idRigaBolla;
      let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + itemId; //Ricostruisco l'id Riga resa
    
     let updatedRese = {};
    updatedRese[itemId] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
-   Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+   //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
    
     dispatch(
    	{
@@ -427,4 +468,5 @@ const stockMessageQueue = rigaResaFA.stockMessageQueue;
    	if (stockMessageQueue) dispatch(stockMessageQueueListener(valori));				
     };
   }
+  
 

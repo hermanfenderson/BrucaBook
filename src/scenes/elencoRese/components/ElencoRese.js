@@ -50,7 +50,7 @@ return (
        <Form.Item
             label="Periodo"
           >
-       <MonthPicker allowClear={false} value={period2moment([this.props.match.params.anno, this.props.match.params.mese])} onChange={this.props.setPeriodElencoBolle} format={"MM/YYYY"} />
+       <MonthPicker allowClear={false} value={period2moment([this.props.match.params.anno, this.props.match.params.mese])} onChange={this.props.setPeriodElencoRese} format={"MM/YYYY"} />
        </Form.Item>
       </FixBlock>
      <FixBlock coors={this.props.geometry.tableCoors}>

@@ -2,7 +2,7 @@ import TableOpenResaComponent from '../components/TableOpenResa'
 import {rigaResaFA, setActiveModal, setModalDetails, setPeriodResa, showModalDetails} from '../../../actions/resa'
 //import {listenRigaBolla, offListenRigaBolla, deleteRigaBolla, rigaBollaFA} from '../../../actions/bolla'
 
-import {getEditedRigaResa, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa, getMatrixEAN, getHeaderEANResa, getStock} from '../../../reducers'
+import {getEditedRigaResa, getTableResaScroll,  getListeningItemResa, getTabellaEAN, getTabelleRigheEAN, getDettagliEANResa, getMatrixEAN, getHeaderEANResa, getStock, getRigheResaIndexed}  from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 
@@ -28,6 +28,7 @@ const mapStateToProps = (state) => {
 	matrixEAN: getMatrixEAN(state),
 	headerEAN: getHeaderEANResa(state),
 	stock: getStock(state, 'RESA'),
+	righeResa: getRigheResaIndexed(state),
 	})
 }
  

@@ -26,7 +26,7 @@ class TableOpenResa extends Component
 							}
 
 	//expandedRowRender = (record) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]} righeResa={this.props.righeResa} />)}
-expandedRowRender = (ean) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa} />)}
+expandedRowRender = (ean) => {return(<TableDettagliResa getMagazzinoItem={this.props.getMagazzinoItem} testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} getRigaBolla={this.props.getRigaBolla}  submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa}  />)}
 
 subTablesHeight = (ean) => {return((this.props.tabelleRigheEAN[ean].length+1)*30)};
 

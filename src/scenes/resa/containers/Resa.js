@@ -3,10 +3,10 @@ import {rigaResaFA, listenBollePerFornitore, unlistenBollePerFornitore} from '..
 import {setStato} from '../../../actions/elencoRese'
 
 import {setHeaderInfo} from '../../../actions'
-import {getGeometry} from '../../../reducers'
+import {getGeometry, getMagazzinoItem, getRigaBolla} from '../../../reducers'
 
 
-import {getMessageBufferResa,  getEditedCatalogItem, getTestataResa, getListeningTestataResa, isStaleTotaliResa, getEditedRigaResa} from '../../../reducers'
+import {getMessageBufferResa,  getEditedCatalogItem, getTestataResa, getListeningTestataResa, isStaleTotaliResa, getEditedRigaResa, } from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataResa = rigaResaFA.listenTestata;
@@ -27,9 +27,12 @@ const mapStateToProps = (state) => {
 	         staleTotali: isStaleTotaliResa(state),
 	         editedRigaResa: getEditedRigaResa(state),
 	         messageBuffer: getMessageBufferResa(state),
-	          geometry: getGeometry(state, 'RESA')
-     
-		
+	          geometry: getGeometry(state, 'RESA'),
+	          //Funzione che dato un EAn ritorna il suo valore...
+	          getMagazzinoItem: getMagazzinoItem(state),
+	          getRigaBolla: getRigaBolla(state),
+	          
+	          
 		
 	})
 }

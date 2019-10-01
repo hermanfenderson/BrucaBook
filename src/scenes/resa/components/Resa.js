@@ -90,7 +90,7 @@ else return (
   
  <FixBlock coors={this.props.geometry.tableCoors}>
        
-    {isOpen ? <TableOpenResa  geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> :  <TableResa geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> }
+    {isOpen ? <TableOpenResa getRigaBolla={this.props.getRigaBolla} getMagazzinoItem={this.props.getMagazzinoItem} geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> :  <TableResa getRigaBolla={this.props.getRigaBolla} getMagazzinoItem={this.props.getMagazzinoItem} geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> }
    
    	 	 </FixBlock>
   

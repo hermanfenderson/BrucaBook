@@ -156,7 +156,7 @@ export const getListeningItemElencoRese = (state) => {return fromElencoRese.getL
 
 //Scene Resa
 export const getRigheResa = (state) => {return fromResa.getItems(state.resa)};
-//export const getRigheResaIndexed = (state) => {return fromResa.getRigheResaIndexed(state.resa)};
+export const getRigheResaIndexed = (state) => {return fromResa.getRigheResaIndexed(state.resa)};
 
 export const getEditedRigaResa = (state) => {return fromResa.getEditedItem(state.resa)};
 export const getTestataResa = (state) => {return fromResa.getTestataResa(state.resa)};
@@ -175,6 +175,8 @@ export const getActiveModal = (state) => {return fromResa.getActiveModal(state.r
 export const getPeriodResa = (state) => {return fromResa.getPeriod(state.resa)};
 export const getMatrixEAN = (state) => {return fromResa.getMatrixEAN(state.resa)};
 export const getHeaderEANResa = (state) => {return fromResa.getHeaderEAN(state.resa)};
+//Una funzione... 
+export const getRigaBolla = (state) => {return fromResa.getRigaBolla(state.resa) };
 
 //Scene ResaLibera
 export const getRigheResaLibera = (state) => {return fromResaLibera.getItems(state.resaLibera)};
@@ -290,7 +292,8 @@ export const getSaveGeneral = (state) => {return fromCatalog.getSaveGeneral(stat
 export const getMagazzino = (state) => {return fromMagazzino.getItems(state.magazzino)};
 export const getListeningMagazzino = (state) => {return fromMagazzino.getListeningItem(state.magazzino)};
 export const getFiltersMagazzino = (state) => {return fromMagazzino.getFilters(state.magazzino)};
-
+//Una funzione da invocare per EAN
+export const getMagazzinoItem = (state) => {return fromMagazzino.getItem(state.magazzino) }
 
 //Scene UserMgmt
 export const getEditedItemUserMgmt = (state) => {return fromUserMgmt.getEditedItem(state.userMgmt)};
