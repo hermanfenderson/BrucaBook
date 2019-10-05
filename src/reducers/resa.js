@@ -387,19 +387,21 @@ export default function resa(state = initialState(), action) {
 	newState = rigaResaR.updateState(state,action,editedItemInitialState, transformAndValidateEditedRigaResa);
 	//Creo una matrice di uno (caso ADDED_ITEM) o n valori (caso INTIAL_LOAD)
 	let newData = [];
-	if (action.type === rigaResaR.ADDED_ITEM)
+	if (action.payload.val())
 		{
-		let key = action.payload.key;
-   		let val = action.payload.val();
-   		newData.push([key, val]);
-		}
-	else newData = Object.entries(action.payload.val());	
-	//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
-	newState = newEANEntry(newState, newData);
-	//Aggiungo righe distinguendo i casi resa e bolla...
-	newState = addRighe(newState, newData, 'rese');
-	
-    }
+		if (action.type === rigaResaR.ADDED_ITEM)
+			{
+			let key = action.payload.key;
+	   		let val = action.payload.val();
+	   		newData.push([key, val]);
+			}
+		else newData = Object.entries(action.payload.val());	
+		//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
+		newState = newEANEntry(newState, newData);
+		//Aggiungo righe distinguendo i casi resa e bolla...
+		newState = addRighe(newState, newData, 'rese');
+	    }
+    }    
 	break;    	 	
 
 	case rigaResaR.CHANGED_ITEM:
@@ -563,11 +565,11 @@ export default function resa(state = initialState(), action) {
    	    let itemsArrayIndex = state.itemsArrayIndex;
    	    let indiceEAN = state.indiceEAN;
    	    		
-   	    if (action.ean) 
+   	    if (action.stato=== 'aperta') 
    	    	{
    	    		 //Passo il punto della tabella in cui fare le modifiche...
-   	    		 let cei = transformAndValidateEditedRigaResa(tabelleRigheEAN[action.ean][action.index], action.field, action.value);
-   	    		 
+   	    		 let cei = transformAndValidateEditedRigaResa(tabelleRigheEAN[action.row.values.ean][action.index], action.field, action.value);
+   	    		 tabelleRigheEAN[action.row.values.ean][action.index] = {...cei};
    	    		 if (action.row.values.key)
    	    			{
    	    			let rigaResaKey = action.row.values.key;

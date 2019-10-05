@@ -39,24 +39,36 @@ function preparaItem(rigaInput)
    	//Genero integralmente la riga... ex novo. E' decisamente meno rischioso. La maschera mi porta tutte le info che mi servono...
    	//Se ho una rigaResa... sono in update... altrimenti sono in insert. In entrambi i casi... so cosa fare.
   
-   	let riga = {};
-   	riga['pezzi'] = parseInt(rigaInput['pezzi'],10) || 0;
-    riga['gratis'] = parseInt(rigaInput['gratis'],10) || 0;
-    
+   	
+   	
+     let mag = {...rigaInput.rigaMagazzino};
+    let bolla ={...rigaInput.bolla};
+    let resa = {...rigaInput.rigaResa}; //E' null per nuovi inserimenti...
+   let tes = {...rigaInput.testata};
+   let rigaBolla = rigaInput.rigaBolla;
+   let pezzi = parseInt(rigaInput['pezzi'],10) || 0;
+   let gratis = parseInt(rigaInput['gratis'],10) || 0;
+    //Posso pulire rigaInput
+     //Sono costretto a far pulizia in modo lento...
+  	let rik = Object.keys(rigaInput);
+  	rik.forEach((key) =>{delete rigaInput[key]});
+    let riga = rigaInput;
+    riga['pezzi'] = pezzi;
+    riga['gratis'] = gratis;
+   
     //Dati che vengono dal magazzino...
-    let mag = rigaInput.rigaMagazzino;
-    riga.autore = mag.autore;
+   
+     riga.autore = mag.autore;
 	riga.categoria = mag.categoria;
 	riga.ean = mag.ean;
 	riga.editore = mag.editore;
-	riga.imgFirebaseUrl = mag.imgFirebaseUrl;
+	if (mag.imgFirebaseUrl) riga.imgFirebaseUrl = mag.imgFirebaseUrl;
 	riga.iva = mag.iva;
 	riga.prezzoListino = mag.prezzoListino;
 	riga.titolo = mag.titolo;
 	 
 	 //Dati che vengono dalla testata...
-    let tes = rigaInput.testata;
-   
+    
 	riga.data = tes.dataScarico;
 	riga.dataDocumento = tes.dataDocumento;
 	riga.dataScarico = tes.dataScarico;
@@ -67,20 +79,18 @@ function preparaItem(rigaInput)
 	
 	
 	//Dati che vengono dalla bolla...
-	let bolla = rigaInput.bolla;
-riga.manSconto = bolla.manSconto;
+	riga.manSconto = bolla.manSconto;
  riga['prezzoUnitario'] = parseFloat(bolla['prezzoUnitario']).toFixed(2);
  
 riga.sconto1 = bolla.sconto1;
 riga.sconto2 = bolla.sconto2;
 riga.sconto3 = bolla.sconto3;
-riga.dataDocumentoBolla = bolla.dataDocumentoBolla;
+riga.dataDocumentoBolla = bolla.dataDocumento;
 riga.dataCarico = bolla.dataCarico;
 riga.idRigaBolla = bolla.idRigaBolla;
-riga.rigaBolla = bolla.rigaBolla;
-riga.riferimentoBolla = bolla.riferimentoBolla;
-	let resa = rigaInput.rigaResa; //E' null per nuovi inserimenti...
-   	//prendo solo il dato di creazione...
+riga.rigaBolla = rigaBolla;
+riga.riferimentoBolla = bolla.riferimento;
+	//prendo solo il dato di creazione...
    	if (resa)
    		{
    			riga.createdAt = resa.createdAt;
@@ -89,10 +99,8 @@ riga.riferimentoBolla = bolla.riferimentoBolla;
    		}
    	//elementi calcolati  
     riga['prezzoTotale'] =(riga.prezzoUnitario*riga.pezzi).toFixed(2);
-  	
-   	console.log(riga);
    	
-         
+  	     
      
         
     
@@ -363,14 +371,14 @@ export const rigaResaFA = new FormActions(SCENE, preparaItem, 'righeResa','righe
 
 //Se devo fare override.... definisco metodi alternativi qui...
 
-rigaResaFA.changeEditedItem = (name, value, row, index, ean) => {
+rigaResaFA.changeEditedItem = (name, value, row, index, stato) => {
 	   	return {
 			type: rigaResaFA.CHANGE_EDITED_ITEM,
 	    	field: name,
 	    	value: value,
 	    	row: row,
 	    	index: index,
-	    	ean: ean
+	    	stato: stato
 			}
 	}
 
@@ -382,19 +390,24 @@ rigaResaFA.aggiungiItem = (params, valori) => {
   const stockMessageQueue = rigaResaFA.stockMessageQueue;
   const stockMessageQueueListener = rigaResaFA.stockMessageQueueListener;
   const toggleTableScroll = rigaResaFA.toggleTableScroll;
-   addCreatedStamp(nuovoItem);
-   rigaResaFA.preparaItem(nuovoItem);
-    return function(dispatch,getState) {
+	   rigaResaFA.preparaItem(nuovoItem);
+	   addCreatedStamp(nuovoItem);
+	   
+   return function(dispatch,getState) {
    
    dispatch(toggleTableScroll(true));    //Mi metto alla fine della tabella
    var ref; 
     ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
-    //ref.set(nuovoItem);
-   // let idRigaBolla = valori.idRigaBolla;
-    //let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
-    //let updatedRese = {};
-   // updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
+    ref.set(nuovoItem);
+    //Devo prendere solo la parte relativa del path
+    var re = new RegExp("\/\/[^\/]+(\/.+)");
+	var idRigaBolla = re.exec(valori.idRigaBolla)[1];
+    let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
+    let updatedRese = {};
+    updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
     //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+    
+   Firebase.database().ref(idRigaBolla).update(updatedRese);
    
     
    dispatch(
@@ -415,19 +428,25 @@ rigaResaFA.aggiornaItem = (params,itemId, valori) => {
  const stockMessageQueueListener = rigaResaFA.stockMessageQueueListener;
   
     var nuovoItem = {...valori};
-      addChangedStamp(nuovoItem);
-   rigaResaFA.preparaItem(nuovoItem);
+    rigaResaFA.preparaItem(nuovoItem);
+    addChangedStamp(nuovoItem);
+  
     const itemsUrl = rigaResaFA.itemsUrl;
       return function(dispatch,getState) {
 
     const ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params, itemId));
-   // ref.update(nuovoItem);
-    let idRigaBolla = valori.idRigaBolla;
+    ref.update(nuovoItem);
+   
+    //Devo prendere solo la parte relativa del path
+    var re = new RegExp("\/\/[^\/]+(\/.+)");
+	var idRigaBolla = re.exec(valori.idRigaBolla)[1];  
      let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + itemId; //Ricostruisco l'id Riga resa
    
     let updatedRese = {};
    updatedRese[itemId] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
    //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
+   //L'ho salvato già "formato"
+   Firebase.database().ref(idRigaBolla).update(updatedRese);
    
     dispatch(
    	{

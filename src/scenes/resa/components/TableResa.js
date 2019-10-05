@@ -29,7 +29,7 @@ class TableResa extends Component
 	}
 
   onSubmit = (record,index) => {return(() => {this.onSave(record, index)})};  //Se la key è null faccio insert altrimenti update...
-  onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index))}
+  onChange = (field,record,index) => {return((value) => this.props.changeEditedItem(field,value,record,index, 'chiusa'))}
   onSave = (record, index) => { 
   								
   								let selectedItem = (record.values.key) ? {key: record.values.key} : null;  
