@@ -24,7 +24,7 @@ import {LISTEN_BOLLE_PER_FORNITORE,
 
 import {isNotNegativeInteger} from '../helpers/validators';
 import {errMgmt, initialState as initialStateHelper, editedItemInitialState as editedItemInitialStateHelper, isValidEditedItem,   insertRow, removeRow} from '../helpers/form';
-import {calcHeaderFix, initCalcGeometry} from '../helpers/geometry';
+import {calcHeaderFix, initCalcGeometry, calcFormColsFix, FORM_COL_H} from '../helpers/geometry';
 
 
 const editedRigaResaValuesInitialState = 
@@ -43,7 +43,14 @@ const editedRigaResaValuesInitialState =
 
 let geometryParams = {cal: {
 						totaliWidth: 150,
-						
+						colSearchParams: [
+										{name: 'ean', min: 120, max: 120},
+										{name: 'titolo', min: 292},
+										{name: 'editore', min: 212},
+										{name: 'reset', min: 250, max: 290},
+	
+										],
+					
 						headerParams: [
 									{name: 'values.riferimentoBolla', label: 'Rif.', min: 80, max: 80 },
 					                {name: 'values.dataDocumentoBolla', label: 'Data', min: 160,max: 160},
@@ -71,10 +78,14 @@ let geometryParams = {cal: {
 				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
 				  	    {tableHeight: (cal) =>  {return(cal.h)}},
 				  	    {totaliHeight: (cal) =>  {return(cal.h)}},
+				  	      {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
+				  	  
 				  	   ],
 				 geo: [ 
 	
-
+                        	{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: cal.totaliWidth})}},
+    					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
+    				
      		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.totaliWidth})}},
     				    
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 
@@ -119,8 +130,9 @@ function transformAndValidateEditedRigaResa(cei, name, value)
 	//Pezzi e gratis non possono essere > del massimo ammesso
 	errMgmt(cei, 'pezzi','lessThanMax','Pezzi deve essere minore di Max. pezzi (' + cei.values.maxRese + ')', cei.values.pezzi > cei.values.maxRese);
 	errMgmt(cei, 'gratis','lessThanMax','Gratis deve essere minore di Max. gratis (' + cei.values.maxGratis + ')', cei.values.gratis > cei.values.maxGratis);
-	errMgmt(cei, 'pezzi','freeFirst','Rendi prima copie gratis (' + cei.values.maxGratis + ')', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
-	errMgmt(cei, 'gratis','freeFirst','Rendi prima copie gratis (' + cei.values.maxGratis + ')', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
+//  Elimino la regola dei pezzi gratis prima...
+//	errMgmt(cei, 'pezzi','freeFirst','Rendi prima copie gratis (' + cei.values.maxGratis + ')', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
+//	errMgmt(cei, 'gratis','freeFirst','Rendi prima copie gratis (' + cei.values.maxGratis + ')', ((cei.values.gratis < cei.values.maxGratis) && (cei.values.pezzi > 0))); //Prima i pezzi gratis!
 	
 	cei.isValid = isValidEditedItem(cei);
 
@@ -432,23 +444,26 @@ export default function resa(state = initialState(), action) {
     case ADDED_RIGABOLLA_IN_RESA: 
     {	
     newState = state;	
-   	//Creo una matrice di uno (caso ADDED_ITEM) o n valori (caso INTIAL_LOAD)
-	let newData = [];
-	if (action.type === ADDED_RIGABOLLA_IN_RESA)
-		{
-		let key = action.payload.key;
-   		let val = action.payload.val();
-   		val.idRigaBolla = action.payload.ref.toString(); //prendo il path completo delle righe
-   		newData.push([key, val]);
-		}
-	else {
-		  newData = Object.entries(action.payload.val());
-		  for (let i=0; i<newData.length; i++) newData[i][1].idRigaBolla = action.payload.ref.toString() + '/' + newData[i][0]; //Prendo il path completo delle righe
-		 } 
-	//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
-    newState = newEANEntry(newState, newData);
-    newState = addRighe(newState, newData, 'bolle');
-	
+    //Gestisco il caso di bolle vuote...
+    if (action.payload.val())
+    	{
+	   	//Creo una matrice di uno (caso ADDED_ITEM) o n valori (caso INTIAL_LOAD)
+		let newData = [];
+		if (action.type === ADDED_RIGABOLLA_IN_RESA)
+			{
+			let key = action.payload.key;
+	   		let val = action.payload.val();
+	   		val.idRigaBolla = action.payload.ref.toString(); //prendo il path completo delle righe
+	   		newData.push([key, val]);
+			}
+		else {
+			  newData = Object.entries(action.payload.val());
+			  for (let i=0; i<newData.length; i++) newData[i][1].idRigaBolla = action.payload.ref.toString() + '/' + newData[i][0]; //Prendo il path completo delle righe
+			 } 
+		//Se EAN è del tutto nuovo creo la riga in indice, tabellaEAN e tabelleRigheEAN
+	    newState = newEANEntry(newState, newData);
+	    newState = addRighe(newState, newData, 'bolle');
+    	}
     }	
 	
 		

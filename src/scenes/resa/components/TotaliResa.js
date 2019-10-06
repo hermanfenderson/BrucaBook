@@ -18,6 +18,18 @@ const TotaliResa = (props) =>
 					<Row> Gratis: {totali ? totali.gratis : 0} </Row> 
 					<Row> Totale: {totali ? totali.prezzoTotale : '0.00'} </Row> 
 				</div> 
+				
+				<Form layout="inline"> 
+				<Form.Item label="Stock >0"> 
+			
+		   <Switch checked={(props.filters.noZeroStock)} onChange={(checked) => {
+								 if (checked) props.setFilter('noZeroStock', true);
+																						else props.setFilter('noZeroStock', false);
+																						}} /> 
+				</Form.Item> 
+			</Form> 
+																					
+				
 				</div>
 		:
 		<Spin spinning={true} />

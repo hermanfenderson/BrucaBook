@@ -6,7 +6,7 @@ import {setHeaderInfo} from '../../../actions'
 import {getGeometry, getMagazzinoItem, getRigaBolla} from '../../../reducers'
 
 
-import {getMessageBufferResa,  getEditedCatalogItem, getTestataResa, getListeningTestataResa, isStaleTotaliResa, getEditedRigaResa, } from '../../../reducers'
+import {getMessageBufferResa,  getEditedCatalogItem, getFilters, getTestataResa, getListeningTestataResa, isStaleTotaliResa, getEditedRigaResa, } from '../../../reducers'
 import { connect} from 'react-redux'
 import { bindActionCreators} from 'redux'
 const listenTestataResa = rigaResaFA.listenTestata;
@@ -18,6 +18,8 @@ const resetResa = rigaResaFA.reset;
 const shiftMessage = rigaResaFA.shiftMessage;
 const resetTableResa = rigaResaFA.resetTable;
 const datiStoricoMagazzino = rigaResaFA.datiStoricoMagazzino;
+const setFilter = rigaResaFA.setFilter;
+
 
 const mapStateToProps = (state) => {
 	return ({
@@ -28,6 +30,8 @@ const mapStateToProps = (state) => {
 	         editedRigaResa: getEditedRigaResa(state),
 	         messageBuffer: getMessageBufferResa(state),
 	          geometry: getGeometry(state, 'RESA'),
+	           filters: getFilters(state, 'RESA'),
+	         
 	          //Funzione che dato un EAn ritorna il suo valore...
 	          getMagazzinoItem: getMagazzinoItem(state),
 	          getRigaBolla: getRigaBolla(state),
@@ -38,7 +42,7 @@ const mapStateToProps = (state) => {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ shiftMessage, resetResa, listenBollePerFornitore,  unlistenBollePerFornitore,
+  return bindActionCreators({ shiftMessage, setFilter, resetResa, listenBollePerFornitore,  unlistenBollePerFornitore,
   listenTestataResa, unlistenTestataResa,  setHeaderInfo, setStato, listenRigaResa, offListenRigaResa, resetTableResa, searchDataMagazzino, datiStoricoMagazzino}, dispatch);
 }
 

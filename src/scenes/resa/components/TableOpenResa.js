@@ -24,11 +24,23 @@ class TableOpenResa extends Component
 		                    //this.props.setPeriodResa([null, null]);
 		                    
 							}
+subTablesHeight = (ean) => {return(10+(this.props.tabelleRigheEAN[ean].length+1)*30)};
 
 	//expandedRowRender = (record) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]} righeResa={this.props.righeResa} />)}
-expandedRowRender = (ean) => {return(<TableDettagliResa getMagazzinoItem={this.props.getMagazzinoItem} testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} getRigaBolla={this.props.getRigaBolla}  submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa}  />)}
+expandedRowRender = (ean) => {return(<TableDettagliResa width={this.props.geometry.tableCoors.width} height={this.subTablesHeight(ean)}
+			 getMagazzinoItem={this.props.getMagazzinoItem} testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} getRigaBolla={this.props.getRigaBolla}  submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa}  />)}
+//Serve a filtrare fuori i record con stock a zero se il bottone è premuto
 
-subTablesHeight = (ean) => {return((this.props.tabelleRigheEAN[ean].length+1)*30)};
+customFilterFunc = (record, filters) => {
+   		let good = true;
+   		//Se il filtro noZeroStock che è l'esito del bottone è true
+   		if (filters['noZeroStock']) 
+   		{
+   		     if (record.values.stock <= 0) 	good = false;
+   		}
+   		
+	    return (good ? {...record} : null) 
+   }
 
     	render() { 
     
@@ -49,7 +61,8 @@ subTablesHeight = (ean) => {return((this.props.tabelleRigheEAN[ean].length+1)*30
 			width={props.geometry.tableCoors.width}
 			subTables={props.tabelleRigheEAN}
 			subTablesHeight={this.subTablesHeight}
-			
+			filters={this.props.filters}
+			customFilterFunc={this.customFilterFunc}
 			subTablesRender={this.expandedRowRender}
 			header={props.geometry.headerOpen}/>
 			</div>
