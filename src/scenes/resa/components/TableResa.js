@@ -54,6 +54,22 @@ class TableResa extends Component
    dataRowRender = (text, record, index) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
    
     customRowRender = {'values.pezzi' : this.pezziRowRender , 'values.gratis' : this.gratisRowRender, 'values.dataDocumentoBolla': this.dataRowRender}
+	customFilterFunc = (record, filters) => {
+   		let good = true;
+   			for (var prop in filters)
+	  			{	
+	  				
+   				if (prop !== 'noZeroStock')
+   					
+   					{  let regex = new RegExp(filters[prop],'i');
+	  				
+	  					if (filters[prop] && (record.values[prop]!==undefined) && (!record.values[prop].match(regex))) good = false;
+	  					if (filters[prop] && ((record.values[prop]===undefined) || record.values[prop].length===0)) good = false;
+	  				}
+   			        
+   				}
+	    return (good ? {...record} : null) 
+   }
 
    	render() { 
        	let props = {...this.props};
@@ -68,6 +84,7 @@ class TableResa extends Component
 			width={props.geometry.tableCoors.width}
 			customRowRender={this.customRowRender}
 			header={props.geometry.header}
+			customFilterFunc={this.customFilterFunc}
 			
 			/>
 			)}

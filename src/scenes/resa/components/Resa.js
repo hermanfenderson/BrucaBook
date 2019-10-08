@@ -2,6 +2,8 @@ import TableResa from '../containers/TableResa';
 import TableOpenResa from '../containers/TableOpenResa';
 
 import TotaliResa from '../components/TotaliResa';
+import FilterResa from '../components/FilterResa';
+
 import MessageQueue from '../../../components/MessageQueue'
 
 import React, {Component} from 'react'
@@ -87,7 +89,10 @@ else return (
   
     	 <TotaliResa setFilter={this.props.setFilter}  filters={this.props.filters} staleTotali={this.props.staleTotali} testataResa={this.props.testataResa} listeningTestataResa={this.props.listeningTestataResa} setStato={this.props.setStato}/>
  </FixBlock>
-  
+   <FixBlock className='filter-form' coors={this.props.geometry.formSearchCoors} >
+      <FilterResa  geometry={this.props.geometry} filters={this.props.filters} setFilter={this.props.setFilter} resetFilter={this.props.resetFilter} />
+      </FixBlock>
+
  <FixBlock coors={this.props.geometry.tableCoors}>
        
     {isOpen ? <TableOpenResa filters={this.props.filters} getRigaBolla={this.props.getRigaBolla} getMagazzinoItem={this.props.getMagazzinoItem} geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> :  <TableResa  filters={this.props.filters} getRigaBolla={this.props.getRigaBolla} getMagazzinoItem={this.props.getMagazzinoItem} geometry={this.props.geometry} testataResa={this.props.testataResa} period={period} idResa={this.props.match.params.id}/> }

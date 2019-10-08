@@ -33,12 +33,24 @@ expandedRowRender = (ean) => {return(<TableDettagliResa width={this.props.geomet
 
 customFilterFunc = (record, filters) => {
    		let good = true;
-   		//Se il filtro noZeroStock che è l'esito del bottone è true
-   		if (filters['noZeroStock']) 
-   		{
-   		     if (record.values.stock <= 0) 	good = false;
-   		}
-   		
+   			for (var prop in filters)
+	  			{	
+	  				
+   					//Se il filtro noZeroStock che è l'esito del bottone è true
+   				if (filters['noZeroStock']) 
+   					{
+   		    		if (record.values.stock <= 0) 	good = false;
+   					}
+   				if (!good) break;	
+   				if (prop !== 'noZeroStock')
+   					
+   					{  let regex = new RegExp(filters[prop],'i');
+	  				
+	  					if (filters[prop] && (record.values[prop]!==undefined) && (!record.values[prop].match(regex))) good = false;
+	  					if (filters[prop] && ((record.values[prop]===undefined) || record.values[prop].length===0)) good = false;
+	  				}
+   			        
+   				}
 	    return (good ? {...record} : null) 
    }
 

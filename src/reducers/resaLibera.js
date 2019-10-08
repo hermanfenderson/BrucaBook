@@ -26,6 +26,7 @@ let geometryParams = {cal: {
 										{name: 'ean', min: 120, max: 120},
 										{name: 'titolo', min: 292},
 										{name: 'editore', min: 212},
+									
 										{name: 'reset', min: 250, max: 290},
 	
 										],
@@ -33,6 +34,8 @@ let geometryParams = {cal: {
 									{name: 'ean', min: 200, max: 200},
 									{name: 'titolo', min: 446 },
 									{name: 'autore', min: 180 },
+								
+									
 									{name: 'listino', min: 60, max: 60}
 	
 									
@@ -55,6 +58,8 @@ let geometryParams = {cal: {
 						headerParams: [
 									  {name: 'ean', label: 'EAN', min: 130, max: 130},
 									  {name: 'titolo', label: 'Titolo', min: 312, sort:'string', ellipsis: true},
+									  {name: 'editore',label: 'Editore', min: 180 },
+							
 									  {name: 'prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
 									  {name: 'pezzi', shortLabel: 'Pz.', label: 'Pezzi', shortBreak: 50, min: 40, max: 80},
 									  {name: 'gratis', shortLabel: 'Gr.', label: 'Gratis', shortBreak: 50, min: 40, max: 80},

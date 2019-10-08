@@ -11,6 +11,10 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 
 Storia delle versioni
 ---------------------
+### Versione 0.13.8
+* Alpha version di rese (da collaudare e usare con cautela)
+* Campo editore in rese e reselibere
+
 ### Versione 0.13.7
 * Bugfixing: non cambiava il mese nella vista rese (le rese non libere sono ancora "guaste")
 

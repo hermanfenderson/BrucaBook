@@ -66,7 +66,7 @@ let geometryParams = {cal: {
 						headerOpenParams: [
 									{name: 'values.ean', label: 'EAN', min: 160,max: 160},
 					                {name: 'values.titolo', label: 'Titolo', min: 310,  ellipsis: true},
-					                {name: 'values.autore', label: 'Autore', min: 270,max: 270,  ellipsis: true},
+					                {name: 'values.editore', label: 'Editore', min: 270,max: 270,  ellipsis: true},
 					            
 					                {name: 'values.prezzoListino', label: 'Listino', min: 90,max: 90},
 								   
@@ -76,7 +76,7 @@ let geometryParams = {cal: {
 						},
 				  tbc: [
 				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
-				  	    {tableHeight: (cal) =>  {return(cal.h)}},
+				  	    {tableHeight: (cal) =>  {return(cal.h - FORM_COL_H)}},
 				  	    {totaliHeight: (cal) =>  {return(cal.h)}},
 				  	      {formSearchWidth: (cal) =>  {return(cal.tableWidth)}},
 				  	  
@@ -86,7 +86,7 @@ let geometryParams = {cal: {
                         	{formSearchCoors: (cal) =>  {return({height: FORM_COL_H, width: cal.formSearchWidth, top: 0, left: cal.totaliWidth})}},
     					{formSearchCols: (cal) =>  {return(calcFormColsFix({colParams: cal.colSearchParams, width: cal.formSearchWidth, offset: 0}))}}, 
     				
-     		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: 0, left: cal.totaliWidth})}},
+     		    		{tableCoors: (cal) =>  {return({height: cal.tableHeight, width: cal.tableWidth, top: FORM_COL_H, left: cal.totaliWidth})}},
     				    
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 
     					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
