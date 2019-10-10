@@ -1,4 +1,4 @@
-BrucaBook V.0.13.7
+BrucaBook V.0.13.8
 ==================
 
 Gestionale per librerie indipendenti. Utilizza React e Firebase. Rilasciato in licenza MIT. [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
@@ -12,8 +12,9 @@ Thankfully using BrowserStack to perform multi-browser testing and iPad developm
 Storia delle versioni
 ---------------------
 ### Versione 0.13.8
-* Alpha version di rese (da collaudare e usare con cautela)
 * Campo editore in rese e reselibere
+* Export in excel per bolle
+* Alpha version di rese (da collaudare e NON usare per ora)
 
 ### Versione 0.13.7
 * Bugfixing: non cambiava il mese nella vista rese (le rese non libere sono ancora "guaste")

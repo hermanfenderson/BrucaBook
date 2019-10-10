@@ -75,6 +75,10 @@ class TableElencoBolle extends Component
 		this.props.setSelectedBolla(row);
 	}
 	
+	saveRow = (row) => {
+		this.props.saveBolla(this.props.period, row.key);
+	}
+	
 	selectRow = (row) => {
 		this.props.setSelectedBolla(row); //Se faccio click in qualsiasi punto della riga... voglio inserire libri...
 		this.props.setReadOnlyForm();
@@ -91,7 +95,7 @@ class TableElencoBolle extends Component
     	let height = props.geometry.tableCoors.height;
     	let width = props.geometry.tableCoors.width;
     	  return(
-			<WrappedTable {...props}   width={width} height={height}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} selectRow={this.selectRow} header={this.props.geometry.header}/>
+			<WrappedTable {...props}   width={width} height={height}  highlightedRowKey={selectedItemKey} editRow={this.editRow} deleteRow={this.deleteRow} saveRow={this.saveRow}  selectRow={this.selectRow} header={this.props.geometry.header}/>
 			)}
     }		
 	

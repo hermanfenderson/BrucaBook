@@ -1,5 +1,5 @@
 import TableElencoBolleComponent from '../components/TableElencoBolle'
-import {bollaFA} from '../../../actions/elencoBolle'
+import {bollaFA, saveBolla} from '../../../actions/elencoBolle'
 
 import {getEditedBolla, getElencoBolle, getTableElencoBolleScroll} from '../../../reducers'
 import { connect} from 'react-redux'
@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
  
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ listenBolla, offListenBolla, deleteBolla, setSelectedBolla, toggleTableScroll, setReadOnlyForm, resetTable }, dispatch);
+  return bindActionCreators({ listenBolla, offListenBolla, deleteBolla, setSelectedBolla, toggleTableScroll, setReadOnlyForm, resetTable, saveBolla }, dispatch);
 }
 
 
