@@ -73,6 +73,20 @@ let geometryParams = {cal: {
 								    {name: 'values.stock', label: 'Stock*', min: 70,max: 70},
 								    {name: 'values.resi', label: 'Resi', min: 70,max: 70},
 								   ],
+						headerDetailParams: [
+										{name: 'values.riferimentoBolla', label: 'Rif.', min: 80,  },
+					                {name: 'values.dataDocumentoBolla', label: 'Data', min: 120,max: 120},
+								 {name: 'values.prezzoListino', label: 'Listino', min: 60,max: 60},
+								   
+								    {name: 'values.prezzoUnitario', label: 'Prezzo', min: 60, max: 60},
+								    {name: 'values.maxRese', label: 'Max. pezzi', min: 120,max: 120},
+								    {name: 'values.maxGratis', label: 'Max. gratis', min: 120,max: 120},
+								   
+								    {name: 'values.pezzi', label: 'Quantità', min: 120,max: 120},
+								    {name: 'values.gratis', label: 'Gratis', min: 120,max: 120},
+								    {name: 'values.prezzoTotale', label: 'Totale', min: 80,max: 80}
+								   ],		   
+					
 						},
 				  tbc: [
 				  	    {tableWidth: (cal) => {return(cal.w-cal.totaliWidth)}},
@@ -91,6 +105,8 @@ let geometryParams = {cal: {
     		//Header ha tolleranza per barra di scorrimento in tabella e sel 
     					{header: (cal) =>  {return(calcHeaderFix({colParams: cal.headerParams, width: cal.tableWidth}))}},
     					{headerOpen: (cal) =>  {return(calcHeaderFix({colParams: cal.headerOpenParams, width: cal.tableWidth}))}},
+    					//Tengo conto di avere meno spazio per i dettagli...
+    				    {headerDetail: (cal) =>  {return(calcHeaderFix({colParams: cal.headerDetailParams, width: cal.tableWidth - 30}))}},
     				
     					{totaliCoors: (cal) => {return({height: cal.totaliHeight, width: cal.totaliWidth, top: 0, left: 0})}},
     					]
@@ -305,7 +321,7 @@ const addRighe = (newState, newData, type) => {
 const deleteRiga = (newState, key, type) => {
 	 let tabelleRigheEAN = {...newState.tabelleRigheEAN};
 	let indiceEAN = {...newState.indiceEAN};
-    let itemsArray = {...newState.itemsArray};
+    let itemsArray = [...newState.itemsArray];
     let tabellaEAN = [...newState.tabellaEAN];
 
 	let idChanged = false;
@@ -323,7 +339,7 @@ const deleteRiga = (newState, key, type) => {
 			if (idx >= 0)
 				{
 				//Se non trovo rigaBolla è un orfano... e uso come chiave di rigaBolla la chiave stessa della rigaResa	
-				let riga = itemsArray[idx];
+				let riga = itemsArray[idx].values;
 				let rigaBolla = (riga.rigaBolla) ? riga.rigaBolla : key;
 				let ean = riga.ean;
 				orfano = (riga.rigaBolla) ? false : true; //decido se ho un orfano...

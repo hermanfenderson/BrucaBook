@@ -5,7 +5,7 @@ import moment from 'moment';
 
 //E' un dato.... che passo come costante...
 //Trucco che mi consente di riciclare un po' di roba dopo...
-
+/*
 const header = [{dataField: 'values.riferimentoBolla', label: 'Rif.', width: 160},
                 {dataField: 'values.dataDocumentoBolla', label: 'Data', width: 160},
                  {dataField: 'values.prezzoListino', label: 'Listino', width: 60},
@@ -19,7 +19,7 @@ const header = [{dataField: 'values.riferimentoBolla', label: 'Rif.', width: 160
 			  
 			   
 			   ];
-
+*/
 
 //Per gestire in modo smmooth il ricaricamento!
 
@@ -61,8 +61,8 @@ class TableDettagliResa extends Component
 		else return (parseInt(record.values[field],10) !==0); //Se non è memorizzato ed è diverso da zero è cambiato... 
 	}
 	
- 	pezziRowRender = (text, record, index) => {return(<SubInput isChanged={this.isChanged(record, 'pezzi')} errorMessage={(record.errorMessages && record.errorMessages.pezzi) ? record.errorMessages.pezzi : ''} onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  />)}
-   gratisRowRender = (text, record, index) => {return(<SubInput isChanged={this.isChanged(record, 'gratis')} errorMessage={(record.errorMessages && record.errorMessages.gratis) ? record.errorMessages.gratis : ''} onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit(record,index)}  />)}
+ 	pezziRowRender = (text, record, index) => {return(<div className={'subInputTable'}><SubInput isChanged={this.isChanged(record, 'pezzi')} errorMessage={(record.errorMessages && record.errorMessages.pezzi) ? record.errorMessages.pezzi : ''} onChange={this.onChange('pezzi',record,index)} value={text}  onSubmit={this.onSubmit(record,index)}  /></div>)}
+   gratisRowRender = (text, record, index) => {return(<div className={'subInputTable'}><SubInput isChanged={this.isChanged(record, 'gratis')} errorMessage={(record.errorMessages && record.errorMessages.gratis) ? record.errorMessages.gratis : ''} onChange={this.onChange('gratis',record,index)} value={text} onSubmit={this.onSubmit(record,index)}  /></div>)}
     dataRowRender = (text, record, index) => {return(<div>{moment(text).format('DD/MM/YYYY')}</div>)}
    
     customRowRender = {'values.pezzi' : this.pezziRowRender , 'values.gratis' : this.gratisRowRender, 'values.dataDocumentoBolla': this.dataRowRender}
@@ -80,7 +80,7 @@ class TableDettagliResa extends Component
 			customRowRender={this.customRowRender} 
 			highlightedRowKey={this.props.righeDettagli.changedKeys} 
 			saveRow={this.onSave}
-			header={header}/>
+			header={this.props.geometry.headerDetail}/>
 			)}
     }		
 	

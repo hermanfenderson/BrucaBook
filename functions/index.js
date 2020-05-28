@@ -5,8 +5,11 @@ const admin = require('firebase-admin');
 const moment = require('moment');
 const {purge, aggiornaRegistro, update, calcolaTotaliNew} = require('./generic');
 const {deletedRigaOrdine, deletedRiga} = require('./ordini');
+const {createClient,getProductId, updateProduct, createProduct} = require('./shopify');
+
 
 const {aggiornaMagazzinoEANFull, creaMagazzinoDaCatalogo} = require('./magazzino');
+//const GraphqlClient = require('./GraphqlClient');
 
 const {generateTop5thisYear, generateTop5lastYear, generateTop5lastMonth, getMatrixVenditeFromRegistroData,generateSerieIncassi, generateSerieIncassiMesi,generateSerieIncassiAnni } = require('./report');
 //const equal = require('deep-equal');
@@ -49,11 +52,11 @@ exports.aggiornaDaCatalogo = functions.database.ref('/catalogo/{ean}')
 			{
 			const ean = context.params.ean;
 			let newCatalogEntry = change.after.val();
-			let promises = [];
-			//
-			let elencoLibrerieRef = change.after.ref.parent.parent.child('librerie').child('elencoLibrerie');
+	let elencoLibrerieRef = change.after.ref.parent.parent.child('librerie').child('elencoLibrerie');
 			return(elencoLibrerieRef.once("value").then(function(snapshot)
 				{
+					let promises = [];
+			//
 				let elencoLibrerie = snapshot.val();
 				for (var catena in elencoLibrerie)
 					for (var libreria in elencoLibrerie[catena].librerie) promises.push(change.after.ref.parent.parent.child(catena).child(libreria).child('magazzino').child(ean).update(newCatalogEntry));
@@ -391,3 +394,84 @@ let promise = refBookStoreRadix.child('registroEAN').once("value").then(function
 return(promise.then(() => {res.send('Passed.');console.info("avviato aggiornamento titoli")}));
 });  
 });
+
+
+exports.aggiornaCatalogoShopify = functions.database.ref('{catena}/{negozio}/magazzino/{ean}')
+    .onWrite((change, context) => 
+            {
+            let ean = context.params.ean;
+            let negozio = context.params.negozio;
+            //Verifico se per il negozio ho una chiave api shopify
+            let shopifyApiRef = change.after.ref.parent.parent.parent.parent.child('librerie').child('shopify').child(negozio);
+			return(shopifyApiRef.once("value").then(function(snapshot)
+				{
+				let shopifyApi = snapshot.val();
+			     if (!shopifyApi) {console.info("shopify non configurato"); return(null);}
+               
+				if (ean.substr(0,3)!=="978") {console.info(ean + "non è un libro"); return(null);}
+				let productData = change.after.val();
+                									 
+				if (productData.ean === ean) //Altrimenti non faccio nulla
+                	{
+                	let token = shopifyApi.token;
+                	let uri = shopifyApi.uri;
+                	let location = shopifyApi.location;
+                	let channels = shopifyApi.channels;
+                	console.log("contenuto channels web "+  channels.web);
+                	console.info("Trovata chiave shopify " + token);
+                	let client = createClient(token,uri);
+                	
+                	console.info("creato Client " + client);
+                	
+                	return(
+                	//Verifico se l'oggetto esiste già
+                		
+                		getProductId(client,ean).then(response => 
+                										 {
+                									 	 //let id = (response.data.productByHandle && response.data.productByHandle.id) ? response.data.productByHandle.id : null;
+                									 	 let id = (response.data && response.data.productByHandle) ? response.data.productByHandle.id : null;
+                									 	 console.log(id);
+                									 	 let variant = (response.data && response.data.productByHandle && response.data.productByHandle.id) ? response.data.productByHandle.variants : null;
+                									 	 let variantId = variant ? variant.edges[0].node.id : null;
+                									 	 console.log(variantId);
+                									 		 //Se il prodotto non esiste vado in insert 
+                									 	 if (id===null) createProduct(client, productData, location).then(
+                									 	 					response => {
+                									 	 						        if (response.data.productCreate && response.data.productCreate.errors && response.data.productCreate.errors.length > 0) console.error(response.data.productCreate.errors);
+                									 	 								else console.log("creato prodotto per EAN: "+ean)
+                									 	 								}
+                									 	 					);
+                									 	 else updateProduct(client, productData, location, id, variantId).then(
+                									 	 					response => {
+                									 	 								if (response.data.productUpdate && response.data.productUpdate.errors && response.data.productUpdate.errors.length > 0) console.error(response.data.productUpdate.errors);
+                									 	 							
+                									 	 								console.log("aggiornato prodotto per EAN: "+ean);
+                									 	 								}
+                									 	 					)
+                										 }
+                									 )
+                	
+                	
+                	     );
+                	}
+					
+				}));
+			}
+			);
+
+            /*
+            //Caso inserimento o aggiornamento... se ho lo stato after non in 'Z' ho un ordine aperto...e semplicemente lo aggiorno...
+            if (change.after.val())
+            {
+            	if (change.after.val().stato !== 'Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(idItem).update(change.after.val()).then(console.info("Aggiornata riga ordine aperto "+idItem)));
+            	// E' in stato Z... e non era in stato Z prima...
+            	else if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(idItem).remove().then(console.info("Chiusa riga ordine aperto "+idItem)));
+            }
+            else //Se ho cancellato una riga che era in stato aperto... cancello anche la riga ordine aperto corrispondente...
+            {
+                if (change.before.val() && change.before.val().stato !=='Z') return (change.after.ref.parent.parent.parent.parent.child("ordiniAperti").child(idItem).remove().then(console.info("Cancellata riga ordine aperto "+idItem)));
+            }
+            */
+            //});	
+
+

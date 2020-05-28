@@ -355,8 +355,10 @@ Cell = ({ columnIndex, data, rowIndex, style }) => (
 
 render ()
      {
-   let itemData = this.memoizedFilterData(this.props.data, this.props.filters);
+   //let itemData = this.memoizedFilterData(this.props.data, this.props.filters);
+   let itemData = this.filterData(this.props.data, this.props.filters);
    /*
+   
    let dataCpy = [...this.props.data]; //Shallow copy utile per il sort...
    let itemData = (this.props.filters) ? 
   		dataCpy.map((record) => 
@@ -376,7 +378,7 @@ render ()
   			dataCpy;
   	*/		
   	//Se devo sortare... applico una funzione di sort... altrimenti ritornoa sortedData... data...
-    let sortedData = this.memoizedSortData(itemData, this.state.sortBy, this.state.sortDirection)
+    let sortedData = this.sortData(itemData, this.state.sortBy, this.state.sortDirection)
  /*
   	let sortedData = (this.state.sortBy) ? 
   					  itemData.sort((a, b) => 

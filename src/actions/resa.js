@@ -1,5 +1,5 @@
 import {FormActions} from '../helpers/formActions';
-import {addCreatedStamp,addChangedStamp, urlFactory} from '../helpers/firebase';
+import {addCreatedStamp,addChangedStamp, urlFactory, url2rel} from '../helpers/firebase';
 import Firebase from 'firebase';
 import {getBolleOsservate} from '../reducers';
 import {getDetailsInMatrix} from '../helpers/form'
@@ -400,14 +400,14 @@ rigaResaFA.aggiungiItem = (params, valori) => {
     ref  = Firebase.database().ref(urlFactory(getState,itemsUrl, params)).push();
     ref.set(nuovoItem);
     //Devo prendere solo la parte relativa del path
-    var re = new RegExp("\/\/[^\/]+(\/.+)");
-	var idRigaBolla = re.exec(valori.idRigaBolla)[1];
+   	var idRigaBolla = url2rel(valori.idRigaBolla);  
     let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + ref.key; //Ricostruisco l'id Riga resa
     let updatedRese = {};
-    updatedRese[ref.key] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
+    //Salvo all'id dela resa...
+    updatedRese[params[2]] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
     //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
     
-   Firebase.database().ref(idRigaBolla).update(updatedRese);
+   Firebase.database().ref(idRigaBolla).child("rese").update(updatedRese);
    
     
    dispatch(
@@ -438,15 +438,15 @@ rigaResaFA.aggiornaItem = (params,itemId, valori) => {
     ref.update(nuovoItem);
    
     //Devo prendere solo la parte relativa del path
-    var re = new RegExp("\/\/[^\/]+(\/.+)");
-	var idRigaBolla = re.exec(valori.idRigaBolla)[1];  
+    
+	var idRigaBolla = url2rel(valori.idRigaBolla);  
      let idRigaResa = params[0] + '/' + params[1] + '/' + params[2] + '/' + itemId; //Ricostruisco l'id Riga resa
    
     let updatedRese = {};
-   updatedRese[itemId] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
+   updatedRese[params[2]] = {pezzi: valori.pezzi, gratis: valori.gratis, idResa: params[2], idRigaResa: idRigaResa};
    //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla)).update(updatedRese);
    //L'ho salvato già "formato"
-   Firebase.database().ref(idRigaBolla).update(updatedRese);
+   Firebase.database().ref(idRigaBolla).child("rese").update(updatedRese);
    
     dispatch(
    	{
@@ -473,10 +473,13 @@ const stockMessageQueue = rigaResaFA.stockMessageQueue;
 
   return function(dispatch, getState) {
     Firebase.database().ref(urlFactory(getState,itemsUrl,params, itemId)).remove();
-      let idRigaBolla = valori.idRigaBolla;
-  
+      //let idRigaBolla = valori.idRigaBolla;
+      var idRigaBolla = url2rel(valori.idRigaBolla);  
+      //In params[2] c'è l'id della resa...
+     Firebase.database().ref(idRigaBolla).child("rese").child(params[2]).remove();
+ 
    
-   Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla, itemId)).remove();
+   //Firebase.database().ref(urlFactory(getState,'reseInRigheBolla', idRigaBolla, itemId)).remove();
   
      dispatch(
 					{

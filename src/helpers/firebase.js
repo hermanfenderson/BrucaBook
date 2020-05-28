@@ -377,6 +377,11 @@ export const encodeSlash = (path) => {
 export const decodeSlash = (key) => {
 	return(key.replace(/,/g, "/"));
 }
+
+export const url2rel = (url) => {
+	 var re = new RegExp("\/\/[^\/]+(\/.+)");
+     return re.exec(url)[1];  
+}
 //Dato un initial load, added, changed o deleted tiene in memoria una copia 
 //I tipi sono INITIAL, ADDED, CHANGED, DELETED e sono dedotti magicamente dal tipo passato... 
 export const persistTree = (params) =>

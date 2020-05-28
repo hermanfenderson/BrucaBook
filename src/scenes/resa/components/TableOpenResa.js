@@ -28,7 +28,7 @@ subTablesHeight = (ean) => {return(10+(this.props.tabelleRigheEAN[ean].length+1)
 
 	//expandedRowRender = (record) => {return(<TableDettagliResa testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[record.values.ean]} righeResa={this.props.righeResa} />)}
 expandedRowRender = (ean) => {return(<TableDettagliResa width={this.props.geometry.tableCoors.width} height={this.subTablesHeight(ean)}
-			 getMagazzinoItem={this.props.getMagazzinoItem} testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} getRigaBolla={this.props.getRigaBolla}  submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa}  />)}
+			 getMagazzinoItem={this.props.getMagazzinoItem} testataResa={this.props.testataResa} listeningItemResa={this.props.listeningItemResa} deleteRigaResa={this.props.deleteRigaResa} getRigaBolla={this.props.getRigaBolla}  submitEditedItem={this.props.submitEditedItem} changeEditedItem={this.props.changeEditedItem} righeDettagli={this.props.tabelleRigheEAN[ean]} righeResa={this.props.righeResa} geometry={this.props.geometry} />)}
 //Serve a filtrare fuori i record con stock a zero se il bottone è premuto
 
 customFilterFunc = (record, filters) => {

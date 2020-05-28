@@ -26,7 +26,9 @@ const mapStateToProps = (state) => {
 	aliquoteIVA: getSelettoreIVA(state)	,
 	libreria: getLibreria(state),
 	catena: getCatena(state),
-	saveGeneral: getSaveGeneral(state),
+	//Forzo save general sempre vero... per ora
+	saveGeneral: true,
+	//saveGeneral: getSaveGeneral(state),
 	categorie: (getAnagraficheLocali(state)) ? getAnagraficheLocali(state).categorie : null
 
 	})
