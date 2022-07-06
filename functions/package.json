@@ -16,7 +16,7 @@
     "graphql": "^14.0.0",
     "graphql-tag": "^2.10.3",
     "lodash": "^4.17.13",
-    "moment": "^2.22.0"
+    "moment": "^2.29.4"
   },
   "private": true
 }
